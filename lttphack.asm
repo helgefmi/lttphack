@@ -4,7 +4,6 @@ lorom
 ; - QW indicator.
 ; - Better enemy detection.
 ; - Fix counter updates in maiden crystal sequences.
-; - Fix problem with dungeon level indicator overlapping segment counter display.
 ; - See if we can remove some "transition detection" types.
 ; - Tidy up draw_* code (make more general). Remember to check scanlines after.
 ; - See if it's possible to end text segments by modifying $11 (prob unsafe).
@@ -104,6 +103,16 @@ org $008225
 org $008056
     JSL gamemode_hook
 
+
+; FloorIndicator quick RTL
+org $0AFD2C
+    SEP #$30
+    RTL
+
+; FloorIndicator.noIndicator quick RTL
+org $0AFDB0
+    SEP #$30
+    RTL
 
 ; HUD template hijack
 ;
@@ -426,7 +435,7 @@ draw_counters:
     ; Lag countere
     LDA.w $04CC : LDX #!POS_LAG : JSR hex_to_dec : JSR draw3_white
 
-    ; Clear space between numbers TODO: needed?
+    ; Erase lil "-"
     LDA #$207F : STA $7EC734
 
     PLX
