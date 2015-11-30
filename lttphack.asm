@@ -3,8 +3,6 @@ lorom
 ; TODO
 ; - QW indicator.
 ; - Better enemy detection.
-; - Fix counter updates in maiden crystal sequences.
-; - See if we can remove some "transition detection" types.
 ; - Tidy up draw_* code (make more general). Remember to check scanlines after.
 ; - See if it's possible to end text segments by modifying $11 (prob unsafe).
 ; - Get full hearts w/controller input.
@@ -276,6 +274,16 @@ gamemode_hook:
     CMP #$07 : BEQ gamemode_dungeon
     CMP #$09 : BEQ gamemode_overworld
     CMP #$0B : BEQ gamemode_overworld ; "Special" overworld (?)
+    CMP #$13 : BEQ gamemode_victory ; LW?
+    CMP #$16 : BEQ gamemode_victory ; DW?
+
+    JMP end_of_transition_detection
+
+  gamemode_victory:
+    LDA $10
+
+    ; Just killed a boss. Loading overworld.
+    CMP #$08 : BEQ show_and_reset_counters
 
     JMP end_of_transition_detection
 
@@ -298,9 +306,6 @@ gamemode_hook:
 
     ; Caught by Wall Master
     CMP #$11 : BEQ show_and_reset_counters
-
-    ; Boss victory
-    CMP #$13 : BEQ show_and_reset_counters
 
     JMP end_of_transition_detection
 
@@ -363,9 +368,6 @@ gamemode_hook:
 
     ; Mirror
     CMP #$23 : BEQ show_and_reset_counters
-
-    ; Master Sword?
-    CMP #$2B : BEQ show_and_reset_counters
 
     ; Whirlpool
     CMP #$2E : BEQ show_and_reset_counters
