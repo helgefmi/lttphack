@@ -94,8 +94,12 @@ org $028068
     JSL load_tile_gfx_hook
 
 
-; NMI hook hijack
+; NMI hook hijack 1
 org $008225
+    JMP start_nmi_hook
+
+; NMI hook hijack 2 (only used on maiden crystal sequence)
+org $0082D2
     JMP start_nmi_hook
 
 
