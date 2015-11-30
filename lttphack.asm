@@ -1,27 +1,30 @@
 lorom
 
 ; TODO
-; - warp from aga1 to darkworld
+; - QW indicator
+; - Better enemy detection
+; - Fix counter updates in maiden crystal sequences
+; - Fix problem with dungeon level indicator overlapping segment counter display
+; - See if we can remove some "transition detection" types
+; - Tidy up draw_* code (make more general). Remember to check scanlines after.
 
 ; Unused ram used:
 ;
-; Section: $7C[0x8]
 ; - $7C[0x2]: Per-room real time counter
 ; - $7E[0x2]: Per-room game time counter
 ; - $80[0x1]: Copy of $10
 ; - $81[0x1]: Copy of $11
 ; - $82[0x2]: Segment real time counter (frames only, see $04E0+)
-; - $8E[0x2]: Controller 1 data: (highest bit first: AXLR....BYETudlr
+; - $8E[0x2]: Controller 1 data: (highest bit first: AXLR....BYETudlr)
 ; - $2B2[0x08]: Copies of timers
 ; - $2BA[0x06]: Copies of timers
 ; - $04CB[0x25] - Unused (just lotsa ram niz!)
-; - $04CC -> lag counter
-; - $04CE -> enemy hp?
-;   * 04D0[0x4] -> temp stuff for frames -> seconds
-;   * 04D4 -> copy of $8E
-;   * 04DA -> copy of $02D8
-;   * 04E0 -> Segment minutes
-;   * 04E2 -> Segment seconds
+;   * $04CC[0x2] -> lag counter
+;   * $04D0[0x4] -> temp stuff for frames -> seconds
+;   * $04D4[0x2] -> copy of $8E
+;   * $04DA[0x1] -> copy of $02D8
+;   * $04E0[0x2] -> Segment minutes
+;   * $04E2[0x2] -> Segment seconds
 
 !POS_RT_ROOM = $36
 !POS_GT_ROOM = $76
@@ -41,27 +44,27 @@ lorom
 !POS_INPUT_DISPLAY_BOT = $7EC768
 
 macro a8()
-    sep #$20
+    SEP #$20
 endmacro
 
 macro a16()
-    rep #$20
+    REP #$20
 endmacro
 
 macro i8()
-    sep #$10
+    SEP #$10
 endmacro
 
 macro i16()
-    rep #$10
+    REP #$10
 endmacro
 
 macro ai8()
-    sep #$30
+    SEP #$30
 endmacro
 
 macro ai16()
-    rep #$30
+    REP #$30
 endmacro
 
 ; SRAM size
@@ -74,23 +77,23 @@ org $00FFD8
 ;    NOP
 
 
-; UpdateHearts Hook
+; UpdateHearts hook
 org $0DFDCB
     JSL draw_hearts_hook
     RTS
 
 
-;Hook into subroutine that transfers hud tiles to vram
+; Hook into subroutine that transfers hud tiles to vram
 org $028068
     JSL load_tile_gfx_hook
 
 
-; NMI Hook Hijack
+; NMI hook hijack
 org $008225
     JMP start_nmi_hook
 
 
-; Game Mode Hijack
+; Game mode hijack
 org $008056
     JSL gamemode_hook
 
@@ -402,19 +405,21 @@ draw_counters:
     %a16()
     PHX
 
-    ; RT SEG
+    ; Segment counter
     LDA $04E0 : LDX #!POS_RT_SEG : JSR hex_to_dec : JSR draw3_white
     LDA $04E2 : JSR hex_to_dec : JSR draw2_yellow
     LDA $82 : JSR hex_to_dec : JSR draw2_gray
 
-    ; RT CNT
+    ; RT counter
     LDA $2BC : LDX #!POS_RT_ROOM : JSR draw_seconds_and_frames
-    ; GT CNT
+
+    ; Game time counter
     LDA $2BE : LDX #!POS_GT_ROOM : JSR draw_seconds_and_frames
-    ; LAG
+
+    ; Lag countere
     LDA.w $04CC : LDX #!POS_LAG : JSR hex_to_dec : JSR draw3_white
 
-    ; Clear space between numbers
+    ; Clear space between numbers TODO: needed?
     LDA #$207F : STA $7EC734
 
     PLX
@@ -520,7 +525,7 @@ draw_hearts_hook:
     ; Quarters
     LDA $7EF36D : AND.w #$7 : ORA.w #$3490 : STA $7EC704,x
 
-    ; Container GFX
+    ; Container gfx
     LDA #$24A2 : LDX.w #!POS_CONTAINER_GFX : STA $7EC700,x
 
     ; Container
@@ -575,6 +580,7 @@ draw_hearts_hook:
   dhh_end:
     RTL
 
+
 load_tile_gfx_hook:
     JSL $00E310
 
@@ -584,7 +590,6 @@ load_tile_gfx_hook:
     ; dest address. #$7000 = $E000 in VRAM. (multiply by 2)
     LDA.w #$7000 : STA $2116
 
-    ; write stuff
     LDX.b #00
     LDY.b #12 ; number of tiles
 
@@ -601,33 +606,33 @@ load_tile_gfx_hook:
     DEY : BEQ ltg_end
     JMP ltg_loop
 
-    ltg_end:
+  ltg_end:
     PLB
 
     RTL
 
 hud_table:
-DW #$0000,#$1800,#$3C00,#$6600,#$7E00,#$6600,#$6600,#$0000
-DW #$0000,#$7C00,#$4400,#$7800,#$4400,#$7C00,#$7C00,#$0000
-DW #$0000,#$6600,#$3C00,#$1800,#$1800,#$3C00,#$6600,#$0000
-DW #$0000,#$6600,#$6600,#$3C00,#$1800,#$1800,#$1800,#$0000
-DW #$0000,#$6000,#$6000,#$6000,#$6000,#$7E00,#$7E00,#$0000
-DW #$0000,#$7C00,#$6600,#$6600,#$7C00,#$6C00,#$6600,#$0000
-DW #$1000,#$3800,#$7C00,#$FE00,#$3800,#$3800,#$3800,#$0000
-DW #$3800,#$3800,#$3800,#$FE00,#$7C00,#$3800,#$1000,#$0000
-DW #$0800,#$0C00,#$7E00,#$7F00,#$7E00,#$0C00,#$0800,#$0000
-DW #$1000,#$3000,#$7E00,#$FE00,#$7E00,#$3000,#$1000,#$0000
-DW #$0000,#$0000,#$E800,#$8800,#$E800,#$2800,#$EE00,#$0000
-DW #$0000,#$0000,#$EE00,#$8400,#$E400,#$2400,#$E400,#$0000
+    DW #$0000,#$1800,#$3C00,#$6600,#$7E00,#$6600,#$6600,#$0000
+    DW #$0000,#$7C00,#$4400,#$7800,#$4400,#$7C00,#$7C00,#$0000
+    DW #$0000,#$6600,#$3C00,#$1800,#$1800,#$3C00,#$6600,#$0000
+    DW #$0000,#$6600,#$6600,#$3C00,#$1800,#$1800,#$1800,#$0000
+    DW #$0000,#$6000,#$6000,#$6000,#$6000,#$7E00,#$7E00,#$0000
+    DW #$0000,#$7C00,#$6600,#$6600,#$7C00,#$6C00,#$6600,#$0000
+    DW #$1000,#$3800,#$7C00,#$FE00,#$3800,#$3800,#$3800,#$0000
+    DW #$3800,#$3800,#$3800,#$FE00,#$7C00,#$3800,#$1000,#$0000
+    DW #$0800,#$0C00,#$7E00,#$7F00,#$7E00,#$0C00,#$0800,#$0000
+    DW #$1000,#$3000,#$7E00,#$FE00,#$7E00,#$3000,#$1000,#$0000
+    DW #$0000,#$0000,#$E800,#$8800,#$E800,#$2800,#$EE00,#$0000
+    DW #$0000,#$0000,#$EE00,#$8400,#$E400,#$2400,#$E400,#$0000
 
 ; L, u, R, Y, X, SL
 ctrl_top_bit_table:
-	DW #$2000,#$0008,#$1000,#$0040,#$4000,#$0020
+    DW #$2000,#$0008,#$1000,#$0040,#$4000,#$0020
 ctrl_top_gfx_table:
-	DW #$2404,#$2406,#$2405,#$2403,#$2402,#$240A
+    DW #$2404,#$2406,#$2405,#$2403,#$2402,#$240A
 
 ; l, d, r, B, A, ST
 ctrl_bot_bit_table:
-	DW #$0002,#$0004,#$0001,#$0080,#$8000,#$0010
+    DW #$0002,#$0004,#$0001,#$0080,#$8000,#$0010
 ctrl_bot_gfx_table:
-	DW #$2409,#$2407,#$2408,#$2401,#$2400,#$240B
+    DW #$2409,#$2407,#$2408,#$2401,#$2400,#$240B
