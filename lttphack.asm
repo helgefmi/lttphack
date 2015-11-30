@@ -1,12 +1,19 @@
 lorom
 
 ; TODO
-; - QW indicator
-; - Better enemy detection
-; - Fix counter updates in maiden crystal sequences
-; - Fix problem with dungeon level indicator overlapping segment counter display
-; - See if we can remove some "transition detection" types
+; - QW indicator.
+; - Better enemy detection.
+; - Fix counter updates in maiden crystal sequences.
+; - Fix problem with dungeon level indicator overlapping segment counter display.
+; - See if we can remove some "transition detection" types.
 ; - Tidy up draw_* code (make more general). Remember to check scanlines after.
+; - See if it's possible to end text segments by modifying $11 (prob unsafe).
+; - Get full hearts w/controller input.
+; - See if we can implement hex_to_dec more efficient.
+; - See if we can run draw_hearts_hook only when something has been updated.
+; - Rewrite code to INC the tilemap indexes instead of counters? Would need more INC/CMP/BNE, but could rid ourselves of hex_to_dec.
+; - Track best room times (persist after loading savestate). Also make the snes push best room times into the cloud using the users facebook account as authentication, so we can have per-room leaderboards.
+; - Slowdown/up, frame advance. (Should try to make counters run slower/stand still when paused too.)
 
 ; Unused ram used:
 ;
