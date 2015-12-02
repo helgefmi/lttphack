@@ -32,9 +32,8 @@ lorom
 ;   * $04E2[0x2] -> Segment seconds
 
 !POS_RT_ROOM = $36
-!POS_GT_ROOM = $76
-!POS_LAG = $BA
-!POS_RT_SEG = $F2
+!POS_LAG = $7A
+!POS_RT_SEG = $B2
 
 !POS_HEART_GFX = $7EC790
 !POS_HEARTS = $92
@@ -435,9 +434,6 @@ draw_counters:
 
     ; RT counter
     LDA $2BC : LDX #!POS_RT_ROOM : JSR draw_seconds_and_frames
-
-    ; Game time counter
-    LDA $2BE : LDX #!POS_GT_ROOM : JSR draw_seconds_and_frames
 
     ; Lag countere
     LDA $2BC : SEC : SBC $2BE
