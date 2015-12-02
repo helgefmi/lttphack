@@ -2,7 +2,6 @@ lorom
 
 ; TODO
 ; - Look into making a "musicless" version of the game (for pracstreams).
-; - QW indicator.
 ; - Better enemy detection.
 ; - Tidy up draw_* code (make more general). Remember to check scanlines after.
 ; - See if it's possible to end text segments by modifying $11 (prob unsafe).
@@ -27,6 +26,8 @@ lorom
 ;   * $04CC[0x2] -> hearts last frame
 ;   * $04D0[0x4] -> temp stuff for frames -> seconds
 ;   * $04D4[0x2] -> copy of $8E
+;   * $04D6[0x2] -> QW check enabled?
+;   * $04D8[0x2] -> QW check enabled, last frame
 ;   * $04DA[0x1] -> copy of $02D8
 ;   * $04E0[0x2] -> Segment minutes
 ;   * $04E2[0x2] -> Segment seconds
@@ -155,6 +156,21 @@ gamemode_hook:
     LDA $8E : CMP #$0030 : BNE +
     JSR draw_counters
     STZ $82 : STZ $04E0 : STZ $04E2
+
+    ; Quick Warp checker
+  + LDA.w #$00 : STA $04D6
+
+    ; Are we outside?
+    LDA $1B : AND.w #$FF : BNE +
+
+    ; Is mirror the active item?
+    LDA $0202 : AND.w #$FF : BEQ +
+    CMP.w #$14 : BNE +
+
+    ; Check L+R
+    LDA $8E : AND #$3000 : CMP #$3000 : BNE +
+    JSR check_qw
+
     +
     ; ACM Save State {{{
 
@@ -552,6 +568,22 @@ draw_hearts_hook:
 
   no_hearts_redraw:
     %a16()
+    LDA $04D6 : CMP $04D8 : BEQ after_qw_check
+    STA $04D8 : CMP.w #$01 : BEQ +
+
+    LDA #$2C62 : STA $7EC74A
+    LDA #$2C63 : STA $7EC74C
+    LDA #$2C72 : STA $7EC78A
+    LDA #$2C73 : STA $7EC78C
+
+    JMP after_qw_check
+
+  + LDA #$2062 : STA $7EC74A
+    LDA #$2063 : STA $7EC74C
+    LDA #$2072 : STA $7EC78A
+    LDA #$2073 : STA $7EC78C
+
+  after_qw_check:
     ; Draw over Enemy Heart stuff in case theres no enemies
     LDA #$207F : STA !POS_ENEMY_HEART_GFX
     LDX.w #!POS_ENEMY_HEARTS : STA $7EC700,x : STA $7EC702,x
@@ -600,6 +632,17 @@ draw_hearts_hook:
   dhh_end:
     RTL
 
+check_qw:
+    ; If last three bits are 111 or 110, we can quickwarp from here.
+    LDA $00E2 : AND.w #$7
+    CMP.w #$7 : BEQ +
+    CMP.w #$6 : BEQ +
+
+    JMP ++
+
+  + LDA.w #$01 : STA $04D6
+
+ ++ RTS
 
 load_tile_gfx_hook:
     JSL $00E310
