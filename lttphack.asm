@@ -4,12 +4,13 @@ lorom
 ; - Look into making a "musicless" version of the game (for pracstreams).
 ; - Better enemy detection.
 ; - Tidy up draw_* code (make more general). Remember to check scanlines after.
-; - See if it's possible to end text segments by modifying $11 (prob unsafe).
 ; - Get full hearts w/controller input.
 ; - See if we can implement hex_to_dec more efficient.
-; - See if we can run draw_hearts_hook only when something has been updated.
-; - Rewrite code to INC the tilemap indexes instead of counters? Would need more INC/CMP/BNE, but could rid ourselves of hex_to_dec.
-; - Track best room times (persist after loading savestate). Also make the snes push best room times into the cloud using the users facebook account as authentication, so we can have per-room leaderboards.
+; - Rewrite code to INC the tilemap indexes instead of counters? Would need more INC/CMP/BNE,
+;   but could rid ourselves of hex_to_dec.
+; - Track best room times (persist after loading savestate). Also make the snes push best room
+;   times into the cloud using the users facebook account as authentication, so we can have
+;   per-room leaderboards.
 ; - Slowdown/up, frame advance. (Should try to make counters run slower/stand still when paused too.)
 
 ; Unused ram used:
@@ -83,11 +84,12 @@ org $0DFDCB
     RTS
 
 ; UpdateHearts removal
+;
 ; This is called twice (once for containers, once for actual hearts),
-; so since we do them both at once, we only need to call it once.
+; and since we do them both at once, we only need one call.
 ;
 ; Overriding the following:
-; CODE_0DFC06: 20 AB FD JSR HandleHearts
+; CODE_0DFC06:  20 AB FD  JSR HandleHearts
 
 org $0DFC26
     NOP : NOP : NOP
@@ -148,14 +150,17 @@ gamemode_hook:
     LDA $F0 : STA $8E
     LDA $F2 : STA $8F
 
+
     ; Update game time counter
     %a16()
     CLC : INC $7E
+
 
     ; Reset segment timer
     LDA $8E : CMP #$0030 : BNE +
     JSR draw_counters
     STZ $82 : STZ $04E0 : STZ $04E2
+
 
     ; Quick Warp checker
   + LDA.w #$00 : STA $04D6
@@ -545,7 +550,7 @@ nmi_hook:
 
 draw_hearts_hook:
     %a8()
-    LDA $7EF36D : CMP $04CC : BEQ no_hearts_redraw
+    LDA $7EF36D : CMP $04CC : BEQ qw_check
     STA $04CC
 
     %a16()
@@ -566,9 +571,11 @@ draw_hearts_hook:
     LDA $7EF36C : AND.w #$00FF : LSR : LSR : LSR : JSR hex_to_dec : LDX.w #!POS_CONTAINERS : JSR draw2_white
 
 
-  no_hearts_redraw:
+  qw_check:
     %a16()
-    LDA $04D6 : CMP $04D8 : BEQ after_qw_check
+    ; Check if state changed at all, skip if not.
+    LDA $04D6 : CMP $04D8 : BEQ enemy_check
+
     STA $04D8 : CMP.w #$01 : BEQ +
 
     LDA #$2C62 : STA $7EC74A
@@ -576,22 +583,19 @@ draw_hearts_hook:
     LDA #$2C72 : STA $7EC78A
     LDA #$2C73 : STA $7EC78C
 
-    JMP after_qw_check
+    JMP enemy_check
 
   + LDA #$2062 : STA $7EC74A
     LDA #$2063 : STA $7EC74C
     LDA #$2072 : STA $7EC78A
     LDA #$2073 : STA $7EC78C
 
-  after_qw_check:
+  enemy_check:
     ; Draw over Enemy Heart stuff in case theres no enemies
     LDA #$207F : STA !POS_ENEMY_HEART_GFX
     LDX.w #!POS_ENEMY_HEARTS : STA $7EC700,x : STA $7EC702,x
 
-    ; Draw sprite HP
-
     LDX.w #$FFFF
-
   emy_loop:
     INX : CPX.w #$10 : BEQ ctrl_start
     LDA.w $0DD0,x : AND.w #$FF : CMP.w #9 : BNE emy_loop
