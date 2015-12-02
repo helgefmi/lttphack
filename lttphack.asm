@@ -644,6 +644,7 @@ check_qw:
 
  ++ RTS
 
+org $1CFD8E
 load_tile_gfx_hook:
     JSL $00E310
 
