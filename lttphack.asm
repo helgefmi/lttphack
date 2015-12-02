@@ -2,7 +2,6 @@ lorom
 
 ; TODO
 ; - Look into making a "musicless" version of the game (for pracstreams).
-; - Better enemy detection.
 ; - Tidy up draw_* code (make more general). Remember to check scanlines after.
 ; - Get full hearts w/controller input.
 ; - See if we can implement hex_to_dec more efficient.
@@ -599,11 +598,12 @@ draw_hearts_hook:
   emy_loop:
     INX : CPX.w #$10 : BEQ ctrl_start
     LDA.w $0DD0,x : AND.w #$FF : CMP.w #9 : BNE emy_loop
-    LDA.w $0E60,x : AND.w #$80 : BNE emy_loop
+    LDA.w $0E60,x : AND.w #$40 : BNE emy_loop
+    LDA.w $0E50,x : AND.w #$FF : BEQ emy_loop : CMP.w #$FF : BEQ emy_loop
 
   emy_found:
-    ; Enemy HP
-    LDA $0E50,x : AND.w #$FF : BEQ emy_loop : JSR hex_to_dec : LDX.w #!POS_ENEMY_HEARTS : JSR draw2_white
+    ; Enemy HP should be in A.
+    JSR hex_to_dec : LDX.w #!POS_ENEMY_HEARTS : JSR draw2_white
 
     ; Enemy Heart GFX
     LDA #$2CA0 : STA !POS_ENEMY_HEART_GFX
