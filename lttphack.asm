@@ -1,6 +1,7 @@
 lorom
 
 ; TODO
+; - Look into making a "musicless" version of the game (for pracstreams).
 ; - QW indicator.
 ; - Better enemy detection.
 ; - Tidy up draw_* code (make more general). Remember to check scanlines after.
@@ -23,7 +24,7 @@ lorom
 ; - $2B2[0x08]: Copies of timers
 ; - $2BA[0x06]: Copies of timers
 ; - $04CB[0x25] - Unused (just lotsa ram niz!)
-;   * $04CC[0x2] -> lag counter
+;   * $04CC[0x2] -> hearts last frame
 ;   * $04D0[0x4] -> temp stuff for frames -> seconds
 ;   * $04D4[0x2] -> copy of $8E
 ;   * $04DA[0x1] -> copy of $02D8
@@ -35,13 +36,13 @@ lorom
 !POS_LAG = $BA
 !POS_RT_SEG = $F2
 
-!POS_HEART_GFX = $90
+!POS_HEART_GFX = $7EC790
 !POS_HEARTS = $92
 
-!POS_CONTAINER_GFX = $9A
+!POS_CONTAINER_GFX = $7EC79A
 !POS_CONTAINERS = $9C
 
-!POS_ENEMY_HEART_GFX = $A2
+!POS_ENEMY_HEART_GFX = $7EC7A2
 !POS_ENEMY_HEARTS = $A4
 
 !POS_INPUT_DISPLAY_TOP = $7EC728
@@ -76,16 +77,20 @@ org $00FFD8
     db $08 ; 256kb
 
 
-; Enable controller 2
-;org $0083F8
-;    NOP
-
-
 ; UpdateHearts hook
 org $0DFDCB
     JSL draw_hearts_hook
     RTS
 
+; UpdateHearts removal
+; This is called twice (once for containers, once for actual hearts),
+; so since we do them both at once, we only need to call it once.
+;
+; Overriding the following:
+; CODE_0DFC06: 20 AB FD JSR HandleHearts
+
+org $0DFC26
+    NOP : NOP : NOP
 
 ; Hook into subroutine that transfers hud tiles to vram
 org $028068
@@ -94,11 +99,11 @@ org $028068
 
 ; NMI hook hijack 1
 org $008225
-    JMP start_nmi_hook
+    JMP nmi_hook_jsl
 
 ; NMI hook hijack 2 (only used on maiden crystal sequence)
 org $0082D2
-    JMP start_nmi_hook
+    JMP nmi_hook_jsl
 
 
 ; Game mode hijack
@@ -128,9 +133,9 @@ org $0DFAAE
 
 ; NMI HOOK
 org $0089C2
-start_nmi_hook:
+nmi_hook_jsl:
     %ai16()
-    JSL nmi_extension
+    JSL nmi_hook
 
     PLB : PLD : PLY : PLX : PLA
     RTI
@@ -139,20 +144,15 @@ start_nmi_hook:
 ; Game Mode hook
 org $1BB1E0
 gamemode_hook:
+    ; For convenience, so that we can access the full ctrl1 as 16bit.
+    LDA $F0 : STA $8E
+    LDA $F2 : STA $8F
+
     ; Update game time counter
     %a16()
     CLC : INC $7E
 
-    ; Update lag counter
-    LDA $7C : SEC : SBC $7E : STA.w $04CC
-
-    ; For convenience, so that we can access the full ctrl1 as 16bit.
-    %a8()
-    LDA $F0 : STA $8E
-    LDA $F2 : STA $8F
-
     ; Reset segment timer
-    %a16()
     LDA $8E : CMP #$0030 : BNE +
     JSR draw_counters
     STZ $82 : STZ $04E0 : STZ $04E2
@@ -416,6 +416,7 @@ gamemode_hook:
 
 ; Hud template hook
 hud_template_hook:
+    STZ $04CC ; Makes sure to redraw hearts.
     JSR draw_counters
     SEP #$30
     INC $16
@@ -439,7 +440,8 @@ draw_counters:
     LDA $2BE : LDX #!POS_GT_ROOM : JSR draw_seconds_and_frames
 
     ; Lag countere
-    LDA.w $04CC : LDX #!POS_LAG : JSR hex_to_dec : JSR draw3_white
+    LDA $2BC : SEC : SBC $2BE
+    LDX #!POS_LAG : JSR hex_to_dec : JSR draw3_white
 
     ; Erase lil "-"
     LDA #$207F : STA $7EC734
@@ -509,7 +511,7 @@ hex_to_dec:
     RTS
 
 
-nmi_extension:
+nmi_hook:
     CLC : INC $7C ; per-room counter
     CLC : INC $82 ; segment counter
 
@@ -530,16 +532,14 @@ nmi_extension:
   + RTL
 
 draw_hearts_hook:
-    ; Only do this once per frame.
     %a8()
-    LDA.b $1A : CMP.b $04C3 : BNE +
-    %a16()
-    RTL
+    LDA $7EF36D : CMP $04CC : BEQ no_hearts_redraw
+    STA $04CC
 
-  + STA.b $04C3
     %a16()
+
     ; Heart gfx
-    LDA #$24A0 : LDX.w #!POS_HEART_GFX : STA $7EC700,x
+    LDA #$24A0 : STA !POS_HEART_GFX
 
     ; Full hearts
     LDA $7EF36D : AND.w #$FF : LSR : LSR : LSR : JSR hex_to_dec : LDX.w #!POS_HEARTS : JSR draw2_white
@@ -548,14 +548,16 @@ draw_hearts_hook:
     LDA $7EF36D : AND.w #$7 : ORA.w #$3490 : STA $7EC704,x
 
     ; Container gfx
-    LDA #$24A2 : LDX.w #!POS_CONTAINER_GFX : STA $7EC700,x
+    LDA #$24A2 : STA !POS_CONTAINER_GFX
 
     ; Container
     LDA $7EF36C : AND.w #$00FF : LSR : LSR : LSR : JSR hex_to_dec : LDX.w #!POS_CONTAINERS : JSR draw2_white
 
+
+  no_hearts_redraw:
+    %a16()
     ; Draw over Enemy Heart stuff in case theres no enemies
-    LDA #$207F
-    LDX.w #!POS_ENEMY_HEART_GFX : STA $7EC700,x
+    LDA #$207F : STA !POS_ENEMY_HEART_GFX
     LDX.w #!POS_ENEMY_HEARTS : STA $7EC700,x : STA $7EC702,x
 
     ; Draw sprite HP
@@ -572,7 +574,7 @@ draw_hearts_hook:
     LDA $0E50,x : AND.w #$FF : BEQ emy_loop : JSR hex_to_dec : LDX.w #!POS_ENEMY_HEARTS : JSR draw2_white
 
     ; Enemy Heart GFX
-    LDA #$2CA0 : LDX.w #!POS_ENEMY_HEART_GFX : STA $7EC700,x
+    LDA #$2CA0 : STA !POS_ENEMY_HEART_GFX
 
   ; Shamelessly stolen from Total's SM hack.
   ctrl_start:
@@ -635,7 +637,7 @@ load_tile_gfx_hook:
 
 hud_table:
     DW #$0000,#$1800,#$3C00,#$6600,#$7E00,#$6600,#$6600,#$0000
-    DW #$0000,#$7C00,#$4400,#$7800,#$4400,#$7C00,#$7C00,#$0000
+    DW #$0000,#$7C00,#$6600,#$7C00,#$6600,#$6600,#$7C00,#$0000
     DW #$0000,#$6600,#$3C00,#$1800,#$1800,#$3C00,#$6600,#$0000
     DW #$0000,#$6600,#$6600,#$3C00,#$1800,#$1800,#$1800,#$0000
     DW #$0000,#$6000,#$6000,#$6000,#$6000,#$7E00,#$7E00,#$0000
