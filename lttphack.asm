@@ -1,6 +1,7 @@
 lorom
 
 ; TODO
+; - Full hp indicator
 ; - Look into making a "musicless" version of the game (for pracstreams).
 ; - Tidy up draw_* code (make more general). Remember to check scanlines after.
 ; - Get full hearts w/controller input.
@@ -37,17 +38,17 @@ lorom
 !POS_LAG = $7A
 !POS_RT_SEG = $B2
 
-!POS_HEART_GFX = $7EC790
+!POS_MEM_HEART_GFX = $7EC790
 !POS_HEARTS = $92
 
-!POS_CONTAINER_GFX = $7EC79A
+!POS_MEM_CONTAINER_GFX = $7EC79A
 !POS_CONTAINERS = $9C
 
-!POS_ENEMY_HEART_GFX = $7EC7A2
+!POS_MEM_ENEMY_HEART_GFX = $7EC7A2
 !POS_ENEMY_HEARTS = $A4
 
-!POS_INPUT_DISPLAY_TOP = $7EC728
-!POS_INPUT_DISPLAY_BOT = $7EC768
+!POS_MEM_INPUT_DISPLAY_TOP = $7EC728
+!POS_MEM_INPUT_DISPLAY_BOT = $7EC768
 
 macro a8()
     SEP #$20
@@ -73,6 +74,7 @@ macro ai16()
     REP #$30
 endmacro
 
+
 ; SRAM size
 org $00FFD8
     db $08 ; 256kb
@@ -82,6 +84,7 @@ org $00FFD8
 org $0DFDCB
     JSL draw_hearts_hook
     RTS
+
 
 ; UpdateHearts removal
 ;
@@ -93,6 +96,7 @@ org $0DFDCB
 
 org $0DFC26
     NOP : NOP : NOP
+
 
 ; Hook into subroutine that transfers hud tiles to vram
 org $028068
@@ -138,7 +142,6 @@ org $0089C2
 nmi_hook_jsl:
     %ai16()
     JSL nmi_hook
-
     PLB : PLD : PLY : PLX : PLA
     RTI
 
@@ -150,33 +153,38 @@ gamemode_hook:
     LDA $F0 : STA $8E
     LDA $F2 : STA $8F
 
-
     ; Update game time counter
     %a16()
-    CLC : INC $7E
-
+    INC $7E
 
     ; Reset segment timer
     LDA $8E : CMP #$0030 : BNE +
     JSR draw_counters
     STZ $82 : STZ $04E0 : STZ $04E2
 
-
     ; Quick Warp checker
   + LDA.w #$00 : STA $04D6
 
     ; Are we outside?
-    LDA $1B : AND.w #$FF : BNE +
+    LDA $1B : AND.w #$FF : BNE save_state
 
     ; Is mirror the active item?
-    LDA $0202 : AND.w #$FF : BEQ +
-    CMP.w #$14 : BNE +
+    LDA $0202 : AND.w #$FF : BEQ save_state
+    CMP.w #$14 : BNE save_state
 
     ; Check L+R
-    LDA $8E : AND #$3000 : CMP #$3000 : BNE +
-    JSR check_qw
+    LDA $8E : AND #$3000 : CMP #$3000 : BNE save_state
 
-    +
+    ; If last three bits are 111 or 110, we can quickwarp from here.
+    LDA $00E2 : AND.w #$7
+    CMP.w #$7 : BEQ +
+    CMP.w #$6 : BEQ +
+
+    JMP save_state
+
+  + LDA.w #$01 : STA $04D6
+
+  save_state:
     ; ACM Save State {{{
 
     %ai16()
@@ -184,7 +192,6 @@ gamemode_hook:
     JMP b
 
   + %a8()
-    STZ $F0 : STZ $F2
     JSR ppuoff
     LDA #$80 : STA $4310
     JSR func_dma2
@@ -195,10 +202,10 @@ gamemode_hook:
 
   b:
     CMP #$2060 : BEQ +
-    JMP after_save_state
+    JMP transition_detection
 
   + %a8()
-    STZ $F0 : STZ $F2
+    STZ $420C
     JSR ppuoff
     STZ $4310
     JSR func_dma2
@@ -221,7 +228,8 @@ gamemode_hook:
 
     LDA #$01 : STA $4310
     LDA #$18 : STA $4311
-    JMP end
+
+  + JMP end
 
   ppuoff:
     LDA #$80 : STA $13 : STA $2100
@@ -229,12 +237,12 @@ gamemode_hook:
     RTS
 
   func_dma1:
-    LDX #$7500 : LDY #$0000 : LDA #$80 : JSR func_dma1b
-    LDX #$7600 : LDY #$4000 : LDA #$80 : JSR func_dma1b
+    LDX.w #$7500 : LDY.w #$0000 : LDA #$80 : JSR func_dma1b
+    LDX.w #$7600 : LDY.w #$4000 : LDA #$80 : JSR func_dma1b
     RTS
 
   func_dma1b:
-    STY $2116 : STZ $4312 : STX $4313 : STZ $4315 : STA $4316 : STZ $2115
+    STY.w $2116 : STZ $4312 : STX.w $4313 : STZ $4315 : STA $4316 : STZ $2115
 
     LDA $4311 : CMP #$39 : BNE +
     LDA $2139
@@ -243,21 +251,21 @@ gamemode_hook:
     RTS
 
   func_dma2:
-    PLX : STX $4318
+    PLX : STX.w $4318
 
     STZ $2181 : STZ $4312
 
-    LDY #$0071 : LDX #$0000 : JSR func_dma2b
-    INY : LDX #$0080 : JSR func_dma2b
-    INY : LDX #$0100 : JSR func_dma2b
-    INY : LDX #$0180 : JSR func_dma2b
+    LDY.w #$0071 : LDX.w #$0000 : JSR func_dma2b
+    INY : LDX.w #$0080 : JSR func_dma2b
+    INY : LDX.w #$0100 : JSR func_dma2b
+    INY : LDX.w #$0180 : JSR func_dma2b
 
-    LDX $4318 : PHX
+    LDX.w $4318 : PHX
 
     RTS
 
   func_dma2b:
-    STZ $4313 : STY $4314 : STX $2182
+    STZ $4313 : STY.w $4314 : STX.w $2182
     LDA #$80 : STA $4311 : STA $4316
     LDA #$02 : STA $420B
     RTS
@@ -272,8 +280,7 @@ gamemode_hook:
 
     ; }}}
 
-  after_save_state:
-
+  transition_detection:
     ; Transition detection {{{
 
     %ai8()
@@ -454,14 +461,14 @@ draw_counters:
     LDA $04E2 : JSR hex_to_dec : JSR draw2_yellow
     LDA $82 : JSR hex_to_dec : JSR draw2_gray
 
-    ; RT counter
+    ; Real-time counter
     LDA $2BC : LDX #!POS_RT_ROOM : JSR draw_seconds_and_frames
 
-    ; Lag countere
+    ; Lag counter
     LDA $2BC : SEC : SBC $2BE
     LDX #!POS_LAG : JSR hex_to_dec : JSR draw3_white
 
-    ; Erase lil "-"
+    ; Remove lil "-"
     LDA #$207F : STA $7EC734
 
     PLX
@@ -470,7 +477,7 @@ draw_counters:
 
 draw_seconds_and_frames:
     STA $4204 : SEP #$20
-    LDA #$3C : STA $4206
+    LDA #60 : STA $4206
     PHA : PLA : PHA : PLA : REP #$20
     LDA $4214 : STA $04D0 : LDA $4216 : STA $04D2
     LDA $04D0 : JSR hex_to_dec : JSR draw3_white
@@ -479,18 +486,20 @@ draw_seconds_and_frames:
 
 
 draw3_white:
+    ; Clear leading 0's
     LDA #$207F : STA $7EC700,x
     LDA #$207F : STA $7EC702,x
 
-    LDA $2B4 : BEQ check_second_digit : ORA #$3C90 : STA $7EC700,x : JMP draw_second_digit
+    LDA $2B4 : BEQ .check_second_digit
+    ORA #$3C90 : STA $7EC700,x : JMP .draw_second_digit
 
-  check_second_digit:
-    LDA $2B6 : BEQ draw_third_digit
+  .check_second_digit
+    LDA $2B6 : BEQ .draw_third_digit
 
-  draw_second_digit:
+  .draw_second_digit
     LDA $2B6 : ORA #$3C90 : STA $7EC702,x
 
-  draw_third_digit:
+  .draw_third_digit
     LDA $2B8 : ORA #$3C90 : STA $7EC704,x
     RTS
 
@@ -534,14 +543,14 @@ nmi_hook:
     LDA $04CB : AND.b #$01 : BNE .skip
 
     %a16()
-    CLC : INC $7C ; per-room counter
-    CLC : INC $82 ; segment counter
+    INC $7C ; per-room counter
+    INC $82 ; segment counter
 
     ; Check if frames == 60
     LDA $82 : CMP.w #60 : BNE .end
 
     ; If so, reset frames and +1 secs
-    STZ $82 : CLC : INC $04E2
+    STZ $82 : INC $04E2
 
     ; Check if secs == 60
     LDA $04E2 : CMP.w #60 : BNE .end
@@ -559,13 +568,13 @@ nmi_hook:
 
 draw_hearts_hook:
     %a8()
-    LDA $7EF36D : CMP $04CC : BEQ qw_check
+    LDA $7EF36D : CMP $04CC : BEQ .qw_indicator
     STA $04CC
 
     %a16()
 
     ; Heart gfx
-    LDA #$24A0 : STA !POS_HEART_GFX
+    LDA #$24A0 : STA !POS_MEM_HEART_GFX
 
     ; Full hearts
     LDA $7EF36D : AND.w #$FF : LSR : LSR : LSR : JSR hex_to_dec : LDX.w #!POS_HEARTS : JSR draw2_white
@@ -574,16 +583,16 @@ draw_hearts_hook:
     LDA $7EF36D : AND.w #$7 : ORA.w #$3490 : STA $7EC704,x
 
     ; Container gfx
-    LDA #$24A2 : STA !POS_CONTAINER_GFX
+    LDA #$24A2 : STA !POS_MEM_CONTAINER_GFX
 
     ; Container
     LDA $7EF36C : AND.w #$00FF : LSR : LSR : LSR : JSR hex_to_dec : LDX.w #!POS_CONTAINERS : JSR draw2_white
 
 
-  qw_check:
+  .qw_indicator
     %a16()
     ; Check if state changed at all, skip if not.
-    LDA $04D6 : CMP $04D8 : BEQ enemy_check
+    LDA $04D6 : CMP $04D8 : BEQ enemy_hp
 
     STA $04D8 : CMP.w #$01 : BEQ +
 
@@ -592,34 +601,33 @@ draw_hearts_hook:
     LDA #$2C72 : STA $7EC78A
     LDA #$2C73 : STA $7EC78C
 
-    JMP enemy_check
+    JMP enemy_hp
 
   + LDA #$2062 : STA $7EC74A
     LDA #$2063 : STA $7EC74C
     LDA #$2072 : STA $7EC78A
     LDA #$2073 : STA $7EC78C
 
-  enemy_check:
+  enemy_hp:
     ; Draw over Enemy Heart stuff in case theres no enemies
-    LDA #$207F : STA !POS_ENEMY_HEART_GFX
+    LDA #$207F : STA !POS_MEM_ENEMY_HEART_GFX
     LDX.w #!POS_ENEMY_HEARTS : STA $7EC700,x : STA $7EC702,x
 
     LDX.w #$FFFF
-  emy_loop:
-    INX : CPX.w #$10 : BEQ ctrl_start
-    LDA.w $0DD0,x : AND.w #$FF : CMP.w #9 : BNE emy_loop
-    LDA.w $0E60,x : AND.w #$40 : BNE emy_loop
-    LDA.w $0E50,x : AND.w #$FF : BEQ emy_loop : CMP.w #$FF : BEQ emy_loop
+  .loop
+    INX : CPX.w #$10 : BEQ input_display
+    LDA.w $0DD0,x : AND.w #$FF : CMP.w #9 : BNE .loop
+    LDA.w $0E60,x : AND.w #$40 : BNE .loop
+    LDA.w $0E50,x : AND.w #$FF : BEQ .loop : CMP.w #$FF : BEQ .loop
 
-  emy_found:
     ; Enemy HP should be in A.
     JSR hex_to_dec : LDX.w #!POS_ENEMY_HEARTS : JSR draw2_white
 
     ; Enemy Heart GFX
-    LDA #$2CA0 : STA !POS_ENEMY_HEART_GFX
+    LDA #$2CA0 : STA !POS_MEM_ENEMY_HEART_GFX
 
   ; Shamelessly stolen from Total's SM hack.
-  ctrl_start:
+  input_display:
     LDA $8E : CMP $04D4 : BEQ dhh_end
 
     STA $04D4
@@ -631,7 +639,7 @@ draw_hearts_hook:
     LDA ctrl_top_gfx_table, X
     JMP ++
 +   LDA #$207F
-++  STA !POS_INPUT_DISPLAY_TOP, X
+++  STA !POS_MEM_INPUT_DISPLAY_TOP, X
     INX : INX : CPX #$00C : BNE -
 
     LDX #$0000
@@ -640,23 +648,11 @@ draw_hearts_hook:
     LDA ctrl_bot_gfx_table, X
     JMP ++
 +   LDA #$207F
-++  STA !POS_INPUT_DISPLAY_BOT, X
+++  STA !POS_MEM_INPUT_DISPLAY_BOT, X
     INX : INX : CPX #$00C : BNE -
 
   dhh_end:
     RTL
-
-check_qw:
-    ; If last three bits are 111 or 110, we can quickwarp from here.
-    LDA $00E2 : AND.w #$7
-    CMP.w #$7 : BEQ +
-    CMP.w #$6 : BEQ +
-
-    JMP ++
-
-  + LDA.w #$01 : STA $04D6
-
- ++ RTS
 
 org $1CFD8E
 load_tile_gfx_hook:
