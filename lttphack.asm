@@ -1,7 +1,6 @@
 lorom
 
 ; TODO
-; - Full hp indicator
 ; - Look into making a "musicless" version of the game (for pracstreams).
 ; - Tidy up draw_* code (make more general). Remember to check scanlines after.
 ; - Get full hearts w/controller input.
@@ -571,10 +570,20 @@ draw_hearts_hook:
     LDA $7EF36D : CMP $04CC : BEQ .qw_indicator
     STA $04CC
 
-    %a16()
+    ; check if we have full hp
+    LDA $7EF36C : CMP $7EF36D : BNE .not_full_hp
 
+    %a16()
+    LDA #$24A0
+    JMP .draw_hearts
+
+  .not_full_hp
+    %a16()
+    LDA #$24A1
+
+  .draw_hearts
     ; Heart gfx
-    LDA #$24A0 : STA !POS_MEM_HEART_GFX
+    STA !POS_MEM_HEART_GFX
 
     ; Full hearts
     LDA $7EF36D : AND.w #$FF : LSR : LSR : LSR : JSR hex_to_dec : LDX.w #!POS_HEARTS : JSR draw2_white
