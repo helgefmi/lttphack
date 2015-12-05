@@ -23,6 +23,7 @@ lorom
 ; - $2B2[0x08]: Copies of timers
 ; - $2BA[0x06]: Copies of timers
 ; - $04CB[0x25] - Unused (just lotsa ram niz!)
+;   * $04CB[0x1] -> set if we just save/loaded
 ;   * $04CC[0x2] -> hearts last frame
 ;   * $04D0[0x4] -> temp stuff for frames -> seconds
 ;   * $04D4[0x2] -> copy of $8E
@@ -266,6 +267,7 @@ gamemode_hook:
     LDA #$A1 : STA $4200
     LDA #$0F : STA $13 : STA $2100
     %ai8()
+    LDA #$01 : STA $04CB
     RTL
 
     ; }}}
@@ -528,24 +530,32 @@ hex_to_dec:
 
 
 nmi_hook:
+    %a8()
+    LDA $04CB : AND.b #$01 : BNE .skip
+
+    %a16()
     CLC : INC $7C ; per-room counter
     CLC : INC $82 ; segment counter
 
     ; Check if frames == 60
-    LDA $82 : CMP.w #60 : BNE +
+    LDA $82 : CMP.w #60 : BNE .end
 
     ; If so, reset frames and +1 secs
     STZ $82 : CLC : INC $04E2
 
     ; Check if secs == 60
-    LDA $04E2 : CMP.w #60 : BNE +
+    LDA $04E2 : CMP.w #60 : BNE .end
 
     ; If so, reset secs and +1 mins.
     STZ $04E2 : INC $04E0
 
-    ; God, I miss Python.
+  .skip
+    %a8()
+    STZ $04CB
+    %a16()
 
-  + RTL
+  .end
+    RTL
 
 draw_hearts_hook:
     %a8()
