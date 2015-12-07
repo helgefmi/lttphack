@@ -175,13 +175,9 @@ gamemode_hook:
     LDA $8E : AND #$3000 : CMP #$3000 : BNE save_state
 
     ; If last three bits are 111 or 110, we can quickwarp from here.
-    LDA $00E2 : AND.w #$7
-    CMP.w #$7 : BEQ +
-    CMP.w #$6 : BEQ +
+    LDA $00E2 : AND.w #$6 : CMP.w #$6 : BNE save_state
 
-    JMP save_state
-
-  + LDA.w #$01 : STA $04D6
+    LDA.w #$01 : STA $04D6
 
   save_state:
     ; ACM Save State {{{
