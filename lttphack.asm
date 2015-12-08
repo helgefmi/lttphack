@@ -15,6 +15,7 @@ lorom
 ; Notes
 ; Check for ctrl2 hack: 0CDB7E | CODE_0CDC1C
 ; Bage main routine: 03EA1D | CODE_04EA9D
+; 7E045A03 -> always lit rooms
 
 ; Unused ram used:
 ;
@@ -90,6 +91,25 @@ org $00FFD8
 org $0DFDCB
     JSL draw_hearts_hook
     RTS
+
+; Enable frame advance/skip
+;
+; Overrides the following
+;$008039: 80 16  BRA $008051
+org $008039
+    NOP : NOP
+
+; Overrides the following
+; $00803B: A5 F6  LDA $F6
+; $00803D: 29 20  AND #$20
+org $00803B
+    LDA $F5 : AND.b #$40
+
+; Overrides the following
+; $008044: A5 F6  LDA $F6
+; $008046: 29 10  AND #$10
+org $008044
+    LDA $F7 : AND.b #$80
 
 ; Enable controller 2 CLR
 ; Overrides the following:
@@ -279,7 +299,7 @@ gamemode_hook:
 
   after_save_state:
 
-    ; Update game time counter
+  .update_gt_counter
     %a16()
     INC $7E
 
@@ -291,15 +311,15 @@ gamemode_hook:
   .input_qw
     LDA.w #$00 : STA $04D6
 
+    ; Check L+R
+    LDA $8E : AND #$3000 : CMP #$3000 : BNE .input_inc_sword
+
     ; Are we outside?
     LDA $1B : AND.w #$FF : BNE .input_inc_sword
 
     ; Is mirror the active item?
     LDA $0202 : AND.w #$FF : BEQ .input_inc_sword
     CMP.w #$14 : BNE .input_inc_sword
-
-    ; Check L+R
-    LDA $8E : AND #$3000 : CMP #$3000 : BNE .input_inc_sword
 
     ; If last three bits are 111 or 110, we can quickwarp from here.
     LDA $00E2 : AND.w #$6 : CMP.w #$6 : BNE .input_inc_sword
@@ -335,7 +355,7 @@ gamemode_hook:
   + STA $7EF35A
 
   .input_restore
-	LDA $F5 : CMP.b #$40 : BNE .input_toggle_xy
+	LDA $F5 : CMP.b #$10 : BNE .input_toggle_xy
 
 	; 1/2 magic
     LDA.b #$01 : STA $7EF37B
