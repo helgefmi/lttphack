@@ -87,11 +87,6 @@ org $00FFD8
     db $08 ; 256kb
 
 
-; UpdateHearts hook
-org $0DFDCB
-    JSL draw_hearts_hook
-    RTS
-
 ; Enable frame advance/skip
 ;
 ; Overrides the following
@@ -111,13 +106,15 @@ org $00803B
 org $008044
     LDA $F7 : AND.b #$80
 
+
 ; Enable controller 2 CLR
 ; Overrides the following:
 ; $0083F8: 60  RTS
 org $0083F8
     NOP
 
-; Make it so saving on third save state gives you
+
+; Make it so saving on third filename slot gives you
 ; full equipment.
 ;
 ; NOP's out some code since originally, there were more
@@ -134,6 +131,11 @@ org $0CDB7E
     NOP : NOP : NOP         ; C9 01 00      CMP #$0001
     NOP : NOP               ; D0 18         BNE CODE_0CDC49
 
+
+; UpdateHearts hook
+org $0DFDCB
+    JSL draw_hearts_hook
+    RTS
 
 ; UpdateHearts removal
 ;
@@ -360,15 +362,15 @@ gamemode_hook:
 	; 1/2 magic
     LDA.b #$01 : STA $7EF37B
 
-	; refill all hearts, magic, bombs, and arrows
+	; refill hearts, magic, bombs, and arrows
 	LDA.b #$FF : STA $7EF372 : STA $7EF373 : STA $7EF375 : STA $7EF376
 
-	; add 255 rupees to the player's stash (A=#$FF)
-	CLC : ADC $7EF360 : STA $7EF360
-	LDA $7EF361 : ADC.b #$00  : STA $7EF361
+	; 999 rupees
+	LDA.b #$E7 : STA $7EF360
+	LDA.b #$03 : STA $7EF361
 
 	; give the player 9 keys
-	LDA.b #$09 : STA $7EF36F
+	LDA.b #9 : STA $7EF36F
 
   .input_toggle_xy
 	LDA $F7 : CMP.b #$40 : BNE .transition_detection
