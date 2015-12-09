@@ -348,34 +348,34 @@ gamemode_hook:
   + STA $7EF35B
 
   .input_inc_shield
-	LDA $F5 : CMP.b #$08 : BNE .input_restore
+    LDA $F5 : CMP.b #$08 : BNE .input_restore
 
-	LDA $7EF35A : INC A : CMP.b #$04 : BNE +
+    LDA $7EF35A : INC A : CMP.b #$04 : BNE +
 
-	LDA.b #$01
+    LDA.b #$01
 
   + STA $7EF35A
 
   .input_restore
-	LDA $F5 : CMP.b #$10 : BNE .input_toggle_xy
+    LDA $F5 : CMP.b #$10 : BNE .input_toggle_xy
 
-	; 1/2 magic
+    ; 1/2 magic
     LDA.b #$01 : STA $7EF37B
 
-	; refill hearts, magic, bombs, and arrows
-	LDA.b #$FF : STA $7EF372 : STA $7EF373 : STA $7EF375 : STA $7EF376
+    ; refill hearts, magic, bombs, and arrows
+    LDA.b #$FF : STA $7EF372 : STA $7EF373 : STA $7EF375 : STA $7EF376
 
-	; 999 rupees
-	LDA.b #$E7 : STA $7EF360
-	LDA.b #$03 : STA $7EF361
+    ; 999 rupees
+    LDA.b #$E7 : STA $7EF360
+    LDA.b #$03 : STA $7EF361
 
-	; give the player 9 keys
-	LDA.b #9 : STA $7EF36F
+    ; give the player 9 keys
+    LDA.b #9 : STA $7EF36F
 
   .input_toggle_xy
-	LDA $F7 : CMP.b #$40 : BNE .transition_detection
+    LDA $F7 : CMP.b #$40 : BNE .transition_detection
 
-	LDA $04E4 : EOR.b #$1 : STA $04E4
+    LDA $04E4 : EOR.b #$1 : STA $04E4
 
   .transition_detection
     ; Transition detection {{{
