@@ -11,7 +11,7 @@ lorom
 ;   times into the cloud using the users facebook account as authentication, so we can have
 ;   per-room leaderboards.
 ; - Slowdown/up, frame advance. (Should try to make counters run slower/stand still when paused too.)
-;
+
 ; Notes
 ; Check for ctrl2 hack: 0CDB7E | CODE_0CDC1C
 ; Bage main routine: 03EA1D | CODE_04EA9D
@@ -123,13 +123,13 @@ org $0CDB79
     CPX #$0A00 ; Checks if the player saved in third space.
     ; There's a BNE I didn't wanna touch here.
 org $0CDB7E
-    NOP : NOP : NOP : NOP   ; AF F8 83 00   LDA.l CODE_0083F8
+    NOP : NOP : NOP : NOP   ; AF F8 83 00   LDA.l $0083F8
     NOP : NOP : NOP         ; 29 FF 00      AND #$00FF
     NOP : NOP : NOP         ; C9 60 00      CMP #$0060
-    NOP : NOP               ; F0 21         BEQ CODE_0CDC49
+    NOP : NOP               ; F0 21         BEQ $0CDC49
     NOP : NOP : NOP : NOP   ; AF D9 03 70   LDA $7003D9
     NOP : NOP : NOP         ; C9 01 00      CMP #$0001
-    NOP : NOP               ; D0 18         BNE CODE_0CDC49
+    NOP : NOP               ; D0 18         BNE $0CDC49
 
 
 ; UpdateHearts hook
@@ -143,7 +143,7 @@ org $0DFDCB
 ; and since we do them both at once, we only need one call.
 ;
 ; Overriding the following:
-; CODE_0DFC06:  20 AB FD  JSR HandleHearts
+; $0DFC06:  20 AB FD  JSR HandleHearts
 
 org $0DFC26
     NOP : NOP : NOP
@@ -180,10 +180,9 @@ org $0AFDB0
 
 ; HUD template hijack
 ;
-; The following is overwritten
-;
-;CODE_0DFA8E:        E2 30         SEP #$30
-;CODE_0DFA90:        E6 16         INC $16
+; Overrides the following
+; $0DFA8E: E2 30  SEP #$30
+; $0DFA90: E6 16  INC $16
 org $0DFAAE
     JSL hud_template_hook ; 4 opcodes
 
@@ -782,7 +781,7 @@ nmi_hook:
 
     %a16()
     INC $7C ; per-room counter
-    INC $82 ; segment counter
+    INC $82 ; segment frames
 
     ; Check if frames == 60
     LDA $82 : CMP.w #60 : BNE .end
