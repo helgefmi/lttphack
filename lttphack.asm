@@ -306,7 +306,6 @@ gamemode_hook:
 
   .input_reset_seg
     LDA $8E : CMP #$0030 : BNE .input_qw
-    JSL draw_counters
     STZ $82 : STZ $04E0 : STZ $04E2
 
   .input_qw
