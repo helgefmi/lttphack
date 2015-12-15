@@ -398,159 +398,159 @@ gamemode_hook:
     LDA.b #9 : STA $7EF36F
 
   .input_toggle_xy
-    LDA $F7 : CMP.b #$40 : BNE .transition_detection
+    LDA $F7 : CMP.b #$40 : BNE transition_detection
 
     LDA $04E4 : EOR.b #$1 : STA $04E4
 
-  .transition_detection
+  transition_detection:
     ; Transition detection {{{
 
     %ai8()
-    LDA $10 : CMP $80 : BNE gamemode_changed
-    LDA $11 : CMP $81 : BNE submode_changed
-    LDA $02D8 : CMP $04DA : BNE new_item_received
+    LDA $10 : CMP $80 : BNE .gamemode_changed
+    LDA $11 : CMP $81 : BNE .submode_changed
+    LDA $02D8 : CMP $04DA : BNE .new_item_received
 
     JMP end_of_gamemode_hook
 
-  new_item_received:
+  .new_item_received
     LDA $02D8 : STA $04DA
 
-    JMP only_show_counters
+    JMP .only_show_counters
 
-  gamemode_changed:
+  .gamemode_changed
     LDA $80
 
-    CMP #$05 : BEQ gamemode_load_game
-    CMP #$07 : BEQ gamemode_dungeon
-    CMP #$09 : BEQ gamemode_overworld
-    CMP #$0B : BEQ gamemode_overworld ; "Special" overworld (?)
-    CMP #$13 : BEQ gamemode_victory ; LW?
-    CMP #$16 : BEQ gamemode_victory ; DW?
+    CMP #$05 : BEQ .gamemode_load_game
+    CMP #$07 : BEQ .gamemode_dungeon
+    CMP #$09 : BEQ .gamemode_overworld
+    CMP #$0B : BEQ .gamemode_overworld ; "Special" overworld (?)
+    CMP #$13 : BEQ .gamemode_victory ; LW?
+    CMP #$16 : BEQ .gamemode_victory ; DW?
 
-    JMP end_of_transition_detection
+    JMP .end
 
-  gamemode_victory:
+  .gamemode_victory
     LDA $10
 
     ; Just killed a boss. Loading overworld.
-    CMP #$08 : BEQ show_and_reset_counters
+    CMP #$08 : BEQ .show_and_reset_counters
 
-    JMP end_of_transition_detection
+    JMP .end
 
-  gamemode_load_game:
+  .gamemode_load_game
     LDA $10
 
     ; Link in bed
-    CMP #$07 : BEQ show_and_reset_counters
+    CMP #$07 : BEQ .show_and_reset_counters
 
-    JMP end_of_transition_detection
+    JMP .end
 
-  gamemode_dungeon:
+  .gamemode_dungeon
     LDA $10
 
     ; Text mode. Don't reset counters.
-    CMP #$0E : BEQ only_show_counters
+    CMP #$0E : BEQ .only_show_counters
 
     ; Dungeon -> Overworld
-    CMP #$0F : BEQ show_and_reset_counters
+    CMP #$0F : BEQ .show_and_reset_counters
 
     ; Caught by Wall Master
-    CMP #$11 : BEQ show_and_reset_counters
+    CMP #$11 : BEQ .show_and_reset_counters
 
-    JMP end_of_transition_detection
+    JMP .end
 
-  gamemode_overworld:
+  .gamemode_overworld
     LDA $10
 
     ; OW (special) -> OW
-    CMP #$09 : BEQ show_and_reset_counters
+    CMP #$09 : BEQ .show_and_reset_counters
 
     ; OW -> OW (special)
-    CMP #$0B : BEQ show_and_reset_counters
+    CMP #$0B : BEQ .show_and_reset_counters
 
     ; Text mode. Don't reset counters.
-    CMP #$0E : BEQ only_show_counters
+    CMP #$0E : BEQ .only_show_counters
 
     ; Overworld -> Dungeon
-    CMP #$0F : BEQ show_and_reset_counters
+    CMP #$0F : BEQ .show_and_reset_counters
 
     ; Fall in hole
-    CMP #$11 : BEQ show_and_reset_counters
+    CMP #$11 : BEQ .show_and_reset_counters
 
-    JMP end_of_transition_detection
+    JMP .end
 
-  submode_changed:
+  .submode_changed
     LDA $10
 
     ; Dungeon
-    CMP #$07 : BEQ submode_dungeon
+    CMP #$07 : BEQ .submode_dungeon
 
     ; Overworld
-    CMP #$09 : BEQ submode_overworld
+    CMP #$09 : BEQ .submode_overworld
 
-    JMP end_of_transition_detection
+    JMP .end
 
-  show_and_reset_counters:
+  .show_and_reset_counters
     ; Reset per-room counters
     %a16()
     LDA $7C : STA $2BC : STZ $7C
     LDA $7E : STA $2BE : STZ $7E
 
     JSL draw_counters
-    JMP end_of_transition_detection
+    JMP .end
 
-  only_show_counters:
+  .only_show_counters
     %a16()
     LDA $7C : STA $2BC
     LDA $7E : STA $2BE
 
     JSL draw_counters
-    JMP end_of_transition_detection
+    JMP .end
 
-  submode_overworld:
+  .submode_overworld
     LDA $11
 
     ; Normal transition
-    CMP #$01 : BEQ show_and_reset_counters
+    CMP #$01 : BEQ .show_and_reset_counters
 
     ; Transition into Dark Woods
-    CMP #$0D : BEQ show_and_reset_counters
+    CMP #$0D : BEQ .show_and_reset_counters
 
     ; Mirror
-    CMP #$23 : BEQ show_and_reset_counters
+    CMP #$23 : BEQ .show_and_reset_counters
 
     ; Whirlpool
-    CMP #$2E : BEQ show_and_reset_counters
+    CMP #$2E : BEQ .show_and_reset_counters
 
-    JMP end_of_transition_detection
+    JMP .end
 
-  submode_dungeon:
+  .submode_dungeon
     LDA $11
 
     ; Normal transition intra-room
-    CMP #$01 : BEQ show_and_reset_counters
+    CMP #$01 : BEQ .show_and_reset_counters
 
     ; Normal transition inter-room
-    CMP #$02 : BEQ show_and_reset_counters
+    CMP #$02 : BEQ .show_and_reset_counters
 
     ; Transition upwards
-    CMP #$06 : BEQ show_and_reset_counters
+    CMP #$06 : BEQ .show_and_reset_counters
 
     ; Transition upwards
-    CMP #$07 : BEQ show_and_reset_counters
+    CMP #$07 : BEQ .show_and_reset_counters
 
     ; Walking up straight inter-room staircase
-    CMP #$12 : BEQ show_and_reset_counters
+    CMP #$12 : BEQ .show_and_reset_counters
 
     ; Walking down straight inter-room staircase
-    CMP #$13 : BEQ show_and_reset_counters
+    CMP #$13 : BEQ .show_and_reset_counters
 
     ; Transition inter-room staircase
-    CMP #$0E : BEQ show_and_reset_counters
+    CMP #$0E : BEQ .show_and_reset_counters
 
-    JMP end_of_transition_detection
+    JMP .end
 
-  end_of_transition_detection:
+  .end
     %a8()
     ; Persist new game mode/submode.
     LDA $10 : STA $80
@@ -566,9 +566,10 @@ gamemode_hook:
 
 draw_hearts_hook:
     %a8()
-    LDA $7EF36D : CMP $04CC : BEQ .qw_indicator
+    LDA $7EF36D : CMP $04CC : BEQ qw_indicator
     STA $04CC
 
+  draw_hearts:
     ; check if we have full hp
     LDA $7EF36C : CMP $7EF36D : BNE .not_full_hp
 
@@ -597,7 +598,7 @@ draw_hearts_hook:
     LDA $7EF36C : AND #$00FF : LSR : LSR : LSR : JSL hex_to_dec : LDX.w #!POS_CONTAINERS : JSL draw2_white
 
 
-  .qw_indicator
+  qw_indicator:
     %a16()
     ; Check if state changed at all, skip if not.
     LDA $04D6 : CMP $04D8 : BEQ enemy_hp
@@ -634,8 +635,8 @@ draw_hearts_hook:
     ; Enemy Heart GFX
     LDA #$2CA0 : STA !POS_MEM_ENEMY_HEART_GFX
 
-  ; Shamelessly stolen from Total's SM hack.
   input_display:
+    ; Shamelessly stolen from Total's SM hack.
     LDA $8E : CMP $04D4 : BEQ xy_display
 
     STA $04D4
@@ -841,7 +842,7 @@ load_tile_gfx_hook:
     LDX.b #00
     LDY.b #12 ; number of tiles
 
-  ltg_loop:
+  .loop
     ; loop
     LDA hud_table,x : STA $2118 : INX : INX
     LDA hud_table,x : STA $2118 : INX : INX
@@ -851,10 +852,10 @@ load_tile_gfx_hook:
     LDA hud_table,x : STA $2118 : INX : INX
     LDA hud_table,x : STA $2118 : INX : INX
     LDA hud_table,x : STA $2118 : INX : INX
-    DEY : BEQ ltg_end
-    JMP ltg_loop
+    DEY : BEQ .end
+    JMP .loop
 
-  ltg_end:
+  .end
     PLB
 
     RTL
