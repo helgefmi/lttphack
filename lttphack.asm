@@ -203,14 +203,26 @@ gamemode_hook:
     LDA $F0 : STA $8E
     LDA $F2 : STA $8F
 
-    ; ACM Save State {{{
+    ; Acmlm's Save State {{{
 
     %ai16()
     LDA $8E : CMP #$1060 : BEQ +
     JMP b
 
-  + %a8()
-    JSR ppuoff
++   %a8()
+    ; store DMA to SRAM
+    LDY #$0000 : LDX #$0000
+
+-   LDA $4300, X : STA $770000, X
+    INX
+    INY : CPY #$000B : BNE -
+    CPX #$007B : BEQ +
+    INX : INX : INX : INX : INX
+    LDY #$0000
+    JMP -
+    ; end of DMA to SRAM
+
+  + JSR ppuoff
     LDA #$80 : STA $4310
     JSR func_dma2
 
@@ -247,7 +259,8 @@ gamemode_hook:
     LDA #$01 : STA $4310
     LDA #$18 : STA $4311
 
-  + JMP end
+  + %a8()
+    JMP end
 
   ppuoff:
     LDA #$80 : STA $13 : STA $2100
@@ -290,7 +303,21 @@ gamemode_hook:
 
   end:
     JSR func_dma1
-    LDA #$A1 : STA $4200
+
+    ; load DMA from SRAM
+    LDY #$0000 : LDX #$0000
+
+    %a8()
+-   LDA $770000, X : STA $4300, X
+    INX
+    INY : CPY #$000B : BNE -
+    CPX #$007B : BEQ +
+    INX : INX : INX : INX : INX
+    LDY #$0000
+    JMP -
+    ; end of DMA from SRAM
+
+  + LDA #$A1 : STA $4200
     LDA #$0F : STA $13 : STA $2100
     %ai8()
     LDA #$01 : STA $04CB
