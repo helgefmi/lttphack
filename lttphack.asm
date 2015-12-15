@@ -13,8 +13,6 @@ lorom
 ; - Slowdown/up, frame advance. (Should try to make counters run slower/stand still when paused too.)
 
 ; Notes
-; Check for ctrl2 hack: 0CDB7E | CODE_0CDC1C
-; Bage main routine: 03EA1D | CODE_04EA9D
 ; 7E045A03 -> always lit rooms
 
 ; Unused ram used:
@@ -30,6 +28,7 @@ lorom
 ; - $04CB[0x25] - Unused (just lotsa ram niz!)
 ;   * $04CB[0x1] -> set if we just save/loaded
 ;   * $04CC[0x2] -> hearts last frame
+;   * $04CE[0x1] -> toggle lit rooms
 ;   * $04D0[0x4] -> temp stuff for frames -> seconds
 ;   * $04D4[0x2] -> copy of $8E
 ;   * $04D6[0x2] -> QW check enabled?
@@ -398,9 +397,14 @@ gamemode_hook:
     LDA.b #9 : STA $7EF36F
 
   .input_toggle_xy
-    LDA $F7 : CMP.b #$40 : BNE transition_detection
+    LDA $F7 : CMP.b #$40 : BNE .input_toggle_always_lit
 
     LDA $04E4 : EOR.b #$1 : STA $04E4
+
+  .input_toggle_always_lit
+    LDA $F5 : CMP.b #$04 : BNE transition_detection
+
+    LDA $04CE : EOR.b #$1 : STA $04CE
 
   transition_detection:
     ; Transition detection {{{
@@ -669,7 +673,7 @@ draw_hearts_hook:
 
   .no_change
     LDA $04E4 : BNE .show
-    JMP dhh_end
+    JMP always_lit
 
   .hide
     %a16()
@@ -677,7 +681,7 @@ draw_hearts_hook:
     LDA #$207F : LDX.w #!POS_XY
     STA $7EC700,x : STA $7EC702,x : STA $7EC704,x
     STA $7EC706,x : STA $7EC708,x : STA $7EC70A,x
-    JMP dhh_end
+    JMP always_lit
 
   .show
     %a16()
@@ -685,6 +689,11 @@ draw_hearts_hook:
     LDA $20 : TAY
     LDA.w #!POS_XY : STA $04D0
     JSL draw_coordinates
+
+  always_lit:
+    %a8()
+    LDA $04CE : BEQ dhh_end
+    LDA #$03 : STA $045A
 
   dhh_end:
     %a16()
