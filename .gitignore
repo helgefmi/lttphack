@@ -2,3 +2,5 @@
 *.sfc
 *.pyc
 .*.sw[nop]
+*.txt
+*.srm
