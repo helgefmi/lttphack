@@ -1,4 +1,4 @@
-Rough todo
+rough todo
 ==========
 
 [num] = Priority. Lower numbers = higher priority. Only [1] is guaranteed to be tried to fit into the next version.
@@ -26,13 +26,15 @@ Rough todo
 
 - [3] Reenable floor indicator and position it underneath counters.
 
-- [3] Lagometer. Toggleable feature that makes the magic go down/up depending on how laggy a frame was (can use scanline counting for this).
+- [3] Lagometer. Toggleable feature that makes the magic go down/up depending on how laggy a frame was.
 
-- [3] Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances the game one frame. Would be good for clip practice.
+- [3] Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances
+      the game one frame. Would be good for clip practice.
 
 - [3] Make counters not run while game is paused (frame advance mode). Can be useful for TAS-ing rooms.
 
-- [8] Record inputs (and play them back from state). The holy grail. Would need to replace the RNG to a deterministic one. Probably won't happen.
+- [8] Record inputs (and play them back from state). The holy grail. Would need to replace the RNG to a deterministic
+      one. Probably won't happen.
 
 - [9] Level editor.
 
