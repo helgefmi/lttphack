@@ -36,14 +36,6 @@
 !ram_qw_indicator_toggle = $7F769C
 !ram_xy_toggle = $7F769E
 
-!ram_cm_old_gamemode = $7F76A0
-!ram_cm_old_submode = $7F76A1
-!ram_cm_mode = $7F76A2
-!ram_cm_active_menu_indices = $7F76A4
-!lowram_cm_cursor = $04E8
-
-!ram_nmi_do_cm_tileset_dma = $7F7700
-
 !ram_debug = $7F7777
 
 ;-------------------------

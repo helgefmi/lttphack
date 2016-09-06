@@ -8,3 +8,4 @@ incsrc hud.asm          ; $218000
 incsrc nmi.asm          ; $228000
 incsrc draw.asm         ; $238000
 incsrc tiles.asm        ; $248000
+incsrc custom_menu.asm  ; $258000
