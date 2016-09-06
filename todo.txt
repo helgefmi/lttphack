@@ -3,12 +3,12 @@ Rough todo
 
 [num] = Priority. Lower numbers = higher priority. Only [1] is guaranteed to be tried to fit into the next version.
 
-- [1] Code some general menu:
-    - Poking memory.
-    - Execute a JSL.
-    - Submenues.
-    - Be able to "go back".
-    - Remember last position.
+x [1] Code some general menu:
+    x Poking memory.
+    x Execute a JSR.
+    x Submenues.
+    x Be able to "go back".
+    x Remember last position.
 
 - [1] Move controller 2 inputs (use menu).
 
@@ -23,6 +23,8 @@ Rough todo
 - [2] Add some footprint w/version (intro, file select, pause menu).
 
 - [2] Make it possible to show the hidden line-of-sight sprites.
+
+- [3] Ingame manual counter (to practice a trick X times and see your success rate).
 
 - [3] Reenable floor indicator and position it underneath counters.
 

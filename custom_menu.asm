@@ -42,13 +42,15 @@ CM_Local:
 
 CM_Init:
     JSR cm_clear_buffer
+    JSR cm_clear_stack
 
   %ppu_off()
     JSR cm_transfer_tilemap
   %ppu_on()
 
   %a16()
-    LDA #cm_mainmenu_indices : STA !ram_cm_active_menu_indices
+    LDA #$0000 : STA !lowram_cm_menu_stack_index
+    LDA #cm_mainmenu_indices : STA !ram_cm_menu_stack
   %a8()
 
     %inc_mode()
@@ -101,14 +103,16 @@ CM_Active:
 
   .pressed_up
   %a16()
-    LDA !lowram_cm_cursor : DEC : DEC : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor
+    LDX !lowram_cm_menu_stack_index
+    LDA !lowram_cm_cursor, X : DEC : DEC : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor, X
   %a8()
     JSR cm_draw_active_menu
     BRA .did_update_gfx
 
   .pressed_down
   %a16()
-    LDA !lowram_cm_cursor : INC : INC : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor
+    LDX !lowram_cm_menu_stack_index
+    LDA !lowram_cm_cursor, X : INC : INC : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor, X
   %a8()
     JSR cm_draw_active_menu
     BRA .did_update_gfx
@@ -149,7 +153,26 @@ CM_Return:
     RTS
 
 
+cm_clear_stack:
+  ; assumes I=8
+  %a16()
+    LDX.b #$00
+    LDA #$0000
+
+  .loop
+
+    STA !lowram_cm_cursor, X : STA !lowram_cm_menu_stack_index, X
+
+    INX : INX : CPX.b #$10
+
+    BNE .loop
+
+  %a8()
+    RTS
+
+
 cm_clear_buffer:
+  ; assumes I=8
   %a16()
 
     LDX.b #$00
@@ -203,12 +226,18 @@ cm_draw_active_menu:
     ; $02[0x2] = current menu item index
     ; then we call the action draw method, which can do whatever it wants.
   %ai16()
-    LDA !ram_cm_active_menu_indices : STA $00
+    STA !ram_debug
+    LDX !lowram_cm_menu_stack_index
+    LDA !ram_cm_menu_stack, X : STA $00
     LDY #$0000
 
   .next_item
+    LDX !lowram_cm_menu_stack_index
+    TYA : CMP !lowram_cm_cursor, X : BEQ .selected
     LDA #$0020
-    CPY !lowram_cm_cursor : BNE .not_selected
+    BRA .not_selected
+
+  .selected
     LDA #$0024
     
   .not_selected
@@ -221,7 +250,7 @@ cm_draw_active_menu:
     ; draw function to use its data however it likes, and jump to it.
     LDA ($02) : TAX
     INC $02 : INC $02
-    JSR (cm_action_draw_table, x)
+    JSR (cm_action_draw_table, X)
 
     PLY
     INY : INY
@@ -238,8 +267,8 @@ cm_draw_text:
 
   .loop
     LDA ($02), y : CMP #$FF : BEQ .end
-    STA $1000, x : INX
-    LDA $0E : STA $1000, x : INX
+    STA $1000, X : INX
+    LDA $0E : STA $1000, X : INX
     INY : JMP .loop
 
   .end
@@ -252,26 +281,22 @@ cm_draw_text:
 ; ---------
 
 cm_fix_cursor_wrap:
-  TAX
-
+  ; X = !lowram_cm_menu_stack_index
   %ai16()
-    LDA !ram_cm_active_menu_indices : STA $00
+    PHA
+    LDA !ram_cm_menu_stack, X : STA $00
     LDY #$0000
 
   .loop
-  %a16()
     LDA ($00), y : BEQ .after_loop
     INY : INY
     JMP .loop
 
   .after_loop
-  %ai8()
-
-    ; X = cursor
+    ; Top of stack = cursor
     ; Y = max + 2
-
     STY $00
-    TXA
+    PLA
 
     BMI .set_to_max
     CMP $00 : BEQ .set_to_zero : BCS .set_to_zero
@@ -279,7 +304,7 @@ cm_fix_cursor_wrap:
     BRA .end
 
   .set_to_zero
-    LDA.b #$00
+    LDA #$0000
     BRA .end
 
   .set_to_max
@@ -293,14 +318,14 @@ cm_fix_cursor_wrap:
 
 cm_execute_cursor:
   %ai16()
-    STA !ram_debug
-    LDA !ram_cm_active_menu_indices : STA $00
-    LDY !lowram_cm_cursor
+    LDX !lowram_cm_menu_stack_index
+    LDA !ram_cm_menu_stack, X : STA $00
+    LDY !lowram_cm_cursor, X
     LDA ($00), y : STA $00
 
     LDA ($00) : INC $00 : INC $00 : TAX
 
-    JSR (cm_action_execute_table, x)
+    JSR (cm_action_execute_table, X)
   %ai8()
     RTS
 
@@ -311,6 +336,8 @@ cm_execute_cursor:
 cm_action_execute_table:
     dw cm_action_toggle_byte
     dw cm_action_jsr
+    dw cm_action_submenu
+    dw cm_action_back
 
 cm_action_toggle_byte:
   %a16()
@@ -325,12 +352,35 @@ cm_action_jsr:
     LDA ($00) : INC $00 : INC $00 : STA $02
   %a8()
     LDX #$0000
-    JSR ($0002,x)
+    JSR ($0002, X)
     RTS
+
+cm_action_submenu:
+  %a16()
+    LDA !lowram_cm_menu_stack_index : INC : INC : STA !lowram_cm_menu_stack_index : TAX
+    LDA ($00) : INC $00 : INC $00 : STA !ram_cm_menu_stack, X
+  %ai8()
+    JSR cm_clear_buffer
+  %i16()
+    RTS
+
+cm_action_back:
+  %a16()
+    LDA !lowram_cm_menu_stack_index : DEC : DEC : BPL .done
+
+    LDA #$0000
+
+  .done
+    STA !lowram_cm_menu_stack_index
+  %a8()
+    RTS
+
 
 cm_action_draw_table:
     dw cm_action_draw_toggle_byte
     dw cm_action_draw_jsr
+    dw cm_action_draw_submenu
+    dw cm_action_draw_back
 
 
 cm_action_draw_toggle_byte:
@@ -352,7 +402,7 @@ cm_action_draw_toggle_byte:
 
   .draw_text
     ; draw checkbox and text
-    STA $1000, x : INX : INX
+    STA $1000, X : INX : INX
     JSR cm_draw_text
     
     RTS
@@ -362,7 +412,26 @@ cm_action_draw_jsr:
     TYA : ASL : ASL : ASL : ASL : ASL
     CLC : ADC #$0144 : TAX
 
-    INc $02 : INC $02
+    INC $02 : INC $02
+    JSR cm_draw_text
+    
+    RTS
+
+cm_action_draw_submenu:
+    ; Find screen position from Y (item number)
+    TYA : ASL : ASL : ASL : ASL : ASL
+    CLC : ADC #$0144 : TAX
+
+    INC $02 : INC $02
+    JSR cm_draw_text
+    
+    RTS
+
+cm_action_draw_back:
+    ; Find screen position from Y (item number)
+    TYA : ASL : ASL : ASL : ASL : ASL
+    CLC : ADC #$0144 : TAX
+
     JSR cm_draw_text
     
     RTS
@@ -372,17 +441,35 @@ cm_action_draw_jsr:
 ; --------------
 
 cm_mainmenu_indices:
-    dw #cm_mainmenu_tezt
+    dw #cm_mainmenu_test_jsr
+    dw #cm_mainmenu_test_submenu
     dw #cm_mainmenu_toggle_xy
     dw #cm_mainmenu_toggle_qw
     dw #cm_mainmenu_toggle_lit_rooms
     dw #cm_mainmenu_toggle_oob
     dw #$0000
 
-cm_mainmenu_tezt:
+cm_submenu_indices:
+    dw #cm_menuitem_test_back
+    dw #cm_mainmenu_test_submenu
+    dw #cm_mainmenu_toggle_lit_rooms
+    dw #cm_mainmenu_toggle_oob
+    dw #$0000
+
+
+cm_menuitem_test_back:
+    dw !CM_ACTION_BACK
+    db "Back", #$FF
+
+cm_mainmenu_test_jsr:
     dw !CM_ACTION_JSR
     dw #tezt
-    db "Tezt", #$FF
+    db "JSR dat coord", #$FF
+
+cm_mainmenu_test_submenu:
+    dw !CM_ACTION_SUBMENU
+    dw #cm_submenu_indices
+    db "Submenu", #$FF
 
 cm_mainmenu_toggle_xy:
     dw !CM_ACTION_TOGGLE_BYTE

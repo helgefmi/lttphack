@@ -1,21 +1,21 @@
 ; ==== RAM usage ====
 
-!lowram_room_realtime = $04D0
-!lowram_room_gametime = $04D2
-!lowram_seg_frames = $04D4
-!lowram_seg_minutes = $04D6
-!lowram_seg_seconds = $04D8
+!lowram_room_realtime = $04CC
+!lowram_room_gametime = $04CE
+!lowram_seg_frames = $04D0
+!lowram_seg_minutes = $04D2
+!lowram_seg_seconds = $04D4
 
-!lowram_room_realtime_copy = $04DA
-!lowram_room_gametime_copy = $04DC
+!lowram_room_realtime_copy = $04D6
+!lowram_room_gametime_copy = $04D8
 
-!lowram_last_frame_did_saveload = $04DE
-!lowram_last_frame_hearts = $04DF
-!lowram_draw_tmp = $04E0
-!lowram_draw_tmp2 = $04E2
-!lowram_draw_tmp3 = $04E4
+!lowram_last_frame_did_saveload = $04DA
+!lowram_last_frame_hearts = $04DB
+!lowram_draw_tmp = $04DC
+!lowram_draw_tmp2 = $04DE
+!lowram_draw_tmp3 = $04E0
 
-!lowram_oob_toggle = $04E6
+!lowram_oob_toggle = $04E2
 
 !ram_gamemode_copy = $7F767E
 !ram_submode_copy = $7F7680
@@ -41,8 +41,10 @@
 
 !ram_cm_old_gamemode = $7F76A0
 !ram_cm_old_submode = $7F76A1
-!ram_cm_active_menu_indices = $7F76A2
-!lowram_cm_cursor = $04E8
+!ram_cm_menu_stack = $7F76B0 ; NOTE: NEEDS 0x10 BYTES OF SPACE
+
+!lowram_cm_cursor = $04E4
+!lowram_cm_menu_stack_index = $04EC
 
 ;-------------------------
 ; HUD
@@ -71,6 +73,8 @@
 
 !CM_ACTION_TOGGLE_BYTE = #$00
 !CM_ACTION_JSR = #$02
+!CM_ACTION_SUBMENU = #$04
+!CM_ACTION_BACK = #$06
 
 ;-------------------------
 ; From ROM
