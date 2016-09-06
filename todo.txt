@@ -1,4 +1,4 @@
-rough todo
+Rough todo
 ==========
 
 [num] = Priority. Lower numbers = higher priority. Only [1] is guaranteed to be tried to fit into the next version.

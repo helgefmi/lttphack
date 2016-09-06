@@ -14,7 +14,7 @@ org $0080A5
 
 macro inc_mode()
     ; Assumes A=8
-    LDA !ram_cm_mode : INC : STA !ram_cm_mode
+    LDA $11 : INC : STA $11
 endmacro
 
 org $258000
@@ -28,7 +28,7 @@ CM_Main:
 
 
 CM_Local:
-    LDA !ram_cm_mode
+    LDA $11
 
     JSL !UseImplicitRegIndexedLocalJumpTable
 
@@ -185,7 +185,7 @@ cm_transfer_tilemap:
     LDX #$7000 : STX $2116 ; VRAM address (E000 in vram)
     LDX #cm_hud_table : STX $4302 ; Source offset 
     LDA #$25 : STA $4304 ; Source bank
-    LDX #$0720 : STX $4305 ; Size (0x10 = 1 tile)
+    LDX #$0740 : STX $4305 ; Size (0x10 = 1 tile)
     LDA #$01 : STA $4300 ; word, normal increment (DMA MODE)
     LDA #$18 : STA $4301 ; destination (VRAM write)
     LDA #$01 : STA $420B ; initiate DMA (channel 1)
@@ -193,45 +193,41 @@ cm_transfer_tilemap:
     %i8()
     RTS
 
+; ---------
+; Draw
+; ---------
 
 cm_draw_active_menu:
+    ; This functions sets:
+    ; $00[0x2] = menu indices
+    ; $02[0x2] = current menu item index
+    ; then we call the action draw method, which can do whatever it wants.
   %ai16()
     LDA !ram_cm_active_menu_indices : STA $00
     LDY #$0000
-    LDX #$0144
 
-  .loop
-    CPY !lowram_cm_cursor : BEQ .on_cursor
+  .next_item
+    LDA #$0020
+    CPY !lowram_cm_cursor : BNE .not_selected
+    LDA #$0024
+    
+  .not_selected
+    STA $0E
+    LDA ($00), y : BEQ .end : STA $02
 
-  %a8()
-    LDA.b #$24 : STA $04
+    PHY
+
+    ; Pull out the action index, increment $02 so its ready for the associated
+    ; draw function to use its data however it likes, and jump to it.
+    LDA ($02) : TAX
+    INC $02 : INC $02
+    JSR (cm_action_draw_table, x)
+
+    PLY
+    INY : INY
     JMP .next_item
 
-  .on_cursor
-  %a8()
-    LDA.b #$20 : STA $04
-    
-  .next_item
-  %a16()
-    LDA ($00), y : BEQ .end
-    
-    PHY : PHX
-
-    STA $02 : JSR cm_draw_text
-
-  %ai8()
-    INY : LDA ($02), y : TAX
-    JSR (cm_action_draw_table, x)
-  %ai16()
-
-    PLX : PLY
-    TXA : CLC : ADC #$0040 : TAX
-    INY : INY
-    JMP .loop
-
   .end
-    STA !ram_debug
-
   %ai8()
     RTS
 
@@ -243,7 +239,7 @@ cm_draw_text:
   .loop
     LDA ($02), y : CMP #$FF : BEQ .end
     STA $1000, x : INX
-    LDA $04 : STA $1000, x : INX
+    LDA $0E : STA $1000, x : INX
     INY : JMP .loop
 
   .end
@@ -251,13 +247,9 @@ cm_draw_text:
     RTS
 
 
-cm_draw_icon:
-  %a8()
-    STA $1000, x : INX
-    LDA #$20 : STA $1000, x
-  %a16()
-    RTS
-
+; ---------
+; Cursor
+; ---------
 
 cm_fix_cursor_wrap:
   TAX
@@ -301,77 +293,121 @@ cm_fix_cursor_wrap:
 
 cm_execute_cursor:
   %ai16()
+    STA !ram_debug
     LDA !ram_cm_active_menu_indices : STA $00
     LDY !lowram_cm_cursor
-
-    ; Put the correct menu item at $00
     LDA ($00), y : STA $00
 
-    ; Skip the text
-    LDY #$0000
-  %a8()
-  .loop
-    LDA ($00), y : CMP #$FF : BEQ .done_with_text
-    INY : BRA .loop
+    LDA ($00) : INC $00 : INC $00 : TAX
 
-  .done_with_text
-    INY : LDA ($00), y
-    TAX
-    INY
-
+    JSR (cm_action_execute_table, x)
   %ai8()
-    JSR (cm_action_table, x)
     RTS
 
+; --------------
+; Actions
+; --------------
 
-cm_action_table:
+cm_action_execute_table:
     dw cm_action_toggle_byte
-
-print pc
-cm_action_draw_table:
-    dw cm_action_draw_toggle_byte
-
-
-cm_action_draw_toggle_byte:
-    RTS
+    dw cm_action_jsr
 
 cm_action_toggle_byte:
   %a16()
-    LDA ($00), y : STA $04
+    LDA ($00) : INC $00 : INC $00 : STA $02
   %a8()
-    INY : INY : LDA ($00), y : STA $06
-    LDA [$04] : EOR.b #$01 : STA [$04]
+    LDA ($00) : INC $00 : STA $04
+    LDA [$02] : EOR #$01 : STA [$02]
     RTS
 
+cm_action_jsr:
+  %a16()
+    LDA ($00) : INC $00 : INC $00 : STA $02
+  %a8()
+    LDX #$0000
+    JSR ($0002,x)
+    RTS
 
-cm_hud_table:
-    incbin cm_gfx.bin;
+cm_action_draw_table:
+    dw cm_action_draw_toggle_byte
+    dw cm_action_draw_jsr
 
+
+cm_action_draw_toggle_byte:
+    ; Find screen position from Y (item number)
+    TYA : ASL : ASL : ASL : ASL : ASL
+    CLC : ADC #$0144 : TAX
+
+    ; grab the memory address (long)
+    LDA ($02) : INC $02 : INC $02 : STA $04
+    LDA ($02) : INC $02 : STA $06
+
+    ; grab the value at that memory address
+    LDA [$04] : BNE .checked
+    LDA #$2472
+    BRA .draw_text
+
+  .checked
+    LDA #$2473
+
+  .draw_text
+    ; draw checkbox and text
+    STA $1000, x : INX : INX
+    JSR cm_draw_text
+    
+    RTS
+
+cm_action_draw_jsr:
+    ; Find screen position from Y (item number)
+    TYA : ASL : ASL : ASL : ASL : ASL
+    CLC : ADC #$0144 : TAX
+
+    INc $02 : INC $02
+    JSR cm_draw_text
+    
+    RTS
+
+; --------------
+; MAIN MENU
+; --------------
 
 cm_mainmenu_indices:
+    dw #cm_mainmenu_tezt
     dw #cm_mainmenu_toggle_xy
     dw #cm_mainmenu_toggle_qw
     dw #cm_mainmenu_toggle_lit_rooms
     dw #cm_mainmenu_toggle_oob
     dw #$0000
 
+cm_mainmenu_tezt:
+    dw !CM_ACTION_JSR
+    dw #tezt
+    db "Tezt", #$FF
 
 cm_mainmenu_toggle_xy:
-    db "Coordinates", #$FF
-    db !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE_BYTE
     dl !ram_xy_toggle
+    db "Coordinates", #$FF
 
 cm_mainmenu_toggle_qw:
-    db "Quickwarp indicator", #$FF
-    db !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE_BYTE
     dl !ram_qw_indicator_toggle
+    db "Quickwarp indicator", #$FF
 
 cm_mainmenu_toggle_oob:
-    db "OoB mode", #$FF
-    db !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE_BYTE
     dl !lowram_oob_toggle
+    db "OoB mode", #$FF
 
 cm_mainmenu_toggle_lit_rooms:
-    db "Lit rooms", #$FF
-    db !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE_BYTE
     dl !ram_lit_rooms_toggle
+    db "Lit rooms", #$FF
+
+
+tezt:
+    LDA.b #$01 : STA !ram_xy_toggle
+    RTS
+
+cm_hud_table:
+    incbin cm_gfx.bin;

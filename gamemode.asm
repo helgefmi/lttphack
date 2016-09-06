@@ -227,7 +227,7 @@ gamemode_hook:
     %ai8()
     LDA $10 : STA !ram_cm_old_gamemode
     LDA $11 : STA !ram_cm_old_submode
-    LDA.b #$00 : STA !ram_cm_mode
+    LDA.b #$00 : STA $11
     LDA #$0C : STA $10
     LDA #$00 : STA $11
     RTL

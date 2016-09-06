@@ -13,8 +13,9 @@
 !lowram_last_frame_hearts = $04DF
 !lowram_draw_tmp = $04E0
 !lowram_draw_tmp2 = $04E2
+!lowram_draw_tmp3 = $04E4
 
-!lowram_oob_toggle = $04E4
+!lowram_oob_toggle = $04E6
 
 !ram_gamemode_copy = $7F767E
 !ram_submode_copy = $7F7680
@@ -37,6 +38,11 @@
 !ram_xy_toggle = $7F769E
 
 !ram_debug = $7F7777
+
+!ram_cm_old_gamemode = $7F76A0
+!ram_cm_old_submode = $7F76A1
+!ram_cm_active_menu_indices = $7F76A2
+!lowram_cm_cursor = $04E8
 
 ;-------------------------
 ; HUD
@@ -64,6 +70,7 @@
 ;-------------------------
 
 !CM_ACTION_TOGGLE_BYTE = #$00
+!CM_ACTION_JSR = #$02
 
 ;-------------------------
 ; From ROM

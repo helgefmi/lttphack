@@ -154,8 +154,7 @@ update_hearts_hook:
   xy_display:
     %a8()
     LDA !ram_xy_toggle : CMP !ram_last_frame_xy_toggle : BEQ .no_change
-    LDA !ram_xy_toggle : STA !ram_last_frame_xy_toggle
-    LDA !ram_xy_toggle : BNE .show
+    LDA !ram_xy_toggle : STA !ram_last_frame_xy_toggle : BNE .show
     JMP .hide
 
   .no_change
@@ -164,7 +163,6 @@ update_hearts_hook:
 
   .hide
     %a16()
-    DEC $04E6
     LDA #$207F : LDX.w #!POS_XY
     STA $7EC700,x : STA $7EC702,x : STA $7EC704,x
     STA $7EC706,x : STA $7EC708,x : STA $7EC70A,x
