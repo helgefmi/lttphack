@@ -1,0 +1,102 @@
+Rough todo
+==========
+
+[num] = Priority. Lower numbers = higher priority. Only [1] is guaranteed to be tried to fit into the next version.
+
+- [1] Code some general menu:
+    - Poking memory.
+    - Execute a JSL.
+    - Submenues.
+    - Be able to "go back".
+    - Remember last position.
+
+- [1] Move controller 2 inputs (use menu).
+
+- [1] Add buncha cool stuff to the menu. Inventory/game state editing etc.
+
+- [1] Teleport "anywhere".
+
+- [1] Show all 3 digits for enemy HP.
+
+- [2] Hack Module_Intro to go to file select as soon as everything needed is initialized.
+
+- [2] Add some footprint w/version (intro, file select, pause menu).
+
+- [2] Make it possible to show the hidden line-of-sight sprites.
+
+- [3] Reenable floor indicator and position it underneath counters.
+
+- [3] Lagometer. Toggleable feature that makes the magic go down/up depending on how laggy a frame was (can use scanline counting for this).
+
+- [3] Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances the game one frame. Would be good for clip practice.
+
+- [3] Make counters not run while game is paused (frame advance mode). Can be useful for TAS-ing rooms.
+
+- [8] Record inputs (and play them back from state). The holy grail. Would need to replace the RNG to a deterministic one. Probably won't happen.
+
+- [9] Level editor.
+
+Menu Spec
+=========
+
+[ ] = checkboxes
+    press A to toggle.
+
+* = buttons/actions
+    press A to perform the action.
+
+[A | B | C] = choice fields
+    press A to open a dropdown or use < > to toggle between choices.
+
+[0-999] = text inputs
+    hold ^ or v to increment/decrement
+
+- Inventory
+    * Get full equipment
+    [ ] Bow
+    [ ] Boomerang
+    [ ] .. etc
+
+- Equipment/Resources
+    Sword: [Fighter | Master | Tempered | Gold]
+    Shield, armor..
+    Rupees: [0-999]
+    Hearts, bombs, arrows..
+
+- Teleport
+    [ ] Change to appropriate game state (equipment etc) for the chosen segment
+        - Mode [Any% NMG | 100% | ..]
+    * Escape
+    * Eastern
+    * Desert (Overworld)
+    * Desert (Dungeon)
+    * etc..
+
+- Game state
+    Game phase [Uncle | Saved Zeldo | Helped old man | ..?]
+    [ ] Killed Armos
+    [ ] Killed Lammolas
+    etc..
+    [ ] Opened theives' Town
+    [ ] Did digging game
+    etc..
+
+- Toggle feature
+    [ ] Show coordinates
+    [ ] Show quick warp indicator
+    [ ] Make dark rooms lit
+    [ ] Toggle OoB Mode
+    [ ] Input display
+    [ ] Show LoS sprites
+
+Notes
+=====
+    %a16()
+    LDA.w #$6 : STA $1AF0
+
+    %ai8()
+    LDA $10 : STA $010C
+    LDA #$0E : STA $10
+    LDA #$0A : STA $11
+    LDA #$6 : STA $0200
+    RTL

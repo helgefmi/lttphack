@@ -2,5 +2,5 @@
 *.sfc
 *.pyc
 .*.sw[nop]
-*.txt
+std*.txt
 *.srm
