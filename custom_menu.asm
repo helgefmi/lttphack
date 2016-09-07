@@ -425,6 +425,9 @@ macro y2x_buffer_index()
 endmacro
 
 cm_action_draw_toggle_byte:
+    ; We decrement by one tile since we're drawing a checkbox too.
+    %y2x_buffer_index() : DEX : DEX
+
     ; grab the memory address (long)
     LDA ($02) : INC $02 : INC $02 : STA $04
     LDA ($02) : INC $02 : STA $06
@@ -439,7 +442,6 @@ cm_action_draw_toggle_byte:
 
   .draw_text
     ; draw checkbox and text
-    %y2x_buffer_index()
     STA $1000, X : INX : INX
     JSR cm_draw_text
     
