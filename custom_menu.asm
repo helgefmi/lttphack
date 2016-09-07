@@ -423,6 +423,7 @@ cm_action_execute_table:
     dw cm_action_jsr
     dw cm_action_submenu
     dw cm_action_back
+    dw cm_action_choice
 
 cm_action_toggle_byte:
     ; Will only toggle the first bit.
@@ -463,6 +464,33 @@ cm_action_back:
     STA !lowram_cm_stack_index
     RTS
 
+cm_action_choice:
+  %a16()
+    LDA ($00) : INC $00 : INC $00 : STA $02
+
+  %a8()
+    LDA ($00) : INC $00 : STA $04
+
+    LDA [$02] : INC : STA [$02] : TAY
+
+    ; find the correct text that should be drawn (the selected choice)
+  %ai8()
+    INY : INY : INY ; uh, skipping the first text
+  .loop_choices
+    DEY : BEQ .found
+    LDA ($00) : CMP.b #$FF : BEQ .wrap
+
+  .loop_text
+    LDA ($00) : INC $00
+    CMP.b #$FF : BEQ .loop_choices
+    BRA .loop_text
+
+  .wrap
+    LDA #$00 : STA [$02]
+
+  .found
+    RTS
+
 
 cm_action_draw_table:
     ; Subroutines for drawing a menu item. I choose to do a subroutine dispatch for this,
@@ -477,6 +505,7 @@ cm_action_draw_table:
     dw cm_action_draw_jsr
     dw cm_action_draw_submenu
     dw cm_action_draw_back
+    dw cm_action_draw_choice
 
 macro y2x_buffer_index()
     ; Assumes A=16, I=16
@@ -540,57 +569,101 @@ cm_action_draw_back:
     JSR cm_draw_text
     RTS
 
+
+cm_action_draw_choice:
+    ; grab the memory address (long)
+    LDA ($02) : INC $02 : INC $02 : STA $04
+    LDA ($02) : INC $02 : STA $06
+
+    ; Draw the text first (since it uses A)
+    %y2x_buffer_index()
+  PHX
+    JSR cm_draw_text
+  PLX
+
+    ; set position for ON/OFF
+    TXA : CLC : ADC #$001C : TAX
+
+    ; grab the value at that memory address
+    LDA [$04] : TAY
+
+    ; find the correct text that should be drawn (the selected choice)
+  %a8()
+    INY : INY ; uh, skipping the first text that we already draw..
+  .loop_choices
+    DEY : BEQ .found
+
+  .loop_text
+    LDA ($02) : INC $02
+    CMP.b #$FF : BEQ .loop_choices
+    BRA .loop_text
+
+  .found
+    JSR cm_draw_text
+    RTS
+
 ; --------------
 ; MAIN MENU
 ; --------------
 
 cm_mainmenu_indices:
-    dw #cm_mainmenu_test_jsr
-    dw #cm_mainmenu_test_submenu
-    dw #cm_mainmenu_toggle_xy
-    dw #cm_mainmenu_toggle_qw
-    dw #cm_mainmenu_toggle_lit_rooms
-    dw #cm_mainmenu_toggle_oob
+    dw #cm_menuitem_jsr
+    dw #cm_menuitem_sword
+    dw #cm_menuitem_submenu
+    dw #cm_menuitem_toggle_xy
+    dw #cm_menuitem_toggle_qw
+    dw #cm_menuitem_toggle_lit_rooms
+    dw #cm_menuitem_toggle_oob
     dw #$0000
 
 cm_submenu_indices:
-    dw #cm_menuitem_test_back
-    dw #cm_mainmenu_test_submenu
-    dw #cm_mainmenu_toggle_lit_rooms
-    dw #cm_mainmenu_toggle_oob
+    dw #cm_menuitem_back
+    dw #cm_menuitem_submenu
+    dw #cm_menuitem_toggle_lit_rooms
+    dw #cm_menuitem_toggle_oob
     dw #$0000
 
 
-cm_menuitem_test_back:
+cm_menuitem_sword:
+    dw !CM_ACTION_CHOICE
+    dl !ram_debug
+    db "Sword", #$FF
+    db "Fighter", #$FF
+    db "Master", #$FF
+    db "Tempered", #$FF
+    db "Gold", #$FF
+    db #$FF
+
+cm_menuitem_back:
     dw !CM_ACTION_BACK
     db "Back", #$FF
 
-cm_mainmenu_test_jsr:
+cm_menuitem_jsr:
     dw !CM_ACTION_JSR
     dw #tezt
-    db "JSR coord", #$FF
+    db "Something Cool", #$FF
 
-cm_mainmenu_test_submenu:
+cm_menuitem_submenu:
     dw !CM_ACTION_SUBMENU
     dw #cm_submenu_indices
     db "Submenu", #$FF
 
-cm_mainmenu_toggle_xy:
+cm_menuitem_toggle_xy:
     dw !CM_ACTION_TOGGLE_BYTE
     dl !ram_xy_toggle
     db "Coordinates", #$FF
 
-cm_mainmenu_toggle_qw:
+cm_menuitem_toggle_qw:
     dw !CM_ACTION_TOGGLE_BYTE
     dl !ram_qw_indicator_toggle
     db "QW indicator", #$FF
 
-cm_mainmenu_toggle_oob:
+cm_menuitem_toggle_oob:
     dw !CM_ACTION_TOGGLE_BYTE
     dl !lowram_oob_toggle
     db "OoB mode", #$FF
 
-cm_mainmenu_toggle_lit_rooms:
+cm_menuitem_toggle_lit_rooms:
     dw !CM_ACTION_TOGGLE_BYTE
     dl !ram_lit_rooms_toggle
     db "Lit rooms", #$FF

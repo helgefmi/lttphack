@@ -74,6 +74,7 @@
 !CM_ACTION_JSR = #$02
 !CM_ACTION_SUBMENU = #$04
 !CM_ACTION_BACK = #$06
+!CM_ACTION_CHOICE = #$08
 
 ;-------------------------
 ; From ROM
