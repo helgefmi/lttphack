@@ -91,6 +91,8 @@ CM_Active:
     LDA $F4 : CMP #$10 : BEQ .pressed_start
               CMP #$04 : BEQ .pressed_down
               CMP #$08 : BEQ .pressed_up
+              CMP #$02 : BEQ .pressed_left
+              CMP #$01 : BEQ .pressed_right
               CMP #$80 : BEQ .pressed_b
     LDA $F6 : CMP #$80 : BEQ .pressed_a
 
@@ -106,29 +108,29 @@ CM_Active:
     LDX !lowram_cm_stack_index
     LDA !lowram_cm_cursor_stack, X : DEC : DEC : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor_stack, X
   %a8()
-    JSR cm_redraw
-    BRA .done
+    BRA .redraw
 
   .pressed_down
   %a16()
     LDX !lowram_cm_stack_index
     LDA !lowram_cm_cursor_stack, X : INC : INC : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor_stack, X
   %a8()
-    JSR cm_redraw
-    BRA .done
+    BRA .redraw
 
+  .pressed_left
+  .pressed_right
   .pressed_a
     JSR cm_execute_cursor
-    JSR cm_redraw
-    BRA .done
+    BRA .redraw
 
   .pressed_b
   %ai16()
     JSR cm_action_back
   %ai8()
-    JSR cm_redraw
-    BRA .done
+    BRA .redraw
 
+  .redraw
+    JSR cm_redraw
   .done
     RTS
 
@@ -465,30 +467,55 @@ cm_action_back:
     RTS
 
 cm_action_choice:
+  ;STA !ram_debug
   %a16()
     LDA ($00) : INC $00 : INC $00 : STA $02
 
-  %a8()
+  %ai8()
     LDA ($00) : INC $00 : STA $04
 
-    LDA [$02] : INC : STA [$02] : TAY
+    ; we either increment or decrement
+    LDA $F4 : CMP #$02 : BEQ .pressed_left
+    LDA [$02] : INC : BRA .bounds_check
 
-    ; find the correct text that should be drawn (the selected choice)
-  %ai8()
-    INY : INY : INY ; uh, skipping the first text
+  .pressed_left
+    LDA [$02] : DEC
+
+  .bounds_check
+    TAX         ; X = new value
+    LDY.b #$00  ; Y will be set to max
+
   .loop_choices
-    DEY : BEQ .found
-    LDA ($00) : CMP.b #$FF : BEQ .wrap
+    LDA ($00) : CMP.b #$FF : BEQ .loop_done
 
   .loop_text
     LDA ($00) : INC $00
-    CMP.b #$FF : BEQ .loop_choices
-    BRA .loop_text
+    CMP.b #$FF : BNE .loop_text
+    INY : BRA .loop_choices
 
-  .wrap
-    LDA #$00 : STA [$02]
+  .loop_done
+    ; X = new value (might be out of bounds)
+    ; Y = maximum + 2
+    ; We need to make sure X is between 0-maximum.
 
-  .found
+    ; for convenience so we cna use BCS. We do one more DEC in `.set_to_max`
+    ; below, so we get the actual max.
+    DEY
+
+    TXA : BMI .set_to_max
+    STY $06
+    CMP $06 : BCS .set_to_zero
+
+    BRA .end
+
+  .set_to_zero
+    LDA.b #$00 : BRA .end
+
+  .set_to_max
+    TYA : DEC
+
+  .end
+    STA [$02]
     RTS
 
 
@@ -641,7 +668,7 @@ cm_menuitem_back:
 cm_menuitem_jsr:
     dw !CM_ACTION_JSR
     dw #tezt
-    db "Something Cool", #$FF
+    db "Do something", #$FF
 
 cm_menuitem_submenu:
     dw !CM_ACTION_SUBMENU
