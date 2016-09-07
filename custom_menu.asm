@@ -319,7 +319,7 @@ cm_draw_active_menu:
   .not_selected
     STA $0E
 
-    LDA ($00), Y : BEQ .end : STA $02
+    LDA ($00), Y : BEQ .done_with_items : STA $02
 
     PHY : PHX
 
@@ -333,7 +333,12 @@ cm_draw_active_menu:
     INY : INY
     JMP .loop
 
-  .end
+  .done_with_items
+    TYA : CLC : ADC $00 : INC : INC : STA $02
+    LDX #$0186
+    LDA #$0034 : STA $0E
+    JSR cm_draw_text
+
   %ai8()
     RTS
 
@@ -538,7 +543,7 @@ macro y2x_buffer_index()
     ; Assumes A=16, I=16
     ; Find screen position from Y (item number)
     TYA : ASL : ASL : ASL : ASL : ASL
-    CLC : ADC #$0186 : TAX
+    CLC : ADC #$0206 : TAX
 endmacro
 
 cm_action_draw_toggle_byte:
@@ -642,6 +647,7 @@ cm_mainmenu_indices:
     dw #cm_menuitem_toggle_lit_rooms
     dw #cm_menuitem_toggle_oob
     dw #$0000
+    db "Main Menu", $FF
 
 cm_submenu_indices:
     dw #cm_menuitem_back
@@ -649,6 +655,7 @@ cm_submenu_indices:
     dw #cm_menuitem_toggle_lit_rooms
     dw #cm_menuitem_toggle_oob
     dw #$0000
+    db "Choose Your Destiny", $FF
 
 
 cm_menuitem_sword:
@@ -698,6 +705,7 @@ cm_menuitem_toggle_lit_rooms:
 
 tezt:
     LDA.b #$01 : STA !ram_xy_toggle
+  %a8()
     RTS
 
 cm_hud_table:
