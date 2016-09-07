@@ -95,6 +95,7 @@ CM_Active:
     LDA $F4 : CMP #$10 : BEQ .pressed_start
               CMP #$04 : BEQ .pressed_down
               CMP #$08 : BEQ .pressed_up
+              CMP #$80 : BEQ .pressed_b
     LDA $F6 : CMP #$80 : BEQ .pressed_a
 
     ; Did not press anything
@@ -124,6 +125,13 @@ CM_Active:
 
   .pressed_a
     JSR cm_execute_cursor
+    JSR cm_draw_active_menu
+    BRA .did_update_gfx
+
+  .pressed_b
+  %ai16()
+    JSR cm_action_back
+  %ai8()
     JSR cm_draw_active_menu
     BRA .did_update_gfx
 
