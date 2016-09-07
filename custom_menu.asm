@@ -246,7 +246,7 @@ cm_redraw:
 
 cm_draw_background_gfx:
   %ai16()
-    LDA #$3CFB : STA $1102
+    LDA #$30FB : STA $1102
     ORA #$8000 : STA $1742
     ORA #$4000 : STA $177C
     EOR #$8000 : STA $113C
@@ -256,7 +256,7 @@ cm_draw_background_gfx:
 
   .drawVerticalEdges
 
-    LDA.w #$3CFC : STA $1142, X
+    LDA.w #$30FC : STA $1142, X
     ORA.w #$4000 : STA $117C, X
 
     TXA : CLC : ADC #$0040 : TAX
@@ -268,7 +268,7 @@ cm_draw_background_gfx:
 
   .drawHorizontalEdges
 
-    LDA.w #$3CF9 : STA $1104, X
+    LDA.w #$30F9 : STA $1104, X
     ORA.w #$8000 : STA $1744, X
 
     INX #2
