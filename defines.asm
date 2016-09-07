@@ -41,10 +41,9 @@
 
 !ram_cm_old_gamemode = $7F76A0
 !ram_cm_old_submode = $7F76A1
-!ram_cm_menu_stack = $7F76B0 ; NOTE: NEEDS 0x10 BYTES OF SPACE
-
-!lowram_cm_cursor = $04E4
-!lowram_cm_menu_stack_index = $04EC
+!ram_cm_menu_stack = $7F76B0 ; 0x10
+!lowram_cm_cursor_stack = $0648 ; 0x10
+!lowram_cm_stack_index = $0658
 
 ;-------------------------
 ; HUD

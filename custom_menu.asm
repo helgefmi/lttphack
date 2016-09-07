@@ -5,17 +5,13 @@
 
 table chrmap.tbl
 
+; Overrides Game Mode 0x0C.
 org $00806D
     db #$00
 org $008089
     db #$80
 org $0080A5
     db #$25
-
-macro inc_mode()
-    ; Assumes A=8
-    LDA $11 : INC : STA $11
-endmacro
 
 org $258000
 CM_Main:
@@ -28,6 +24,11 @@ CM_Main:
 
 
 CM_Local:
+    ; We try to stay %ai8() throughout these local $11 indexed functions.
+    ;
+    ; This means that any subroutines called from these subroutines, should make sure to do %ai8()
+    ; before RTS-ing.
+
     LDA $11
 
     JSL !UseImplicitRegIndexedLocalJumpTable
@@ -41,6 +42,7 @@ CM_Local:
 
 
 CM_Init:
+    ; Clears anything that needs clearing. 
     JSR cm_clear_buffer
     JSR cm_clear_stack
 
@@ -49,39 +51,40 @@ CM_Init:
   %ppu_on()
 
   %a16()
-    LDA #$0000 : STA !lowram_cm_menu_stack_index
+    LDA #$0000 : STA !lowram_cm_stack_index
     LDA #cm_mainmenu_indices : STA !ram_cm_menu_stack
   %a8()
 
-    %inc_mode()
+    INC $11
     RTS
 
 
 CM_DrawMenu:
-    ; play sound effect for opening item menu
-    LDA.b #$11 : STA $012F
-
+    ; Renders the mainmenu.
     JSR cm_draw_active_menu
 
     ; tell NMI to update tilemap
     LDA.b #$01 : STA $17
     LDA.b #$22 : STA $0116
 
-    %inc_mode()
+    ; play sound effect for opening menu
+    LDA.b #$11 : STA $012F
+
+    INC $11
     RTS
 
 
 CM_MenuDown:
+    ; Scrolls the menu down first.
   %a16()
     LDA $EA : SEC : SBC.w #$0008 : STA $EA
     CMP.w #$FF18
   %a8()
 
-    BNE .notDoneScrolling
+    BNE .not_done_scrolling
+    INC $11
 
-    %inc_mode()
-
-  .notDoneScrolling
+  .not_done_scrolling
     RTS
 
 
@@ -90,29 +93,31 @@ CM_Active:
     ; $F6 = AXLR | ....
 
     LDA $F4 : CMP #$10 : BEQ .pressed_start
-    CMP #$04 : BEQ .pressed_down
-    CMP #$08 : BEQ .pressed_up
+              CMP #$04 : BEQ .pressed_down
+              CMP #$08 : BEQ .pressed_up
     LDA $F6 : CMP #$80 : BEQ .pressed_a
 
     ; Did not press anything
     BRA .done
 
   .pressed_start
-    %inc_mode()
+    ; play sound effect for closing menu, and go to next mode
+    LDA.b #$11 : STA $012F
+    INC $11
     BRA .done
 
   .pressed_up
   %a16()
-    LDX !lowram_cm_menu_stack_index
-    LDA !lowram_cm_cursor, X : DEC : DEC : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor, X
+    LDX !lowram_cm_stack_index
+    LDA !lowram_cm_cursor_stack, X : DEC : DEC : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor_stack, X
   %a8()
     JSR cm_draw_active_menu
     BRA .did_update_gfx
 
   .pressed_down
   %a16()
-    LDX !lowram_cm_menu_stack_index
-    LDA !lowram_cm_cursor, X : INC : INC : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor, X
+    LDX !lowram_cm_stack_index
+    LDA !lowram_cm_cursor_stack, X : INC : INC : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor_stack, X
   %a8()
     JSR cm_draw_active_menu
     BRA .did_update_gfx
@@ -136,11 +141,10 @@ CM_MenuUp:
     LDA $EA : CLC : ADC.w #$0008 : STA $EA
   %a8()
 
-    BNE .notDoneScrolling
+    BNE .not_done_scrolling
+    INC $11
 
-    %inc_mode()
-
-  .notDoneScrolling
+  .not_done_scrolling
     RTS
 
 CM_Return:
@@ -154,17 +158,14 @@ CM_Return:
 
 
 cm_clear_stack:
-  ; assumes I=8
+    ; Assumes I=8
   %a16()
     LDX.b #$00
     LDA #$0000
 
   .loop
-
-    STA !lowram_cm_cursor, X : STA !lowram_cm_menu_stack_index, X
-
+    STA !lowram_cm_cursor_stack, X : STA !ram_cm_menu_stack, X
     INX : INX : CPX.b #$10
-
     BNE .loop
 
   %a8()
@@ -172,7 +173,7 @@ cm_clear_stack:
 
 
 cm_clear_buffer:
-  ; assumes I=8
+    ; Assumes I=8
   %a16()
 
     LDX.b #$00
@@ -180,8 +181,7 @@ cm_clear_buffer:
     ; value of a transparent tile
     LDA #$207F
 
-  .clearVramBuffer
-
+  .loop
     STA $1000, X : STA $1080, X
     STA $1100, X : STA $1180, X
     STA $1200, X : STA $1280, X
@@ -192,15 +192,15 @@ cm_clear_buffer:
     STA $1700, X : STA $1780, X
 
     INX : INX : CPX.b #$80
-
-    BNE .clearVramBuffer
+    BNE .loop
 
   %a8()
     RTS
 
 
 cm_transfer_tilemap:
-    %i16()
+    ; Assumes A=8
+  %i16()
 
     ; word-access, incr by 1
     LDA #$80 : STA $2115
@@ -213,7 +213,7 @@ cm_transfer_tilemap:
     LDA #$18 : STA $4301 ; destination (VRAM write)
     LDA #$01 : STA $420B ; initiate DMA (channel 1)
 
-    %i8()
+  %i8()
     RTS
 
 ; ---------
@@ -224,16 +224,15 @@ cm_draw_active_menu:
     ; This functions sets:
     ; $00[0x2] = menu indices
     ; $02[0x2] = current menu item index
-    ; then we call the action draw method, which can do whatever it wants.
+    ; Then we call the action draw method, which can consume its arguments and draw the text however it wants.
   %ai16()
-    STA !ram_debug
-    LDX !lowram_cm_menu_stack_index
+    LDX !lowram_cm_stack_index
     LDA !ram_cm_menu_stack, X : STA $00
     LDY #$0000
 
-  .next_item
-    LDX !lowram_cm_menu_stack_index
-    TYA : CMP !lowram_cm_cursor, X : BEQ .selected
+  .loop
+    ; Figure out if this menu item is on the same location as the cursor.
+    TYA : CMP !lowram_cm_cursor_stack, X : BEQ .selected
     LDA #$0020
     BRA .not_selected
 
@@ -242,9 +241,10 @@ cm_draw_active_menu:
     
   .not_selected
     STA $0E
+
     LDA ($00), y : BEQ .end : STA $02
 
-    PHY
+    PHY : PHX
 
     ; Pull out the action index, increment $02 so its ready for the associated
     ; draw function to use its data however it likes, and jump to it.
@@ -252,9 +252,9 @@ cm_draw_active_menu:
     INC $02 : INC $02
     JSR (cm_action_draw_table, X)
 
-    PLY
+    PLX : PLY
     INY : INY
-    JMP .next_item
+    JMP .loop
 
   .end
   %ai8()
@@ -262,7 +262,8 @@ cm_draw_active_menu:
 
 
 cm_draw_text:
-    %a8()
+    ; Assumes I=16
+  %a8()
     LDY #$0000
 
   .loop
@@ -272,7 +273,7 @@ cm_draw_text:
     INY : JMP .loop
 
   .end
-    %a16()
+  %a16()
     RTS
 
 
@@ -281,7 +282,10 @@ cm_draw_text:
 ; ---------
 
 cm_fix_cursor_wrap:
-  ; X = !lowram_cm_menu_stack_index
+    ; Checks if new cursor is out of bounds, and if so, sets it to the appropriate index.
+    ;
+    ; Assumes X = !lowram_cm_stack_index
+    ;         A = the current cursor position (might be out of bounds)
   %ai16()
     PHA
     LDA !ram_cm_menu_stack, X : STA $00
@@ -293,12 +297,10 @@ cm_fix_cursor_wrap:
     JMP .loop
 
   .after_loop
-    ; Top of stack = cursor
+    ; Top of stack = cursor index
     ; Y = max + 2
     STY $00
-    PLA
-
-    BMI .set_to_max
+    PLA : BMI .set_to_max
     CMP $00 : BEQ .set_to_zero : BCS .set_to_zero
 
     BRA .end
@@ -317,12 +319,14 @@ cm_fix_cursor_wrap:
 
 
 cm_execute_cursor:
+    ; The user selected a menu item.
   %ai16()
-    LDX !lowram_cm_menu_stack_index
+    LDX !lowram_cm_stack_index
     LDA !ram_cm_menu_stack, X : STA $00
-    LDY !lowram_cm_cursor, X
+    LDY !lowram_cm_cursor_stack, X
     LDA ($00), y : STA $00
 
+    ; Consume the action index and jump to the appropriate execute subroutine.
     LDA ($00) : INC $00 : INC $00 : TAX
 
     JSR (cm_action_execute_table, X)
@@ -334,12 +338,19 @@ cm_execute_cursor:
 ; --------------
 
 cm_action_execute_table:
+    ; Subroutines for executing an action when the user selects a menu item.
+    ;
+    ; We'll be in %ai16() when calling these.
+    ; $01 will contain the menu item's data.
+    ;
+    ; They can safely manipulate X/Y/A/P and $00-$0F.
     dw cm_action_toggle_byte
     dw cm_action_jsr
     dw cm_action_submenu
     dw cm_action_back
 
 cm_action_toggle_byte:
+    ; Will only toggle the first bit.
   %a16()
     LDA ($00) : INC $00 : INC $00 : STA $02
   %a8()
@@ -356,8 +367,9 @@ cm_action_jsr:
     RTS
 
 cm_action_submenu:
+    ; Increments stack index and puts the submenu into the stack.
   %a16()
-    LDA !lowram_cm_menu_stack_index : INC : INC : STA !lowram_cm_menu_stack_index : TAX
+    LDA !lowram_cm_stack_index : INC : INC : STA !lowram_cm_stack_index : TAX
     LDA ($00) : INC $00 : INC $00 : STA !ram_cm_menu_stack, X
   %ai8()
     JSR cm_clear_buffer
@@ -365,29 +377,42 @@ cm_action_submenu:
     RTS
 
 cm_action_back:
+    ; Decrements the stack index.
   %a16()
-    LDA !lowram_cm_menu_stack_index : DEC : DEC : BPL .done
-
+    ; make sure we dont set a negative number
+    LDA !lowram_cm_stack_index : DEC : DEC : BPL .done
     LDA #$0000
 
   .done
-    STA !lowram_cm_menu_stack_index
-  %a8()
+    STA !lowram_cm_stack_index
+  %ai8()
+    JSR cm_clear_buffer
+  %i16()
     RTS
 
 
 cm_action_draw_table:
+    ; Subroutines for drawing a menu item. I choose to do a subroutine dispatch for this,
+    ; to make it possible for some widgets to draw itself differently (e.g. checkboxes, comboboxes etc).
+    ;
+    ; We'll be in %ai16() when calling these, and should leave it like that when RTS-ing too.
+    ; $02 will contain the menu item's data, including the text.
+    ; Y will be set to the row number (starting for 0 and going upwards 2 at a time).
+    ;
+    ; They can safely reuse X and Y. The only restriction is not touching $00[0x2].
     dw cm_action_draw_toggle_byte
     dw cm_action_draw_jsr
     dw cm_action_draw_submenu
     dw cm_action_draw_back
 
-
-cm_action_draw_toggle_byte:
+macro y2x_buffer_index()
+    ; Assumes A=16, I=16
     ; Find screen position from Y (item number)
     TYA : ASL : ASL : ASL : ASL : ASL
     CLC : ADC #$0144 : TAX
+endmacro
 
+cm_action_draw_toggle_byte:
     ; grab the memory address (long)
     LDA ($02) : INC $02 : INC $02 : STA $04
     LDA ($02) : INC $02 : STA $06
@@ -402,38 +427,34 @@ cm_action_draw_toggle_byte:
 
   .draw_text
     ; draw checkbox and text
+    %y2x_buffer_index()
     STA $1000, X : INX : INX
     JSR cm_draw_text
     
     RTS
 
 cm_action_draw_jsr:
-    ; Find screen position from Y (item number)
-    TYA : ASL : ASL : ASL : ASL : ASL
-    CLC : ADC #$0144 : TAX
-
+    ; skip jsr address
     INC $02 : INC $02
+
+    ; draw text normally
+    %y2x_buffer_index()
     JSR cm_draw_text
-    
     RTS
 
 cm_action_draw_submenu:
-    ; Find screen position from Y (item number)
-    TYA : ASL : ASL : ASL : ASL : ASL
-    CLC : ADC #$0144 : TAX
+    INC $02 : INC $02 ; skip submenu address
 
-    INC $02 : INC $02
+    ; draw text normally
+    %y2x_buffer_index()
     JSR cm_draw_text
     
     RTS
 
 cm_action_draw_back:
-    ; Find screen position from Y (item number)
-    TYA : ASL : ASL : ASL : ASL : ASL
-    CLC : ADC #$0144 : TAX
-
+    ; just draw the text
+    %y2x_buffer_index()
     JSR cm_draw_text
-    
     RTS
 
 ; --------------
