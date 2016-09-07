@@ -164,6 +164,9 @@ CM_Return:
     LDA !ram_cm_old_submode : STA $11
     RTS
 
+; -----------
+; Utilities
+; ----------
 
 cm_clear_stack:
     ; Assumes I=8
@@ -172,9 +175,10 @@ cm_clear_stack:
     LDA #$0000
 
   .loop
-    STA !lowram_cm_cursor_stack, X : STA !ram_cm_menu_stack, X
-    INX : INX : CPX.b #$10
-    BNE .loop
+    STA !lowram_cm_cursor_stack, X
+    STA !ram_cm_menu_stack, X
+    INX : INX
+    CPX.b #$10 : BNE .loop
 
   %a8()
     RTS
@@ -199,8 +203,8 @@ cm_clear_buffer:
     STA $1600, X : STA $1680, X
     STA $1700, X : STA $1780, X
 
-    INX : INX : CPX.b #$80
-    BNE .loop
+    INX : INX
+    CPX.b #$80 : BNE .loop
 
   %a8()
     RTS
