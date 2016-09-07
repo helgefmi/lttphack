@@ -391,6 +391,10 @@ cm_action_submenu:
 cm_action_back:
     ; Decrements the stack index.
   %a16()
+    ; make sure next time we go to a submenu, we start on the first line.
+    LDX !lowram_cm_stack_index
+    LDA #$0000 : STA !lowram_cm_cursor_stack, x
+
     ; make sure we dont set a negative number
     LDA !lowram_cm_stack_index : DEC : DEC : BPL .done
     LDA #$0000
