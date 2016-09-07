@@ -442,22 +442,39 @@ cm_action_toggle_byte:
     RTS
 
 cm_action_jsr:
+    ; < and > should do nothing here
+  %a8()
+    LDA $F4 : CMP.b #$01 : BEQ .end
+            : CMP.b #$02 : BEQ .end
+
   %a16()
     LDA ($00) : INC $0000 : INC $0000 : STA $02
   %a8()
 
     LDX #$0000
     JSR ($0002, X)
+
+  .end
     RTS
 
 cm_action_submenu:
+    ; < should do nothing here
+  %a8()
+    LDA $F4 : CMP.b #$02 : BEQ .end
+
     ; Increments stack index and puts the submenu into the stack.
   %a16()
     LDA !lowram_cm_stack_index : INC : INC : STA !lowram_cm_stack_index : TAX
-    LDA ($00) : INC $00 : INC $00 : STA !ram_cm_menu_stack, X
+    LDA ($00) : INC $0000 : INC $0000 : STA !ram_cm_menu_stack, X
+
+  .end
     RTS
 
 cm_action_back:
+    ; > should do nothing here
+  %a8()
+    LDA $F4 : CMP.b #$01 : BEQ .end
+
     ; Decrements the stack index.
   %a16()
     ; make sure next time we go to a submenu, we start on the first line.
@@ -470,6 +487,8 @@ cm_action_back:
 
   .done
     STA !lowram_cm_stack_index
+
+  .end
     RTS
 
 cm_action_choice:
