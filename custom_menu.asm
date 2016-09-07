@@ -326,7 +326,7 @@ cm_draw_active_menu:
     ; Pull out the action index, increment $02 so its ready for the associated
     ; draw function to use its data however it likes, and jump to it.
     LDA ($02) : TAX
-    INC $02 : INC $02
+    INC $0002 : INC $0002
     JSR (cm_action_draw_table, X)
 
     PLX : PLY
@@ -409,7 +409,7 @@ cm_execute_cursor:
     LDA ($00), Y : STA $00
 
     ; Consume the action index and jump to the appropriate execute subroutine.
-    LDA ($00) : INC $00 : INC $00 : TAX
+    LDA ($00) : INC $0000 : INC $0000 : TAX
 
     JSR (cm_action_execute_table, X)
   %ai8()
@@ -435,16 +435,17 @@ cm_action_execute_table:
 cm_action_toggle_byte:
     ; Will only toggle the first bit.
   %a16()
-    LDA ($00) : INC $00 : INC $00 : STA $02
+    LDA ($00) : INC $0000 : INC $0000 : STA $02
   %a8()
-    LDA ($00) : INC $00 : STA $04
+    LDA ($00) : INC $0000 : STA $04
     LDA [$02] : EOR #$01 : STA [$02]
     RTS
 
 cm_action_jsr:
   %a16()
-    LDA ($00) : INC $00 : INC $00 : STA $02
+    LDA ($00) : INC $0000 : INC $0000 : STA $02
   %a8()
+
     LDX #$0000
     JSR ($0002, X)
     RTS
@@ -472,12 +473,11 @@ cm_action_back:
     RTS
 
 cm_action_choice:
-  ;STA !ram_debug
   %a16()
-    LDA ($00) : INC $00 : INC $00 : STA $02
+    LDA ($00) : INC $0000 : INC $0000 : STA $02
 
   %ai8()
-    LDA ($00) : INC $00 : STA $04
+    LDA ($00) : INC $0000 : STA $04
 
     ; we either increment or decrement
     LDA $F4 : CMP #$02 : BEQ .pressed_left
@@ -494,7 +494,7 @@ cm_action_choice:
     LDA ($00) : CMP.b #$FF : BEQ .loop_done
 
   .loop_text
-    LDA ($00) : INC $00
+    LDA ($00) : INC $0000
     CMP.b #$FF : BNE .loop_text
     INY : BRA .loop_choices
 
@@ -548,8 +548,8 @@ endmacro
 
 cm_action_draw_toggle_byte:
     ; grab the memory address (long)
-    LDA ($02) : INC $02 : INC $02 : STA $04
-    LDA ($02) : INC $02 : STA $06
+    LDA ($02) : INC $0002 : INC $0002 : STA $04
+    LDA ($02) : INC $0002 : STA $06
 
     ; Draw the text first (since it uses A)
     %y2x_buffer_index()
@@ -579,7 +579,7 @@ cm_action_draw_toggle_byte:
 
 cm_action_draw_jsr:
     ; skip jsr address
-    INC $02 : INC $02
+    INC $0002 : INC $0002
 
     ; draw text normally
     %y2x_buffer_index()
@@ -587,7 +587,7 @@ cm_action_draw_jsr:
     RTS
 
 cm_action_draw_submenu:
-    INC $02 : INC $02 ; skip submenu address
+    INC $0002 : INC $0002 ; skip submenu address
 
     ; draw text normally
     %y2x_buffer_index()
@@ -604,8 +604,8 @@ cm_action_draw_back:
 
 cm_action_draw_choice:
     ; grab the memory address (long)
-    LDA ($02) : INC $02 : INC $02 : STA $04
-    LDA ($02) : INC $02 : STA $06
+    LDA ($02) : INC $0002 : INC $0002 : STA $04
+    LDA ($02) : INC $0002 : STA $06
 
     ; Draw the text first (since it uses A)
     %y2x_buffer_index()
@@ -626,7 +626,7 @@ cm_action_draw_choice:
     DEY : BEQ .found
 
   .loop_text
-    LDA ($02) : INC $02
+    LDA ($02) : INC $0002
     CMP.b #$FF : BEQ .loop_choices
     BRA .loop_text
 
