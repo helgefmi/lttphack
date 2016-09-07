@@ -1,4 +1,4 @@
-; $1100 = first line -> $D100 in VRAM
+; $10C0 = first line -> $D100 in VRAM
 ; $1140 = second line
 ; $1780 = last line
 ; $40 bytes/32 tiles per line.
@@ -37,35 +37,31 @@ CM_Local:
     dw CM_DrawMenu
     dw CM_MenuDown
     dw CM_Active
+    dw CM_DeInit
     dw CM_MenuUp
     dw CM_Return
 
 
 CM_Init:
-    ; Clears anything that needs clearing. 
-    JSR cm_clear_buffer
+    ; Start with new state when opening the menu.
     JSR cm_clear_stack
 
-  %ppu_off()
-    JSR cm_transfer_tilemap
-  %ppu_on()
-
+  ; Put the main menu onto the stack.
   %a16()
     LDA #$0000 : STA !lowram_cm_stack_index
     LDA #cm_mainmenu_indices : STA !ram_cm_menu_stack
   %a8()
+
+  %ppu_off()
+    JSR cm_transfer_tilemap
+  %ppu_on()
 
     INC $11
     RTS
 
 
 CM_DrawMenu:
-    ; Renders the mainmenu.
-    JSR cm_draw_active_menu
-
-    ; tell NMI to update tilemap
-    LDA.b #$01 : STA $17
-    LDA.b #$22 : STA $0116
+    JSR cm_redraw
 
     ; play sound effect for opening menu
     LDA.b #$11 : STA $012F
@@ -102,8 +98,6 @@ CM_Active:
     BRA .done
 
   .pressed_start
-    ; play sound effect for closing menu, and go to next mode
-    LDA.b #$11 : STA $012F
     INC $11
     BRA .done
 
@@ -112,35 +106,40 @@ CM_Active:
     LDX !lowram_cm_stack_index
     LDA !lowram_cm_cursor_stack, X : DEC : DEC : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor_stack, X
   %a8()
-    JSR cm_draw_active_menu
-    BRA .did_update_gfx
+    JSR cm_redraw
+    BRA .done
 
   .pressed_down
   %a16()
     LDX !lowram_cm_stack_index
     LDA !lowram_cm_cursor_stack, X : INC : INC : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor_stack, X
   %a8()
-    JSR cm_draw_active_menu
-    BRA .did_update_gfx
+    JSR cm_redraw
+    BRA .done
 
   .pressed_a
     JSR cm_execute_cursor
-    JSR cm_draw_active_menu
-    BRA .did_update_gfx
+    JSR cm_redraw
+    BRA .done
 
   .pressed_b
   %ai16()
     JSR cm_action_back
   %ai8()
-    JSR cm_draw_active_menu
-    BRA .did_update_gfx
-
-  .did_update_gfx
-    ; tell NMI to update tilemap
-    LDA.b #$01 : STA $17
-    LDA.b #$22 : STA $0116
+    JSR cm_redraw
+    BRA .done
 
   .done
+    RTS
+
+
+CM_DeInit:
+    ; play sound effect for closing menu, and go to next mode
+    LDA.b #$11 : STA $012F
+
+    JSR cm_clear_buffer
+
+    INC $11
     RTS
 
 
@@ -231,6 +230,71 @@ cm_transfer_tilemap:
 ; ---------
 ; Draw
 ; ---------
+
+cm_redraw:
+    ; Assumes A=8 I=8 
+    JSR cm_clear_buffer
+    JSR cm_draw_background_gfx
+    JSR cm_draw_active_menu
+
+    ; tell NMI to update tilemap
+    LDA.b #$01 : STA $17
+    LDA.b #$22 : STA $0116
+
+    RTS
+
+
+cm_draw_background_gfx:
+  %ai16()
+    LDA #$3CFB : STA $1102
+    ORA #$8000 : STA $1782
+    ORA #$4000 : STA $17BC
+    EOR #$8000 : STA $113C
+
+    LDX #$0000
+    LDY #$0018
+
+  .drawVerticalEdges
+
+    LDA.w #$3CFC : STA $1142, X
+    ORA.w #$4000 : STA $117C, X
+
+    TXA : CLC : ADC #$0040 : TAX
+
+    DEY : BPL .drawVerticalEdges
+
+    LDX.w #$0000
+    LDY.w #$001B
+
+  .drawHorizontalEdges
+
+    LDA.w #$3CF9 : STA $1104, X
+    ORA.w #$8000 : STA $1784, X
+
+    INX #2
+
+    DEY : BPL .drawHorizontalEdges
+
+    LDX.w #$0000
+    LDY.w #$001B
+    LDA.w #$24F5
+
+  .drawBoxInterior
+
+    STA $1144, X : STA $1184, X : STA $11C4, X : STA $1204, X
+    STA $1244, X : STA $1284, X : STA $12C4, X : STA $1304, X
+    STA $1344, X : STA $1384, X : STA $13C4, X : STA $1404, X
+    STA $1444, X : STA $1484, X : STA $14C4, X : STA $1504, X
+    STA $1544, X : STA $1584, X : STA $15C4, X : STA $1604, X
+    STA $1644, X : STA $1684, X : STA $16C4, X : STA $1704, X
+    STA $1744, X
+
+    INX #2
+
+    DEY : BPL .drawBoxInterior
+
+  %ai8()
+    RTS
 
 cm_draw_active_menu:
     ; This functions sets:
@@ -383,9 +447,6 @@ cm_action_submenu:
   %a16()
     LDA !lowram_cm_stack_index : INC : INC : STA !lowram_cm_stack_index : TAX
     LDA ($00) : INC $00 : INC $00 : STA !ram_cm_menu_stack, X
-  %ai8()
-    JSR cm_clear_buffer
-  %i16()
     RTS
 
 cm_action_back:
@@ -401,9 +462,6 @@ cm_action_back:
 
   .done
     STA !lowram_cm_stack_index
-  %ai8()
-    JSR cm_clear_buffer
-  %i16()
     RTS
 
 
@@ -425,12 +483,12 @@ macro y2x_buffer_index()
     ; Assumes A=16, I=16
     ; Find screen position from Y (item number)
     TYA : ASL : ASL : ASL : ASL : ASL
-    CLC : ADC #$0144 : TAX
+    CLC : ADC #$0186 : TAX
 endmacro
 
 cm_action_draw_toggle_byte:
     ; We decrement by one tile since we're drawing a checkbox too.
-    %y2x_buffer_index() : DEX : DEX
+    %y2x_buffer_index()
 
     ; grab the memory address (long)
     LDA ($02) : INC $02 : INC $02 : STA $04

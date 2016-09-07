@@ -9,11 +9,9 @@ x [1] Code some general menu:
     x Submenues.
     x Be able to "go back".
     x Remember last position.
-    - choice menu item
-    - background gfx
-    - would be cool if submenu would be drawn over the mainmenu (with extra topleft padding)
-    - icon for submenu action?
     x press B to go back (not from main menu)?
+    - choice menu item
+    x background gfx
     - make sure to only go to this game mode when its safe to do so
         - not while bringing up the item menu
         - not before selecting a file
