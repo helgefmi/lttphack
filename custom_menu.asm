@@ -3,8 +3,6 @@
 ; $1780 = last line
 ; $40 bytes/32 tiles per line.
 
-table chrmap.tbl
-
 ; Overrides Game Mode 0x0C.
 org $00806D
     db #$00
@@ -336,7 +334,7 @@ cm_draw_active_menu:
   .done_with_items
     TYA : CLC : ADC $00 : INC : INC : STA $02
     LDX #$0186
-    LDA #$0034 : STA $0E
+    LDA #$0030 : STA $0E
     JSR cm_draw_text
 
   %ai8()
@@ -650,12 +648,15 @@ cm_action_draw_choice:
     BRA .loop_text
 
   .found
+    LDA.b #$34 : STA $0E
     JSR cm_draw_text
     RTS
 
 ; --------------
 ; MAIN MENU
 ; --------------
+
+table header.tbl
 
 cm_mainmenu_indices:
     dw #cm_menuitem_jsr
@@ -666,7 +667,7 @@ cm_mainmenu_indices:
     dw #cm_menuitem_toggle_lit_rooms
     dw #cm_menuitem_toggle_oob
     dw #$0000
-    db "Main Menu", $FF
+    db "MAIN MENU", $FF
 
 cm_submenu_indices:
     dw #cm_menuitem_back
@@ -674,8 +675,9 @@ cm_submenu_indices:
     dw #cm_menuitem_toggle_lit_rooms
     dw #cm_menuitem_toggle_oob
     dw #$0000
-    db "Choose Your Destiny", $FF
+    db "CHOOSE YOUR DESTINY", $FF
 
+table normal.tbl
 
 cm_menuitem_sword:
     dw !CM_ACTION_CHOICE
