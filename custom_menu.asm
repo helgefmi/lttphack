@@ -247,12 +247,12 @@ cm_redraw:
 cm_draw_background_gfx:
   %ai16()
     LDA #$3CFB : STA $1102
-    ORA #$8000 : STA $1782
-    ORA #$4000 : STA $17BC
+    ORA #$8000 : STA $1742
+    ORA #$4000 : STA $177C
     EOR #$8000 : STA $113C
 
     LDX #$0000
-    LDY #$0018
+    LDY #$0017
 
   .drawVerticalEdges
 
@@ -269,7 +269,7 @@ cm_draw_background_gfx:
   .drawHorizontalEdges
 
     LDA.w #$3CF9 : STA $1104, X
-    ORA.w #$8000 : STA $1784, X
+    ORA.w #$8000 : STA $1744, X
 
     INX #2
 
@@ -287,7 +287,6 @@ cm_draw_background_gfx:
     STA $1444, X : STA $1484, X : STA $14C4, X : STA $1504, X
     STA $1544, X : STA $1584, X : STA $15C4, X : STA $1604, X
     STA $1644, X : STA $1684, X : STA $16C4, X : STA $1704, X
-    STA $1744, X
 
     INX #2
 
@@ -318,7 +317,7 @@ cm_draw_active_menu:
   .not_selected
     STA $0E
 
-    LDA ($00), y : BEQ .end : STA $02
+    LDA ($00), Y : BEQ .end : STA $02
 
     PHY : PHX
 
@@ -343,7 +342,7 @@ cm_draw_text:
     LDY #$0000
 
   .loop
-    LDA ($02), y : CMP #$FF : BEQ .end
+    LDA ($02), Y : CMP #$FF : BEQ .end
     STA $1000, X : INX
     LDA $0E : STA $1000, X : INX
     INY : JMP .loop
@@ -368,7 +367,7 @@ cm_fix_cursor_wrap:
     LDY #$0000
 
   .loop
-    LDA ($00), y : BEQ .after_loop
+    LDA ($00), Y : BEQ .after_loop
     INY : INY
     JMP .loop
 
@@ -400,7 +399,7 @@ cm_execute_cursor:
     LDX !lowram_cm_stack_index
     LDA !ram_cm_menu_stack, X : STA $00
     LDY !lowram_cm_cursor_stack, X
-    LDA ($00), y : STA $00
+    LDA ($00), Y : STA $00
 
     ; Consume the action index and jump to the appropriate execute subroutine.
     LDA ($00) : INC $00 : INC $00 : TAX
@@ -454,7 +453,7 @@ cm_action_back:
   %a16()
     ; make sure next time we go to a submenu, we start on the first line.
     LDX !lowram_cm_stack_index
-    LDA #$0000 : STA !lowram_cm_cursor_stack, x
+    LDA #$0000 : STA !lowram_cm_cursor_stack, X
 
     ; make sure we dont set a negative number
     LDA !lowram_cm_stack_index : DEC : DEC : BPL .done
@@ -487,26 +486,34 @@ macro y2x_buffer_index()
 endmacro
 
 cm_action_draw_toggle_byte:
-    ; We decrement by one tile since we're drawing a checkbox too.
-    %y2x_buffer_index()
-
     ; grab the memory address (long)
     LDA ($02) : INC $02 : INC $02 : STA $04
     LDA ($02) : INC $02 : STA $06
 
+    ; Draw the text first (since it uses A)
+    %y2x_buffer_index()
+  PHX
+    JSR cm_draw_text
+  PLX
+
+    ; Set position for ON/OFF
+    TXA : CLC : ADC #$001C : TAX
+
     ; grab the value at that memory address
     LDA [$04] : BNE .checked
-    LDA #$2472
-    BRA .draw_text
+
+    ; OFF
+    LDA #$344B : STA $1000, X
+    LDA #$344D : STA $1002, X : STA $1004, X
+
+    BRA .end
 
   .checked
-    LDA #$2473
+    ; ON
+    LDA #$3C4B : STA $1000, X
+    LDA #$3C4C : STA $1002, X
 
-  .draw_text
-    ; draw checkbox and text
-    STA $1000, X : INX : INX
-    JSR cm_draw_text
-    
+  .end
     RTS
 
 cm_action_draw_jsr:
@@ -561,7 +568,7 @@ cm_menuitem_test_back:
 cm_mainmenu_test_jsr:
     dw !CM_ACTION_JSR
     dw #tezt
-    db "JSR dat coord", #$FF
+    db "JSR coord", #$FF
 
 cm_mainmenu_test_submenu:
     dw !CM_ACTION_SUBMENU
@@ -576,7 +583,7 @@ cm_mainmenu_toggle_xy:
 cm_mainmenu_toggle_qw:
     dw !CM_ACTION_TOGGLE_BYTE
     dl !ram_qw_indicator_toggle
-    db "Quickwarp indicator", #$FF
+    db "QW indicator", #$FF
 
 cm_mainmenu_toggle_oob:
     dw !CM_ACTION_TOGGLE_BYTE
