@@ -3,6 +3,15 @@ org $00FFD8
     db $08 ; 256kb
 
 
+; == CTRL 2 ==
+
+; Enable controller 2 CLR
+; Overrides the following:
+; $0083F8: 60  RTS
+org $0083F8
+    NOP
+
+
 ; == FRAME ADVANCE ==
 
 ; Overrides the following
@@ -21,15 +30,6 @@ org $00803B
 ; $008046: 29 10  AND #$10
 org $008044
     LDA $F7 : AND.b #$80
-
-
-; == CTRL 2 ==
-
-; Enable controller 2 CLR
-; Overrides the following:
-; $0083F8: 60  RTS
-org $0083F8
-    NOP
 
 
 ; == BAGE CHEAT CODE ==

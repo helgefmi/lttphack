@@ -15,8 +15,6 @@
 !lowram_draw_tmp2 = $04DE
 !lowram_draw_tmp3 = $04E0
 
-!lowram_oob_toggle = $04E2
-
 !ram_gamemode_copy = $7F767E
 !ram_submode_copy = $7F7680
 
@@ -31,13 +29,21 @@
 !ram_hex2dec_first_digit = $7F768C
 !ram_hex2dec_second_digit = $7F768E
 !ram_hex2dec_third_digit = $7F7690
-!ram_last_frame_qw_check_enabled = $7F7696
+
 !ram_last_frame_xy_toggle = $7F7698
+
 !ram_lit_rooms_toggle = $7F769A
-!ram_qw_indicator_toggle = $7F769C
+!ram_qw_toggle = $7F769C
+!ram_qw_last_scroll = $7F76A2
 !ram_xy_toggle = $7F769E
+!ram_enemy_hp_toggle = $7F76A4
+!ram_counters_toggle = $7F76A6
+!ram_input_display_toggle = $7F76A8
+!lowram_oob_toggle = $037F
+!ram_los_toggle = $7F76AC
 
 !ram_debug = $7F7777
+!ram_debug2 = $7F7779
 
 !ram_cm_old_gamemode = $7F76A0
 !ram_cm_old_submode = $7F76A1

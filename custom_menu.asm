@@ -652,80 +652,12 @@ cm_action_draw_choice:
     JSR cm_draw_text
     RTS
 
-; --------------
-; MAIN MENU
-; --------------
-
-table header.tbl
-
-cm_mainmenu_indices:
-    dw #cm_menuitem_jsr
-    dw #cm_menuitem_sword
-    dw #cm_menuitem_submenu
-    dw #cm_menuitem_toggle_xy
-    dw #cm_menuitem_toggle_qw
-    dw #cm_menuitem_toggle_lit_rooms
-    dw #cm_menuitem_toggle_oob
-    dw #$0000
-    db "MAIN MENU", $FF
-
-cm_submenu_indices:
-    dw #cm_menuitem_back
-    dw #cm_menuitem_submenu
-    dw #cm_menuitem_toggle_lit_rooms
-    dw #cm_menuitem_toggle_oob
-    dw #$0000
-    db "CHOOSE YOUR DESTINY", $FF
-
-table normal.tbl
-
-cm_menuitem_sword:
-    dw !CM_ACTION_CHOICE
-    dl !ram_debug
-    db "Sword", #$FF
-    db "Fighter", #$FF
-    db "Master", #$FF
-    db "Tempered", #$FF
-    db "Gold", #$FF
-    db #$FF
-
-cm_menuitem_back:
-    dw !CM_ACTION_BACK
-    db "Back", #$FF
-
-cm_menuitem_jsr:
-    dw !CM_ACTION_JSR
-    dw #tezt
-    db "Do something", #$FF
-
-cm_menuitem_submenu:
-    dw !CM_ACTION_SUBMENU
-    dw #cm_submenu_indices
-    db "Submenu", #$FF
-
-cm_menuitem_toggle_xy:
-    dw !CM_ACTION_TOGGLE_BYTE
-    dl !ram_xy_toggle
-    db "Coordinates", #$FF
-
-cm_menuitem_toggle_qw:
-    dw !CM_ACTION_TOGGLE_BYTE
-    dl !ram_qw_indicator_toggle
-    db "QW indicator", #$FF
-
-cm_menuitem_toggle_oob:
-    dw !CM_ACTION_TOGGLE_BYTE
-    dl !lowram_oob_toggle
-    db "OoB mode", #$FF
-
-cm_menuitem_toggle_lit_rooms:
-    dw !CM_ACTION_TOGGLE_BYTE
-    dl !ram_lit_rooms_toggle
-    db "Lit rooms", #$FF
-
+incsrc cm_mainmenu.asm
 
 tezt:
     LDA.b #$01 : STA !ram_xy_toggle
+  %a16()
+    LDA !ram_debug2 : INC : INC : INC : INC : STA !ram_debug2
   %a8()
     RTS
 

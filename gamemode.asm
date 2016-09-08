@@ -140,28 +140,6 @@ gamemode_hook:
     %a16()
     INC !lowram_room_gametime
 
-  .input_reset_seg
-    LDA !ram_ctrl1_word : CMP #$0030 : BNE .input_qw
-    STZ !lowram_seg_frames : STZ !lowram_seg_minutes : STZ !lowram_seg_seconds
-
-  .input_qw
-    LDA.w #$00 : STA !ram_qw_indicator_toggle
-
-    ; Check L+R
-    LDA !ram_ctrl1_word : AND #$3000 : CMP #$3000 : BNE .input_inc_sword
-
-    ; Are we outside?
-    LDA $1B : AND.w #$FF : BNE .input_inc_sword
-
-    ; Is mirror the active item?
-    LDA $0202 : AND.w #$FF : BEQ .input_inc_sword
-    CMP.w #$14 : BNE .input_inc_sword
-
-    ; If last three bits are 111 or 110, we can quickwarp from here.
-    LDA $00E2 : AND.w #$6 : CMP.w #$6 : BNE .input_inc_sword
-
-    LDA.w #$01 : STA !ram_qw_indicator_toggle
-
   .input_inc_sword
     %a8()
     LDA $F5 : CMP.b #$02 : BNE .input_inc_armor

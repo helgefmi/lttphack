@@ -14,13 +14,22 @@ x [1] Code some general menu:
     x background gfx
     x use left/right to toggle choice menu items
     x make each (sub) menu have a header
+    - support menues longer than the screen
+    - number widget (min and max)
+        * should maybe make a general function to handle checking these bounds since it comes up all the time
+        * support repeating inputs (holding dpad button)
+    - press A to get dropdown on choice fields
+    - draw submenu over parent menu (with 2 tiles of padding?)
     - make sure to only go to this game mode when its safe to do so
         - not while bringing up the item menu
         - not before selecting a file
 
 - [1] Move controller 2 inputs to the menu.
+    x Toggles
+    - Equipment
 
 - [1] Add buncha cool stuff to the menu. Inventory/game state editing etc.
+    - Items
 
 - [1] Teleport "anywhere".
 
@@ -43,13 +52,22 @@ x [1] Code some general menu:
 
 - [3] Make counters not run while game is paused (frame advance mode). Can be useful for TAS-ing rooms.
 
+- [3] Save best room times. Make them persist through save/load state.
+      This can then be exportable through a web ui. Could even include WR times in next version. Or perhaps a "patch your
+      SRM with WR times" web ui. Holy carp.  
+
+- [3] Mashing minigame (mps, max frames w/o mash, frames lost total etc)
+
+- [3] Reconfigurable controls (save/load state mostly)
+
 - [8] Record inputs (and play them back from state). The holy grail. Would need to replace the RNG to a deterministic
       one. Probably won't happen.
 
-- [9] Level editor.
+- [9] Level editor. Ha.
 
-Menu Spec
-=========
+
+Menu widgets
+============
 
 [ ] = checkboxes
     press A to toggle.
@@ -63,21 +81,30 @@ Menu Spec
 [0-999] = text inputs
     hold ^ or v to increment/decrement
 
-- Inventory
+
+Menu spec
+=========
+
+- Equipment
     * Get full equipment
     [ ] Bow
     [ ] Boomerang
     [ ] .. etc
 
-- Equipment/Resources
+- Resources
     Sword: [Fighter | Master | Tempered | Gold]
-    Shield, armor..
+    Shield
+    Armor
     Rupees: [0-999]
-    Hearts, bombs, arrows..
+    Hearts
+    Bombs
+    Arrow
+    Keys
 
 - Teleport
     [ ] Change to appropriate game state (equipment etc) for the chosen segment
         - Mode [Any% NMG | 100% | ..]
+    [ ] I use sanc heart
     * Escape
     * Eastern
     * Desert (Overworld)
@@ -89,26 +116,28 @@ Menu Spec
     [ ] Killed Armos
     [ ] Killed Lammolas
     etc..
-    [ ] Opened theives' Town
+    [ ] Opened Theives' Town
     [ ] Did digging game
     etc..
 
 - Toggle feature
-    [ ] Show coordinates
-    [ ] Show quick warp indicator
-    [ ] Make dark rooms lit
-    [ ] Toggle OoB Mode
+    [ ] Counters
     [ ] Input display
-    [ ] Show LoS sprites
+    [ ] Enemy HP
+    [ ] Coordinates
+    [ ] QW indicator
+    [ ] Lit rooms
+    [ ] OoB Mode
+    [ ] LoS sprites
+
 
 Notes
 =====
-    %a16()
-    LDA.w #$6 : STA $1AF0
+%a16()
+LDA.w #$6 : STA $1AF0
 
-    %ai8()
-    LDA $10 : STA $010C
-    LDA #$0E : STA $10
-    LDA #$0A : STA $11
-    LDA #$6 : STA $0200
-    RTL
+%ai8()
+LDA $10 : STA $010C
+LDA #$0E : STA $10
+LDA #$0A : STA $11
+LDA #$6 : STA $0200
