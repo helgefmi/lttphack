@@ -88,6 +88,27 @@
 
 !UseImplicitRegIndexedLocalJumpTable = $008781
 
+!ram_item_bow = $7EF340
+!ram_item_boom = $7EF341
+!ram_item_hook = $7EF342
+!ram_item_bombs = $7EF343
+!ram_item_powder = $7EF344
+!ram_item_fire_rod = $7EF345
+!ram_item_ice_rod = $7EF346
+!ram_item_bombos = $7EF347
+!ram_item_ether = $7EF348
+!ram_item_2quake = $7EF349
+!ram_item_lantern = $7EF34A
+!ram_item_hammer = $7EF34B
+!ram_item_flute = $7EF34C
+!ram_item_net = $7EF34D
+!ram_item_book = $7EF34E
+!ram_item_bottle = $7EF34F
+!ram_item_somaria = $7EF350
+!ram_item_byrna = $7EF351
+!ram_item_cape = $7EF352
+!ram_item_mirror = $7EF353
+
 ;-------------------------
 ; Macros
 ;-------------------------

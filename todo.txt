@@ -14,12 +14,14 @@ x [1] Code some general menu:
     x background gfx
     x use left/right to toggle choice menu items
     x make each (sub) menu have a header
-    - support menues longer than the screen
     - number widget (min and max)
         * should maybe make a general function to handle checking these bounds since it comes up all the time
         * support repeating inputs (holding dpad button)
+    - choice jsr widget
+        * needed to do more complicated .. choices 8).
     - press A to get dropdown on choice fields
     - draw submenu over parent menu (with 2 tiles of padding?)
+    - support menues longer than the screen
     - make sure to only go to this game mode when its safe to do so
         - not while bringing up the item menu
         - not before selecting a file

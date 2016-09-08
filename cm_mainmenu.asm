@@ -1,6 +1,6 @@
-; --------------
+;---------------
 ; Indices
-; --------------
+;---------------
 
 table header.tbl
 
@@ -14,28 +14,28 @@ cm_mainmenu_indices:
     db "MAIN MENU", $FF
 
 cm_submenu_items:
-;    dw cm_equipment_bow
-;    dw cm_equipment_boom
-;    dw cm_equipment_hook
-;    dw cm_equipment_bombs
-;    dw cm_equipment_powder
-;    dw cm_equipment_fire_rod
-;    dw cm_equipment_ice_rod
-;    dw cm_equipment_bombos
-;    dw cm_equipment_ether
-;    dw cm_equipment_quake
-;    dw cm_equipment_lantern
-;    dw cm_equipment_hammer
-;    dw cm_equipment_flute
-;    dw cm_equipment_net
-;    dw cm_equipment_book
-;    dw cm_equipment_bottle
-;    dw cm_equipment_somaria
-;    dw cm_equipment_byrna
-;    dw cm_equipment_cape
-;    dw cm_equipment_mirror
+    dw cm_equipment_bow
+    dw cm_equipment_boom
+    dw cm_equipment_hook
+    dw cm_equipment_bombs
+    dw cm_equipment_powder
+    dw cm_equipment_fire_rod
+    dw cm_equipment_ice_rod
+    dw cm_equipment_bombos
+    dw cm_equipment_ether
+    dw cm_equipment_quake
+    dw cm_equipment_lantern
+    dw cm_equipment_hammer
+    dw cm_equipment_flute
+    dw cm_equipment_net
+    dw cm_equipment_book
+    dw cm_equipment_bottle
+    dw cm_equipment_somaria
+    dw cm_equipment_byrna
+    dw cm_equipment_cape
+    dw cm_equipment_mirror
     dw #$0000
-    db "ITEMS", $FF
+    db "Y ITEMS", $FF
 
 cm_submenu_equipment:
 ;    dw cm_resource_boots
@@ -52,7 +52,7 @@ cm_submenu_equipment:
 ;    dw cm_resource_arrows
 ;    dw cm_resource_keys
     dw #$0000
-    db "EQUIPMENT", $FF
+    db "OTHER ITEMS", $FF
 
 cm_submenu_teleport:
 ;    dw cm_teleport_mode
@@ -89,26 +89,26 @@ cm_submenu_features:
     dw #$0000
     db "TOGGLE FEATURES", $FF
 
-; -----------------
-; MAIN MENU ITEMS
-; -----------------
-
 table normal.tbl
+
+;------------------
+; MAIN MENU ITEMS
+;------------------
 
 cm_main_goto_items:
     dw !CM_ACTION_SUBMENU
     dw #cm_submenu_items
-    db "Items", #$FF
+    db "Y Items", #$FF
 
 cm_main_goto_equipment:
     dw !CM_ACTION_SUBMENU
     dw #cm_submenu_equipment
-    db "Equipment", #$FF
+    db "Other Items", #$FF
 
 cm_main_goto_teleport:
     dw !CM_ACTION_SUBMENU
     dw #cm_submenu_teleport
-    db "Teleport to", #$FF
+    db "Teleport", #$FF
 
 cm_main_goto_gamestate:
     dw !CM_ACTION_SUBMENU
@@ -120,10 +120,119 @@ cm_main_goto_features:
     dw #cm_submenu_features
     db "Features", #$FF
 
+;-------------------
+; Y Item Menu Items
+;-------------------
 
-; -------------------
+cm_equipment_bow:
+    ; \todo choice: 1 = normal 3 = silver
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_bow
+    db "Bow", #$FF
+
+cm_equipment_boom:
+    ; \todo choice: 1 = normal 2 = red
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_boom
+    db "Boom", #$FF
+
+cm_equipment_hook:
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_hook
+    db "Hook", #$FF
+
+cm_equipment_bombs:
+    ; \todo numfield: 0-63
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_bombs
+    db "Bombs", #$FF
+
+cm_equipment_powder:
+    ; \todo choice: 1 = shroom 2 = powder
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_powder
+    db "Powder", #$FF
+
+cm_equipment_fire_rod:
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_fire_rod
+    db "Fire Rod", #$FF
+
+cm_equipment_ice_rod:
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_ice_rod
+    db "Ice Rod", #$FF
+
+cm_equipment_bombos:
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_bombos
+    db "Bombos", #$FF
+
+cm_equipment_ether:
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_ether
+    db "Ether", #$FF
+
+cm_equipment_quake:
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_2quake
+    db "Quake", #$FF
+
+cm_equipment_lantern:
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_lantern
+    db "Lantern", #$FF
+
+cm_equipment_hammer:
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_hammer
+    db "Hammer", #$FF
+
+cm_equipment_flute:
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_flute
+    db "Flute", #$FF
+
+cm_equipment_net:
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_net
+    db "Net", #$FF
+
+cm_equipment_book:
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_book
+    db "B of Medura", #$FF
+
+cm_equipment_bottle:
+    ; \todo choice: set $7EF35C to 03 and onwards (2 = empty, 3 = red, 4 = green, 5 = blue, 6 = fairy, 7 = bee)
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_bottle
+    db "Bottle", #$FF
+
+cm_equipment_somaria:
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_somaria
+    db "C of Somaria", #$FF
+
+cm_equipment_byrna:
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_byrna
+    db "C of Byrna", #$FF
+
+cm_equipment_cape:
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_cape
+    db "Cape", #$FF
+
+cm_equipment_mirror:
+    ; \todo sprite
+    dw !CM_ACTION_TOGGLE_BYTE
+    dl #!ram_item_mirror
+    db "Mirror", #$FF
+
+;--------------------
 ; Feature Menu Items
-; -------------------
+;--------------------
 
 cm_feature_counters:
     dw !CM_ACTION_TOGGLE_BYTE
