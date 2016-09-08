@@ -434,8 +434,8 @@ cm_action_toggle_byte:
     ; Will only toggle the first bit.
   %a16()
     LDA ($00) : INC $0000 : INC $0000 : STA $02
-  %a8()
     LDA ($00) : INC $0000 : STA $04
+  %a8()
     LDA [$02] : EOR #$01 : STA [$02]
     RTS
 
@@ -492,9 +492,8 @@ cm_action_back:
 cm_action_choice:
   %a16()
     LDA ($00) : INC $0000 : INC $0000 : STA $02
-
-  %ai8()
     LDA ($00) : INC $0000 : STA $04
+  %ai8()
 
     ; we either increment or decrement
     LDA $F4 : CMP #$02 : BEQ .pressed_left
@@ -508,10 +507,10 @@ cm_action_choice:
     LDY.b #$00  ; Y will be set to max
 
   .loop_choices
-    LDA ($00) : CMP.b #$FF : BEQ .loop_done
+    LDA ($00) : %a16() : INC $0000 : %a8() : CMP.b #$FF : BEQ .loop_done
 
   .loop_text
-    LDA ($00) : INC $0000
+    LDA ($00) : %a16() : INC $0000 : %a8()
     CMP.b #$FF : BNE .loop_text
     INY : BRA .loop_choices
 
@@ -537,6 +536,7 @@ cm_action_choice:
     TYA : DEC
 
   .end
+  %a8()
     STA [$02]
     RTS
 
@@ -636,33 +636,30 @@ cm_action_draw_choice:
     ; set position for ON/OFF
     TXA : CLC : ADC #$001C : TAX
 
+    STA !ram_debug
+    LDY #$0000
+    LDA #$0000
+  %a8()
     ; grab the value at that memory address
     LDA [$04] : TAY
 
     ; find the correct text that should be drawn (the selected choice)
-  %a8()
     INY : INY ; uh, skipping the first text that we already draw..
   .loop_choices
     DEY : BEQ .found
 
   .loop_text
-    LDA ($02) : INC $0002
+    LDA ($02) : %a16() : INC $0002 : %a8()
     CMP.b #$FF : BEQ .loop_choices
     BRA .loop_text
 
   .found
     LDA.b #$34 : STA $0E
     JSR cm_draw_text
+  %a16()
     RTS
 
 incsrc cm_mainmenu.asm
-
-tezt:
-    LDA.b #$01 : STA !ram_xy_toggle
-  %a16()
-    LDA !ram_debug2 : INC : INC : INC : INC : STA !ram_debug2
-  %a8()
-    RTS
 
 cm_hud_table:
     incbin cm_gfx.bin;
