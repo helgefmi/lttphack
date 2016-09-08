@@ -11,7 +11,7 @@ cm_mainmenu_indices:
     dw #cm_main_goto_gamestate
     dw #cm_main_goto_features
     dw #$0000
-    db "MAIN MENU", $FF
+    db "MAIN MENU", #$FF
 
 cm_submenu_items:
     dw cm_equipment_bow
@@ -35,7 +35,7 @@ cm_submenu_items:
     dw cm_equipment_cape
     dw cm_equipment_mirror
     dw #$0000
-    db "Y ITEMS", $FF
+    db "Y ITEMS", #$FF
 
 cm_submenu_equipment:
 ;    dw cm_resource_boots
@@ -52,7 +52,7 @@ cm_submenu_equipment:
 ;    dw cm_resource_arrows
 ;    dw cm_resource_keys
     dw #$0000
-    db "OTHER ITEMS", $FF
+    db "OTHER ITEMS", #$FF
 
 cm_submenu_teleport:
 ;    dw cm_teleport_mode
@@ -71,11 +71,11 @@ cm_submenu_teleport:
 ;    dw cm_teleport_gtower
 ;    dw cm_teleport_ganon
     dw #$0000
-    db "TELEPORT TO..", $FF
+    db "TELEPORT TO..", #$FF
 
 cm_submenu_gamestate:
     dw #$0000
-    db "GAME STATE", $FF
+    db "GAME STATE", #$FF
 
 cm_submenu_features:
     dw cm_feature_counters
@@ -87,7 +87,7 @@ cm_submenu_features:
     dw cm_feature_oob
     dw cm_feature_los
     dw #$0000
-    db "TOGGLE FEATURES", $FF
+    db "TOGGLE FEATURES", #$FF
 
 table normal.tbl
 
@@ -131,10 +131,15 @@ cm_equipment_bow:
     db "Bow", #$FF
 
 cm_equipment_boom:
-    ; \todo choice: 1 = normal 2 = red
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_CHOICE
     dl #!ram_item_boom
     db "Boom", #$FF
+  table header.tbl
+    db "OFF", #$FF
+  table normal.tbl
+    db "Blue", #$FF
+    db "Red", #$FF
+    db #$FF
 
 cm_equipment_hook:
     dw !CM_ACTION_TOGGLE_BYTE
@@ -148,10 +153,15 @@ cm_equipment_bombs:
     db "Bombs", #$FF
 
 cm_equipment_powder:
-    ; \todo choice: 1 = shroom 2 = powder
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_CHOICE
     dl #!ram_item_powder
     db "Powder", #$FF
+  table header.tbl
+    db "OFF", #$FF
+  table normal.tbl
+    db "Shroom", #$FF
+    db "Powder", #$FF
+    db #$FF
 
 cm_equipment_fire_rod:
     dw !CM_ACTION_TOGGLE_BYTE
@@ -279,23 +289,21 @@ cm_feature_los:
 
 
 
-; TEST
-
-cm_menuitem_sword:
-    dw !CM_ACTION_CHOICE
-    dl !ram_debug
-    db "Sword", #$FF
-    db "Fighter", #$FF
-    db "Master", #$FF
-    db "Tempered", #$FF
-    db "Gold", #$FF
-    db #$FF
-
-cm_menuitem_back:
-    dw !CM_ACTION_BACK
-    db "Back", #$FF
-
-cm_menuitem_jsr:
-    dw !CM_ACTION_JSR
-    dw #tezt
-    db "Do something", #$FF
+;cm_menuitem_sword:
+;    dw !CM_ACTION_CHOICE
+;    dl !ram_debug
+;    db "Sword", #$FF
+;    db "Fighter", #$FF
+;    db "Master", #$FF
+;    db "Tempered", #$FF
+;    db "Gold", #$FF
+;    db #$FF
+;
+;cm_menuitem_back:
+;    dw !CM_ACTION_BACK
+;    db "Back", #$FF
+;
+;cm_menuitem_jsr:
+;    dw !CM_ACTION_JSR
+;    dw #tezt
+;    db "Do something", #$FF
