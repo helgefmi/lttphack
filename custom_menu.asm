@@ -577,8 +577,10 @@ cm_action_draw_toggle_byte:
     ; Set position for ON/OFF
     TXA : CLC : ADC #$001C : TAX
 
+  %a8()
     ; grab the value at that memory address
     LDA [$04] : BNE .checked
+  %a16()
 
     ; OFF
     LDA #$344B : STA $1000, X
@@ -587,6 +589,7 @@ cm_action_draw_toggle_byte:
     BRA .end
 
   .checked
+  %a16()
     ; ON
     LDA #$3C4B : STA $1000, X
     LDA #$3C4C : STA $1002, X
