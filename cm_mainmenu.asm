@@ -125,18 +125,30 @@ cm_main_goto_features:
 ;-------------------
 
 cm_equipment_bow:
-    ; \todo choice: 1 = normal 3 = silver
-    dw !CM_ACTION_TOGGLE_BYTE
-    dl #!ram_item_bow
+    dw !CM_ACTION_CHOICE_JSR
+    dw #.set_ram_value
+    dl #!ram_cm_item_bow
     db "Bow", #$FF
+    db "None", #$FF
+    db "Blue", #$FF
+    db "Red", #$FF
+    db #$FF
+
+  .set_ram_value
+    ; 0 -> 1 -> 3
+    ASL : BNE .end
+    INC
+  .end
+    DEC
+    STA !ram_item_bow
+    RTS
+
 
 cm_equipment_boom:
     dw !CM_ACTION_CHOICE
     dl #!ram_item_boom
     db "Boom", #$FF
-  table header.tbl
-    db "OFF", #$FF
-  table normal.tbl
+    db "None", #$FF
     db "Blue", #$FF
     db "Red", #$FF
     db #$FF
@@ -153,6 +165,7 @@ cm_equipment_bombs:
     db "Bombs", #$FF
 
 cm_equipment_powder:
+    ; \todo "OFF" font
     dw !CM_ACTION_CHOICE
     dl #!ram_item_powder
     db "Powder", #$FF
@@ -214,10 +227,27 @@ cm_equipment_book:
     db "B of Medura", #$FF
 
 cm_equipment_bottle:
-    ; \todo choice: set $7EF35C to 03 and onwards (2 = empty, 3 = red, 4 = green, 5 = blue, 6 = fairy, 7 = bee)
-    dw !CM_ACTION_TOGGLE_BYTE
-    dl #!ram_item_bottle
+    dw !CM_ACTION_TOGGLE_BYTE_JSR
+    dw #.set_bottles
+    dl #!ram_cm_item_bottle
     db "Bottle", #$FF
+
+  .set_bottles
+    CMP #$00 : BEQ .no_bottles
+
+    LDA.b #$03 : STA !ram_item_bottle_array
+    LDA.b #$04 : STA !ram_item_bottle_array+1
+    LDA.b #$05 : STA !ram_item_bottle_array+2
+    LDA.b #$06 : STA !ram_item_bottle_array+3
+
+    BRA .end
+  .no_bottles
+    LDA.b #$00 : STA !ram_item_bottle_array
+                 STA !ram_item_bottle_array+1
+                 STA !ram_item_bottle_array+2
+                 STA !ram_item_bottle_array+3
+  .end
+    RTS
 
 cm_equipment_somaria:
     dw !CM_ACTION_TOGGLE_BYTE
@@ -235,10 +265,16 @@ cm_equipment_cape:
     db "Cape", #$FF
 
 cm_equipment_mirror:
-    ; \todo sprite
-    dw !CM_ACTION_TOGGLE_BYTE
-    dl #!ram_item_mirror
+    dw !CM_ACTION_TOGGLE_BYTE_JSR
+    dw #.set_mirror
+    dl #!ram_cm_item_mirror
     db "Mirror", #$FF
+
+
+  .set_mirror
+    ; 0 -> 2
+    ASL : STA !ram_item_mirror
+    RTS
 
 ;--------------------
 ; Feature Menu Items

@@ -81,6 +81,8 @@
 !CM_ACTION_SUBMENU = #$04
 !CM_ACTION_BACK = #$06
 !CM_ACTION_CHOICE = #$08
+!CM_ACTION_TOGGLE_BYTE_JSR = #$0A
+!CM_ACTION_CHOICE_JSR = #$0C
 
 ;-------------------------
 ; From ROM
@@ -89,6 +91,7 @@
 !UseImplicitRegIndexedLocalJumpTable = $008781
 
 !ram_item_bow = $7EF340
+    !ram_cm_item_bow = $7F76C0
 !ram_item_boom = $7EF341
 !ram_item_hook = $7EF342
 !ram_item_bombs = $7EF343
@@ -104,10 +107,13 @@
 !ram_item_net = $7EF34D
 !ram_item_book = $7EF34E
 !ram_item_bottle = $7EF34F
+    !ram_cm_item_bottle = $7F76C2
+    !ram_item_bottle_array = $7EF35C
 !ram_item_somaria = $7EF350
 !ram_item_byrna = $7EF351
 !ram_item_cape = $7EF352
 !ram_item_mirror = $7EF353
+    !ram_cm_item_mirror = $7F76C1
 
 ;-------------------------
 ; Macros
