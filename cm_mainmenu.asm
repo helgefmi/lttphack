@@ -11,7 +11,7 @@ cm_mainmenu_indices:
     dw #cm_main_goto_gamestate
     dw #cm_main_goto_features
     dw #$0000
-    db "MAIN MENU", #$FF
+    db #$2C, "MAIN MENU", #$FF
 
 cm_submenu_items:
     dw cm_equipment_bow
@@ -35,7 +35,7 @@ cm_submenu_items:
     dw cm_equipment_cape
     dw cm_equipment_mirror
     dw #$0000
-    db "Y ITEMS", #$FF
+    db #$2C, "EQUIPMENT", #$FF
 
 cm_submenu_equipment:
 ;    dw cm_resource_boots
@@ -52,7 +52,7 @@ cm_submenu_equipment:
 ;    dw cm_resource_arrows
 ;    dw cm_resource_keys
     dw #$0000
-    db "OTHER ITEMS", #$FF
+    db #$2C, "EQUIPMENT 2", #$FF
 
 cm_submenu_teleport:
 ;    dw cm_teleport_mode
@@ -71,11 +71,11 @@ cm_submenu_teleport:
 ;    dw cm_teleport_gtower
 ;    dw cm_teleport_ganon
     dw #$0000
-    db "TELEPORT TO..", #$FF
+    db #$2C, "TELEPORT", #$FF
 
 cm_submenu_gamestate:
     dw #$0000
-    db "GAME STATE", #$FF
+    db #$2C, "GAME STATE", #$FF
 
 cm_submenu_features:
     dw cm_feature_counters
@@ -87,7 +87,7 @@ cm_submenu_features:
     dw cm_feature_oob
     dw cm_feature_los
     dw #$0000
-    db "TOGGLE FEATURES", #$FF
+    db #$2C, "ROM FEATURES", #$FF
 
 table normal.tbl
 
@@ -98,27 +98,27 @@ table normal.tbl
 cm_main_goto_items:
     dw !CM_ACTION_SUBMENU
     dw #cm_submenu_items
-    db "Y Items", #$FF
+    db #$24, "Equipment", #$FF
 
 cm_main_goto_equipment:
     dw !CM_ACTION_SUBMENU
     dw #cm_submenu_equipment
-    db "Other Items", #$FF
+    db #$24, "Equipment 2", #$FF
 
 cm_main_goto_teleport:
     dw !CM_ACTION_SUBMENU
     dw #cm_submenu_teleport
-    db "Teleport", #$FF
+    db #$24, "Teleport", #$FF
 
 cm_main_goto_gamestate:
     dw !CM_ACTION_SUBMENU
     dw #cm_submenu_gamestate
-    db "Gamestate", #$FF
+    db #$24, "Game State", #$FF
 
 cm_main_goto_features:
     dw !CM_ACTION_SUBMENU
     dw #cm_submenu_features
-    db "Features", #$FF
+    db #$24, "ROM Features", #$FF
 
 ;-------------------
 ; Y Item Menu Items
@@ -128,10 +128,12 @@ cm_equipment_bow:
     dw !CM_ACTION_CHOICE_JSR
     dw #.set_ram_value
     dl #!ram_cm_item_bow
-    db "Bow", #$FF
-    db "None", #$FF
-    db "Blue", #$FF
-    db "Red", #$FF
+    db #$24, "Bow", #$FF
+  table header.tbl
+    db #$24, "OFF", #$FF
+  table normal.tbl
+    db #$24, "Normal", #$FF
+    db #$24, "Silver", #$FF
     db #$FF
 
   .set_ram_value
@@ -147,100 +149,104 @@ cm_equipment_bow:
 cm_equipment_boom:
     dw !CM_ACTION_CHOICE
     dl #!ram_item_boom
-    db "Boom", #$FF
-    db "None", #$FF
-    db "Blue", #$FF
-    db "Red", #$FF
+    db #$24, "Boom", #$FF
+  table header.tbl
+    db #$24, "OFF", #$FF
+  table normal.tbl
+    db #$24, "Blue", #$FF
+    db #$24, "Red", #$FF
     db #$FF
 
 cm_equipment_hook:
     dw !CM_ACTION_TOGGLE_BYTE
     dl #!ram_item_hook
-    db "Hook", #$FF
+    db #$24, "Hook", #$FF
 
 cm_equipment_bombs:
     ; \todo numfield: 0-63
     dw !CM_ACTION_TOGGLE_BYTE
     dl #!ram_item_bombs
-    db "Bombs", #$FF
+    db #$24, "Bombs", #$FF
 
 cm_equipment_powder:
     ; \todo "OFF" font
     dw !CM_ACTION_CHOICE
     dl #!ram_item_powder
-    db "Powder", #$FF
+    db #$24, "Powder", #$FF
   table header.tbl
-    db "OFF", #$FF
+    db #$24, "OFF", #$FF
   table normal.tbl
-    db "Shroom", #$FF
-    db "Powder", #$FF
+    db #$24, "Shroom", #$FF
+    db #$24, "Powder", #$FF
     db #$FF
 
 cm_equipment_fire_rod:
     dw !CM_ACTION_TOGGLE_BYTE
     dl #!ram_item_fire_rod
-    db "Fire Rod", #$FF
+    db #$24, "Fire Rod", #$FF
 
 cm_equipment_ice_rod:
     dw !CM_ACTION_TOGGLE_BYTE
     dl #!ram_item_ice_rod
-    db "Ice Rod", #$FF
+    db #$24, "Ice Rod", #$FF
 
 cm_equipment_bombos:
     dw !CM_ACTION_TOGGLE_BYTE
     dl #!ram_item_bombos
-    db "Bombos", #$FF
+    db #$24, "Bombos", #$FF
 
 cm_equipment_ether:
     dw !CM_ACTION_TOGGLE_BYTE
     dl #!ram_item_ether
-    db "Ether", #$FF
+    db #$24, "Ether", #$FF
 
 cm_equipment_quake:
     dw !CM_ACTION_TOGGLE_BYTE
     dl #!ram_item_2quake
-    db "Quake", #$FF
+    db #$24, "Quake", #$FF
 
 cm_equipment_lantern:
     dw !CM_ACTION_TOGGLE_BYTE
     dl #!ram_item_lantern
-    db "Lantern", #$FF
+    db #$24, "Lantern", #$FF
 
 cm_equipment_hammer:
     dw !CM_ACTION_TOGGLE_BYTE
     dl #!ram_item_hammer
-    db "Hammer", #$FF
+    db #$24, "Hammer", #$FF
 
 cm_equipment_flute:
     dw !CM_ACTION_TOGGLE_BYTE
     dl #!ram_item_flute
-    db "Flute", #$FF
+    db #$24, "Flute", #$FF
 
 cm_equipment_net:
     dw !CM_ACTION_TOGGLE_BYTE
     dl #!ram_item_net
-    db "Net", #$FF
+    db #$24, "Net", #$FF
 
 cm_equipment_book:
     dw !CM_ACTION_TOGGLE_BYTE
     dl #!ram_item_book
-    db "B of Medura", #$FF
+    db #$24, "B of Medura", #$FF
 
 cm_equipment_bottle:
     dw !CM_ACTION_TOGGLE_BYTE_JSR
     dw #.set_bottles
     dl #!ram_cm_item_bottle
-    db "Bottle", #$FF
+    db #$24, "Bottle", #$FF
 
   .set_bottles
     CMP #$00 : BEQ .no_bottles
 
+    ; Creates 4 bottles of various colors
     LDA.b #$03 : STA !ram_item_bottle_array
     LDA.b #$04 : STA !ram_item_bottle_array+1
     LDA.b #$05 : STA !ram_item_bottle_array+2
     LDA.b #$06 : STA !ram_item_bottle_array+3
 
     BRA .end
+
   .no_bottles
     LDA.b #$00 : STA !ram_item_bottle_array
                  STA !ram_item_bottle_array+1
@@ -252,23 +258,23 @@ cm_equipment_bottle:
 cm_equipment_somaria:
     dw !CM_ACTION_TOGGLE_BYTE
     dl #!ram_item_somaria
-    db "C of Somaria", #$FF
+    db #$24, "C of Somaria", #$FF
 
 cm_equipment_byrna:
     dw !CM_ACTION_TOGGLE_BYTE
     dl #!ram_item_byrna
-    db "C of Byrna", #$FF
+    db #$24, "C of Byrna", #$FF
 
 cm_equipment_cape:
     dw !CM_ACTION_TOGGLE_BYTE
     dl #!ram_item_cape
-    db "Cape", #$FF
+    db #$24, "Cape", #$FF
 
 cm_equipment_mirror:
     dw !CM_ACTION_TOGGLE_BYTE_JSR
     dw #.set_mirror
     dl #!ram_cm_item_mirror
-    db "Mirror", #$FF
+    db #$24, "Mirror", #$FF
 
 
   .set_mirror
@@ -283,43 +289,43 @@ cm_equipment_mirror:
 cm_feature_counters:
     dw !CM_ACTION_TOGGLE_BYTE
     dl !ram_counters_toggle
-    db "Counters", #$FF
+    db #$24, "Counters", #$FF
 
 cm_feature_input_display:
     dw !CM_ACTION_TOGGLE_BYTE
     dl !ram_input_display_toggle
-    db "Input Display", #$FF
+    db #$24, "Input Display", #$FF
 
 cm_feature_enemy_hp:
     dw !CM_ACTION_TOGGLE_BYTE
     dl !ram_enemy_hp_toggle
-    db "Enemy HP", #$FF
+    db #$24, "Enemy HP", #$FF
 
 cm_feature_xy:
     dw !CM_ACTION_TOGGLE_BYTE
     dl !ram_xy_toggle
-    db "Coordinates", #$FF
+    db #$24, "Coordinates", #$FF
 
 cm_feature_qw:
     dw !CM_ACTION_TOGGLE_BYTE
     dl !ram_qw_toggle
-    db "QW Indicator", #$FF
+    db #$24, "QW Indicator", #$FF
 
 cm_feature_lit_rooms:
     dw !CM_ACTION_TOGGLE_BYTE
     dl !ram_lit_rooms_toggle
-    db "Lit Rooms", #$FF
+    db #$24, "Lit Rooms", #$FF
 
 cm_feature_oob:
     dw !CM_ACTION_TOGGLE_BYTE
     dl !lowram_oob_toggle
-    db "OoB Mode", #$FF
+    db #$24, "OoB Mode", #$FF
 
 cm_feature_los:
     ; \todo implement
     dw !CM_ACTION_TOGGLE_BYTE
     dl !ram_los_toggle
-    db "LoS Sprites", #$FF
+    db #$24, "LoS Sprites", #$FF
 
 
 

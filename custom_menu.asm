@@ -308,11 +308,11 @@ cm_draw_active_menu:
   .loop
     ; Figure out if this menu item is on the same location as the cursor.
     TYA : CMP !lowram_cm_cursor_stack, X : BEQ .selected
-    LDA #$0020
+    LDA #$0000
     BRA .not_selected
 
   .selected
-    LDA #$0024
+    LDA #$0010
     
   .not_selected
     STA $0E
@@ -332,9 +332,9 @@ cm_draw_active_menu:
     JMP .loop
 
   .done_with_items
+    STZ $0E
     TYA : CLC : ADC $00 : INC : INC : STA $02
     LDX #$0186
-    LDA #$0030 : STA $0E
     JSR cm_draw_text
 
   %ai8()
@@ -345,6 +345,9 @@ cm_draw_text:
     ; Assumes I=16
   %a8()
     LDY #$0000
+    ; grab palette info
+    LDA ($02), Y : INY : CMP.b #$FF : BEQ .end
+    ORA $0E : STA $0E
 
   .loop
     LDA ($02), Y : CMP #$FF : BEQ .end
@@ -598,21 +601,22 @@ cm_action_draw_toggle_byte:
   %a8()
     ; grab the value at that memory address
     LDA [$04] : BNE .checked
-  %a16()
 
     ; OFF
-    LDA #$344B : STA $1000, X
-    LDA #$344D : STA $1002, X : STA $1004, X
+    LDA $0E : STA $1001, X : STA $1003, X : STA $1005, X
+    LDA.b #$5E : STA $1000, X
+    LDA.b #$55 : STA $1002, X : STA $1004, X
 
     BRA .end
 
   .checked
-  %a16()
     ; ON
-    LDA #$3C4B : STA $1000, X
-    LDA #$3C4C : STA $1002, X
+    LDA $0E : EOR.b #$18 : STA $1001, X : STA $1003, X
+    LDA.b #$5E : STA $1000, X
+    LDA.b #$5D : STA $1002, X
 
   .end
+  %a16()
     RTS
 
 cm_action_draw_toggle_byte_jsr:
@@ -677,7 +681,6 @@ cm_action_draw_choice:
     BRA .loop_text
 
   .found
-    LDA.b #$34 : STA $0E
     JSR cm_draw_text
   %a16()
     RTS
