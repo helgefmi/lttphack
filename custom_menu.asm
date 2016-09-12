@@ -429,6 +429,8 @@ cm_action_execute_table:
     dw cm_action_submenu
     dw cm_action_back
     dw cm_action_choice
+    dw cm_action_toggle_byte_jsr
+    dw cm_action_choice_jsr
 
 cm_action_toggle_byte:
     ; Will only toggle the first bit.
@@ -436,6 +438,14 @@ cm_action_toggle_byte:
     LDA ($00) : INC $00 : STA $04
   %ai8()
     LDA [$02] : EOR #$01 : STA [$02]
+    RTS
+
+cm_action_toggle_byte_jsr:
+    LDA ($00) : INC $00 : INC $00 : STA $06
+    JSR cm_action_toggle_byte
+
+  %ai8()
+    LDX.b #$00 : JSR ($0006, x)
     RTS
 
 cm_action_jsr:
@@ -535,8 +545,15 @@ cm_action_choice:
     TYA : DEC
 
   .end
-  %a8()
+  %ai8()
     STA [$02]
+    RTS
+
+cm_action_choice_jsr:
+    LDA ($00) : INC $00 : INC $00 : STA $08
+    JSR cm_action_choice
+    LDX.b #$00
+    JSR ($0008,x)
     RTS
 
 
@@ -554,6 +571,8 @@ cm_action_draw_table:
     dw cm_action_draw_submenu
     dw cm_action_draw_back
     dw cm_action_draw_choice
+    dw cm_action_draw_toggle_byte_jsr
+    dw cm_action_draw_choice_jsr
 
 macro y2x_buffer_index()
     ; Assumes A=16, I=16
@@ -594,6 +613,12 @@ cm_action_draw_toggle_byte:
     LDA #$3C4C : STA $1002, X
 
   .end
+    RTS
+
+cm_action_draw_toggle_byte_jsr:
+    ; just skip the JSR address
+    INC $02 : INC $02
+    JSR cm_action_draw_toggle_byte
     RTS
 
 cm_action_draw_jsr:
@@ -655,6 +680,12 @@ cm_action_draw_choice:
     LDA.b #$34 : STA $0E
     JSR cm_draw_text
   %a16()
+    RTS
+
+cm_action_draw_choice_jsr:
+    ; just skip the JSR address
+    INC $02 : INC $02
+    JSR cm_action_draw_choice
     RTS
 
 incsrc cm_mainmenu.asm
