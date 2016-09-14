@@ -52,7 +52,7 @@ CM_Init:
   %a8()
 
   %ppu_off()
-    JSR cm_transfer_tilemap
+    JSR cm_transfer_tileset
   %ppu_on()
 
     INC $11
@@ -60,6 +60,9 @@ CM_Init:
 
 
 CM_DrawMenu:
+    ; Save $1000-1680 so we can transfer it back aferwards
+    JSR cm_save_buffer
+
     JSR cm_redraw
 
     ; play sound effect for opening menu
@@ -157,6 +160,9 @@ CM_Return:
 
     JSR cm_clear_buffer
 
+    ; Restores $1000-1680 in case it was used for something.
+    JSR cm_restore_buffer
+
     ; tell NMI to update tilemap
     LDA.b #$01 : STA $17
     LDA.b #$22 : STA $0116
@@ -213,7 +219,59 @@ cm_clear_buffer:
     RTS
 
 
-cm_transfer_tilemap:
+cm_save_buffer:
+    ; Assumes I=8
+  %ai16()
+
+    LDX #$0000
+
+  .loop
+    LDA $1000, X : STA $7FF180, X
+    LDA $1080, X : STA $7FF200, X
+    LDA $1100, X : STA $7FF280, X
+    LDA $1180, X : STA $7FF300, X
+    LDA $1200, X : STA $7FF380, X
+    LDA $1280, X : STA $7FF400, X
+    LDA $1300, X : STA $7FF480, X
+    LDA $1380, X : STA $7FF500, X
+    LDA $1400, X : STA $7FF580, X
+    LDA $1480, X : STA $7FF600, X
+    LDA $1500, X : STA $7FF680, X
+    LDA $1580, X : STA $7FF700, X
+    LDA $1600, X : STA $7FF780, X
+    INX : INX : CPX #$080 : BNE .loop
+
+  %ai8()
+    RTS
+
+
+cm_restore_buffer:
+    ; Assumes I=8
+  %ai16()
+
+    LDX #$0000
+
+  .loop
+    LDA $7FF180, X : STA $1000, X 
+    LDA $7FF200, X : STA $1080, X 
+    LDA $7FF280, X : STA $1100, X 
+    LDA $7FF300, X : STA $1180, X 
+    LDA $7FF380, X : STA $1200, X 
+    LDA $7FF400, X : STA $1280, X 
+    LDA $7FF480, X : STA $1300, X 
+    LDA $7FF500, X : STA $1380, X 
+    LDA $7FF580, X : STA $1400, X 
+    LDA $7FF600, X : STA $1480, X 
+    LDA $7FF680, X : STA $1500, X 
+    LDA $7FF700, X : STA $1580, X 
+    LDA $7FF780, X : STA $1600, X 
+    INX : INX : CPX #$080 : BNE .loop
+
+  %ai8()
+    RTS
+
+
+cm_transfer_tileset:
     ; Assumes A=8
   %i16()
 
