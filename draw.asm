@@ -1,13 +1,9 @@
 org $238000
 draw_counters:
-    %a16()
-    ; Remove lil "-"
-    LDA #$207F : STA $7EC734
-
-    LDA !ram_counters_toggle : BEQ .just_clear
+  %a16()
+    LDA !ram_counters_toggle : BEQ .end
 
   PHX
-
     ; Segment counter
     LDA !lowram_seg_minutes : LDX #!POS_RT_SEG : JSL hex_to_dec : JSL draw3_white
     LDA !lowram_seg_seconds : JSL hex_to_dec : JSL draw2_yellow
@@ -19,23 +15,7 @@ draw_counters:
     ; Lag counter
     LDA !lowram_room_realtime_copy : SEC : SBC !lowram_room_gametime_copy
     LDX #!POS_LAG : JSL hex_to_dec : JSL draw3_white
-
   PLX
-    BRA .end
-
-  .just_clear
-    LDX #!POS_RT_ROOM
-    STA $7EC700,x : STA $7EC702,x : STA $7EC704,x
-    STA $7EC706,x : STA $7EC708,x
-
-    LDX #!POS_LAG
-    STA $7EC700,x : STA $7EC702,x : STA $7EC704,x
-
-    LDX #!POS_RT_SEG
-    STA $7EC700,x : STA $7EC702,x : STA $7EC704,x
-    STA $7EC706,x : STA $7EC708,x
-    STA $7EC70A,x : STA $7EC70C,x
-
 
   .end
     RTL

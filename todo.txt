@@ -15,20 +15,17 @@ x [1] Code some general menu:
     x use left/right to toggle choice menu items
     x make each (sub) menu have a header
     x choice jsr widget
-    - number widget (min and max)
-        * should maybe make a general function to handle checking these bounds since it comes up all the time
-        * support repeating inputs (holding dpad button)
-    - support menues longer than the screen
-    - fix fonts..
-        - letters: '?
+    x number widget (min and max)
+        - should maybe make a general function to handle checking these bounds since it comes up all the time
+        - support repeating inputs (holding dpad button)
+    - fix fonts
     - make sure to only go to this game mode when its safe to do so
-        - not while bringing up the item menu
-        - not before selecting a file
+        - item menu; before selecting file
 
-- [1] Move controller 2 inputs to the menu.
+x [1] Move controller 2 inputs to the menu.
     x Toggles
+    x Items
     x Equipment
-    - Equipment 2
 
 - [1] Add buncha cool stuff to the menu. Inventory/game state editing etc.
     - Items

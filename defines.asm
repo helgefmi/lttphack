@@ -30,8 +30,6 @@
 !ram_hex2dec_second_digit = $7F768E
 !ram_hex2dec_third_digit = $7F7690
 
-!ram_last_frame_xy_toggle = $7F7698
-
 !ram_lit_rooms_toggle = $7F769A
 !ram_qw_toggle = $7F769C
 !ram_qw_last_scroll = $7F76A2

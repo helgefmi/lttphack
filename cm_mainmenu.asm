@@ -38,24 +38,25 @@ cm_submenu_items:
     db #$2C, "ITEMS", #$FF
 
 cm_submenu_equipment:
+    dw cm_equipment_fill_magic
+    dw cm_equipment_fill_hearts
+    dw cm_equipment_fill_rupees
+
     dw cm_equipment_sword
     dw cm_equipment_shield
     dw cm_equipment_armor
 
-    dw cm_equipment_boots
     dw cm_equipment_gloves
+    dw cm_equipment_boots
     dw cm_equipment_flippers
     dw cm_equipment_moon_pearl
     dw cm_equipment_half_magic
-
-    dw cm_equipment_fill_magic
-    dw cm_equipment_fill_hearts
-    dw cm_equipment_fill_rupees
 
     dw cm_equipment_maxhp
     dw cm_equipment_bombs
     dw cm_equipment_arrows
     dw cm_equipment_keys
+
     dw #$0000
     db #$2C, "EQUIPMENT", #$FF
 
@@ -477,30 +478,83 @@ cm_equipment_keys:
 ; -------------------
 
 cm_feature_counters:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE_BYTE_JSR
+    dw .turn_off_counters
     dl !ram_counters_toggle
     db #$24, "Counters", #$FF
 
+  .turn_off_counters
+  %a16()
+    LDA #$207F : STA $7EC734
+
+    LDX.b #!POS_RT_ROOM
+    STA $7EC700,x : STA $7EC702,x : STA $7EC704,x
+    STA $7EC706,x : STA $7EC708,x
+
+    LDX.b #!POS_LAG
+    STA $7EC700,x : STA $7EC702,x : STA $7EC704,x
+
+    LDX.b #!POS_RT_SEG
+    STA $7EC700,x : STA $7EC702,x : STA $7EC704,x
+    STA $7EC706,x : STA $7EC708,x
+    STA $7EC70A,x : STA $7EC70C,x
+
+    RTS
+
 cm_feature_input_display:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE_BYTE_JSR
+    dw .turn_off_input_display
     dl !ram_input_display_toggle
     db #$24, "Input Display", #$FF
 
+  .turn_off_input_display
+  %a16()
+    LDA #$207F
+    STA !POS_MEM_INPUT_DISPLAY_TOP+0 : STA !POS_MEM_INPUT_DISPLAY_TOP+2
+    STA !POS_MEM_INPUT_DISPLAY_TOP+4 : STA !POS_MEM_INPUT_DISPLAY_TOP+6
+    STA !POS_MEM_INPUT_DISPLAY_TOP+8 : STA !POS_MEM_INPUT_DISPLAY_BOT+0
+    STA !POS_MEM_INPUT_DISPLAY_BOT+2 : STA !POS_MEM_INPUT_DISPLAY_BOT+4
+    STA !POS_MEM_INPUT_DISPLAY_BOT+6 : STA !POS_MEM_INPUT_DISPLAY_BOT+8
+
+    RTS
+
 cm_feature_enemy_hp:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE_BYTE_JSR
+    dw #.turn_off_enemy_hp
     dl !ram_enemy_hp_toggle
     db #$24, "Enemy HP", #$FF
 
+  .turn_off_enemy_hp
+  %ai16()
+    LDA #$207F : STA !POS_MEM_ENEMY_HEART_GFX
+    LDX.w #!POS_ENEMY_HEARTS : STA $7EC700,x : STA $7EC702,x
+    RTS
+
 cm_feature_xy:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE_BYTE_JSR
+    dw .turn_off_xy
     dl !ram_xy_toggle
     db #$24, "Coordinates", #$FF
 
+  .turn_off_xy
+  %ai16()
+    LDA #$207F : LDX.w #!POS_XY
+    STA $7EC700,x : STA $7EC702,x : STA $7EC704,x
+    STA $7EC706,x : STA $7EC708,x : STA $7EC70A,x
+    RTS
+
 cm_feature_qw:
-    ; \todo reversed colors
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE_BYTE_JSR
+    dw #.turn_off_qw
     dl !ram_qw_toggle
     db #$24, "QW Indicator", #$FF
+
+  .turn_off_qw
+  %a16()
+    LDA #$207F : STA $7EC80A
+    LDA #$207F : STA $7EC80C
+    RTS
+
 
 cm_feature_lit_rooms:
     dw !CM_ACTION_TOGGLE_BYTE

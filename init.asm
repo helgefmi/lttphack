@@ -1,5 +1,10 @@
+; INIT
+;
+; Code that is run once after the game has been powered on.
+
 org $0CC1FF
     JML init_hook
+
 
 org $268000
 init_hook:

@@ -14,11 +14,11 @@ gamemode_hook:
 
     ; Acmlm's Save State {{{
 
-    %ai16()
+  %ai16()
     LDA !ram_ctrl1_word : CMP #$1060 : BEQ +
     JMP b
 
-+   %a8()
++ %a8()
     ; store DMA to SRAM
     LDY #$0000 : LDX #$0000
 
@@ -43,7 +43,7 @@ gamemode_hook:
     CMP #$2060 : BEQ +
     JMP after_save_state
 
-  + %a8()
++ %a8()
     STZ $420C
     JSR ppuoff
     STZ $4310
@@ -68,7 +68,7 @@ gamemode_hook:
     LDA #$01 : STA $4310
     LDA #$18 : STA $4311
 
-  + %a8()
++ %a8()
     JMP end
 
   ppuoff:
@@ -116,7 +116,7 @@ gamemode_hook:
     ; load DMA from SRAM
     LDY #$0000 : LDX #$0000
 
-    %a8()
+  %a8()
 -   LDA $770000, X : STA $4300, X
     INX
     INY : CPY #$000B : BNE -
@@ -128,7 +128,7 @@ gamemode_hook:
 
   + LDA #$A1 : STA $4200
     LDA #$0F : STA $13 : STA $2100
-    %ai8()
+  %ai8()
     LDA #$01 : STA !lowram_last_frame_did_saveload
     RTL
 
@@ -137,72 +137,19 @@ gamemode_hook:
   after_save_state:
 
   .update_gt_counter
-    %a16()
+  %a16()
     INC !lowram_room_gametime
-
-  .input_inc_sword
-    %a8()
-    LDA $F5 : CMP.b #$02 : BNE .input_inc_armor
-
-    LDA $7EF359 : INC A : CMP.b #$05 : BNE +
-
-    LDA.b #$01
-
-  + STA $7EF359
-
-  .input_inc_armor
-    LDA $F5 : CMP.b #$01 : BNE .input_inc_shield
-
-    LDA $7EF35B : INC A : CMP.b #$03 : BNE +
-
-    LDA.b #$00
-
-  + STA $7EF35B
-
-  .input_inc_shield
-    LDA $F5 : CMP.b #$08 : BNE .input_restore
-
-    LDA $7EF35A : INC A : CMP.b #$04 : BNE +
-
-    LDA.b #$01
-
-  + STA $7EF35A
-
-  .input_restore
-    LDA $F5 : CMP.b #$10 : BNE .input_toggle_xy
-
-    ; 1/2 magic
-    LDA.b #$01 : STA $7EF37B
-
-    ; refill hearts, magic, bombs, and arrows
-    LDA.b #$FF : STA $7EF372 : STA $7EF373 : STA $7EF375 : STA $7EF376
-
-    ; 999 rupees
-    LDA.b #$E7 : STA $7EF360
-    LDA.b #$03 : STA $7EF361
-
-    ; give the player 9 keys
-    LDA.b #9 : STA $7EF36F
-
-  .input_toggle_xy
-    LDA $F7 : CMP.b #$40 : BNE .input_toggle_always_lit
-
-    LDA !ram_xy_toggle : EOR.b #$1 : STA !ram_xy_toggle
-
-  .input_toggle_always_lit
-    LDA $F5 : CMP.b #$04 : BNE .custom_menu
-
-    LDA !ram_lit_rooms_toggle : EOR.b #$1 : STA !ram_lit_rooms_toggle
+  %a8()
 
   .custom_menu
     LDA $10 : CMP.b #$0C : BEQ transition_detection
 
-    %a16()
+  %a16()
     LDA !ram_ctrl1_word : AND #$1000 : CMP #$1000 : BNE transition_detection
-    %a8()
+  %a8()
     LDA $F4 : CMP #$10 : BNE transition_detection
 
-    %ai8()
+  %ai8()
     LDA $10 : STA !ram_cm_old_gamemode
     LDA $11 : STA !ram_cm_old_submode
     LDA.b #$00 : STA $11
@@ -367,6 +314,6 @@ gamemode_hook:
     ; }}}
 
   end_of_gamemode_hook:
-    %ai8()
+  %ai8()
     JSL $0080B5 ; GameModes
     RTL
