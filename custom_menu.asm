@@ -37,7 +37,6 @@ CM_Local:
     dw CM_DrawMenu
     dw CM_MenuDown
     dw CM_Active
-    dw CM_DeInit
     dw CM_MenuUp
     dw CM_Return
 
@@ -100,6 +99,9 @@ CM_Active:
     BRA .done
 
   .pressed_start
+    ; play sound effect for closing menu, and go to next mode
+    LDA.b #$11 : STA $012F
+
     INC $11
     BRA .done
 
@@ -136,16 +138,6 @@ CM_Active:
     RTS
 
 
-CM_DeInit:
-    ; play sound effect for closing menu, and go to next mode
-    LDA.b #$11 : STA $012F
-
-    JSR cm_clear_buffer
-
-    INC $11
-    RTS
-
-
 CM_MenuUp:
   %a16()
     LDA $EA : CLC : ADC.w #$0008 : STA $EA
@@ -162,6 +154,12 @@ CM_Return:
   %ppu_off()
     JSL load_default_tileset
   %ppu_on()
+
+    JSR cm_clear_buffer
+
+    ; tell NMI to update tilemap
+    LDA.b #$01 : STA $17
+    LDA.b #$22 : STA $0116
 
     LDA !ram_cm_old_gamemode : STA $10
     LDA !ram_cm_old_submode : STA $11
