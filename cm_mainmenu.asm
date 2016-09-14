@@ -394,15 +394,14 @@ cm_equipment_fill_magic:
     RTS
 
 cm_equipment_fill_rupees:
-    ; \todo word-sized numfields
     dw !CM_ACTION_JSR
     dw .set_full_rupees
     db #$24, "Fill Rupees", #$FF
 
   .set_full_rupees
+  %a16()
     ; Sets 999 rupees.
-    LDA #$E7 : STA $7EF360
-    LDA #$03 : STA $7EF361
+    LDA #$03E7 : STA $7EF360
     RTS
 
 cm_equipment_fill_hearts:
