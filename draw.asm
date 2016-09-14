@@ -98,6 +98,8 @@ draw2_gray:
     RTL
 
 hex_to_dec:
+    ; Enters A=16
+    ; Leaves A=16 \todo please fix this code
     STA $4204 : SEP #$20
     LDA #$64 : STA $4206
     PHA : PLA : PHA : PLA : REP #$20

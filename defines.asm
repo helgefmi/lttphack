@@ -83,12 +83,15 @@
 !CM_ACTION_CHOICE = #$08
 !CM_ACTION_TOGGLE_BYTE_JSR = #$0A
 !CM_ACTION_CHOICE_JSR = #$0C
+!CM_ACTION_NUMFIELD = #$0E
 
 ;-------------------------
 ; From ROM
 ;-------------------------
 
 !UseImplicitRegIndexedLocalJumpTable = $008781
+
+; ITEM MENU
 
 !ram_item_bow = $7EF340
     !ram_cm_item_bow = $7F76C0
@@ -114,6 +117,30 @@
 !ram_item_cape = $7EF352
 !ram_item_mirror = $7EF353
     !ram_cm_item_mirror = $7F76C1
+
+; EQUIPMENT MENU
+
+!ram_equipment_boots_menu = $7EF355
+    !ram_cm_equipment_boots = $7F76C3
+!ram_equipment_gloves = $7EF354
+!ram_equipment_flippers_menu = $7EF356
+    !ram_cm_equipment_flippers = $7F76C4
+!ram_equipment_moon_pearl = $7EF357
+!ram_equipment_sword = $7EF359
+!ram_equipment_shield = $7EF35A
+!ram_equipment_armor = $7EF35B
+!ram_equipment_maxhp = $7EF36C
+    !ram_cm_equipment_maxhp = $7F76C5
+!ram_equipment_curhp = $7EF36D
+!ram_equipment_arrows = $7EF376
+!ram_equipment_keys = $7EF36F
+!ram_equipment_half_magic = $7EF37B
+!ram_equipment_magic_meter = $7EF36E
+
+; GAME STATE
+
+!ram_capabilities = $7EF379
+!ram_game_phase = $7EF3C5
 
 ;-------------------------
 ; Macros

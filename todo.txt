@@ -14,24 +14,26 @@ x [1] Code some general menu:
     x background gfx
     x use left/right to toggle choice menu items
     x make each (sub) menu have a header
+    x choice jsr widget
     - number widget (min and max)
         * should maybe make a general function to handle checking these bounds since it comes up all the time
         * support repeating inputs (holding dpad button)
-    - choice jsr widget
-        * needed to do more complicated .. choices 8).
-    - press A to get dropdown on choice fields
-    - draw submenu over parent menu (with 2 tiles of padding?)
     - support menues longer than the screen
+    - fix fonts..
+        - letters: '?
     - make sure to only go to this game mode when its safe to do so
         - not while bringing up the item menu
         - not before selecting a file
 
 - [1] Move controller 2 inputs to the menu.
     x Toggles
-    - Equipment
+    x Equipment
+    - Equipment 2
 
 - [1] Add buncha cool stuff to the menu. Inventory/game state editing etc.
     - Items
+    - Need to initialize the ram_cm_* variables when loading a game.
+        - Might be better to do this every time you open the menu. Perhaps a custom code is needed, not generic.
 
 - [1] Teleport "anywhere".
 
@@ -51,6 +53,8 @@ x [1] Code some general menu:
 
 - [3] Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances
       the game one frame. Would be good for clip practice.
+
+- [3] Slowdown
 
 - [3] Make counters not run while game is paused (frame advance mode). Can be useful for TAS-ing rooms.
 
@@ -143,3 +147,13 @@ LDA $10 : STA $010C
 LDA #$0E : STA $10
 LDA #$0A : STA $11
 LDA #$6 : STA $0200
+
+7EF3C5-7EF3C8 = diff game phase things.
+7EF3C5=1 = got sword from uncle
+7EF3CC = zelda bitching (set to 0)
+
+BCC = BLT
+BCS = BGT
+
+7EF366 = Big key array, indexed by 040C. Masks found in 98C0:
+  LDY $040C : LDA $7EF366 : AND $98C0, Y : BNE .haveKey

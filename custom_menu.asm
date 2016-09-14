@@ -1,7 +1,9 @@
+; VRAM buffer:
 ; $10C0 = first line -> $D100 in VRAM
-; $1140 = second line
+; $1100 = second line
 ; $1780 = last line
 ; $40 bytes/32 tiles per line.
+
 
 ; Overrides Game Mode 0x0C.
 org $00806D
@@ -10,6 +12,7 @@ org $008089
     db #$80
 org $0080A5
     db #$25
+
 
 org $258000
 CM_Main:
@@ -22,10 +25,9 @@ CM_Main:
 
 
 CM_Local:
-    ; We try to stay %ai8() throughout these local $11 indexed functions.
-    ;
-    ; This means that any subroutines called from these subroutines, should make sure to do %ai8()
-    ; before RTS-ing.
+    ; For all these local $11 indexed subroutines:
+    ; Enters: AI=8.
+    ; Leave with: AI=8
 
     LDA $11
 
@@ -123,12 +125,13 @@ CM_Active:
 
   .pressed_b
   %ai16()
-    JSR cm_action_back
+    JSR cm_execute_back
   %ai8()
     BRA .redraw
 
   .redraw
     JSR cm_redraw
+
   .done
     RTS
 
@@ -153,6 +156,7 @@ CM_MenuUp:
 
   .not_done_scrolling
     RTS
+
 
 CM_Return:
   %ppu_off()
@@ -295,7 +299,11 @@ cm_draw_background_gfx:
   %ai8()
     RTS
 
+
 cm_draw_active_menu:
+    ; Enters: AI=8
+    ; Leave with: AI=8
+    ;
     ; This functions sets:
     ; $00[0x2] = menu indices
     ; $02[0x2] = current menu item index
@@ -325,7 +333,7 @@ cm_draw_active_menu:
     ; draw function to use its data however it likes, and jump to it.
     LDA ($02) : TAX
     INC $02 : INC $02
-    JSR (cm_action_draw_table, X)
+    JSR (cm_draw_action_table, X)
 
     PLX : PLY
     INY : INY
@@ -359,16 +367,17 @@ cm_draw_text:
   %a16()
     RTS
 
-
 ; ---------
 ; Cursor
 ; ---------
 
 cm_fix_cursor_wrap:
-    ; Checks if new cursor is out of bounds, and if so, sets it to the appropriate index.
+    ; Enters: A=16 I=8
+    ; Leave with: AI=8
+    ; Assumes: X = !lowram_cm_stack_index
+    ;          A = the current cursor position (might be out of bounds)
     ;
-    ; Assumes X = !lowram_cm_stack_index
-    ;         A = the current cursor position (might be out of bounds)
+    ; Checks if new cursor is out of bounds, and if so, sets it to the appropriate index.
   %ai16()
     PHA
     LDA !ram_cm_menu_stack, X : STA $00
@@ -402,6 +411,9 @@ cm_fix_cursor_wrap:
 
 
 cm_execute_cursor:
+    ; Enters AI=8
+    ; Leave with AI=8
+    ;
     ; The user selected a menu item.
   %ai16()
     LDX !lowram_cm_stack_index
@@ -412,30 +424,30 @@ cm_execute_cursor:
     ; Consume the action index and jump to the appropriate execute subroutine.
     LDA ($00) : INC $00 : INC $00 : TAX
 
-    JSR (cm_action_execute_table, X)
+    JSR (cm_execute_action_table, X)
   %ai8()
     RTS
 
-; --------------
-; Actions
-; --------------
+; ---------------
+; Execute Action
+; ---------------
 
-cm_action_execute_table:
+cm_execute_action_table:
     ; Subroutines for executing an action when the user selects a menu item.
     ;
-    ; We'll be in %ai16() when calling these.
-    ; $01 will contain the menu item's data.
-    ;
-    ; They can safely manipulate X/Y/A/P and $00-$0F.
-    dw cm_action_toggle_byte
-    dw cm_action_jsr
-    dw cm_action_submenu
-    dw cm_action_back
-    dw cm_action_choice
-    dw cm_action_toggle_byte_jsr
-    dw cm_action_choice_jsr
+    ; Enters: AI=8
+    ; Can mess with whatever it wants.
+    dw cm_execute_toggle_byte
+    dw cm_execute_jsr
+    dw cm_execute_submenu
+    dw cm_execute_back
+    dw cm_execute_choice
+    dw cm_execute_toggle_byte_jsr
+    dw cm_execute_choice_jsr
+    dw cm_execute_numfield
 
-cm_action_toggle_byte:
+
+cm_execute_toggle_byte:
     ; Will only toggle the first bit.
     LDA ($00) : INC $00 : INC $00 : STA $02
     LDA ($00) : INC $00 : STA $04
@@ -443,15 +455,17 @@ cm_action_toggle_byte:
     LDA [$02] : EOR #$01 : STA [$02]
     RTS
 
-cm_action_toggle_byte_jsr:
+
+cm_execute_toggle_byte_jsr:
     LDA ($00) : INC $00 : INC $00 : STA $06
-    JSR cm_action_toggle_byte
+    JSR cm_execute_toggle_byte
 
   %ai8()
-    LDX.b #$00 : JSR ($0006, x)
+    LDX.b #$00 : JSR ($0006, X)
     RTS
 
-cm_action_jsr:
+
+cm_execute_jsr:
     ; < and > should do nothing here
   %a8()
     LDA $F4 : CMP.b #$01 : BEQ .end
@@ -467,7 +481,8 @@ cm_action_jsr:
   .end
     RTS
 
-cm_action_submenu:
+
+cm_execute_submenu:
     ; < should do nothing here
   %a8()
     LDA $F4 : CMP.b #$02 : BEQ .end
@@ -480,7 +495,8 @@ cm_action_submenu:
   .end
     RTS
 
-cm_action_back:
+
+cm_execute_back:
     ; > should do nothing here
   %a8()
     LDA $F4 : CMP.b #$01 : BEQ .end
@@ -501,7 +517,8 @@ cm_action_back:
   .end
     RTS
 
-cm_action_choice:
+
+cm_execute_choice:
   %a16()
     LDA ($00) : INC $00 : INC $00 : STA $02
     LDA ($00) : INC $00 : STA $04
@@ -552,45 +569,98 @@ cm_action_choice:
     STA [$02]
     RTS
 
-cm_action_choice_jsr:
+
+cm_execute_choice_jsr:
     LDA ($00) : INC $00 : INC $00 : STA $08
-    JSR cm_action_choice
+    JSR cm_execute_choice
     LDX.b #$00
-    JSR ($0008,x)
+    JSR ($0008, X)
     RTS
 
 
-cm_action_draw_table:
+cm_execute_numfield:
+    ; Puts: memory address in $02[0x3]
+    ;       min in $05[0x1]
+    ;       max in $06[0x1]
+    ;       increment value in $07[0x1]
+  %a16()
+    LDA ($00) : INC $00 : INC $00 : STA $02
+    LDA ($00) : INC $00 : INC $00 : STA $04
+    ; One additional INC on the max value here, for convenience later.
+    LDA ($00) : INC $00 : INC $00 : INC : STA $06
+  %ai8()
+
+    LDA $F4 : CMP.b #$01 : BEQ .pressed_right
+
+    LDA [$02] : SEC : SBC $07
+
+    CMP $05 : BMI .set_to_max : BCC .set_to_max
+
+    STA [$02] : BRA .end
+
+  .pressed_right
+    LDA [$02] : CLC : ADC $07
+
+    CMP $06 : BCS .set_to_min
+
+    STA [$02] : BRA .end
+
+  .set_to_min
+    LDA $05 : STA [$02] : CLC : BRA .end
+
+  .set_to_max
+    LDA $06 : DEC : STA [$02] : CLC
+
+  .end
+  %ai16()
+    RTS
+
+
+cm_exectue_numfield_word:
+  ; will not work:
+  ; 1. execute the above on the least significant byte
+  ; 2. ^ sets Y=1 if we carried
+  ; 3. INC $02
+  ; 4. use additional entry point for the inc/dec only.
+
+; -------------
+; Draw Action
+; -------------
+
+cm_draw_action_table:
     ; Subroutines for drawing a menu item. I choose to do a subroutine dispatch for this,
     ; to make it possible for some widgets to draw itself differently (e.g. checkboxes, comboboxes etc).
     ;
-    ; We'll be in %ai16() when calling these, and should leave it like that when RTS-ing too.
-    ; $02 will contain the menu item's data, including the text.
-    ; Y will be set to the row number (starting for 0 and going upwards 2 at a time).
-    ;
-    ; They can safely reuse X and Y. The only restriction is not touching $00[0x2].
-    dw cm_action_draw_toggle_byte
-    dw cm_action_draw_jsr
-    dw cm_action_draw_submenu
-    dw cm_action_draw_back
-    dw cm_action_draw_choice
-    dw cm_action_draw_toggle_byte_jsr
-    dw cm_action_draw_choice_jsr
+    ; Enters: AI=16, Y=row number * 2
+    ; Leave with: AI=16, $00[0x2]
 
-macro y2x_buffer_index()
-    ; Assumes A=16, I=16
+    dw cm_draw_toggle_byte
+    dw cm_draw_jsr
+    dw cm_draw_submenu
+    dw cm_draw_back
+    dw cm_draw_choice
+    dw cm_draw_toggle_byte_jsr
+    dw cm_draw_choice_jsr
+    dw cm_draw_numfield
+
+
+macro item_index_to_vram_index()
+    ; Assumes AI=16
+    ; Messes with A, X
+    ;
     ; Find screen position from Y (item number)
     TYA : ASL : ASL : ASL : ASL : ASL
     CLC : ADC #$0206 : TAX
 endmacro
 
-cm_action_draw_toggle_byte:
+
+cm_draw_toggle_byte:
     ; grab the memory address (long)
     LDA ($02) : INC $02 : INC $02 : STA $04
     LDA ($02) : INC $02 : STA $06
 
     ; Draw the text first (since it uses A)
-    %y2x_buffer_index()
+    %item_index_to_vram_index()
   PHX
     JSR cm_draw_text
   PLX
@@ -619,44 +689,48 @@ cm_action_draw_toggle_byte:
   %a16()
     RTS
 
-cm_action_draw_toggle_byte_jsr:
+
+cm_draw_toggle_byte_jsr:
     ; just skip the JSR address
     INC $02 : INC $02
-    JSR cm_action_draw_toggle_byte
+    JSR cm_draw_toggle_byte
     RTS
 
-cm_action_draw_jsr:
+
+cm_draw_jsr:
     ; skip jsr address
     INC $02 : INC $02
 
     ; draw text normally
-    %y2x_buffer_index()
+    %item_index_to_vram_index()
     JSR cm_draw_text
     RTS
 
-cm_action_draw_submenu:
+
+cm_draw_submenu:
     INC $02 : INC $02 ; skip submenu address
 
     ; draw text normally
-    %y2x_buffer_index()
+    %item_index_to_vram_index()
     JSR cm_draw_text
     
     RTS
 
-cm_action_draw_back:
+
+cm_draw_back:
     ; just draw the text
-    %y2x_buffer_index()
+    %item_index_to_vram_index()
     JSR cm_draw_text
     RTS
 
 
-cm_action_draw_choice:
+cm_draw_choice:
     ; grab the memory address (long)
     LDA ($02) : INC $02 : INC $02 : STA $04
     LDA ($02) : INC $02 : STA $06
 
     ; Draw the text first (since it uses A)
-    %y2x_buffer_index()
+    %item_index_to_vram_index()
   PHX
     JSR cm_draw_text
   PLX
@@ -685,11 +759,60 @@ cm_action_draw_choice:
   %a16()
     RTS
 
-cm_action_draw_choice_jsr:
+
+cm_draw_choice_jsr:
     ; just skip the JSR address
     INC $02 : INC $02
-    JSR cm_action_draw_choice
+    JSR cm_draw_choice
     RTS
+
+
+cm_draw_numfield:
+    ; grab the memory address (long)
+    LDA ($02) : INC $02 : INC $02 : STA $04
+    LDA ($02) : INC $02 : STA $06
+
+    ; skip bounds and increment value
+    INC $02 : INC $02 : INC $02
+
+    ; Draw the text
+    %item_index_to_vram_index()
+  PHX
+    JSR cm_draw_text
+  PLX
+
+    ; set position for the number
+    TXA : CLC : ADC #$001C : TAX
+
+    LDA [$04] : AND #$00FF : JSL hex_to_dec
+
+    ; Clear out the area (black tile)
+    LDA #$24F5 : STA $1000, X
+                 STA $1000+2, X
+                 STA $1000+4, X
+
+    ; Set palette
+  %a8()
+    LDA.b #$24 : ORA $0E : STA $0F
+    LDA.b #$20 : STA $0E
+  %a16()
+
+    ; Draw numbers
+    LDA !ram_hex2dec_first_digit : BEQ .second_digit
+    CLC : ADC $0E : STA $1000, X
+
+  .second_digit
+    LDA !ram_hex2dec_second_digit : BEQ .third_digit
+    CLC : ADC $0E : STA $1000+2, X
+
+  .third_digit
+    LDA !ram_hex2dec_third_digit : CLC : ADC $0E : STA $1000+4, X
+
+    RTS
+
+; ------
+; Data
+; ------
 
 incsrc cm_mainmenu.asm
 
