@@ -226,19 +226,22 @@ cm_save_buffer:
     LDX #$0000
 
   .loop
-    LDA $1000, X : STA $7FF180, X
-    LDA $1080, X : STA $7FF200, X
-    LDA $1100, X : STA $7FF280, X
-    LDA $1180, X : STA $7FF300, X
-    LDA $1200, X : STA $7FF380, X
-    LDA $1280, X : STA $7FF400, X
-    LDA $1300, X : STA $7FF480, X
-    LDA $1380, X : STA $7FF500, X
-    LDA $1400, X : STA $7FF580, X
-    LDA $1480, X : STA $7FF600, X
-    LDA $1500, X : STA $7FF680, X
-    LDA $1580, X : STA $7FF700, X
-    LDA $1600, X : STA $7FF780, X
+    LDA $1000, X : STA $7ED000, X
+    LDA $1080, X : STA $7ED080, X
+    LDA $1100, X : STA $7ED100, X
+    LDA $1180, X : STA $7ED180, X
+    LDA $1200, X : STA $7ED200, X
+    LDA $1280, X : STA $7ED280, X
+    LDA $1300, X : STA $7ED300, X
+    LDA $1380, X : STA $7ED380, X
+    LDA $1400, X : STA $7ED400, X
+    LDA $1480, X : STA $7ED480, X
+    LDA $1500, X : STA $7ED500, X
+    LDA $1580, X : STA $7ED580, X
+    LDA $1600, X : STA $7ED600, X
+    LDA $1680, X : STA $7ED680, X
+    LDA $1700, X : STA $7ED700, X
+    LDA $1780, X : STA $7ED780, X
     INX : INX : CPX #$080 : BNE .loop
 
   %ai8()
@@ -252,19 +255,22 @@ cm_restore_buffer:
     LDX #$0000
 
   .loop
-    LDA $7FF180, X : STA $1000, X 
-    LDA $7FF200, X : STA $1080, X 
-    LDA $7FF280, X : STA $1100, X 
-    LDA $7FF300, X : STA $1180, X 
-    LDA $7FF380, X : STA $1200, X 
-    LDA $7FF400, X : STA $1280, X 
-    LDA $7FF480, X : STA $1300, X 
-    LDA $7FF500, X : STA $1380, X 
-    LDA $7FF580, X : STA $1400, X 
-    LDA $7FF600, X : STA $1480, X 
-    LDA $7FF680, X : STA $1500, X 
-    LDA $7FF700, X : STA $1580, X 
-    LDA $7FF780, X : STA $1600, X 
+    LDA $7ED000, X : STA $1000, X 
+    LDA $7ED080, X : STA $1080, X 
+    LDA $7ED100, X : STA $1100, X 
+    LDA $7ED180, X : STA $1180, X 
+    LDA $7ED200, X : STA $1200, X 
+    LDA $7ED280, X : STA $1280, X 
+    LDA $7ED300, X : STA $1300, X 
+    LDA $7ED380, X : STA $1380, X 
+    LDA $7ED400, X : STA $1400, X 
+    LDA $7ED480, X : STA $1480, X 
+    LDA $7ED500, X : STA $1500, X 
+    LDA $7ED580, X : STA $1580, X 
+    LDA $7ED600, X : STA $1600, X 
+    LDA $7ED680, X : STA $1680, X 
+    LDA $7ED700, X : STA $1700, X 
+    LDA $7ED780, X : STA $1780, X 
     INX : INX : CPX #$080 : BNE .loop
 
   %ai8()

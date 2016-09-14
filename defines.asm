@@ -135,7 +135,7 @@
 !ram_equipment_half_magic = $7EF37B
 !ram_equipment_magic_meter = $7EF36E
 
-; GAME STATE
+; OTHER
 
 !ram_capabilities = $7EF379
 !ram_game_phase = $7EF3C5
