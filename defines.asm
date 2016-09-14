@@ -180,3 +180,9 @@ macro ppu_on()
     LDA #$0F : STA $13 : STA $2100
     PLA : STA $9B : STA $420C
 endmacro
+
+
+macro wait_14_cycles()
+    PHA : PLA : PHA : PLA
+endmacro
+

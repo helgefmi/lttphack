@@ -21,9 +21,13 @@ draw_counters:
     RTL
 
 draw_seconds_and_frames:
-    STA $4204 : SEP #$20
+    STA $4204
+
+  %a8()
     LDA #60 : STA $4206
-    PHA : PLA : PHA : PLA : REP #$20
+    %wait_14_cycles()
+  %a16()
+
     LDA $4214 : STA !lowram_draw_tmp : LDA $4216 : STA !lowram_draw_tmp2
     LDA !lowram_draw_tmp : JSL hex_to_dec : JSL draw3_white
     LDA !lowram_draw_tmp2 : JSL hex_to_dec : JSL draw2_yellow
@@ -79,19 +83,32 @@ draw2_gray:
 
 hex_to_dec:
     ; Enters A=16
-    ; Leaves A=16 \todo please fix this code
-    STA $4204 : SEP #$20
+    ; Leaves A=16
+    STA $4204
+
+  %a8()
     LDA #$64 : STA $4206
-    PHA : PLA : PHA : PLA : REP #$20
+    %wait_14_cycles()
+  %a16()
+
     LDA $4214 : STA !ram_hex2dec_tmp
-    LDA $4216 : STA $4204 : SEP #$20
+    LDA $4216 : STA $4204
+
+  %a8()
     LDA #$0A : STA $4206
-    PHA : PLA : PHA : PLA : REP #$20
+    %wait_14_cycles()
+  %a16()
+
     LDA $4214 : STA !ram_hex2dec_second_digit
     LDA $4216 : STA !ram_hex2dec_third_digit
-    LDA !ram_hex2dec_tmp : STA $4204 : SEP #$20
+    LDA !ram_hex2dec_tmp : STA $4204
+
+  %a8()
     LDA #$0A : STA $4206
-    PHA : PLA : PHA : PLA : REP #$20
+    %wait_14_cycles()
+  %a16()
+
     LDA $4214 : STA !ram_hex2dec_tmp
     LDA $4216 : STA !ram_hex2dec_first_digit
+
     RTL
