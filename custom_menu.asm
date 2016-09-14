@@ -173,8 +173,10 @@ CM_Return:
 
 cm_clear_stack:
     ; Assumes I=8
+    ;
+    ; Clears cursor index for all but the main menu.
   %a16()
-    LDX.b #$00
+    LDX.b #$02
     LDA #$0000
 
   .loop
