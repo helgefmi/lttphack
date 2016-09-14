@@ -135,9 +135,7 @@ cm_items_bow:
     dw #.set_ram_value
     dl #!ram_cm_item_bow
     db #$24, "Bow", #$FF
-  table header.tbl
-    db #$24, "OFF", #$FF
-  table normal.tbl
+    db #$24, "No", #$FF
     db #$24, "Normal", #$FF
     db #$24, "Silver", #$FF
     db #$FF
@@ -155,9 +153,7 @@ cm_items_boom:
     dw !CM_ACTION_CHOICE
     dl #!ram_item_boom
     db #$24, "Boom", #$FF
-  table header.tbl
-    db #$24, "OFF", #$FF
-  table normal.tbl
+    db #$24, "No", #$FF
     db #$24, "Blue", #$FF
     db #$24, "Red", #$FF
     db #$FF
@@ -171,9 +167,7 @@ cm_items_powder:
     dw !CM_ACTION_CHOICE
     dl #!ram_item_powder
     db #$24, "Powder", #$FF
-  table header.tbl
-    db #$24, "OFF", #$FF
-  table normal.tbl
+    db #$24, "No", #$FF
     db #$24, "Shroom", #$FF
     db #$24, "Powder", #$FF
     db #$FF
@@ -312,7 +306,7 @@ cm_equipment_gloves:
     dw !CM_ACTION_CHOICE
     dl !ram_equipment_gloves
     db #$24, "Gloves", #$FF
-    db #$24, "None", #$FF
+    db #$24, "No", #$FF
     db #$24, "Power Glove", #$FF
     db #$24, "Titan's Mitts", #$FF
     db #$FF
@@ -354,7 +348,7 @@ cm_equipment_sword:
     dw .toggle_sword
     dl !ram_equipment_sword
     db #$24, "Sword", #$FF
-    db #$24, "None", #$FF
+    db #$24, "No", #$FF
     db #$24, "Fighter", #$FF
     db #$24, "Master", #$FF
     db #$24, "Tempered", #$FF
@@ -375,7 +369,7 @@ cm_equipment_shield:
     dw !CM_ACTION_CHOICE
     dl !ram_equipment_shield
     db #$24, "Shield", #$FF
-    db #$24, "None", #$FF
+    db #$24, "No", #$FF
     db #$24, "Fighter", #$FF
     db #$24, "Red", #$FF
     db #$24, "Mirror", #$FF

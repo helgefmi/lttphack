@@ -669,21 +669,23 @@ cm_draw_toggle_byte:
     TXA : CLC : ADC #$001C : TAX
 
   %a8()
+    ; set palette
+    LDA $0E : STA $1001, X : STA $1003, X : STA $1005, X
+
     ; grab the value at that memory address
     LDA [$04] : BNE .checked
 
-    ; OFF
-    LDA $0E : STA $1001, X : STA $1003, X : STA $1005, X
-    LDA.b #$5E : STA $1000, X
-    LDA.b #$55 : STA $1002, X : STA $1004, X
+    ; No
+    LDA.b #$0D : STA $1000, X
+    LDA.b #$38 : STA $1002, X
 
     BRA .end
 
   .checked
-    ; ON
-    LDA $0E : EOR.b #$18 : STA $1001, X : STA $1003, X
-    LDA.b #$5E : STA $1000, X
-    LDA.b #$5D : STA $1002, X
+    ; Yes
+    LDA.b #$18 : STA $1000, X
+    LDA.b #$2E : STA $1002, X
+    LDA.b #$3C : STA $1004, X
 
   .end
   %a16()
