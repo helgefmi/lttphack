@@ -485,9 +485,9 @@ cm_execute_jsr:
 
 
 cm_execute_submenu:
-    ; < should do nothing here
+    ; dpad should do nothing here
   %a8()
-    LDA $F4 : CMP.b #$02 : BEQ .end
+    LDA $F4 : BNE .end
 
     ; Increments stack index and puts the submenu into the stack.
   %a16()
@@ -592,18 +592,18 @@ cm_execute_numfield:
     LDA ($00) : INC $00 : INC $00 : INC : STA $06
   %ai8()
 
-    LDA $F4 : CMP.b #$01 : BEQ .pressed_right
+    LDA $F4 : CMP.b #$02 : BEQ .pressed_left
 
-    LDA [$02] : SEC : SBC $07
-
-    CMP $05 : BMI .set_to_max : BCC .set_to_max
-
-    STA [$02] : BRA .end
-
-  .pressed_right
     LDA [$02] : CLC : ADC $07
 
     CMP $06 : BCS .set_to_min
+
+    STA [$02] : BRA .end
+
+  .pressed_left
+    LDA [$02] : SEC : SBC $07
+
+    CMP $05 : BMI .set_to_max : BCC .set_to_max
 
     STA [$02] : BRA .end
 
