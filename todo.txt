@@ -1,138 +1,63 @@
 Rough todo
 ==========
 
-[num] = Priority. Lower numbers = higher priority. Only [1] is guaranteed to be tried to fit into the next version.
+V8:
 
-x [1] Code some general menu:
-    x Poking memory.
-    x Execute a JSR.
-    x Submenues.
-    x Be able to "go back".
-    x Remember last position.
-    x press B to go back (not from main menu)?
-    x choice menu item
-    x background gfx
-    x use left/right to toggle choice menu items
-    x make each (sub) menu have a header
-    x choice jsr widget
-    x number widget (min and max)
-        - should maybe make a general function to handle checking these bounds since it comes up all the time
-        - support repeating inputs (holding dpad button)
-    - fix fonts
-    - make sure to only go to this game mode when its safe to do so
-        - item menu; before selecting file
+x Code some general menu:
+    x Number widget (min and max).
+        - Should maybe make a general function to handle checking these bounds since it comes up all the time.
+        - Support repeating inputs (holding dpad button).
+        - Word-sized number widget for rupees.
+    - Make sure to only go to this game mode when its safe to do so.
+        - Item menu, before selecting file.
+    - Initialize cm_ values on menu open.
 
-x [1] Move controller 2 inputs to the menu.
-    x Toggles
-    x Items
-    x Equipment
+- Teleport "anywhere" w/presets.
 
-- [1] Add buncha cool stuff to the menu. Inventory/game state editing etc.
-    - Items
-    - Need to initialize the ram_cm_* variables when loading a game.
-        - Might be better to do this every time you open the menu. Perhaps a custom code is needed, not generic.
+- Show all 3 digits for enemy HP.
 
-- [1] Teleport "anywhere".
+- Reset segment timer on file load.
 
-- [1] Show all 3 digits for enemy HP.
+- Only show full hearts icon when you can use sword beams.
 
-- [2] Hack Module_Intro to go to file select as soon as everything needed is initialized.
+V9:
 
-- [2] Add some footprint w/version (intro, file select, pause menu).
+- Hack Module_Intro to go to file select as soon as everything needed is initialized.
 
-- [2] Make it possible to show the hidden line-of-sight sprites.
+- Add some footprint w/version (intro, file select, pause menu).
 
-- [3] Ingame manual counter (to practice a trick X times and see your success rate).
+- Set RNG for rooms (trock pokies, aga etc).
 
-- [3] Reenable floor indicator and position it underneath counters.
+- Ingame manual counter (to practice a trick X times and see your success rate).
 
-- [3] Lagometer. Toggleable feature that makes the magic go down/up depending on how laggy a frame was.
+- Reenable floor indicator and position it somewhere else.
 
-- [3] Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances
-      the game one frame. Would be good for clip practice.
+V10:
 
-- [3] Slowdown
+- Toggle music.
 
-- [3] Make counters not run while game is paused (frame advance mode). Can be useful for TAS-ing rooms.
+- LoS sprite viewer.
 
-- [3] Save best room times. Make them persist through save/load state.
-      This can then be exportable through a web ui. Could even include WR times in next version. Or perhaps a "patch your
-      SRM with WR times" web ui. Holy carp.  
+- Lagometer. Toggleable feature that makes the magic go down/up depending on how laggy a frame was.
 
-- [3] Mashing minigame (mps, max frames w/o mash, frames lost total etc)
+- Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances
+        the game one frame. Would be good for clip practice.
 
-- [3] Reconfigurable controls (save/load state mostly)
+- Slowdown.
 
-- [8] Record inputs (and play them back from state). The holy grail. Would need to replace the RNG to a deterministic
-      one. Probably won't happen.
+- Make it possible to draw hearts the normal way.
 
-- [9] Level editor. Ha.
+- Make counters not run while game is paused (frame advance mode). Can be useful for TAS-ing rooms.
 
+Future:
 
-Menu widgets
-============
+- Save best room times. Make them persist through save/load state.
+  This can then be exportable through a web ui. Could even include WR times in next version. Or perhaps a "patch your
+  SRM with WR times" web ui. Holy carp.  
 
-[ ] = checkboxes
-    press A to toggle.
+- Mashing and pumping minigame (mps, max frames w/o mash, frames lost total etc).
 
-* = buttons/actions
-    press A to perform the action.
-
-[A | B | C] = choice fields
-    press A to open a dropdown or use < > to toggle between choices.
-
-[0-999] = text inputs
-    hold ^ or v to increment/decrement
-
-
-Menu spec
-=========
-
-- Equipment
-    * Get full equipment
-    [ ] Bow
-    [ ] Boomerang
-    [ ] .. etc
-
-- Resources
-    Sword: [Fighter | Master | Tempered | Gold]
-    Shield
-    Armor
-    Rupees: [0-999]
-    Hearts
-    Bombs
-    Arrow
-    Keys
-
-- Teleport
-    [ ] Change to appropriate game state (equipment etc) for the chosen segment
-        - Mode [Any% NMG | 100% | ..]
-    [ ] I use sanc heart
-    * Escape
-    * Eastern
-    * Desert (Overworld)
-    * Desert (Dungeon)
-    * etc..
-
-- Game state
-    Game phase [Uncle | Saved Zeldo | Helped old man | ..?]
-    [ ] Killed Armos
-    [ ] Killed Lammolas
-    etc..
-    [ ] Opened Theives' Town
-    [ ] Did digging game
-    etc..
-
-- Toggle feature
-    [ ] Counters
-    [ ] Input display
-    [ ] Enemy HP
-    [ ] Coordinates
-    [ ] QW indicator
-    [ ] Lit rooms
-    [ ] OoB Mode
-    [ ] LoS sprites
-
+- Reconfigurable controls (save/load state mostly).
 
 Notes
 =====
@@ -154,3 +79,5 @@ BCS = BGT
 
 7EF366 = Big key array, indexed by 040C. Masks found in 98C0:
   LDY $040C : LDA $7EF366 : AND $98C0, Y : BNE .haveKey
+
+SNES fps = 60.098814

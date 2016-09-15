@@ -568,26 +568,3 @@ cm_feature_los:
     dw !CM_ACTION_TOGGLE_BYTE
     dl !ram_los_toggle
     db #$24, "LoS Sprites", #$FF
-
-
-
-
-
-;cm_menuitem_sword:
-;    dw !CM_ACTION_CHOICE
-;    dl !ram_debug
-;    db "Sword", #$FF
-;    db "Fighter", #$FF
-;    db "Master", #$FF
-;    db "Tempered", #$FF
-;    db "Gold", #$FF
-;    db #$FF
-;
-;cm_menuitem_back:
-;    dw !CM_ACTION_BACK
-;    db "Back", #$FF
-;
-;cm_menuitem_jsr:
-;    dw !CM_ACTION_JSR
-;    dw #tezt
-;    db "Do something", #$FF
