@@ -883,4 +883,4 @@ cm_draw_numfield:
 incsrc cm_mainmenu.asm
 
 cm_hud_table:
-    incbin cm_gfx.bin;
+    incbin ../resources/cm_gfx.bin

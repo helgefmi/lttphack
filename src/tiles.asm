@@ -47,4 +47,4 @@ load_default_tileset:
     RTL
 
 hud_table:
-    incbin hud_gfx.bin
+    incbin ../resources/hud_gfx.bin

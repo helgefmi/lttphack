@@ -2,7 +2,7 @@
 ; INDICES
 ; --------------
 
-table header.tbl
+table ../resources/header.tbl
 
 cm_mainmenu_indices:
     dw #cm_main_goto_items
@@ -95,7 +95,7 @@ cm_submenu_features:
     dw #$0000
     db #$2C, "FEATURES", #$FF
 
-table normal.tbl
+table ../resources/normal.tbl
 
 ; -----------------
 ; MAIN MENU
