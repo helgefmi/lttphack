@@ -208,9 +208,13 @@ cm_items_hammer:
     db #$24, "Hammer", #$FF
 
 cm_items_flute:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_CHOICE
     dl #!ram_item_flute
     db #$24, "Flute", #$FF
+    db #$24, "No", #$FF
+    db #$24, "Shovel", #$FF
+    db #$24, "Flute", #$FF
+    db #$FF
 
 cm_items_net:
     dw !CM_ACTION_TOGGLE_BYTE
