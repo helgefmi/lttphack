@@ -136,28 +136,29 @@ gamemode_hook:
 
   after_save_state:
 
-  .update_gt_counter
+  ; Update Game Time counter
   %a16()
     INC !lowram_room_gametime
   %a8()
 
-  .custom_menu
-    LDA $10 : CMP.b #$0C : BEQ transition_detection
+    ; Custom Menu
+    LDA $10 : CMP.b #$0C : BEQ .no_custom_menu
 
   %a16()
-    LDA !ram_ctrl1_word : AND #$1000 : CMP #$1000 : BNE transition_detection
+    LDA !ram_ctrl1_word : AND #$1000 : CMP #$1000 : BNE .no_custom_menu
   %a8()
-    LDA $F4 : CMP #$10 : BNE transition_detection
 
-  %ai8()
+    LDA $F4 : CMP #$10 : BNE .no_custom_menu
+
     LDA $10 : STA !ram_cm_old_gamemode
     LDA $11 : STA !ram_cm_old_submode
     LDA.b #$00 : STA $11
-    LDA #$0C : STA $10
-    LDA #$00 : STA $11
+    LDA.b #$0C : STA $10
+    LDA.b #$00 : STA $11
+
     RTL
 
-  transition_detection:
+  .no_custom_menu
     ; Transition detection {{{
 
     %ai8()
@@ -165,7 +166,7 @@ gamemode_hook:
     LDA $11 : CMP !ram_submode_copy : BNE .submode_changed
     LDA $02D8 : CMP !ram_received_item_copy : BNE .new_item_received
 
-    JMP end_of_gamemode_hook
+    JMP .end_of_gamemode_hook
 
   .new_item_received
     LDA $02D8 : STA !ram_received_item_copy
@@ -313,7 +314,7 @@ gamemode_hook:
 
     ; }}}
 
-  end_of_gamemode_hook:
+  .end_of_gamemode_hook
   %ai8()
     JSL $0080B5 ; GameModes
     RTL
