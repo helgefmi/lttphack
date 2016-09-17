@@ -158,8 +158,21 @@ CM_Return:
     JSL load_default_tileset
   %ppu_on()
 
+  %ai16()
+    LDA !ram_poverty_do_load : BEQ .no_poverty
+  %ai8()
+    ; clear up any text we that might've been displayed on the screen
     JSR cm_clear_buffer
 
+    ; tell NMI to update tilemap
+    LDA.b #$01 : STA $17
+    LDA.b #$22 : STA $0116
+
+    JSL poverty_load_next_frame
+    RTS
+
+  .no_poverty
+  %ai8()
     ; Restores $1000-1680 in case it was used for something.
     JSR cm_restore_buffer
 
@@ -501,17 +514,18 @@ cm_execute_action_table:
     ;
     ; Enters: AI=8
     ; Can mess with whatever it wants.
-    dw cm_execute_toggle_byte
+    dw cm_execute_toggle
     dw cm_execute_jsr
     dw cm_execute_submenu
     dw cm_execute_back
     dw cm_execute_choice
-    dw cm_execute_toggle_byte_jsr
+    dw cm_execute_toggle_jsr
     dw cm_execute_choice_jsr
     dw cm_execute_numfield
+    dw cm_execute_poverty_load
 
 
-cm_execute_toggle_byte:
+cm_execute_toggle:
     ; Will only toggle the first bit.
     LDA ($00) : INC $00 : INC $00 : STA $02
     LDA ($00) : INC $00 : STA $04
@@ -520,9 +534,9 @@ cm_execute_toggle_byte:
     RTS
 
 
-cm_execute_toggle_byte_jsr:
+cm_execute_toggle_jsr:
     LDA ($00) : INC $00 : INC $00 : STA $06
-    JSR cm_execute_toggle_byte
+    JSR cm_execute_toggle
 
   %ai8()
     LDX.b #$00 : JSR ($0006, X)
@@ -680,12 +694,12 @@ cm_execute_numfield:
     RTS
 
 
-cm_exectue_numfield_word:
-  ; will not work:
-  ; 1. execute the above on the least significant byte
-  ; 2. ^ sets Y=1 if we carried
-  ; 3. INC $02
-  ; 4. use additional entry point for the inc/dec only.
+cm_execute_poverty_load:
+  %a16()
+    LDA #$0001 : STA !ram_poverty_do_load
+  %a8()
+    INC $11
+    RTS
 
 ; -------------
 ; Draw Action
@@ -698,14 +712,15 @@ cm_draw_action_table:
     ; Enters: AI=16, Y=row number * 2
     ; Leave with: AI=16, $00[0x2]
 
-    dw cm_draw_toggle_byte
+    dw cm_draw_toggle
     dw cm_draw_jsr
     dw cm_draw_submenu
     dw cm_draw_back
     dw cm_draw_choice
-    dw cm_draw_toggle_byte_jsr
+    dw cm_draw_toggle_jsr
     dw cm_draw_choice_jsr
     dw cm_draw_numfield
+    dw cm_draw_poverty_load
 
 
 macro item_index_to_vram_index()
@@ -718,7 +733,7 @@ macro item_index_to_vram_index()
 endmacro
 
 
-cm_draw_toggle_byte:
+cm_draw_toggle:
     ; grab the memory address (long)
     LDA ($02) : INC $02 : INC $02 : STA $04
     LDA ($02) : INC $02 : STA $06
@@ -756,10 +771,10 @@ cm_draw_toggle_byte:
     RTS
 
 
-cm_draw_toggle_byte_jsr:
+cm_draw_toggle_jsr:
     ; just skip the JSR address
     INC $02 : INC $02
-    JSR cm_draw_toggle_byte
+    JSR cm_draw_toggle
     RTS
 
 
@@ -874,6 +889,12 @@ cm_draw_numfield:
   .third_digit
     LDA !ram_hex2dec_third_digit : CLC : ADC $0E : STA $1000+4, X
 
+    RTS
+
+
+cm_draw_poverty_load:
+    %item_index_to_vram_index()
+    JSR cm_draw_text
     RTS
 
 ; ------

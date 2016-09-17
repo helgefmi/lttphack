@@ -1,4 +1,11 @@
 ; ==== RAM usage ====
+;
+; 04CB[0x25] (04F0)
+; $7F7667[0x6719] (7FDD80)
+;  * 7F767E[0x982] = Different stuff
+;  * 7F8000[0xA00] = OW save data (lol)
+; $7EC900[0x1F00] (7EE800)
+;  * 7ED000 - 7ED780 = VRAM buffer backup in custom_menu.asm
 
 !lowram_room_realtime = $04CC
 !lowram_room_gametime = $04CE
@@ -74,20 +81,45 @@
 ; Custom menu
 ;-------------------------
 
-!CM_ACTION_TOGGLE_BYTE = #$00
+!CM_ACTION_TOGGLE = #$00
 !CM_ACTION_JSR = #$02
 !CM_ACTION_SUBMENU = #$04
 !CM_ACTION_BACK = #$06
 !CM_ACTION_CHOICE = #$08
-!CM_ACTION_TOGGLE_BYTE_JSR = #$0A
+!CM_ACTION_TOGGLE_JSR = #$0A
 !CM_ACTION_CHOICE_JSR = #$0C
 !CM_ACTION_NUMFIELD = #$0E
+!CM_ACTION_POVERTY_LOAD = #$10
+
+;--------------------
+; POVERTY
+;--------------------
+
+!ram_poverty_do_load = $04E2
+
+!ram_poverty_type = $7F76C6
+!ram_poverty_slot = $7F76C8
+
+!ram_table_ow_screen_index = $7F8000
+!ram_table_ow_unknown_1 = $7F8100
+!ram_table_ow_bg1_vscroll = $7F8200
+!ram_table_ow_bg2_vscroll = $7F8300
+!ram_table_ow_bg1_hscroll = $7F8400
+!ram_table_ow_bg2_hscroll = $7F8500
+!ram_table_ow_link_y = $7F8600
+!ram_table_ow_link_x = $7F8700
+!ram_table_ow_scroll_y = $7F8800
+!ram_table_ow_scroll_x = $7F8900
+!ram_table_ow_unknown_2 = $7F8A00
+!ram_table_ow_unknown_3 = $7F8B00
 
 ;-------------------------
 ; From ROM
 ;-------------------------
 
 !UseImplicitRegIndexedLocalJumpTable = $008781
+!BirdTravel_LoadTargetAreaData = $02E99D
+!BirdTravel_LoadTargetAreaData_AfterData = $02EA30
 
 ; ITEM MENU
 
@@ -185,4 +217,3 @@ endmacro
 macro wait_14_cycles()
     PHA : PLA : PHA : PLA
 endmacro
-

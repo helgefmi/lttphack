@@ -5,11 +5,14 @@
 table ../resources/header.tbl
 
 cm_mainmenu_indices:
-    dw #cm_main_goto_items
-    dw #cm_main_goto_equipment
-    dw #cm_main_goto_teleport
-    dw #cm_main_goto_gamestate
-    dw #cm_main_goto_features
+    dw cm_poverty_type
+    dw cm_poverty_slot
+    dw cm_poverty_state_load
+    dw cm_poverty_state_save
+
+    dw cm_main_goto_items
+    dw cm_main_goto_equipment
+    dw cm_main_goto_features
     dw #$0000
     db #$2C, "MAIN MENU", #$FF
 
@@ -60,25 +63,6 @@ cm_submenu_equipment:
     dw #$0000
     db #$2C, "EQUIPMENT", #$FF
 
-cm_submenu_teleport:
-;    dw cm_teleport_mode
-;    dw cm_teleport_escape
-;    dw cm_teleport_eastern
-;    dw cm_teleport_desert
-;    dw cm_teleport_hera
-;    dw cm_teleport_aga
-;    dw cm_teleport_pod
-;    dw cm_teleport_theives
-;    dw cm_teleport_skull
-;    dw cm_teleport_ice
-;    dw cm_teleport_swamp
-;    dw cm_teleport_mire
-;    dw cm_teleport_trock
-;    dw cm_teleport_gtower
-;    dw cm_teleport_ganon
-    dw #$0000
-    db #$2C, "TELEPORT", #$FF
-
 cm_submenu_gamestate:
     dw #$0000
     db #$2C, "GAME STATE", #$FF
@@ -103,27 +87,17 @@ table ../resources/normal.tbl
 
 cm_main_goto_items:
     dw !CM_ACTION_SUBMENU
-    dw #cm_submenu_items
+    dw cm_submenu_items
     db #$24, "Items", #$FF
 
 cm_main_goto_equipment:
     dw !CM_ACTION_SUBMENU
-    dw #cm_submenu_equipment
+    dw cm_submenu_equipment
     db #$24, "Equipment", #$FF
-
-cm_main_goto_teleport:
-    dw !CM_ACTION_SUBMENU
-    dw #cm_submenu_teleport
-    db #$24, "Teleport", #$FF
-
-cm_main_goto_gamestate:
-    dw !CM_ACTION_SUBMENU
-    dw #cm_submenu_gamestate
-    db #$24, "Game State", #$FF
 
 cm_main_goto_features:
     dw !CM_ACTION_SUBMENU
-    dw #cm_submenu_features
+    dw cm_submenu_features
     db #$24, "Features", #$FF
 
 ; ------------------
@@ -159,7 +133,7 @@ cm_items_boom:
     db #$FF
 
 cm_items_hook:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl #!ram_item_hook
     db #$24, "Hook", #$FF
 
@@ -173,37 +147,37 @@ cm_items_powder:
     db #$FF
 
 cm_items_fire_rod:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl #!ram_item_fire_rod
     db #$24, "Fire Rod", #$FF
 
 cm_items_ice_rod:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl #!ram_item_ice_rod
     db #$24, "Ice Rod", #$FF
 
 cm_items_bombos:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl #!ram_item_bombos
     db #$24, "Bombos", #$FF
 
 cm_items_ether:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl #!ram_item_ether
     db #$24, "Ether", #$FF
 
 cm_items_quake:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl #!ram_item_2quake
     db #$24, "Quake", #$FF
 
 cm_items_lantern:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl #!ram_item_lantern
     db #$24, "Lantern", #$FF
 
 cm_items_hammer:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl #!ram_item_hammer
     db #$24, "Hammer", #$FF
 
@@ -217,17 +191,17 @@ cm_items_flute:
     db #$FF
 
 cm_items_net:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl #!ram_item_net
     db #$24, "Net", #$FF
 
 cm_items_book:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl #!ram_item_book
     db #$24, "B of Medura", #$FF
 
 cm_items_bottle:
-    dw !CM_ACTION_TOGGLE_BYTE_JSR
+    dw !CM_ACTION_TOGGLE_JSR
     dw #.toggle_bottles
     dl #!ram_cm_item_bottle
     db #$24, "Bottle", #$FF
@@ -254,22 +228,22 @@ cm_items_bottle:
     RTS
 
 cm_items_somaria:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl #!ram_item_somaria
     db #$24, "C of Somaria", #$FF
 
 cm_items_byrna:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl #!ram_item_byrna
     db #$24, "C of Byrna", #$FF
 
 cm_items_cape:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl #!ram_item_cape
     db #$24, "Cape", #$FF
 
 cm_items_mirror:
-    dw !CM_ACTION_TOGGLE_BYTE_JSR
+    dw !CM_ACTION_TOGGLE_JSR
     dw #.toggle_mirror
     dl #!ram_cm_item_mirror
     db #$24, "Mirror", #$FF
@@ -285,7 +259,7 @@ cm_items_mirror:
 ; ----------
 
 cm_equipment_boots:
-    dw !CM_ACTION_TOGGLE_BYTE_JSR
+    dw !CM_ACTION_TOGGLE_JSR
     dw #.toggle_boots
     dl !ram_cm_equipment_boots
     db #$24, "Boots", #$FF
@@ -316,7 +290,7 @@ cm_equipment_gloves:
     db #$FF
 
 cm_equipment_flippers:
-    dw !CM_ACTION_TOGGLE_BYTE_JSR
+    dw !CM_ACTION_TOGGLE_JSR
     dw #.toggle_flippers
     dl !ram_cm_equipment_flippers
     db #$24, "Flippers", #$FF
@@ -338,18 +312,18 @@ cm_equipment_flippers:
     RTS
 
 cm_equipment_moon_pearl:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl !ram_equipment_moon_pearl
     db #$24, "Moon Pearl", #$FF
 
 cm_equipment_half_magic:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl !ram_equipment_half_magic
     db #$24, "Half Magic", #$FF
 
 cm_equipment_sword:
     dw !CM_ACTION_CHOICE_JSR
-    dw .toggle_sword
+    dw #.toggle_sword
     dl !ram_equipment_sword
     db #$24, "Sword", #$FF
     db #$24, "No", #$FF
@@ -390,7 +364,7 @@ cm_equipment_armor:
 
 cm_equipment_fill_magic:
     dw !CM_ACTION_JSR
-    dw .set_full_magic
+    dw #.set_full_magic
     db #$24, "Fill Magic", #$FF
 
   .set_full_magic
@@ -399,7 +373,7 @@ cm_equipment_fill_magic:
 
 cm_equipment_fill_rupees:
     dw !CM_ACTION_JSR
-    dw .set_full_rupees
+    dw #.set_full_rupees
     db #$24, "Fill Rupees", #$FF
 
   .set_full_rupees
@@ -410,7 +384,7 @@ cm_equipment_fill_rupees:
 
 cm_equipment_fill_hearts:
     dw !CM_ACTION_JSR
-    dw .set_full_hp
+    dw #.set_full_hp
     db #$24, "Fill HP", #$FF
 
   .set_full_hp
@@ -419,7 +393,7 @@ cm_equipment_fill_hearts:
 
 cm_equipment_maxhp:
     dw !CM_ACTION_CHOICE_JSR
-    dw .set_maxhp
+    dw #.set_maxhp
     dl !ram_cm_equipment_maxhp
     db #$24, "Max HP", #$FF
     db #$24, "  3", #$FF
@@ -471,12 +445,43 @@ cm_equipment_keys:
     db #$24, "Keys", #$FF
 
 ; -------------------
+; POVERTY STATES
+; -------------------
+
+cm_poverty_type:
+    dw !CM_ACTION_CHOICE
+    dl !ram_poverty_type
+    db #$24, "Poverty Type", #$FF
+    db #$24, "Custom", #$FF
+    db #$24, "Preset", #$FF
+    db #$FF
+
+cm_poverty_slot:
+    dw !CM_ACTION_NUMFIELD
+    dl !ram_poverty_slot
+    db #$00, #$7F
+    db #$01
+    db #$24, "Slot", #$FF
+
+cm_poverty_state_load:
+    dw !CM_ACTION_POVERTY_LOAD
+    db #$24, "Load State", #$FF
+
+cm_poverty_state_save:
+    dw !CM_ACTION_JSR
+    dw .save
+    db #$24, "Save State", #$FF
+  .save
+    JSL poverty_save_state
+    RTS
+
+; -------------------
 ; FEATURES
 ; -------------------
 
 cm_feature_counters:
-    dw !CM_ACTION_TOGGLE_BYTE_JSR
-    dw .turn_off_counters
+    dw !CM_ACTION_TOGGLE_JSR
+    dw #.turn_off_counters
     dl !ram_counters_toggle
     db #$24, "Counters", #$FF
 
@@ -499,8 +504,8 @@ cm_feature_counters:
     RTS
 
 cm_feature_input_display:
-    dw !CM_ACTION_TOGGLE_BYTE_JSR
-    dw .turn_off_input_display
+    dw !CM_ACTION_TOGGLE_JSR
+    dw #.turn_off_input_display
     dl !ram_input_display_toggle
     db #$24, "Input Display", #$FF
 
@@ -516,7 +521,7 @@ cm_feature_input_display:
     RTS
 
 cm_feature_enemy_hp:
-    dw !CM_ACTION_TOGGLE_BYTE_JSR
+    dw !CM_ACTION_TOGGLE_JSR
     dw #.turn_off_enemy_hp
     dl !ram_enemy_hp_toggle
     db #$24, "Enemy HP", #$FF
@@ -528,8 +533,8 @@ cm_feature_enemy_hp:
     RTS
 
 cm_feature_xy:
-    dw !CM_ACTION_TOGGLE_BYTE_JSR
-    dw .turn_off_xy
+    dw !CM_ACTION_TOGGLE_JSR
+    dw #.turn_off_xy
     dl !ram_xy_toggle
     db #$24, "Coordinates", #$FF
 
@@ -541,7 +546,7 @@ cm_feature_xy:
     RTS
 
 cm_feature_qw:
-    dw !CM_ACTION_TOGGLE_BYTE_JSR
+    dw !CM_ACTION_TOGGLE_JSR
     dw #.turn_off_qw
     dl !ram_qw_toggle
     db #$24, "QW Indicator", #$FF
@@ -554,17 +559,17 @@ cm_feature_qw:
 
 
 cm_feature_lit_rooms:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl !ram_lit_rooms_toggle
     db #$24, "Lit Rooms", #$FF
 
 cm_feature_oob:
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl !lowram_oob_toggle
     db #$24, "OoB Mode", #$FF
 
 cm_feature_los:
     ; \todo implement
-    dw !CM_ACTION_TOGGLE_BYTE
+    dw !CM_ACTION_TOGGLE
     dl !ram_los_toggle
     db #$24, "LoS Sprites", #$FF

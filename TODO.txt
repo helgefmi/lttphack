@@ -13,6 +13,10 @@ x Code some general menu:
     - Initialize cm_ values on menu open.
 
 - Teleport "anywhere" w/presets.
+    - Might want to set:
+        - $7EC500-$7EC700 (palette).
+        - $99: Fixed Color +/-
+        - $1C: Main Screen Designation
 
 - Show all 3 digits for enemy HP.
 
@@ -70,14 +74,68 @@ LDA #$0E : STA $10
 LDA #$0A : STA $11
 LDA #$6 : STA $0200
 
+--
+
 7EF3C5-7EF3C8 = diff game phase things.
 7EF3C5=1 = got sword from uncle
 7EF3CC = zelda bitching (set to 0)
 
+--
+
 BCC = BLT
 BCS = BGT
+
+--
 
 7EF366 = Big key array, indexed by 040C. Masks found in 98C0:
   LDY $040C : LDA $7EF366 : AND $98C0, Y : BNE .haveKey
 
+--
+
 SNES fps = 60.098814
+
+--
+
+$02E99D = BirdTravel_LoadTargetAreaData
+$02EA30 = After the PLB
+$0AB90D = JSL BirdTravel_LoadTargetAreaData
+
+--
+
+http://wiki.nesdev.com/w/images/7/76/Programmanual.pdf
+
+--
+
+$7B[0x1]: 0x00 = LW, 0x40 = DW?
+$8A[0x1]: 0x00 = LW, 0x40 = DW?
+$7EF3CA[0x01] - 0x00 = LW, 0x40 = DW
+$02DB[0x1]: Set when warping to DW?
+
+$0AA1 = 0x21 for dark world, 0x20 for light world.
+$0AA4 = 0x08 for dark world, 0x00 for light world.
+$0AA4 = 0x01 in LW, 0x0B in DW
+
+Can look at $7EFD40, X (X=$8A aka ow index). Might be set up differently for lw/dw.
+
+
+0AA4[0x1]: 
+    Misc. Sprite Graphics index. Valid values are: 0x01, 0x0A, or 0x0B.
+    0x01 - Light world Overworld
+    0x0A - Dungeons
+    0x0B - Dark World Overworld
+
+$0AB3[0x1] - Selects BP-2 through BP-6 (first halves)
+    0 - Light World
+    1 - Dark World
+    2 - Light World Death Mountain
+    3 - Dark World Death Mountain
+    4 - Used during history mode
+    5 - Seems to be used during initialization
+$0AB4[0x01] - Selects BP-2 through BP-4 (second halves). Values 0x00 to 0x13 are valid. Only used during loading the overworld and the title screen.
+$0AB5[0x01] - Selects BP-5 through BP-7 (second halves). Values 0x00 to 0x13 are valid. Only used during loading the overworld and the title screen.
+
+$0FFF[0x01] - Indicates whether you are in the light world or dark world (0,1 respectively)
+
+--
+
+$A8: DW version = LW version OR 0x40
