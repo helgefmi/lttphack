@@ -64,52 +64,43 @@ poverty_deinit_dialog_mode:
 ; ----------
 
 table_ow_screen_index:
-    ; $EAE5 - Overworld Screen Index. Moved to $8A.
-    dw $0013, $0013
+    dw $0013, $006E
 
 table_ow_unknown_1:
-    ; $EB07 - Unknown. Looks perhaps to have to do with some transitioning effect? Moved to $84, modified then moved to $86 and $88.
-    dw $001C, $089C
+    dw $001C, $0000
 
 table_ow_bg1_vscroll:
-    ; $EB29 - BG1/BG2 vertical scroll register. Moved to $E6 and $E8.
-    dw $0400, $0500
+    dw $0400, $0A00
 
 table_ow_bg2_vscroll:
-    ; $EB29 - BG1/BG2 vertical scroll register. Moved to $E6 and $E8.
-    dw $0400, $0500
+    dw $0400, $0A00
 
 table_ow_bg1_hscroll:
-    ; $EB4B - BG1/BG2 horizontal scroll register. Moved to $E0 and $E2.
-    dw $06DE, $06DE
+    dw $06DE, $0D6B
 
 table_ow_bg2_hscroll:
-    ; $EB4B - BG1/BG2 horizontal scroll register. Moved to $E0 and $E2.
-    dw $06DE, $06DE
+    dw $06DE, $0C00
 
 table_ow_link_y:
-    ; $EB6D - Link Y. Moved to $20.
-    dw $045A, $05A8
+    dw $045A, $0A15
 
 table_ow_link_x:
-    ; $EB8F - Link X. Moved to $22.
-    dw $0758, $0758
+    dw $0758, $0C7E
 
 table_ow_scroll_y:
-    ; $EBB1 - Y coordinate of lower bounds of scrolling. Moved to $0618.
-    dw $046D, $058B
+    dw $046D, $0A6D
 
 table_ow_scroll_x:
-    ; $EBD3 - X coordinate of lower bounds of scrolling. Moved to $061C.
-    dw $0763, $0763
+    dw $0763, $0C85
 
 table_ow_unknown_2:
-    ; $EBF5 - No idea. Moved to $0624, with its decimal inverse to $0626.
     dw 0, 0
 
 table_ow_unknown_3:
-    ; $EC17 - No idea. Moved to $0628 with its decimal inverse to $062A.
     dw 2, 2
+
+table_world_type:
+    dw $0000, $0040
 
 ; ==============================================================================
 
@@ -141,6 +132,7 @@ poverty_load_state:
     LDA table_ow_scroll_x, X : STA !ram_table_ow_scroll_x
     LDA table_ow_unknown_2, X : STA !ram_table_ow_unknown_2
     LDA table_ow_unknown_3, X : STA !ram_table_ow_unknown_3
+    LDA table_world_type, X : STA !ram_table_world_type
     LDX #$00
   PLB
 
@@ -181,6 +173,11 @@ poverty_load_state:
     LDA !ram_table_ow_scroll_y, X : STA $0618 : DEC #2 : STA $061A
     LDA !ram_table_ow_scroll_x, X : STA $061C : DEC #2 : STA $061E
 
+  %a8()
+    ; LW/DW
+    LDA !ram_table_world_type, X : STA $7EF3CA
+  %a16()
+
     ; Makes it possible to spawn in the middle of a field/not inside doorway?
     STZ $0696
     
@@ -220,6 +217,9 @@ poverty_save_state:
     ; Camera scroll X/Y
     LDA $0618 : STA !ram_table_ow_scroll_y, X
     LDA $061C : STA !ram_table_ow_scroll_x, X
+
+    ; LW/DW
+    LDA $7EF3CA : STA !ram_table_world_type, X
 
   %ai8()
     RTL

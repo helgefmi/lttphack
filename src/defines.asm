@@ -112,6 +112,7 @@
 !ram_table_ow_scroll_x = $7F8900
 !ram_table_ow_unknown_2 = $7F8A00
 !ram_table_ow_unknown_3 = $7F8B00
+!ram_table_world_type = $7F8C00
 
 ;-------------------------
 ; From ROM
