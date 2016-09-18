@@ -61,7 +61,7 @@ CM_Init:
 
 CM_DrawMenu:
     ; Save $1000-1680 so we can transfer it back aferwards
-    JSR cm_save_buffer
+    JSR cm_cache_buffer
 
     JSR cm_redraw
 
@@ -158,9 +158,9 @@ CM_Return:
     JSL load_default_tileset
   %ppu_on()
 
-  %ai16()
-    LDA !ram_poverty_do_load : BEQ .no_poverty
   %ai8()
+    LDA !ram_preset_type : BEQ .no_preset
+
     ; clear up any text we that might've been displayed on the screen
     JSR cm_clear_buffer
 
@@ -168,11 +168,10 @@ CM_Return:
     LDA.b #$01 : STA $17
     LDA.b #$22 : STA $0116
 
-    JSL poverty_load_next_frame
+    JSL preset_load_next_frame
     RTS
 
-  .no_poverty
-  %ai8()
+  .no_preset
     ; Restores $1000-1680 in case it was used for something.
     JSR cm_restore_buffer
 
@@ -232,7 +231,7 @@ cm_clear_buffer:
     RTS
 
 
-cm_save_buffer:
+cm_cache_buffer:
     ; Assumes I=8
   %ai16()
 
@@ -522,7 +521,7 @@ cm_execute_action_table:
     dw cm_execute_toggle_jsr
     dw cm_execute_choice_jsr
     dw cm_execute_numfield
-    dw cm_execute_poverty_load
+    dw cm_execute_preset
 
 
 cm_execute_toggle:
@@ -694,11 +693,14 @@ cm_execute_numfield:
     RTS
 
 
-cm_execute_poverty_load:
-  %a16()
-    LDA #$0001 : STA !ram_poverty_do_load
+cm_execute_preset:
+  STA !ram_debug
   %a8()
+    LDA ($00) : STA !ram_preset_type
     INC $11
+  %a16()
+    INC $00 
+    LDA ($00) : STA !ram_preset_destination
     RTS
 
 ; -------------
@@ -720,7 +722,7 @@ cm_draw_action_table:
     dw cm_draw_toggle_jsr
     dw cm_draw_choice_jsr
     dw cm_draw_numfield
-    dw cm_draw_poverty_load
+    dw cm_draw_preset
 
 
 macro item_index_to_vram_index()
@@ -892,7 +894,9 @@ cm_draw_numfield:
     RTS
 
 
-cm_draw_poverty_load:
+cm_draw_preset:
+  %a16()
+    INC $02 : INC $02 : INC $02
     %item_index_to_vram_index()
     JSR cm_draw_text
     RTS

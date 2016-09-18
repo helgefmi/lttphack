@@ -5,16 +5,30 @@
 table ../resources/header.tbl
 
 cm_mainmenu_indices:
-    dw cm_poverty_type
-    dw cm_poverty_slot
-    dw cm_poverty_state_load
-    dw cm_poverty_state_save
-
+    dw cm_main_goto_presets
     dw cm_main_goto_items
     dw cm_main_goto_equipment
     dw cm_main_goto_features
     dw #$0000
     db #$2C, "MAIN MENU", #$FF
+
+cm_submenu_presets:
+    dw cm_presets_goto_escape
+    dw cm_presets_goto_eastern
+    dw cm_presets_goto_desert
+    dw cm_presets_goto_hera
+    dw cm_presets_goto_aga
+    dw cm_presets_goto_pod
+    dw cm_presets_goto_theives
+    dw cm_presets_goto_skull
+    dw cm_presets_goto_ice
+    dw cm_presets_goto_swamp
+    dw cm_presets_goto_mire
+    dw cm_presets_goto_trock
+    dw cm_presets_goto_gtower
+    dw cm_presets_goto_ganon
+    dw #$0000
+    db #$2C, "PRESETS", #$FF
 
 cm_submenu_items:
     dw cm_items_bow
@@ -84,6 +98,11 @@ table ../resources/normal.tbl
 ; -----------------
 ; MAIN MENU
 ; -----------------
+
+cm_main_goto_presets:
+    dw !CM_ACTION_SUBMENU
+    dw cm_submenu_presets
+    db #$24, "Presets", #$FF
 
 cm_main_goto_items:
     dw !CM_ACTION_SUBMENU
@@ -445,35 +464,111 @@ cm_equipment_keys:
     db #$24, "Keys", #$FF
 
 ; -------------------
-; POVERTY STATES
+; PRESETS
 ; -------------------
 
-cm_poverty_type:
-    dw !CM_ACTION_CHOICE
-    dl !ram_poverty_type
-    db #$24, "Poverty Type", #$FF
-    db #$24, "Custom", #$FF
-    db #$24, "Preset", #$FF
-    db #$FF
+cm_presets_goto_escape:
+    dw !CM_ACTION_SUBMENU
+    dw cm_presets_escape
+    db #$24, "Escape", #$FF
 
-cm_poverty_slot:
-    dw !CM_ACTION_NUMFIELD
-    dl !ram_poverty_slot
-    db #$00, #$7F
-    db #$01
-    db #$24, "Slot", #$FF
+cm_presets_escape:
+    dw cm_escape_links_house
+    dw cm_escape_courtyard
+    dw cm_escape_entrance
+    dw cm_escape_1st_keyguard
+    dw #$0000
+    db #$2C, "ESCAPE", #$FF
 
-cm_poverty_state_load:
-    dw !CM_ACTION_POVERTY_LOAD
-    db #$24, "Load State", #$FF
+cm_escape_links_house:
+    dw !CM_ACTION_PRESET
+    db !PRESET_OVERWORLD
+    dw #preset_data_ow_test1
+    db #$24, "Link's House", #$FF
 
-cm_poverty_state_save:
-    dw !CM_ACTION_JSR
-    dw .save
-    db #$24, "Save State", #$FF
-  .save
-    JSL poverty_save_state
-    RTS
+cm_escape_courtyard:
+    dw !CM_ACTION_PRESET
+    db !PRESET_OVERWORLD
+    dw #preset_data_ow_test2
+    db #$24, "Courtyard", #$FF
+
+cm_escape_entrance:
+    dw !CM_ACTION_PRESET
+    db !PRESET_DUNGEON
+    dw #preset_data_dng_test1
+    db #$24, "Entrance", #$FF
+
+cm_escape_1st_keyguard:
+    dw !CM_ACTION_PRESET
+    db !PRESET_DUNGEON
+    dw #preset_data_dng_test2
+    db #$24, "1st Keyguard", #$FF
+
+
+cm_presets_goto_eastern:
+    dw !CM_ACTION_SUBMENU
+    dw cm_presets_escape
+    db #$24, "Eastern", #$FF
+
+cm_presets_goto_desert:
+    dw !CM_ACTION_SUBMENU
+    dw cm_presets_escape
+    db #$24, "Desert", #$FF
+
+cm_presets_goto_hera:
+    dw !CM_ACTION_SUBMENU
+    dw cm_presets_escape
+    db #$24, "Hera", #$FF
+
+cm_presets_goto_aga:
+    dw !CM_ACTION_SUBMENU
+    dw cm_presets_escape
+    db #$24, "Agahnim's Tower", #$FF
+
+cm_presets_goto_pod:
+    dw !CM_ACTION_SUBMENU
+    dw cm_presets_escape
+    db #$24, "Palace of Darkness", #$FF
+
+cm_presets_goto_theives:
+    dw !CM_ACTION_SUBMENU
+    dw cm_presets_escape
+    db #$24, "Theive's Town", #$FF
+
+cm_presets_goto_skull:
+    dw !CM_ACTION_SUBMENU
+    dw cm_presets_escape
+    db #$24, "Skull Woods", #$FF
+
+cm_presets_goto_ice:
+    dw !CM_ACTION_SUBMENU
+    dw cm_presets_escape
+    db #$24, "Ice Palace", #$FF
+
+cm_presets_goto_swamp:
+    dw !CM_ACTION_SUBMENU
+    dw cm_presets_escape
+    db #$24, "Swamp Palace", #$FF
+
+cm_presets_goto_mire:
+    dw !CM_ACTION_SUBMENU
+    dw cm_presets_escape
+    db #$24, "Misery Mire", #$FF
+
+cm_presets_goto_trock:
+    dw !CM_ACTION_SUBMENU
+    dw cm_presets_escape
+    db #$24, "T-Rock", #$FF
+
+cm_presets_goto_gtower:
+    dw !CM_ACTION_SUBMENU
+    dw cm_presets_escape
+    db #$24, "Ganon's Tower", #$FF
+
+cm_presets_goto_ganon:
+    dw !CM_ACTION_SUBMENU
+    dw cm_presets_escape
+    db #$24, "Ganon", #$FF
 
 ; -------------------
 ; FEATURES

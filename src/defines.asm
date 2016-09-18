@@ -89,30 +89,18 @@
 !CM_ACTION_TOGGLE_JSR = #$0A
 !CM_ACTION_CHOICE_JSR = #$0C
 !CM_ACTION_NUMFIELD = #$0E
-!CM_ACTION_POVERTY_LOAD = #$10
+!CM_ACTION_PRESET = #$10
 
-;--------------------
-; POVERTY
-;--------------------
+;-------------------------
+; PRESETS
+;-------------------------
 
-!ram_poverty_do_load = $04E2
+!PRESET_OVERWORLD = #$01
+!PRESET_DUNGEON = #$02
 
-!ram_poverty_type = $7F76C6
-!ram_poverty_slot = $7F76C8
-
-!ram_table_ow_screen_index = $7F8000
-!ram_table_ow_unknown_1 = $7F8100
-!ram_table_ow_bg1_vscroll = $7F8200
-!ram_table_ow_bg2_vscroll = $7F8300
-!ram_table_ow_bg1_hscroll = $7F8400
-!ram_table_ow_bg2_hscroll = $7F8500
-!ram_table_ow_link_y = $7F8600
-!ram_table_ow_link_x = $7F8700
-!ram_table_ow_scroll_y = $7F8800
-!ram_table_ow_scroll_x = $7F8900
-!ram_table_ow_unknown_2 = $7F8A00
-!ram_table_ow_unknown_3 = $7F8B00
-!ram_table_world_type = $7F8C00
+!ram_preset_type = $04E2
+!ram_preset_destination = $7F8000
+!ram_preset_data = $7F8002
 
 ;-------------------------
 ; From ROM
