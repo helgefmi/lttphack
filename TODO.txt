@@ -139,3 +139,8 @@ $0FFF[0x01] - Indicates whether you are in the light world or dark world (0,1 re
 --
 
 $A8: DW version = LW version OR 0x40
+
+--
+
+$02:8154 = `JSR Dungeon_LoadEntrance` from Module_PreDungeon
+$02:D617 = ^ the destination (Dungeon_LoadEntrance)

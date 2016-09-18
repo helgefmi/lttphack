@@ -2,7 +2,6 @@
 preset_data_dng:
 
 .test1
-print pc
 dw $119 ; Room Index
 dw $2300 ; BG1 Vertical Scroll
 dw $2300 ; BG2 Vertical Scroll

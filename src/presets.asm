@@ -3,20 +3,28 @@ org $0AB90D
     JSL preset_load_overworld
 
 
-; Hooks the "load entrance" JSL call done in PreDungeon Module.
-org $02D6FC
+; Replaces the address of Dungeon_LoadEntrance from the PreDungeon Module.
+org $028154
+    JSR load_entrance_local
+
+
+org $02C240
+load_entrance_local:
+    STA !ram_debug
+    ; Enters AI=8
+    ; This is called without using presets too, so need to redirect to the correct code.
+    LDA !ram_preset_type : BNE .custom
+
+    JSR $D617 ; Dungeon_LoadEntrance
+  %ai8()
+    RTS
+
+  .custom
+    LDA.b #$00 : STA !ram_preset_type
     JSL preset_load_dungeon
-
-
-; We need a means to JSR into the "load entrance" module right after our variables are set.
-; This spot does not have much free space, but enough for this.
-org $02FCE0
-post_load_dungeon:
-  %a16()
-    TSC : INC : INC : INC : TCS
-  %a8()
-    JMP $D836
-    RTL
+  %ai8()
+    RTS
+warnpc $02C270
 
 
 org $278000
@@ -159,7 +167,7 @@ preset_load_overworld:
 
 
 preset_load_dungeon:
-  ; Enters AI=16
+  ; Can leave with anything.
   %a16()
   PHB : PHK : PLB
     LDA !ram_preset_destination : STA $00
@@ -254,12 +262,7 @@ preset_load_dungeon:
     LDA ($00) : LSR #4 : STA $A9
     LDA ($00) : %a16() : INC $00 : %a8() : AND.b #$0F : STA $AA
 
-  ; Erase the footprint of this hook
-  %a16()
   PLB
-    TSC : INC : INC : INC : TCS
-  %a8()
-    ; Go back to the original function, since've set up our variables.
-    JML $02D836
+    RTL
 
 incsrc preset_data.asm
