@@ -694,13 +694,16 @@ cm_execute_numfield:
 
 
 cm_execute_preset:
-  STA !ram_debug
+  %a16()
+    LDA ($00) : STA $02
+    INC : STA !ram_preset_destination 
   %a8()
-    LDA ($00) : STA !ram_preset_type
+  PHB
+    LDA.b #$27 : PHA : PLB
+    LDA ($02) : STA !ram_preset_type
+  PLB
     INC $11
   %a16()
-    INC $00 
-    LDA ($00) : STA !ram_preset_destination
     RTS
 
 ; -------------
@@ -896,7 +899,7 @@ cm_draw_numfield:
 
 cm_draw_preset:
   %a16()
-    INC $02 : INC $02 : INC $02
+    INC $02 : INC $02
     %item_index_to_vram_index()
     JSR cm_draw_text
     RTS

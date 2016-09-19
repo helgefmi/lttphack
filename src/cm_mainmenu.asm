@@ -473,37 +473,83 @@ cm_presets_goto_escape:
     db #$24, "Escape", #$FF
 
 cm_presets_escape:
-    dw cm_escape_links_house
-    dw cm_escape_courtyard
-    dw cm_escape_entrance
-    dw cm_escape_1st_keyguard
+    dw cm_escape_1
+    dw cm_escape_2
+    dw cm_escape_3
+    dw cm_escape_4
+    dw cm_escape_5
+    dw cm_escape_6
+    dw cm_escape_7
+    dw cm_escape_8
+    dw cm_escape_9
+    dw cm_escape_10
+    dw cm_escape_11
+    dw cm_escape_12
     dw #$0000
     db #$2C, "ESCAPE", #$FF
 
-cm_escape_links_house:
-    dw !CM_ACTION_PRESET
-    db !PRESET_OVERWORLD
-    dw #preset_data_ow_test1
-    db #$24, "Link's House", #$FF
 
-cm_escape_courtyard:
+cm_escape_1:
     dw !CM_ACTION_PRESET
-    db !PRESET_OVERWORLD
-    dw #preset_data_ow_test2
-    db #$24, "Courtyard", #$FF
+    dw #preset_data_save_1
+    db #$24, "Test 1", #$FF
 
-cm_escape_entrance:
+cm_escape_2:
     dw !CM_ACTION_PRESET
-    db !PRESET_DUNGEON
-    dw #preset_data_dng_test1
-    db #$24, "Entrance", #$FF
+    dw #preset_data_save_2
+    db #$24, "Test 2", #$FF
 
-cm_escape_1st_keyguard:
+cm_escape_3:
     dw !CM_ACTION_PRESET
-    db !PRESET_DUNGEON
-    dw #preset_data_dng_test2
-    db #$24, "1st Keyguard", #$FF
+    dw #preset_data_save_3
+    db #$24, "Test 3", #$FF
 
+cm_escape_4:
+    dw !CM_ACTION_PRESET
+    dw #preset_data_save_4
+    db #$24, "Test 4", #$FF
+
+cm_escape_5:
+    dw !CM_ACTION_PRESET
+    dw #preset_data_save_5
+    db #$24, "Test 5", #$FF
+
+cm_escape_6:
+    dw !CM_ACTION_PRESET
+    dw #preset_data_save_6
+    db #$24, "Test 6", #$FF
+
+cm_escape_7:
+    dw !CM_ACTION_PRESET
+    dw #preset_data_save_7
+    db #$24, "Test 7", #$FF
+
+cm_escape_8:
+    dw !CM_ACTION_PRESET
+    dw #preset_data_save_8
+    db #$24, "Test 8", #$FF
+
+cm_escape_9:
+    dw !CM_ACTION_PRESET
+    dw #preset_data_save_9
+    db #$24, "Test 9", #$FF
+
+cm_escape_10:
+    dw !CM_ACTION_PRESET
+    dw #preset_data_save_10
+    db #$24, "Test 10", #$FF
+
+cm_escape_11:
+    dw !CM_ACTION_PRESET
+    dw #preset_data_save_11
+    db #$24, "Test 11", #$FF
+
+cm_escape_12:
+    dw !CM_ACTION_PRESET
+    dw #preset_data_save_12
+    db #$24, "Test 12", #$FF
+
+; --
 
 cm_presets_goto_eastern:
     dw !CM_ACTION_SUBMENU

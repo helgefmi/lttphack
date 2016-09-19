@@ -10,7 +10,6 @@ org $028154
 
 org $02C240
 load_entrance_local:
-    STA !ram_debug
     ; Enters AI=8
     ; This is called without using presets too, so need to redirect to the correct code.
     LDA !ram_preset_type : BNE .custom
@@ -193,29 +192,29 @@ preset_load_dungeon:
     ; Door settings
     LDA ($00) : INC $00 : INC $00 : STA $0696 : STZ $0698
 
+    ; Relative coordinates (scroll edges?)
+    LDA ($00) : INC $00 : INC $00 : STA $0600
+    LDA ($00) : INC $00 : INC $00 : STA $0602
+    LDA ($00) : INC $00 : INC $00 : STA $0604
+    LDA ($00) : INC $00 : INC $00 : STA $0606
+    LDA ($00) : INC $00 : INC $00 : STA $0608
+    LDA ($00) : INC $00 : INC $00 : STA $060A
+    LDA ($00) : INC $00 : INC $00 : STA $060C
+    LDA ($00) : INC $00 : INC $00 : STA $060E
+
     LDA #$0000 : STA $0610
     LDA #$0110 : STA $0612
     LDA #$0000 : STA $0614
     LDA #$0100 : STA $0616
 
+    ; Quadrant stuff
+    LDA ($00) : INC $00 : INC $00 : STA $A6
+    LDA ($00) : INC $00 : INC $00 : STA $A9
+
   %a8()
 
     ; Set link to be in the Overworld
     LDA.b #$01 : STA $1B
-
-    ; Relative coordinates (scroll edges?)
-    LDA ($00) : %a16() : INC $00 : %a8() : STA $0601
-    LDA ($00) : %a16() : INC $00 : %a8() : STA $0603
-    LDA ($00) : %a16() : INC $00 : %a8() : STA $0605
-    LDA ($00) : %a16() : INC $00 : %a8() : STA $0607
-    LDA ($00) : %a16() : INC $00 : %a8() : STA $0609
-    LDA ($00) : %a16() : INC $00 : %a8() : STA $060B
-    LDA ($00) : %a16() : INC $00 : %a8() : STA $060D
-    LDA ($00) : %a16() : INC $00 : %a8() : STA $060F
-
-    STZ $0600 : STZ $0602
-
-    LDA.b #$10 : STA $0604 : STA $0606 : STA $0608 : STA $060A : STA $060C : STA $060E
 
     ; Make it so Link faces south (down) at most entrances.
     ; \todo we removed the special case where Link faces down.
@@ -251,16 +250,11 @@ preset_load_dungeon:
 
     ; Starting BG
     ; Set the position that Link starts at.
-    LDA ($00) : LSR #4 : STA $EE
+    ; NOTE that original code had a LSR #4 here that I removed, since I serialize this differently.
+    LDA ($00) : STA $EE
+
     ; Set Pseudo bg level
     LDA ($00) : %a16() : INC $00 : %a8() : AND.b #$0F : STA $0476
-
-    ; .quadrant1
-    LDA ($00) : LSR #4 : STA $A6
-    LDA ($00) : %a16() : INC $00 : %a8() : AND.b #$0F : STA $A7
-    ; .quadrant2
-    LDA ($00) : LSR #4 : STA $A9
-    LDA ($00) : %a16() : INC $00 : %a8() : AND.b #$0F : STA $AA
 
   PLB
     RTL
