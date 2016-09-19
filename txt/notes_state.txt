@@ -47,3 +47,18 @@ $7EF3C7 - integer value, 0-8
   * 8 = Only shows Ganon Tower in map
 
 - This is heavily used to load correct sprites? Idk.
+
+------
+
+To load room state for your current room:
+
+LDA $A0 : ASL A : TAX
+
+; Access the dungeon room's saved data (1 word)
+LDA $7EF000, X : AND.w #$F000 : STA $0400
+
+ORA.w #$0F00 : STA $068C
+
+LDA $7EF000, X : AND.w #$0FF0 : ASL #4 : STA $0402
+
+LDA $7EF000, X : AND.w #$000F : STA $0408

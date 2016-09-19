@@ -78,8 +78,7 @@ local function fetch_dng_table()
   }
 end
 
-local output_dungeon = ""
-local output_overworld = ""
+local output = ""
 local last_save_input = false
 
 while true do
@@ -107,7 +106,7 @@ while true do
       "Unknown 3 : " .. tosigned16(T.unk3),
     })
     if do_save then
-      output_overworld = output_overworld .. "\n\n" .. table.concat({
+      output = output .. "\n\n" .. table.concat({
         dw(T.screen_idx, "Screen Index"),
         dw(T.link_x, "Link X"),
         dw(T.link_y, "Link Y"),
@@ -150,7 +149,7 @@ while true do
         "Quad 2    : " .. tohex(T.quadrant_2),
     })
     if do_save then
-      output_dungeon = output_dungeon .. "\n\n" .. table.concat({
+      output = output .. "\n\n" .. table.concat({
         dw(T.room, "Room Index"),
         dw(T.bg1_vscroll, "BG1 Vertical Scroll"),
         dw(T.bg2_vscroll, "BG2 Vertical Scroll"),
@@ -184,10 +183,7 @@ while true do
 
   if do_save then
     local file = io.open ("test.txt", "w")
-    file:write("; Dungeon\n")
-    file:write(output_dungeon)
-    file:write("\n; Overworld\n")
-    file:write(output_overworld)
+    file:write(output)
     file:close()
   end
   

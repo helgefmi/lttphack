@@ -17,6 +17,11 @@ x Code some general menu:
         - $7EC500-$7EC700 (palette).
         - $99: Fixed Color +/-
         - $1C: Main Screen Designation
+    - State:
+        - Layer
+        - Menu items
+        - State variables
+        - Room state
 
 - Show all 3 digits for enemy HP.
 
