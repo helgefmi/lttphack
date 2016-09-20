@@ -5,238 +5,64 @@ local preset_output = ""
 local num_states = 0
 
 local movie_steps = { -- {{{
-    [1900] = {
-        verbose = "Link's Bed",
-        slug = "escape_links_bed",
-    },
-    [5770] = {
-        verbose = "Courtyard",
-        slug = "escape_courtyard",
-    },
-    [6330] = {
-        verbose = "Entrance",
-        slug = "escape_entrance",
-    },
-    [7646] = {
-        verbose = "1st Keyguard",
-        slug = "escape_1st_keyguard",
-    },
-    [8966] = {
-        verbose = "Big Room",
-        slug = "escape_big_room",
-    },
-    [9756] = {
-        verbose = "2nd Keyguard / Boom",
-        slug = "escape_2nd_keyguard",
-    },
-    [11092] = {
-        verbose = "Ball'n Chains",
-        slug = "escape_balln_chains",
-    },
-    [15093] = {
-        verbose = "Keyguard revisited",
-        slug = "escape_keyguard_revisited",
-    },
-    [17288] = {
-        verbose = "Secret Passage",
-        slug = "escape_secret_passage",
-    },
-    [18338] = {
-        verbose = "Snake Avoidance Room",
-        slug = "escape_snake_avoidance_room",
-    },
-    [20284] = {
-        verbose = "Keyrat",
-        slug = "escape_keyrat",
-    },
-    [21335] = {
-        verbose = "Last two screens",
-        slug = "escape_last_two_screens",
-    },
-    [22184] = {
-        verbose = "Before Cutscene",
-        slug = "eastern_before_cutscene",
-    },
-    [23708] = {
-        verbose = "After Cutscene",
-        slug = "eastern_after_cutscene",
-    },
-    [25720] = {
-        verbose = "Octoroc",
-        slug = "eastern_octoroc",
-    },
-    [26541] = {
-        verbose = "Eastern Palace Overworld",
-        slug = "eastern_palace_overworld",
-    },
-    [28086] = {
-        verbose = "Entrance",
-        slug = "eastern_entrance",
-    },
-    [29962] = {
-        verbose = "Stalfos Room",
-        slug = "stalfos_room",
-    },
-    [32159] = {
-        verbose = "Dark key room",
-        slug = "eastern_dark_key_room",
-    },
-    [33492] = {
-        verbose = "Big Key Dmg Boost",
-        slug = "eastern_bk_dmg_boost",
-    },
-    [34604] = {
-        verbose = "Big Chest room",
-        slug = "eastern_big_chest_room",
-    },
-    [35516] = {
-        verbose = "Gifted With Greenies",
-        slug = "eastern_gwg",
-    },
-    [36040] = {
-        verbose = "Pot Room",
-        slug = "eastern_pot_room",
-    },
-    [37133] = {
-        verbose = "Zeldagamer Room",
-        slug = "eastern_zgr",
-    },
-    [37945] = {
-        verbose = "Armos",
-        slug = "eastern_armos",
-    },
-    [39993] = {
-        verbose = "Outside Eastern Palace",
-        slug = "desert_outside_ep",
-    },
-    [41862] = {
-        verbose = "EP spinspeed",
-        slug = "desert_ep_spinspeed",
-    },
-    [44397] = {
-        verbose = "Unholy Spinspeed",
-        slug = "desert_unholy_spinspeed",
-    },
-    [46968] = {
-        verbose = "Water Dash",
-        slug = "desert_water_dash",
-    },
-    [49591] = {
-        verbose = "Desert Palace Entrance",
-        slug = "desert_entrance",
-    },
-    [50540] = {
-        verbose = "Keybonk",
-        slug = "desert_keybonk",
-    },
-    [51794] = {
-        verbose = "Pre Cannonball Room",
-        slug = "desert_pre_cannonball_room",
-    },
-    [53803] = {
-        verbose = "Pot room",
-        slug = "desert_pot_room",
-    },
-    [55451] = {
-        verbose = "Desert2 spinspeed",
-        slug = "desert_desert2_spinspeed",
-    },
-    [56862] = {
-        verbose = "Popo Genocide Room",
-        slug = "desert_popo_genocide",
-    },
-    [58004] = {
-        verbose = "Torches",
-        slug = "desert_torches",
-    },
-    [58995] = {
-        verbose = "Lanmolas",
-        slug = "desert_lanmolas",
-    },
-    [61408] = {
-        verbose = "Outside Desert Palace",
-        slug = "hera_outside_desert",
-    },
-    [62920] = {
-        verbose = "Fake flippers",
-        slug = "hera_fake_flippers",
-    },
-    [66550] = {
-        verbose = "DM",
-        slug = "hera_dm",
-    },
-    [67499] = {
-        verbose = "After Mirror",
-        slug = "hera_after_mirror",
-    },
-    [69321] = {
-        verbose = "Entrance",
-        slug = "hera_entrance",
-    },
-    [70568] = {
-        verbose = "Tile room",
-        slug = "hera_tile_room",
-    },
-    [73384] = {
-        verbose = "Torches",
-        slug = "hera_torches",
-    },
-    [74293] = {
-        verbose = "Beetles",
-        slug = "hera_beetles",
-    },
-    [75505] = {
-        verbose = "Petting Zoo",
-        slug = "hera_petting_zoo",
-    },
-    [77291] = {
-        verbose = "Moldorm",
-        slug = "hera_moldorm",
-    },
-    [80099] = {
-        verbose = "Outside Hera Palace",
-        slug = "atower_outside_hera",
-    },
-    [81427] = {
-        verbose = "First Rupee Tree",
-        slug = "atower_first_rupee_tree",
-    },
-    [82375] = {
-        verbose = "Lost Woods",
-        slug = "atower_lost_woods",
-    },
-    [87154] = {
-        verbose = "After Lost Woods",
-        slug = "atower_after_lost_woods",
-    },
-    [89759] = {
-        verbose = "Tower Entrance",
-        slug = "atower_tower_entrance",
-    },
-    [91220] = {
-        verbose = "Dark Room of Despair",
-        slug = "atower_dark_room_despair",
-    },
-    [92847] = {
-        verbose = "Dark Room of Melancholy",
-        slug = "atower_dark_room_melancholy",
-    },
-    [93632] = {
-        verbose = "Red Spears",
-        slug = "atower_red_spears",
-    },
-    [94433] = {
-        verbose = "Circle of Pot",
-        slug = "atower_cop",
-    },
-    [97618] = {
-        verbose = "Agahnim",
-        slug = "atower_agahnim",
-    },
-    [102972] = {
-        verbose = "Pyramid",
-        slug = "pod_pyramid",
-    },
+    [1900] = "Link's Bed",
+    [5770] = "Courtyard",
+    [6330] = "Entrance",
+    [7646] = "1st Keyguard",
+    [8966] = "Big Room",
+    [9756] = "2nd Keyguard / Boom",
+    [11092] = "Ball'n Chains",
+    [15093] = "Keyguard revisited",
+    [17288] = "Secret Passage",
+    [18338] = "Snake Avoidance Room",
+    [20284] = "Keyrat",
+    [21335] = "Last two screens",
+    [22184] = "Before Cutscene",
+    [23708] = "After Cutscene",
+    [25720] = "Octoroc",
+    [26541] = "Eastern Palace Overworld",
+    [28086] = "Entrance",
+    [29962] = "Stalfos Room",
+    [32159] = "Dark key room",
+    [33492] = "Big Key Dmg Boost",
+    [34604] = "Big Chest room",
+    [35516] = "Gifted With Greenies",
+    [36040] = "Pot Room",
+    [37133] = "Zeldagamer Room",
+    [37945] = "Armos",
+    [39993] = "Outside Eastern Palace",
+    [41862] = "EP spinspeed",
+    [44397] = "Unholy Spinspeed",
+    [46968] = "Water Dash",
+    [49591] = "Desert Palace Entrance",
+    [50540] = "Keybonk",
+    [51794] = "Pre Cannonball Room",
+    [53803] = "Pot room",
+    [55451] = "Desert2 spinspeed",
+    [56862] = "Popo Genocide Room",
+    [58004] = "Torches",
+    [58995] = "Lanmolas",
+    [61408] = "Outside Desert Palace",
+    [62920] = "Fake flippers",
+    [66550] = "DM",
+    [67499] = "After Mirror",
+    [69321] = "Entrance",
+    [70568] = "Tile room",
+    [73384] = "Torches",
+    [74293] = "Beetles",
+    [75505] = "Petting Zoo",
+    [77291] = "Moldorm",
+    [80099] = "Outside Hera Palace",
+    [81427] = "First Rupee Tree",
+    [82375] = "Lost Woods",
+    [87154] = "After Lost Woods",
+    [89759] = "Tower Entrance",
+    [91220] = "Dark Room of Despair",
+    [92847] = "Dark Room of Melancholy",
+    [93632] = "Red Spears",
+    [94433] = "Circle of Pot",
+    [97618] = "Agahnim",
+    [102972] = "Pyramid",
 } -- }}}
 
 
@@ -423,10 +249,10 @@ function draw_overworld()
     })
 end
 
-function save_overworld(config)
+function save_overworld(slug)
     local T = fetch_ow_table()
     preset_output = preset_output .. "\n" .. table.concat({
-        "preset_" .. config["slug"] .. ":",
+        "preset_" .. slug .. ":",
         db(1, "Overworld"),
         dw(T.screen_idx, "Screen Index"),
         dw(T.link_x, "Link X"),
@@ -440,7 +266,7 @@ function save_overworld(config)
         dw(T.unk1, "Unknown 1"),
         dw(T.unk2, "Unknown 2"),
         dw(T.unk3, "Unknown 3"),
-        "dw sram_" .. config["slug"] .. "_after",
+        "dw sram_" .. slug .. "_after",
     }, "\n") .. "\n"
 end
 
@@ -475,10 +301,10 @@ local function fetch_dng_table()
     }
 end
 
-function save_dungeon(config)
+function save_dungeon(slug)
     local T = fetch_dng_table()
     preset_output = preset_output .. "\n" .. table.concat({
-        "preset_" .. config["slug"] .. ":",
+        "preset_" .. slug .. ":",
         db(2, "Dungeon"),
         dw(T.room, "Room Index"),
         dw(T.bg1_vscroll, "BG1 Vertical Scroll"),
@@ -507,7 +333,7 @@ function save_dungeon(config)
         db(T.palace_no, "Palace No"),
         db(T.door_orientation, "Door Orientation"),
         db(T.starting_bg, "Starting Background"),
-        "dw sram_" .. config["slug"] .. "_after",
+        "dw sram_" .. slug .. "_after",
     }, "\n") .. "\n"
 end
 
@@ -543,8 +369,8 @@ end
 
 -- SRAM state
 
-function save_sram_delta(config)
-    sram_output = sram_output .. "\nsram_" .. config["slug"] .. ":\n"
+function save_sram_delta(slug)
+    sram_output = sram_output .. "\nsram_" .. slug .. ":\n"
     for addr, size_and_val in pairs(current_state) do
         local size = size_and_val[1]
         local val = size_and_val[2]
@@ -562,17 +388,17 @@ end
 
 -- Main functionality
 
-function make_preset_save(config)
+function make_preset_save(slug)
     num_states = num_states + 1
-    save_sram_delta(config)
+    save_sram_delta(slug)
 
     if in_overworld() then
-        save_overworld(config)
+        save_overworld(slug)
     else
-        save_dungeon(config)
+        save_dungeon(slug)
     end
 
-    debug("Saved", config["verbose"])
+    debug("Saved", slug)
     local file = io.open("data.txt", "w")
     file:write("; Preset locations\n" .. preset_output .. "\n\n")
     file:write("; Preset SRAM changes\n" .. sram_output .. "\n\n")
@@ -599,9 +425,9 @@ end
 function tick_movie()
     local frame = emu.framecount()
 
-    config = movie_steps[frame]
-    if config then
-        make_preset_save(config)
+    slug = movie_steps[frame]
+    if slug then
+        make_preset_save(slug)
     end
 end
 

@@ -13,19 +13,48 @@ x Code some general menu:
     - Initialize cm_ values on menu open.
 
 - Teleport "anywhere" w/presets.
-    - Might want to set:
-        - $7EC500-$7EC700 (palette).
-        - $99: Fixed Color +/-
-        - $1C: Main Screen Designation
-    - State:
-        - Layer
-        - Menu items
-        - State variables
-        - Room state
+    - Fix Link's state for when loading:
+        - Sleeping state: Load anything from link's bed.
+        - Falling state: Big Room
+        - Damaged state
+        - Dead state. Might want to not allow menues there.
+        - Movable: Load anything while opening chest.
+        NOTE: Some of these are fixed when entering from a hole.
+    - Remove killed sprites: 2nd key guard, backtrack from Ball'n Chains.
+    - Tagalong sprite is wrong: Secret Passage.
+    - Remember solved secrets within your quadrant:
+        - 2nd key guard
+        - Backtrack from Ball'n Chains.
+        - Before Sanctuary
+        - Eastern -> Dark Key Room
+        - Eastern -> Zeldagamer Room
+        - Eastern -> Armos
+        - Desert -> Lanmolas (in this case, key is not picked up still)
+        - Aga -> Circle of Pots
+        - Aga -> Agahnim (probably not a secret)
+    - Remember opened key-doors in current quadrant:
+        - Eastern -> Pot Room
+        - Desert -> Cannonball Room
+        - Desert -> Torches
+        - Aga -> Red Spear Guards
+    - Fix/investigate save states:
+        - After Sanctuary save state.
+        - Octoroc
+        - Eastern -> Entrance (enemy sprites are wrong)
+        - Hera -> Outside DP
+        - Hera -> Fake Flippers
+        - Aga -> Lost Woods
+    - Fix Link's direction.
+    - Make one-exit rooms work.
+        - Desert -> EP Spinspeed
+    - Remember switch state:
+        - Desert -> Beetles
+        - Desert -> Petting Zoo (good place to debug)
+        NOTE: Map fixes this
 
 - Show all 3 digits for enemy HP.
 
-- Reset segment timer on file load.
+- Reset segment timer on file/preset load.
 
 - Only show full hearts icon when you can use sword beams.
 
