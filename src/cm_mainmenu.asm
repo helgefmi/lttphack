@@ -17,7 +17,7 @@ cm_submenu_presets:
     dw cm_presets_goto_eastern
     dw cm_presets_goto_desert
     dw cm_presets_goto_hera
-    dw cm_presets_goto_aga
+    dw cm_presets_goto_atower
     dw cm_presets_goto_pod
     dw cm_presets_goto_theives
     dw cm_presets_goto_skull
@@ -467,6 +467,8 @@ cm_equipment_keys:
 ; PRESETS
 ; -------------------
 
+; ESCAPE
+
 cm_presets_goto_escape:
     dw !CM_ACTION_SUBMENU
     dw cm_presets_escape
@@ -485,120 +487,395 @@ cm_presets_escape:
     dw cm_escape_10
     dw cm_escape_11
     dw cm_escape_12
-    dw cm_escape_13
-    dw cm_escape_14
-    dw cm_escape_15
-    dw cm_escape_16
     dw #$0000
     db #$2C, "ESCAPE", #$FF
 
-
 cm_escape_1:
     dw !CM_ACTION_PRESET
-    dw #preset_data_save_1
-    db #$24, "Test 1", #$FF
+	dw #preset_escape_links_bed
+    db #$24, "Link's Bed", #$FF
 
 cm_escape_2:
     dw !CM_ACTION_PRESET
-    dw #preset_data_save_2
-    db #$24, "Test 2", #$FF
+	dw #preset_escape_courtyard
+    db #$24, "Courtyard", #$FF
 
 cm_escape_3:
     dw !CM_ACTION_PRESET
-    dw #preset_data_save_3
-    db #$24, "Test 3", #$FF
+	dw #preset_escape_entrance
+    db #$24, "Entrance", #$FF
 
 cm_escape_4:
     dw !CM_ACTION_PRESET
-    dw #preset_data_save_4
-    db #$24, "Test 4", #$FF
+	dw #preset_escape_1st_keyguard
+    db #$24, "1st Key Guard", #$FF
 
 cm_escape_5:
     dw !CM_ACTION_PRESET
-    dw #preset_data_save_5
-    db #$24, "Test 5", #$FF
+	dw #preset_escape_big_room
+    db #$24, "Big Room", #$FF
 
 cm_escape_6:
     dw !CM_ACTION_PRESET
-    dw #preset_data_save_6
-    db #$24, "Test 6", #$FF
+	dw #preset_escape_2nd_keyguard
+    db #$24, "2nd Key Guard", #$FF
 
 cm_escape_7:
     dw !CM_ACTION_PRESET
-    dw #preset_data_save_7
-    db #$24, "Test 7", #$FF
+	dw #preset_escape_balln_chains
+    db #$24, "Ball'n Chains", #$FF
 
 cm_escape_8:
     dw !CM_ACTION_PRESET
-    dw #preset_data_save_8
-    db #$24, "Test 8", #$FF
+	dw #preset_escape_keyguard_revisited
+    db #$24, "Key Guard Revisited", #$FF
 
 cm_escape_9:
     dw !CM_ACTION_PRESET
-    dw #preset_data_save_9
-    db #$24, "Test 9", #$FF
+	dw #preset_escape_secret_passage
+    db #$24, "Secret Passage", #$FF
 
 cm_escape_10:
     dw !CM_ACTION_PRESET
-    dw #preset_data_save_10
-    db #$24, "Test 10", #$FF
+	dw #preset_escape_snake_avoidance_room
+    db #$24, "Snake Avoidance Room", #$FF
 
 cm_escape_11:
     dw !CM_ACTION_PRESET
-    dw #preset_data_save_11
-    db #$24, "Test 11", #$FF
+	dw #preset_escape_keyrat
+    db #$24, "Key Rat", #$FF
 
 cm_escape_12:
     dw !CM_ACTION_PRESET
-    dw #preset_data_save_12
-    db #$24, "Test 12", #$FF
+	dw #preset_escape_last_two_screens
+    db #$24, "Last Two Screens", #$FF
 
-cm_escape_13:
-    dw !CM_ACTION_PRESET
-    dw #preset_data_save_13
-    db #$24, "Test 13", #$FF
-
-cm_escape_14:
-    dw !CM_ACTION_PRESET
-    dw #preset_data_save_14
-    db #$24, "Test 14", #$FF
-
-cm_escape_15:
-    dw !CM_ACTION_PRESET
-    dw #preset_data_save_15
-    db #$24, "Test 15", #$FF
-
-cm_escape_16:
-    dw !CM_ACTION_PRESET
-    dw #preset_data_save_16
-    db #$24, "Test 16", #$FF
-
-; --
+; EASTERN
 
 cm_presets_goto_eastern:
     dw !CM_ACTION_SUBMENU
-    dw cm_presets_escape
+    dw cm_presets_eastern
     db #$24, "Eastern", #$FF
+
+cm_presets_eastern:
+    dw cm_eastern_1
+    dw cm_eastern_2
+    dw cm_eastern_3
+    dw cm_eastern_4
+    dw cm_eastern_5
+    dw cm_eastern_6
+    dw cm_eastern_7
+    dw cm_eastern_8
+    dw cm_eastern_9
+    dw cm_eastern_10
+    dw cm_eastern_11
+    dw cm_eastern_12
+    dw #$0000
+    db #$2C, "EASTERN", #$FF
+
+cm_eastern_1:
+    dw !CM_ACTION_PRESET
+	dw #preset_eastern_before_cutscene
+    db #$24, "Before Cutscene", #$FF
+
+cm_eastern_2:
+    dw !CM_ACTION_PRESET
+	dw #preset_eastern_after_cutscene
+    db #$24, "After Cutscene", #$FF
+
+cm_eastern_3:
+    dw !CM_ACTION_PRESET
+	dw #preset_eastern_octoroc
+    db #$24, "Octoroc", #$FF
+
+cm_eastern_4:
+    dw !CM_ACTION_PRESET
+	dw #preset_eastern_entrance
+    db #$24, "Entrance", #$FF
+
+cm_eastern_5:
+    dw !CM_ACTION_PRESET
+	dw #preset_stalfos_room
+    db #$24, "Stalfos Room", #$FF
+
+cm_eastern_6:
+    dw !CM_ACTION_PRESET
+	dw #preset_eastern_dark_key_room
+    db #$24, "Dark Key Room", #$FF
+
+cm_eastern_7:
+    dw !CM_ACTION_PRESET
+	dw #preset_eastern_bk_dmg_boost
+    db #$24, "BK Dmg Boost", #$FF
+
+cm_eastern_8:
+    dw !CM_ACTION_PRESET
+	dw #preset_eastern_big_chest_room
+    db #$24, "Big Chest Room", #$FF
+
+cm_eastern_9:
+    dw !CM_ACTION_PRESET
+	dw #preset_eastern_gwg
+    db #$24, "Gifted With Greenies", #$FF
+
+cm_eastern_10:
+    dw !CM_ACTION_PRESET
+	dw #preset_eastern_pot_room
+    db #$24, "Pot Room", #$FF
+
+cm_eastern_11:
+    dw !CM_ACTION_PRESET
+	dw #preset_eastern_zgr
+    db #$24, "Zeldagamer Room", #$FF
+
+cm_eastern_12:
+    dw !CM_ACTION_PRESET
+	dw #preset_eastern_armos
+    db #$24, "Armos", #$FF
+
+; DESERT
 
 cm_presets_goto_desert:
     dw !CM_ACTION_SUBMENU
-    dw cm_presets_escape
+    dw cm_presets_desert
     db #$24, "Desert", #$FF
+
+cm_presets_desert:
+    dw cm_desert_1
+    dw cm_desert_2
+    dw cm_desert_3
+    dw cm_desert_4
+    dw cm_desert_5
+    dw cm_desert_6
+    dw cm_desert_7
+    dw cm_desert_8
+    dw cm_desert_9
+    dw cm_desert_10
+    dw cm_desert_11
+    dw cm_desert_12
+    dw #$0000
+    db #$2C, "DESERT", #$FF
+
+cm_desert_1:
+    dw !CM_ACTION_PRESET
+	dw #preset_desert_outside_ep
+    db #$24, "Outside Eastern Palace", #$FF
+
+cm_desert_2:
+    dw !CM_ACTION_PRESET
+	dw #preset_desert_ep_spinspeed
+    db #$24, "Eastern Palace Spinspeed", #$FF
+
+cm_desert_3:
+    dw !CM_ACTION_PRESET
+	dw #preset_desert_unholy_spinspeed
+    db #$24, "Unhold Spinspeed", #$FF
+
+cm_desert_4:
+    dw !CM_ACTION_PRESET
+	dw #preset_desert_water_dash
+    db #$24, "Water Dash", #$FF
+
+cm_desert_5:
+    dw !CM_ACTION_PRESET
+	dw #preset_desert_entrance
+    db #$24, "Entrance", #$FF
+
+cm_desert_6:
+    dw !CM_ACTION_PRESET
+	dw #preset_desert_keybonk
+    db #$24, "Key Bonk", #$FF
+
+cm_desert_7:
+    dw !CM_ACTION_PRESET
+	dw #preset_desert_pre_cannonball_room
+    db #$24, "Cannonball Room", #$FF
+
+cm_desert_8:
+    dw !CM_ACTION_PRESET
+	dw #preset_desert_pot_room
+    db #$24, "Pot Room", #$FF
+
+cm_desert_9:
+    dw !CM_ACTION_PRESET
+	dw #preset_desert_desert2_spinspeed
+    db #$24, "Desert 2 Spinspeed", #$FF
+
+cm_desert_10:
+    dw !CM_ACTION_PRESET
+	dw #preset_desert_popo_genocide
+    db #$24, "Popo Genocide", #$FF
+
+cm_desert_11:
+    dw !CM_ACTION_PRESET
+	dw #preset_desert_torches
+    db #$24, "Torches", #$FF
+
+cm_desert_12:
+    dw !CM_ACTION_PRESET
+	dw #preset_desert_lanmolas
+    db #$24, "Lanmolas", #$FF
+
+; HERA
 
 cm_presets_goto_hera:
     dw !CM_ACTION_SUBMENU
-    dw cm_presets_escape
+    dw cm_presets_hera
     db #$24, "Hera", #$FF
 
-cm_presets_goto_aga:
+cm_presets_hera:
+    dw cm_hera_1
+    dw cm_hera_2
+    dw cm_hera_3
+    dw cm_hera_4
+    dw cm_hera_5
+    dw cm_hera_6
+    dw cm_hera_7
+    dw cm_hera_8
+    dw cm_hera_9
+    dw cm_hera_10
+    dw #$0000
+    db #$2C, "HERA", #$FF
+
+cm_hera_1:
+    dw !CM_ACTION_PRESET
+	dw #preset_hera_outside_desert
+    db #$24, "Outside Desert Palace", #$FF
+
+cm_hera_2:
+    dw !CM_ACTION_PRESET
+	dw #preset_hera_fake_flippers
+    db #$24, "Fake Flippers", #$FF
+
+cm_hera_3:
+    dw !CM_ACTION_PRESET
+	dw #preset_hera_dm
+    db #$24, "Death Mountain", #$FF
+
+cm_hera_4:
+    dw !CM_ACTION_PRESET
+	dw #preset_hera_after_mirror
+    db #$24, "After Mirror", #$FF
+
+cm_hera_5:
+    dw !CM_ACTION_PRESET
+	dw #preset_hera_entrance
+    db #$24, "Entrance", #$FF
+
+cm_hera_6:
+    dw !CM_ACTION_PRESET
+	dw #preset_hera_tile_room
+    db #$24, "Tile room", #$FF
+
+cm_hera_7:
+    dw !CM_ACTION_PRESET
+	dw #preset_hera_torches
+    db #$24, "Torches", #$FF
+
+cm_hera_8:
+    dw !CM_ACTION_PRESET
+	dw #preset_hera_beetles
+    db #$24, "Beetles", #$FF
+
+cm_hera_9:
+    dw !CM_ACTION_PRESET
+	dw #preset_hera_petting_zoo
+    db #$24, "Petting Zoo", #$FF
+
+cm_hera_10:
+    dw !CM_ACTION_PRESET
+	dw #preset_hera_moldorm
+    db #$24, "Moldorm", #$FF
+
+cm_atower_1:
+    dw !CM_ACTION_PRESET
+	dw #preset_atower_outside_hera
+    db #$24, "Outside Hera", #$FF
+
+cm_atower_2:
+    dw !CM_ACTION_PRESET
+	dw #preset_atower_first_rupee_tree
+    db #$24, "First Rupee Tree", #$FF
+
+; ATOWER
+
+cm_presets_goto_atower:
     dw !CM_ACTION_SUBMENU
-    dw cm_presets_escape
+    dw cm_presets_atower
     db #$24, "Agahnim's Tower", #$FF
+
+cm_presets_atower:
+    dw cm_atower_1
+    dw cm_atower_2
+    dw cm_atower_3
+    dw cm_atower_4
+    dw cm_atower_5
+    dw cm_atower_6
+    dw cm_atower_7
+    dw cm_atower_8
+    dw cm_atower_9
+    dw cm_atower_10
+    dw #$0000
+    db #$2C, "AGAHNIM'S TOWER", #$FF
+
+cm_atower_3:
+    dw !CM_ACTION_PRESET
+	dw #preset_atower_lost_woods
+    db #$24, "Lost Woods", #$FF
+
+cm_atower_4:
+    dw !CM_ACTION_PRESET
+	dw #preset_atower_after_lost_woods
+    db #$24, "After Lost Woods", #$FF
+
+cm_atower_5:
+    dw !CM_ACTION_PRESET
+	dw #preset_atower_tower_entrance
+    db #$24, "Tower Entrance", #$FF
+
+cm_atower_6:
+    dw !CM_ACTION_PRESET
+	dw #preset_atower_dark_room_despair
+    db #$24, "Dark Room of Despair", #$FF
+
+cm_atower_7:
+    dw !CM_ACTION_PRESET
+	dw #preset_atower_dark_room_melancholy
+    db #$24, "Dark Room of Melancholy", #$FF
+
+cm_atower_8:
+    dw !CM_ACTION_PRESET
+	dw #preset_atower_red_spears
+    db #$24, "Red Spear Guards", #$FF
+
+cm_atower_9:
+    dw !CM_ACTION_PRESET
+	dw #preset_atower_cop
+    db #$24, "Circle of Pot", #$FF
+
+cm_atower_10:
+    dw !CM_ACTION_PRESET
+	dw #preset_atower_agahnim
+    db #$24, "Agahnim", #$FF
+
+; POD
 
 cm_presets_goto_pod:
     dw !CM_ACTION_SUBMENU
-    dw cm_presets_escape
+    dw cm_presets_pod
     db #$24, "Palace of Darkness", #$FF
+
+cm_presets_pod:
+    dw cm_pod_1
+    dw #$0000
+    db #$2C, "PALACE OF DARKNESS", #$FF
+
+cm_pod_1:
+    dw !CM_ACTION_PRESET
+	dw #preset_pod_pyramid
+    db #$24, "Pyramid", #$FF
+
+; --
 
 cm_presets_goto_theives:
     dw !CM_ACTION_SUBMENU

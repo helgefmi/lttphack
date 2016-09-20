@@ -274,7 +274,7 @@ preset_load_state:
     ; $00-$01 = pointer to the end of preset table, which contains a pointer to where
     ;           we want to stop restoring state form.
     LDA ($00) : STA $06
-    LDA #preset_data_state_1 : STA $00
+    LDA #sram_first_state : STA $00
 
   .next_item
     ; Sets up $02-$04 with the long address we want to manipulate.
