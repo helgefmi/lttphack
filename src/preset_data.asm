@@ -3,120 +3,92 @@ preset_data:
 
 
 .save_1
-db $2 ; Dungeon
-dw $104 ; Room Index
-dw $2110 ; BG1 Vertical Scroll
-dw $2110 ; BG2 Vertical Scroll
-dw $900 ; BG1 Horizontal Scroll
-dw $900 ; BG2 Horizontal Scroll
-dw $978 ; Link X
-dw $21B5 ; Link Y
-dw $17F ; Camera X
-dw $17F ; Camera Y
-dw $816 ; Door Settings
-dw $2100 ; Relative Coords HU
-dw $2000 ; Relative Coords FU
-dw $2110 ; Relative Coords HD
-dw $2110 ; Relative Coords FD
-dw $900 ; Relative Coords HL
-dw $900 ; Relative Coords FL
-dw $900 ; Relative Coords HR
-dw $A00 ; Relative Coords FR
-dw $0 ; Quadrant 1
-dw $200 ; Quadrant 2
-db $3 ; Main Graphics
-db $FF ; Music Track
-db $0 ; Starting Floor
-db $FF ; Palace No
-db $0 ; Door Orientation
-db $0 ; Starting Background
+db $1 ; Overworld
+dw $2C ; Screen Index
+dw $8B8 ; Link X
+dw $B05 ; Link Y
+dw $A1A0 ; BG1 Vertical Scroll
+dw $AA7 ; BG2 Vertical Scroll
+dw $2E32 ; BG1 Horizontal Scroll
+dw $832 ; BG2 Horizontal Scroll
+dw $8BF ; Scroll X
+dw $B14 ; Scroll Y
+dw $506 ; Unknown 1
+dw $FFF9 ; Unknown 2
+dw $FFFE ; Unknown 3
 dw .after_state_1
 
 
 .save_2
 db $2 ; Dungeon
-dw $61 ; Room Index
-dw $D10 ; BG1 Vertical Scroll
-dw $D10 ; BG2 Vertical Scroll
-dw $280 ; BG1 Horizontal Scroll
-dw $280 ; BG2 Horizontal Scroll
-dw $2F8 ; Link X
-dw $D96 ; Link Y
-dw $FF ; Camera X
-dw $187 ; Camera Y
-dw $0 ; Door Settings
-dw $D00 ; Relative Coords HU
-dw $C00 ; Relative Coords FU
-dw $D10 ; Relative Coords HD
-dw $D10 ; Relative Coords FD
-dw $200 ; Relative Coords HL
-dw $200 ; Relative Coords FL
-dw $200 ; Relative Coords HR
-dw $300 ; Relative Coords FR
-dw $202 ; Quadrant 1
-dw $200 ; Quadrant 2
-db $4 ; Main Graphics
-db $10 ; Music Track
-db $0 ; Starting Floor
-db $2 ; Palace No
-db $0 ; Door Orientation
-db $0 ; Starting Background
-dw .after_state_2
-
-
-.save_3
-db $2 ; Dungeon
-dw $60 ; Room Index
-dw $C8C ; BG1 Vertical Scroll
-dw $C8C ; BG2 Vertical Scroll
-dw $100 ; BG1 Horizontal Scroll
-dw $100 ; BG2 Horizontal Scroll
-dw $1A6 ; Link X
-dw $CF8 ; Link Y
-dw $17F ; Camera X
-dw $103 ; Camera Y
-dw $0 ; Door Settings
-dw $C00 ; Relative Coords HU
-dw $C00 ; Relative Coords FU
-dw $C10 ; Relative Coords HD
-dw $D10 ; Relative Coords FD
-dw $100 ; Relative Coords HL
-dw $0 ; Relative Coords FL
-dw $100 ; Relative Coords HR
-dw $100 ; Relative Coords FR
-dw $200 ; Quadrant 1
-dw $1 ; Quadrant 2
-db $4 ; Main Graphics
-db $10 ; Music Track
-db $0 ; Starting Floor
-db $2 ; Palace No
-db $0 ; Door Orientation
-db $1 ; Starting Background
-dw .after_state_3
-
-
-.save_4
-db $2 ; Dungeon
-dw $50 ; Room Index
+dw $55 ; Room Index
 dw $B10 ; BG1 Vertical Scroll
 dw $B10 ; BG2 Vertical Scroll
-dw $100 ; BG1 Horizontal Scroll
-dw $100 ; BG2 Horizontal Scroll
-dw $178 ; Link X
-dw $B90 ; Link Y
-dw $17F ; Camera X
+dw $A00 ; BG1 Horizontal Scroll
+dw $A00 ; BG2 Horizontal Scroll
+dw $A78 ; Link X
+dw $BC5 ; Link Y
+dw $7F ; Camera X
 dw $188 ; Camera Y
 dw $0 ; Door Settings
 dw $B00 ; Relative Coords HU
 dw $A00 ; Relative Coords FU
 dw $B10 ; Relative Coords HD
 dw $B10 ; Relative Coords FD
-dw $100 ; Relative Coords HL
-dw $0 ; Relative Coords FL
-dw $100 ; Relative Coords HR
-dw $100 ; Relative Coords FR
-dw $200 ; Quadrant 1
-dw $201 ; Quadrant 2
+dw $A00 ; Relative Coords HL
+dw $A00 ; Relative Coords FL
+dw $A00 ; Relative Coords HR
+dw $B00 ; Relative Coords FR
+dw $2 ; Quadrant 1
+dw $200 ; Quadrant 2
+db $1 ; Main Graphics
+db $3 ; Music Track
+db $FF ; Starting Floor
+db $FF ; Palace No
+db $1 ; Door Orientation
+db $0 ; Starting Background
+dw .after_state_2
+
+
+.save_3
+db $1 ; Overworld
+dw $1B ; Screen Index
+dw $7F8 ; Link X
+dw $707 ; Link Y
+dw $F4C0 ; BG1 Vertical Scroll
+dw $6A9 ; BG2 Vertical Scroll
+dw $2F84 ; BG1 Horizontal Scroll
+dw $784 ; BG2 Horizontal Scroll
+dw $803 ; Scroll X
+dw $716 ; Scroll Y
+dw $530 ; Unknown 1
+dw $FFF7 ; Unknown 2
+dw $FFFA ; Unknown 3
+dw .after_state_3
+
+
+.save_4
+db $2 ; Dungeon
+dw $1 ; Room Index
+dw $0 ; BG1 Vertical Scroll
+dw $0 ; BG2 Vertical Scroll
+dw $280 ; BG1 Horizontal Scroll
+dw $280 ; BG2 Horizontal Scroll
+dw $2F8 ; Link X
+dw $5F ; Link Y
+dw $FF ; Camera X
+dw $78 ; Camera Y
+dw $0 ; Door Settings
+dw $0 ; Relative Coords HU
+dw $0 ; Relative Coords FU
+dw $10 ; Relative Coords HD
+dw $110 ; Relative Coords FD
+dw $200 ; Relative Coords HL
+dw $200 ; Relative Coords FL
+dw $200 ; Relative Coords HR
+dw $300 ; Relative Coords FR
+dw $2 ; Quadrant 1
+dw $0 ; Quadrant 2
 db $4 ; Main Graphics
 db $10 ; Music Track
 db $0 ; Starting Floor
@@ -128,113 +100,20 @@ dw .after_state_4
 
 .save_5
 db $2 ; Dungeon
-dw $1 ; Room Index
-dw $B ; BG1 Vertical Scroll
-dw $B ; BG2 Vertical Scroll
-dw $200 ; BG1 Horizontal Scroll
-dw $200 ; BG2 Horizontal Scroll
-dw $252 ; Link X
-dw $78 ; Link Y
-dw $7F ; Camera X
-dw $83 ; Camera Y
-dw $0 ; Door Settings
-dw $0 ; Relative Coords HU
-dw $0 ; Relative Coords FU
-dw $10 ; Relative Coords HD
-dw $110 ; Relative Coords FD
-dw $200 ; Relative Coords HL
-dw $200 ; Relative Coords FL
-dw $200 ; Relative Coords HR
-dw $300 ; Relative Coords FR
-dw $2 ; Quadrant 1
-dw $0 ; Quadrant 2
-db $4 ; Main Graphics
-db $10 ; Music Track
-db $0 ; Starting Floor
-db $2 ; Palace No
-db $0 ; Door Orientation
-db $1 ; Starting Background
-dw .after_state_5
-
-
-.save_6
-db $2 ; Dungeon
-dw $52 ; Room Index
-dw $A0B ; BG1 Vertical Scroll
-dw $A0B ; BG2 Vertical Scroll
+dw $82 ; Room Index
+dw $110B ; BG1 Vertical Scroll
+dw $110B ; BG2 Vertical Scroll
 dw $400 ; BG1 Horizontal Scroll
 dw $400 ; BG2 Horizontal Scroll
-dw $451 ; Link X
-dw $A78 ; Link Y
+dw $40E ; Link X
+dw $1178 ; Link Y
 dw $7F ; Camera X
-dw $83 ; Camera Y
+dw $183 ; Camera Y
 dw $0 ; Door Settings
-dw $A00 ; Relative Coords HU
-dw $A00 ; Relative Coords FU
-dw $A10 ; Relative Coords HD
-dw $B10 ; Relative Coords FD
-dw $400 ; Relative Coords HL
-dw $400 ; Relative Coords FL
-dw $400 ; Relative Coords HR
-dw $500 ; Relative Coords FR
-dw $202 ; Quadrant 1
-dw $0 ; Quadrant 2
-db $4 ; Main Graphics
-db $10 ; Music Track
-db $0 ; Starting Floor
-db $2 ; Palace No
-db $0 ; Door Orientation
-db $1 ; Starting Background
-dw .after_state_6
-
-
-.save_7
-db $2 ; Dungeon
-dw $62 ; Room Index
-dw $C00 ; BG1 Vertical Scroll
-dw $C00 ; BG2 Vertical Scroll
-dw $400 ; BG1 Horizontal Scroll
-dw $400 ; BG2 Horizontal Scroll
-dw $478 ; Link X
-dw $C61 ; Link Y
-dw $7F ; Camera X
-dw $78 ; Camera Y
-dw $0 ; Door Settings
-dw $C00 ; Relative Coords HU
-dw $C00 ; Relative Coords FU
-dw $C10 ; Relative Coords HD
-dw $D10 ; Relative Coords FD
-dw $400 ; Relative Coords HL
-dw $400 ; Relative Coords FL
-dw $400 ; Relative Coords HR
-dw $500 ; Relative Coords FR
-dw $202 ; Quadrant 1
-dw $0 ; Quadrant 2
-db $4 ; Main Graphics
-db $10 ; Music Track
-db $0 ; Starting Floor
-db $2 ; Palace No
-db $0 ; Door Orientation
-db $1 ; Starting Background
-dw .after_state_7
-
-
-.save_8
-db $2 ; Dungeon
-dw $52 ; Room Index
-dw $B10 ; BG1 Vertical Scroll
-dw $B10 ; BG2 Vertical Scroll
-dw $466 ; BG1 Horizontal Scroll
-dw $466 ; BG2 Horizontal Scroll
-dw $4DE ; Link X
-dw $BA3 ; Link Y
-dw $E5 ; Camera X
-dw $188 ; Camera Y
-dw $0 ; Door Settings
-dw $B00 ; Relative Coords HU
-dw $A00 ; Relative Coords FU
-dw $B10 ; Relative Coords HD
-dw $B10 ; Relative Coords FD
+dw $1100 ; Relative Coords HU
+dw $1000 ; Relative Coords FU
+dw $1110 ; Relative Coords HD
+dw $1110 ; Relative Coords FD
 dw $400 ; Relative Coords HL
 dw $400 ; Relative Coords FL
 dw $400 ; Relative Coords HR
@@ -243,7 +122,100 @@ dw $202 ; Quadrant 1
 dw $200 ; Quadrant 2
 db $4 ; Main Graphics
 db $10 ; Music Track
-db $0 ; Starting Floor
+db $FF ; Starting Floor
+db $2 ; Palace No
+db $0 ; Door Orientation
+db $1 ; Starting Background
+dw .after_state_5
+
+
+.save_6
+db $2 ; Dungeon
+dw $71 ; Room Index
+dw $F0B ; BG1 Vertical Scroll
+dw $F0B ; BG2 Vertical Scroll
+dw $200 ; BG1 Horizontal Scroll
+dw $200 ; BG2 Horizontal Scroll
+dw $2A9 ; Link X
+dw $F78 ; Link Y
+dw $7F ; Camera X
+dw $183 ; Camera Y
+dw $0 ; Door Settings
+dw $F00 ; Relative Coords HU
+dw $E00 ; Relative Coords FU
+dw $F10 ; Relative Coords HD
+dw $F10 ; Relative Coords FD
+dw $200 ; Relative Coords HL
+dw $200 ; Relative Coords FL
+dw $200 ; Relative Coords HR
+dw $300 ; Relative Coords FR
+dw $0 ; Quadrant 1
+dw $200 ; Quadrant 2
+db $4 ; Main Graphics
+db $10 ; Music Track
+db $FF ; Starting Floor
+db $2 ; Palace No
+db $0 ; Door Orientation
+db $1 ; Starting Background
+dw .after_state_6
+
+
+.save_7
+db $2 ; Dungeon
+dw $70 ; Room Index
+dw $E00 ; BG1 Vertical Scroll
+dw $E00 ; BG2 Vertical Scroll
+dw $0 ; BG1 Horizontal Scroll
+dw $0 ; BG2 Horizontal Scroll
+dw $50 ; Link X
+dw $E31 ; Link Y
+dw $7F ; Camera X
+dw $78 ; Camera Y
+dw $0 ; Door Settings
+dw $E00 ; Relative Coords HU
+dw $E00 ; Relative Coords FU
+dw $E10 ; Relative Coords HD
+dw $F10 ; Relative Coords FD
+dw $0 ; Relative Coords HL
+dw $0 ; Relative Coords FL
+dw $0 ; Relative Coords HR
+dw $100 ; Relative Coords FR
+dw $0 ; Quadrant 1
+dw $0 ; Quadrant 2
+db $4 ; Main Graphics
+db $10 ; Music Track
+db $FE ; Starting Floor
+db $2 ; Palace No
+db $0 ; Door Orientation
+db $0 ; Starting Background
+dw .after_state_7
+
+
+.save_8
+db $2 ; Dungeon
+dw $80 ; Room Index
+dw $1010 ; BG1 Vertical Scroll
+dw $1010 ; BG2 Vertical Scroll
+dw $E8 ; BG1 Horizontal Scroll
+dw $E8 ; BG2 Horizontal Scroll
+dw $160 ; Link X
+dw $1082 ; Link Y
+dw $167 ; Camera X
+dw $88 ; Camera Y
+dw $0 ; Door Settings
+dw $1000 ; Relative Coords HU
+dw $1000 ; Relative Coords FU
+dw $1010 ; Relative Coords HD
+dw $1110 ; Relative Coords FD
+dw $100 ; Relative Coords HL
+dw $0 ; Relative Coords FL
+dw $100 ; Relative Coords HR
+dw $100 ; Relative Coords FR
+dw $2 ; Quadrant 1
+dw $1 ; Quadrant 2
+db $4 ; Main Graphics
+db $10 ; Music Track
+db $FD ; Starting Floor
 db $2 ; Palace No
 db $0 ; Door Orientation
 db $0 ; Starting Background
@@ -252,20 +224,175 @@ dw .after_state_8
 
 .save_9
 db $2 ; Dungeon
-dw $1 ; Room Index
-dw $B ; BG1 Vertical Scroll
-dw $B ; BG2 Vertical Scroll
-dw $300 ; BG1 Horizontal Scroll
-dw $300 ; BG2 Horizontal Scroll
-dw $39C ; Link X
-dw $78 ; Link Y
-dw $17F ; Camera X
-dw $83 ; Camera Y
+dw $51 ; Room Index
+dw $A37 ; BG1 Vertical Scroll
+dw $A37 ; BG2 Vertical Scroll
+dw $280 ; BG1 Horizontal Scroll
+dw $280 ; BG2 Horizontal Scroll
+dw $2F8 ; Link X
+dw $AA4 ; Link Y
+dw $FF ; Camera X
+dw $AF ; Camera Y
 dw $0 ; Door Settings
-dw $0 ; Relative Coords HU
-dw $0 ; Relative Coords FU
-dw $10 ; Relative Coords HD
-dw $110 ; Relative Coords FD
+dw $A00 ; Relative Coords HU
+dw $A00 ; Relative Coords FU
+dw $A10 ; Relative Coords HD
+dw $B10 ; Relative Coords FD
+dw $200 ; Relative Coords HL
+dw $200 ; Relative Coords FL
+dw $200 ; Relative Coords HR
+dw $300 ; Relative Coords FR
+dw $202 ; Quadrant 1
+dw $0 ; Quadrant 2
+db $4 ; Main Graphics
+db $10 ; Music Track
+db $1 ; Starting Floor
+db $2 ; Palace No
+db $0 ; Door Orientation
+db $0 ; Starting Background
+dw .after_state_9
+
+
+.save_10
+db $2 ; Dungeon
+dw $41 ; Room Index
+dw $40 ; BG1 Vertical Scroll
+dw $800 ; BG2 Vertical Scroll
+dw $FFCF ; BG1 Horizontal Scroll
+dw $300 ; BG2 Horizontal Scroll
+dw $3A8 ; Link X
+dw $833 ; Link Y
+dw $17F ; Camera X
+dw $78 ; Camera Y
+dw $0 ; Door Settings
+dw $800 ; Relative Coords HU
+dw $800 ; Relative Coords FU
+dw $810 ; Relative Coords HD
+dw $910 ; Relative Coords FD
+dw $300 ; Relative Coords HL
+dw $200 ; Relative Coords FL
+dw $300 ; Relative Coords HR
+dw $300 ; Relative Coords FR
+dw $202 ; Quadrant 1
+dw $1 ; Quadrant 2
+db $4 ; Main Graphics
+db $10 ; Music Track
+db $1 ; Starting Floor
+db $0 ; Palace No
+db $0 ; Door Orientation
+db $0 ; Starting Background
+dw .after_state_10
+
+
+.save_11
+db $2 ; Dungeon
+dw $42 ; Room Index
+dw $40 ; BG1 Vertical Scroll
+dw $800 ; BG2 Vertical Scroll
+dw $FFFF ; BG1 Horizontal Scroll
+dw $480 ; BG2 Horizontal Scroll
+dw $4F8 ; Link X
+dw $835 ; Link Y
+dw $FF ; Camera X
+dw $78 ; Camera Y
+dw $0 ; Door Settings
+dw $800 ; Relative Coords HU
+dw $800 ; Relative Coords FU
+dw $810 ; Relative Coords HD
+dw $910 ; Relative Coords FD
+dw $400 ; Relative Coords HL
+dw $400 ; Relative Coords FL
+dw $400 ; Relative Coords HR
+dw $500 ; Relative Coords FR
+dw $2 ; Quadrant 1
+dw $0 ; Quadrant 2
+db $4 ; Main Graphics
+db $10 ; Music Track
+db $0 ; Starting Floor
+db $0 ; Palace No
+db $0 ; Door Orientation
+db $0 ; Starting Background
+dw .after_state_11
+
+
+.save_12
+db $2 ; Dungeon
+dw $32 ; Room Index
+dw $40 ; BG1 Vertical Scroll
+dw $600 ; BG2 Vertical Scroll
+dw $FFFF ; BG1 Horizontal Scroll
+dw $47F ; BG2 Horizontal Scroll
+dw $4F7 ; Link X
+dw $639 ; Link Y
+dw $FE ; Camera X
+dw $78 ; Camera Y
+dw $0 ; Door Settings
+dw $600 ; Relative Coords HU
+dw $600 ; Relative Coords FU
+dw $610 ; Relative Coords HD
+dw $710 ; Relative Coords FD
+dw $400 ; Relative Coords HL
+dw $400 ; Relative Coords FL
+dw $400 ; Relative Coords HR
+dw $500 ; Relative Coords FR
+dw $202 ; Quadrant 1
+dw $0 ; Quadrant 2
+db $4 ; Main Graphics
+db $10 ; Music Track
+db $FF ; Starting Floor
+db $0 ; Palace No
+db $0 ; Door Orientation
+db $0 ; Starting Background
+dw .after_state_12
+
+
+.save_13
+db $2 ; Dungeon
+dw $21 ; Room Index
+dw $40 ; BG1 Vertical Scroll
+dw $500 ; BG2 Vertical Scroll
+dw $FFFF ; BG1 Horizontal Scroll
+dw $27F ; BG2 Horizontal Scroll
+dw $2F7 ; Link X
+dw $532 ; Link Y
+dw $FE ; Camera X
+dw $178 ; Camera Y
+dw $0 ; Door Settings
+dw $500 ; Relative Coords HU
+dw $400 ; Relative Coords FU
+dw $510 ; Relative Coords HD
+dw $510 ; Relative Coords FD
+dw $200 ; Relative Coords HL
+dw $200 ; Relative Coords FL
+dw $200 ; Relative Coords HR
+dw $300 ; Relative Coords FR
+dw $2 ; Quadrant 1
+dw $200 ; Quadrant 2
+db $4 ; Main Graphics
+db $10 ; Music Track
+db $FF ; Starting Floor
+db $0 ; Palace No
+db $0 ; Door Orientation
+db $0 ; Starting Background
+dw .after_state_13
+
+
+.save_14
+db $2 ; Dungeon
+dw $21 ; Room Index
+dw $40 ; BG1 Vertical Scroll
+dw $400 ; BG2 Vertical Scroll
+dw $FFFF ; BG1 Horizontal Scroll
+dw $300 ; BG2 Horizontal Scroll
+dw $378 ; Link X
+dw $433 ; Link Y
+dw $17F ; Camera X
+dw $78 ; Camera Y
+dw $0 ; Door Settings
+dw $400 ; Relative Coords HU
+dw $400 ; Relative Coords FU
+dw $410 ; Relative Coords HD
+dw $510 ; Relative Coords FD
 dw $300 ; Relative Coords HL
 dw $200 ; Relative Coords FL
 dw $300 ; Relative Coords HR
@@ -274,104 +401,73 @@ dw $2 ; Quadrant 1
 dw $1 ; Quadrant 2
 db $4 ; Main Graphics
 db $10 ; Music Track
-db $0 ; Starting Floor
-db $2 ; Palace No
-db $0 ; Door Orientation
-db $1 ; Starting Background
-dw .after_state_9
-
-
-.save_10
-db $2 ; Dungeon
-dw $50 ; Room Index
-dw $B0B ; BG1 Vertical Scroll
-dw $B0B ; BG2 Vertical Scroll
-dw $100 ; BG1 Horizontal Scroll
-dw $100 ; BG2 Horizontal Scroll
-dw $190 ; Link X
-dw $B78 ; Link Y
-dw $17F ; Camera X
-dw $183 ; Camera Y
-dw $0 ; Door Settings
-dw $B00 ; Relative Coords HU
-dw $A00 ; Relative Coords FU
-dw $B10 ; Relative Coords HD
-dw $B10 ; Relative Coords FD
-dw $100 ; Relative Coords HL
-dw $0 ; Relative Coords FL
-dw $100 ; Relative Coords HR
-dw $100 ; Relative Coords FR
-dw $200 ; Quadrant 1
-dw $201 ; Quadrant 2
-db $4 ; Main Graphics
-db $10 ; Music Track
-db $0 ; Starting Floor
-db $2 ; Palace No
-db $0 ; Door Orientation
-db $1 ; Starting Background
-dw .after_state_10
-
-
-.save_11
-db $2 ; Dungeon
-dw $60 ; Room Index
-dw $CC4 ; BG1 Vertical Scroll
-dw $CC4 ; BG2 Vertical Scroll
-dw $100 ; BG1 Horizontal Scroll
-dw $100 ; BG2 Horizontal Scroll
-dw $178 ; Link X
-dw $D31 ; Link Y
-dw $17F ; Camera X
-dw $13C ; Camera Y
-dw $0 ; Door Settings
-dw $D00 ; Relative Coords HU
-dw $C00 ; Relative Coords FU
-dw $D10 ; Relative Coords HD
-dw $D10 ; Relative Coords FD
-dw $100 ; Relative Coords HL
-dw $0 ; Relative Coords FL
-dw $100 ; Relative Coords HR
-dw $100 ; Relative Coords FR
-dw $200 ; Quadrant 1
-dw $201 ; Quadrant 2
-db $4 ; Main Graphics
-db $10 ; Music Track
-db $0 ; Starting Floor
-db $2 ; Palace No
-db $0 ; Door Orientation
-db $1 ; Starting Background
-dw .after_state_11
-
-
-.save_12
-db $2 ; Dungeon
-dw $60 ; Room Index
-dw $CFC ; BG1 Vertical Scroll
-dw $CFC ; BG2 Vertical Scroll
-dw $100 ; BG1 Horizontal Scroll
-dw $100 ; BG2 Horizontal Scroll
-dw $178 ; Link X
-dw $D6A ; Link Y
-dw $17F ; Camera X
-dw $174 ; Camera Y
-dw $0 ; Door Settings
-dw $D00 ; Relative Coords HU
-dw $C00 ; Relative Coords FU
-dw $D10 ; Relative Coords HD
-dw $D10 ; Relative Coords FD
-dw $100 ; Relative Coords HL
-dw $0 ; Relative Coords FL
-dw $100 ; Relative Coords HR
-dw $100 ; Relative Coords FR
-dw $200 ; Quadrant 1
-dw $201 ; Quadrant 2
-db $4 ; Main Graphics
-db $10 ; Music Track
-db $0 ; Starting Floor
-db $2 ; Palace No
+db $FF ; Starting Floor
+db $0 ; Palace No
 db $0 ; Door Orientation
 db $0 ; Starting Background
-dw .after_state_12
+dw .after_state_14
+
+
+.save_15
+db $2 ; Dungeon
+dw $11 ; Room Index
+dw $200 ; BG1 Vertical Scroll
+dw $200 ; BG2 Vertical Scroll
+dw $300 ; BG1 Horizontal Scroll
+dw $300 ; BG2 Horizontal Scroll
+dw $378 ; Link X
+dw $232 ; Link Y
+dw $17F ; Camera X
+dw $78 ; Camera Y
+dw $0 ; Door Settings
+dw $200 ; Relative Coords HU
+dw $200 ; Relative Coords FU
+dw $210 ; Relative Coords HD
+dw $310 ; Relative Coords FD
+dw $300 ; Relative Coords HL
+dw $200 ; Relative Coords FL
+dw $300 ; Relative Coords HR
+dw $300 ; Relative Coords FR
+dw $200 ; Quadrant 1
+dw $1 ; Quadrant 2
+db $4 ; Main Graphics
+db $10 ; Music Track
+db $FF ; Starting Floor
+db $0 ; Palace No
+db $0 ; Door Orientation
+db $0 ; Starting Background
+dw .after_state_15
+
+
+.save_16
+db $2 ; Dungeon
+dw $2 ; Room Index
+dw $110 ; BG1 Vertical Scroll
+dw $110 ; BG2 Vertical Scroll
+dw $480 ; BG1 Horizontal Scroll
+dw $480 ; BG2 Horizontal Scroll
+dw $4F8 ; Link X
+dw $1A3 ; Link Y
+dw $FF ; Camera X
+dw $188 ; Camera Y
+dw $0 ; Door Settings
+dw $100 ; Relative Coords HU
+dw $0 ; Relative Coords FU
+dw $110 ; Relative Coords HD
+dw $110 ; Relative Coords FD
+dw $400 ; Relative Coords HL
+dw $400 ; Relative Coords FL
+dw $400 ; Relative Coords HR
+dw $500 ; Relative Coords FR
+dw $2 ; Quadrant 1
+dw $200 ; Quadrant 2
+db $4 ; Main Graphics
+db $10 ; Music Track
+db $0 ; Starting Floor
+db $0 ; Palace No
+db $0 ; Door Orientation
+db $1 ; Starting Background
+dw .after_state_16
 
 
 ; State Changes
@@ -379,6 +475,7 @@ dw .after_state_12
 
 .state_1
 dl $7EF000 : db $2 : dw $0
+dl $7EF3CC : db $1 : db $5
 dl $7EF004 : db $2 : dw $0
 dl $7EF002 : db $2 : dw $0
 dl $7EF006 : db $2 : dw $0
@@ -621,7 +718,7 @@ dl $7EF3B6 : db $2 : dw $0
 dl $7EF3BA : db $2 : dw $0
 dl $7EF3BE : db $2 : dw $0
 dl $7EF3C2 : db $2 : dw $0
-dl $7EF3C6 : db $1 : dw $10
+dl $7EF3C6 : db $1 : db $10
 dl $7EF3CA : db $2 : dw $0
 dl $7EF3CE : db $2 : dw $0
 dl $7EF3D2 : db $2 : dw $0
@@ -699,12 +796,13 @@ dl $7EF4EE : db $2 : dw $0
 dl $7EF4F2 : db $2 : dw $0
 dl $7EF4F6 : db $2 : dw $0
 dl $7EF4FA : db $2 : dw $0
-dl $7EF4FE : db $2 : dw $BAEA
+dl $7EF4FE : db $2 : dw $B9EA
+dl $7E0403 : db $1 : db $0
 dl $7E040E : db $2 : dw $0
-dl $7E0408 : db $1 : dw $2
+dl $7E0408 : db $1 : db $2
 dl $7E0400 : db $2 : dw $0
-dl $7EF36F : db $1 : dw $FF
-dl $7E0402 : db $2 : dw $0
+dl $7EF36F : db $1 : db $FF
+dl $7E0402 : db $1 : db $0
 dl $7EF3FE : db $2 : dw $0
 dl $7EF2FE : db $2 : dw $0
 dl $7EF1FE : db $2 : dw $0
@@ -759,7 +857,7 @@ dl $7EF2DC : db $2 : dw $0
 dl $7EF1DC : db $2 : dw $0
 dl $7EF0DC : db $2 : dw $0
 dl $7EF4D8 : db $2 : dw $0
-dl $7EF3D8 : db $2 : dw $6100
+dl $7EF3D8 : db $2 : dw $6200
 dl $7EF2D8 : db $2 : dw $0
 dl $7EF1D8 : db $2 : dw $0
 dl $7EF0D8 : db $2 : dw $0
@@ -774,7 +872,6 @@ dl $7EF2D0 : db $2 : dw $0
 dl $7EF1D0 : db $2 : dw $0
 dl $7EF0D0 : db $2 : dw $0
 dl $7EF4CC : db $2 : dw $0
-dl $7EF3CC : db $1 : dw $5
 dl $7EF2CC : db $2 : dw $0
 dl $7EF1CC : db $2 : dw $0
 dl $7EF0CC : db $2 : dw $0
@@ -1027,125 +1124,205 @@ dl $7EF49A : db $2 : dw $0
 
 
 .state_2
-dl $7EF3C8 : db $1 : dw $3
+dl $7EF3C8 : db $1 : db $3
 dl $7E0402 : db $2 : dw $0
-dl $7E040A : db $1 : dw $1B
-dl $7E040E : db $2 : dw $1C
-dl $7EF360 : db $2 : dw $1
-dl $7EF36F : db $1 : dw $0
-dl $7EF2FB : db $1 : dw $0
-dl $7EF208 : db $2 : dw $2
-dl $7EF216 : db $1 : dw $0
-dl $7EF35A : db $1 : dw $1
+dl $7E040A : db $1 : db $1B
+dl $7EF359 : db $1 : db $1
+dl $7EF35A : db $1 : db $1
+dl $7EF36F : db $1 : db $FF
+dl $7EF2FB : db $1 : db $0
+dl $7EF216 : db $1 : db $0
 dl $7EF0AA : db $2 : dw $F
-dl $7EF36D : db $1 : dw $14
-dl $7EF3C5 : db $1 : dw $1
-dl $7EF3C6 : db $1 : dw $11
-dl $7EF359 : db $1 : dw $1
-dl $7EF2BB : db $1 : dw $0
-dl $7EF0C2 : db $2 : dw $F
-dl $7EF362 : db $2 : dw $1
-dl $7EF051 : db $1 : dw $0
-dl $7EF3CC : db $1 : dw $0
-dl $7E0403 : db $1 : dw $0
+dl $7EF2BB : db $1 : db $0
+dl $7EF3C5 : db $1 : db $1
+dl $7E040E : db $2 : dw $10
+dl $7EF051 : db $1 : db $0
+dl $7EF3C6 : db $1 : db $11
+dl $7E0408 : db $1 : db $F
 dl $7E0400 : db $2 : dw $0
-dl $7E0408 : db $1 : dw $F
+dl $7EF3CC : db $1 : db $0
 .after_state_2
 
 
 .state_3
-dl $7EF0C2 : db $2 : dw $F
+dl $7E0403 : db $1 : db $0
+dl $7EF37C : db $1 : db $0
 dl $7E0400 : db $2 : dw $0
-dl $7E0408 : db $2 : dw $0
-dl $7EF0C0 : db $2 : dw $5
-dl $7E040E : db $2 : dw $4
-dl $7E0402 : db $2 : dw $0
+dl $7E0408 : db $1 : db $F
+dl $7EF0AA : db $2 : dw $F
+dl $7E0402 : db $1 : db $0
+dl $7EF36F : db $1 : db $FF
+dl $7EF0C2 : db $2 : dw $F
+dl $7E040E : db $2 : dw $1C
 .after_state_3
 
 
 .state_4
+dl $7E040E : db $2 : dw $10
 dl $7E0400 : db $2 : dw $0
+dl $7EF0C0 : db $2 : dw $5
+dl $7EF36F : db $1 : db $0
+dl $7EF002 : db $2 : dw $C
 dl $7E0402 : db $2 : dw $0
 dl $7EF0A0 : db $2 : dw $5
-dl $7EF0C0 : db $2 : dw $5
-dl $7E040E : db $2 : dw $4
+dl $7EF0C2 : db $2 : dw $F
 dl $7E0408 : db $2 : dw $0
 .after_state_4
 
 
 .state_5
+dl $7E040E : db $2 : dw $1C
+dl $7EF36D : db $1 : db $18
 dl $7E0400 : db $2 : dw $0
-dl $7EF36D : db $1 : dw $10
-dl $7E0402 : db $2 : dw $0
-dl $7EF0A0 : db $2 : dw $5
+dl $7E0408 : db $1 : db $F
+dl $7EF36F : db $2 : dw $0
 dl $7EF002 : db $2 : dw $C
-dl $7E040E : db $2 : dw $10
-dl $7E0408 : db $2 : dw $0
+dl $7E0402 : db $2 : dw $0
+dl $7EF372 : db $1 : db $0
+dl $7EF0E4 : db $2 : dw $840F
+dl $7EF104 : db $2 : dw $F
 .after_state_5
 
 
 .state_6
-dl $7EF002 : db $2 : dw $C
-dl $7E0408 : db $2 : dw $0
-dl $7E0402 : db $2 : dw $0
-dl $7EF0A4 : db $2 : dw $F
-dl $7E040E : db $2 : dw $1C
+dl $7E040E : db $2 : dw $0
+dl $7EF36D : db $1 : db $18
 dl $7E0400 : db $2 : dw $0
+dl $7EF372 : db $1 : db $0
+dl $7EF0E2 : db $2 : dw $2
+dl $7EF104 : db $2 : dw $F
+dl $7E0402 : db $2 : dw $0
+dl $7EF102 : db $2 : dw $F
+dl $7E0408 : db $2 : dw $0
 .after_state_6
 
 
 .state_7
+dl $7EF36F : db $2 : dw $0
+dl $7EF0E2 : db $2 : dw $841B
+dl $7EF0E0 : db $2 : dw $8
+dl $7E0408 : db $1 : db $8
 dl $7E0400 : db $2 : dw $0
-dl $7E0408 : db $2 : dw $0
-dl $7EF0C4 : db $2 : dw $F
-dl $7EF0A4 : db $2 : dw $F
-dl $7E040E : db $2 : dw $1C
+dl $7EF341 : db $1 : db $1
+dl $7E040E : db $2 : dw $0
 dl $7E0402 : db $2 : dw $0
 .after_state_7
 
 
 .state_8
+dl $7E040E : db $2 : dw $10
+dl $7EF3E5 : db $2 : dw $0
+dl $7EF366 : db $2 : dw $4000
 dl $7E0400 : db $2 : dw $0
-dl $7E0402 : db $2 : dw $0
-dl $7E040E : db $2 : dw $1C
-dl $7EF0A4 : db $2 : dw $F
-dl $7EF0C4 : db $2 : dw $F
-dl $7E0408 : db $2 : dw $F
+dl $7EF3C8 : db $1 : db $2
+dl $7E0408 : db $1 : db $C
+dl $7EF100 : db $2 : dw $43C
+dl $7EF3D3 : db $1 : db $0
+dl $7EF34A : db $1 : db $1
+dl $7E0402 : db $2 : dw $4300
+dl $7EF3FF : db $2 : dw $0
+dl $7EF0E0 : db $2 : dw $8
+dl $7EF3CC : db $1 : db $1
 .after_state_8
 
 
 .state_9
+dl $7E040E : db $2 : dw $1C
+dl $7EF0A2 : db $2 : dw $F
+dl $7EF0C2 : db $2 : dw $F
 dl $7E0400 : db $2 : dw $0
-dl $7E0402 : db $2 : dw $0
+dl $7EF0C0 : db $2 : dw $5
+dl $7E0408 : db $1 : db $F
+dl $7EF0E2 : db $2 : dw $841B
+dl $7EF104 : db $2 : dw $F
+dl $7EF100 : db $2 : dw $43C
+dl $7EF0E4 : db $2 : dw $840F
 dl $7EF002 : db $2 : dw $C
-dl $7EF0A4 : db $2 : dw $F
-dl $7E040E : db $2 : dw $10
-dl $7E0408 : db $2 : dw $C
+dl $7E0402 : db $2 : dw $0
+dl $7EF0A0 : db $2 : dw $5
+dl $7EF0E0 : db $2 : dw $8
+dl $7EF102 : db $2 : dw $F
 .after_state_9
 
 
 .state_10
-dl $7EF002 : db $2 : dw $C
-dl $7EF36D : db $1 : dw $C
-dl $7E0408 : db $2 : dw $5
-dl $7EF0A0 : db $2 : dw $5
-dl $7E0402 : db $2 : dw $0
-dl $7E040E : db $2 : dw $4
+dl $7E0408 : db $2 : dw $0
 dl $7E0400 : db $2 : dw $0
+dl $7EF36D : db $1 : db $16
+dl $7E0402 : db $2 : dw $0
+dl $7E040E : db $2 : dw $1C
+dl $7EF082 : db $2 : dw $F
+dl $7EF0A2 : db $2 : dw $F
+dl $7EF3C8 : db $1 : db $4
 .after_state_10
 
 
 .state_11
+dl $7EF064 : db $2 : dw $F
 dl $7E0400 : db $2 : dw $0
-dl $7E0408 : db $2 : dw $5
-dl $7EF0A0 : db $2 : dw $5
-dl $7EF0C0 : db $2 : dw $5
-dl $7E040E : db $2 : dw $4
+dl $7EF36D : db $1 : db $12
 dl $7E0402 : db $2 : dw $0
+dl $7EF084 : db $2 : dw $C
+dl $7EF082 : db $2 : dw $F
+dl $7E040E : db $2 : dw $10
+dl $7E0408 : db $1 : db $C
 .after_state_11
 
 
 .state_12
-dl $7E0408 : db $1 : dw $5
-dl $7EF0C0 : db $2 : dw $5
+dl $7EF36F : db $2 : dw $0
+dl $7E0400 : db $2 : dw $8000
+dl $7E0408 : db $1 : db $F
+dl $7EF084 : db $2 : dw $C
+dl $7EF064 : db $2 : dw $1F
+dl $7E040E : db $2 : dw $1C
+dl $7E0402 : db $2 : dw $100
 .after_state_12
+
+
+.state_13
+dl $7EF042 : db $2 : dw $3
+dl $7E0400 : db $2 : dw $0
+dl $7EF044 : db $2 : dw $8003
+dl $7EF064 : db $2 : dw $801F
+dl $7EF36D : db $1 : db $10
+dl $7E0402 : db $2 : dw $0
+dl $7E040E : db $2 : dw $10
+dl $7E0408 : db $2 : dw $0
+.after_state_13
+
+
+.state_14
+dl $7EF36F : db $2 : dw $0
+dl $7E0400 : db $2 : dw $8000
+dl $7EF36D : db $1 : db $8
+dl $7EF042 : db $2 : dw $840F
+dl $7EF022 : db $2 : dw $2005
+dl $7E0408 : db $2 : dw $F
+dl $7E040E : db $2 : dw $10
+dl $7E0402 : db $2 : dw $4000
+.after_state_14
+
+
+.state_15
+dl $7E0400 : db $2 : dw $2000
+dl $7EF022 : db $2 : dw $2005
+dl $7E0402 : db $2 : dw $0
+dl $7EF36D : db $1 : db $6
+dl $7EF042 : db $2 : dw $840F
+dl $7E040E : db $2 : dw $4
+dl $7E0408 : db $2 : dw $5
+.after_state_15
+
+
+.state_16
+dl $7E040E : db $2 : dw $10
+dl $7EF36D : db $1 : db $4
+dl $7EF362 : db $2 : dw $5
+dl $7EF022 : db $2 : dw $2005
+dl $7E0408 : db $1 : db $C
+dl $7EF360 : db $2 : dw $5
+dl $7E0402 : db $2 : dw $0
+dl $7EF004 : db $2 : dw $F
+dl $7E0400 : db $2 : dw $0
+.after_state_16

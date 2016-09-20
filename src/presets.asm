@@ -162,6 +162,10 @@ preset_load_overworld:
     ; Clears RAM in case it's needed (used for when lifting big rocks?).
     STZ $0698
 
+  %a8()
+    JSR preset_load_state
+  %a16()
+
     JML !BirdTravel_LoadTargetAreaData_AfterData
 
 
@@ -256,7 +260,44 @@ preset_load_dungeon:
     ; Set Pseudo bg level
     LDA ($00) : %a16() : INC $00 : %a8() : AND.b #$0F : STA $0476
 
+    JSR preset_load_state
+
   PLB
     RTL
+
+
+preset_load_state:
+    STA !ram_debug
+    ; Enteres A=8
+  PHB : PHK : PLB
+  %a16()
+    ; $00-$01 = pointer to the end of preset table, which contains a pointer to where
+    ;           we want to stop restoring state form.
+    LDA ($00) : STA $06
+    LDA #preset_data_state_1 : STA $00
+
+  .next_item
+    ; Sets up $02-$04 with the long address we want to manipulate.
+    LDA $00 : CMP $06 : BEQ .done
+    LDA ($00) : INC $00 : INC $00 : STA $02
+    LDA ($00) : INC $00 : INC $00 : STA $04
+
+    ; High byte of A = How many bytes to copy over.
+    XBA : AND.w #$00FF : CMP #$0001 : BEQ .one_byte
+
+    LDA ($00) : INC $00 : INC $00 : STA [$02]
+    BRA .next_item
+
+  .one_byte
+  %a8()
+    LDA ($00) : STA [$02]
+  %a16()
+    INC $00
+    BRA .next_item
+
+  .done
+  %a8()
+    PLB
+    RTS
 
 incsrc preset_data.asm

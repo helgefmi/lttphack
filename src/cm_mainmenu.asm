@@ -485,6 +485,10 @@ cm_presets_escape:
     dw cm_escape_10
     dw cm_escape_11
     dw cm_escape_12
+    dw cm_escape_13
+    dw cm_escape_14
+    dw cm_escape_15
+    dw cm_escape_16
     dw #$0000
     db #$2C, "ESCAPE", #$FF
 
@@ -548,6 +552,26 @@ cm_escape_12:
     dw !CM_ACTION_PRESET
     dw #preset_data_save_12
     db #$24, "Test 12", #$FF
+
+cm_escape_13:
+    dw !CM_ACTION_PRESET
+    dw #preset_data_save_13
+    db #$24, "Test 13", #$FF
+
+cm_escape_14:
+    dw !CM_ACTION_PRESET
+    dw #preset_data_save_14
+    db #$24, "Test 14", #$FF
+
+cm_escape_15:
+    dw !CM_ACTION_PRESET
+    dw #preset_data_save_15
+    db #$24, "Test 15", #$FF
+
+cm_escape_16:
+    dw !CM_ACTION_PRESET
+    dw #preset_data_save_16
+    db #$24, "Test 16", #$FF
 
 ; --
 
