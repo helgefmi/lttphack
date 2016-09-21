@@ -51,9 +51,6 @@ preset_load_next_frame:
     STZ $04AA ; 
     STZ $010A ; death
 
-    ; Don't remember anymore :-) \todo
-    LDA $7EF3CC : AND #$FB : STA $7EF3CC
-
     ; Put us in Spotlight_close Module.
     LDA.b #$0F : STA $10
     STZ $11
@@ -267,8 +264,8 @@ preset_load_dungeon:
 
 
 preset_load_state:
-    STA !ram_debug
     ; Enteres A=8
+    JSR preset_clear_sram
   PHB : PHK : PLB
   %a16()
     ; $00-$01 = pointer to the end of preset table, which contains a pointer to where
@@ -298,6 +295,20 @@ preset_load_state:
   .done
   %a8()
     PLB
+    RTS
+
+
+preset_clear_sram:
+    ; Enteres A=8
+  %a16()
+
+    LDA.w #$0000
+
+  .loop
+    STA $7FE000, X : STA $7FE100, X : STA $7FE200, X : STA $7FE300, X : STA $7FE400, X
+    INX #2 : CPX.w #$0100 : BNE .loop
+
+  %a8()
     RTS
 
 incsrc preset_data.asm
