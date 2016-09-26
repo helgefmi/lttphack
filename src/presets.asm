@@ -324,6 +324,9 @@ preset_load_state:
   .done_with_state
     PLB
 
+  %ai16()
+    JSL !Sprite_LoadGfxProperties
+
   %ai8()
     LDA $7EF3CC : BEQ .done
     JSL !Tagalong_LoadGfx

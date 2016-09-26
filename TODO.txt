@@ -17,7 +17,6 @@ x Code some general menu:
         - Eastern -> Zeldagamer Room
     - Fix/investigate save states:
         - Octoroc
-        - Eastern -> Entrance (enemy sprites are wrong)
         - Hera -> Fake Flippers
         - Aga -> Lost Woods
     - Make one-exit rooms work.
