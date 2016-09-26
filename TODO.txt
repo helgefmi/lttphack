@@ -10,6 +10,7 @@ x Code some general menu:
         - Word-sized number widget for rupees.
     - Make sure to only go to this game mode when its safe to do so.
         - Item menu, before selecting file.
+        - Infinite pause item menu
     - Initialize cm_ values on menu open.
 
 - Teleport "anywhere" w/presets.

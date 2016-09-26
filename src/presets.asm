@@ -300,15 +300,16 @@ preset_load_state:
 
 preset_clear_sram:
     ; Enteres A=8
-  %a16()
+  %ai16()
 
     LDA.w #$0000
+    LDX.w #$0000
 
   .loop
-    STA $7FE000, X : STA $7FE100, X : STA $7FE200, X : STA $7FE300, X : STA $7FE400, X
+    STA $7EF000, X : STA $7EF100, X : STA $7EF200, X : STA $7EF300, X : STA $7EF400, X
     INX #2 : CPX.w #$0100 : BNE .loop
 
-  %a8()
+  %ai8()
     RTS
 
 incsrc preset_data.asm

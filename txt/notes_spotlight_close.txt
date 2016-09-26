@@ -1,0 +1,115 @@
+- Jump to Module 0F/00 (Module_CloseSpotlight). Set PreDungeon as next.
+
+Module_CloseSpotlight:
+{
+    JSL Sprite_Main
+
+    JSR ($997E, $11 << 1) ; see below
+
+    if (outdoors) {
+        if (on_pre_zoras_domain_screen()) {
+            make_sure_water_sprite_effect_works()
+        }
+
+        set_walking_speed(6)
+
+        JSL $07E245 ; $3E245 IN ROM
+    }
+
+    something_about_figuring_out_direction_link_is_facing_and_stuff()
+
+    JSL $07E6A6 ; $3E6A6 IN ROM
+    JML PlayerOam_Main
+}
+
+Module_CloseSpotlight/00
+{
+    stop_crystal_cutscene()
+    stop_rendering_crystal_stuff()
+
+    if (outdoors) {
+        JSL Ancilla_TerminateWaterfallSplashes
+        cache_links_y_coordinate()
+    }
+
+    figure_out_some_music_shit()
+
+    reset_floor_indicator_timer() ; not sure
+
+    JSL FloorIndicator()
+
+    tell_nmi_to_update_hud()
+
+    JSL Spotlight_close
+
+    INC $11
+}
+
+Module_CloseSpotlight/01
+{
+    JSL ConfigureSpotlightTable
+    {
+        spotlight_hdma_stuff()
+        when (done_spotlighting()) {
+            Resets $11
+            Sets $10 to $010C (cache - where should be PreDungeon=$06 for us)
+        }
+    }
+
+    ; Disable IRQ logic
+    disable_irq_logic()
+
+    if (not_done_spotlighing() {
+        return
+    }
+
+    if (in_pre_dungeon_mode()) {
+        restore_links_y_coordinate_from_before()
+    }
+
+    if (!in_overworld()) {
+
+        ; Force V-blank in preperation for Dungeon mode
+        JSL EnableForceBlank ; $93D IN ROM
+
+        reset_some_of_links_states()
+    }
+
+    if (in_overworld()) {
+        if (!some_special_screen()) {
+            set_right_submodule_depending_on_links_direction() ; $2F.
+        }
+
+        LDA.b #$10 : STA $069A
+
+        LDA $0696 : ORA $0698 : BEQ BRANCH_GAMMA ; not an extended door type (palace or sanctuary)
+
+        LDA $0699 : BEQ BRANCH_GAMMA
+
+        LDX.b #$00
+
+        ASL A : BCC BRANCH_THETA
+
+        LDX.b #$18
+
+    BRANCH_THETA:
+
+        LDA $0699 : AND.b #$7F : STA $0699
+
+        STX $0692
+
+        STZ $0690
+
+        LDA.b #$09 : STA $11
+
+        STZ $B0
+
+        LDA.b #$15 : STA $012F
+    }
+
+BRANCH_GAMMA:
+    reset_window_mask_values()
+
+    ; setup_fixed_color_values_based_on_area_number()
+    RTS
+}
