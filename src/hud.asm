@@ -154,7 +154,7 @@ hud_draw_hearts:
     LDA !ram_equipment_curhp : AND #$00FF : LSR : LSR : LSR : JSL hex_to_dec : LDX.w #!POS_HEARTS : JSL draw2_white
 
     ; Quarters
-    LDA !ram_equipment_curhp : AND #$0007 : ORA #$3490 : STA $7EC704,x
+    LDA !ram_equipment_curhp : AND #$0007 : ORA #$3490 : STA $7EC704, X
 
     ; Container gfx
     LDA #$24A2 : STA !POS_MEM_CONTAINER_GFX
@@ -187,7 +187,7 @@ hud_draw_enemy_hp:
     ; Assumes: I=16
     ; Draw over Enemy Heart stuff in case theres no enemies
     LDA #$207F : STA !POS_MEM_ENEMY_HEART_GFX
-    LDX.w #!POS_ENEMY_HEARTS : STA $7EC700,x : STA $7EC702,x
+    LDX.w #!POS_ENEMY_HEARTS : STA $7EC700, X : STA $7EC702, X : STA $7EC704, X
 
     LDX #$FFFF
 
@@ -198,7 +198,7 @@ hud_draw_enemy_hp:
     LDA $0E50, X : AND #$00FF : BEQ .loop : CMP #$00FF : BEQ .loop
 
     ; Enemy HP should be in A.
-    JSL hex_to_dec : LDX.w #!POS_ENEMY_HEARTS : JSL draw2_white
+    JSL hex_to_dec : LDX.w #!POS_ENEMY_HEARTS : JSL draw3_white_aligned_left
 
     ; Enemy Heart GFX
     LDA #$2CA0 : STA !POS_MEM_ENEMY_HEART_GFX

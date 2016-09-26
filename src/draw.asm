@@ -65,6 +65,22 @@ draw3_white:
     LDA !ram_hex2dec_third_digit : ORA #$3C90 : STA $7EC704,x
     RTL
 
+draw3_white_aligned_left:
+    ; Clear "leading" 0's
+    LDA #$207F : STA $7EC702,x
+    LDA #$207F : STA $7EC704,x
+
+    LDA !ram_hex2dec_first_digit : BEQ .draw_second_digit
+    ORA #$3C90 : STA $7EC700,x
+    INX : INX
+
+  .draw_second_digit
+    LDA !ram_hex2dec_second_digit : ORA #$3C90 : STA $7EC700,x
+    INX : INX
+
+  .draw_third_digit
+    LDA !ram_hex2dec_third_digit : ORA #$3C90 : STA $7EC700,x
+    RTL
 
 draw2_white:
     LDA !ram_hex2dec_second_digit : ORA #$3C90 : STA $7EC700,x
