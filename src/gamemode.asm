@@ -153,7 +153,7 @@ gamemode_hook:
               CMP.b #$19 : BEQ .no_custom_menu ; Triforce Room scene
               CMP.b #$1A : BEQ .no_custom_menu ; End sequence
 
-    ; We still allow the following:
+    ; We still allow the following, untill it's proven to be a hassle:
     ; 0x06 - Pre Dungeon Mode
     ; 0x07 - Dungeon Mode
     ; 0x08 - Pre Overworld Mode
@@ -200,7 +200,7 @@ gamemode_hook:
   .gamemode_changed
     LDA !ram_gamemode_copy
 
-    CMP #$05 : BEQ .gamemode_load_game
+    CMP #$05 : BEQ .show_and_reset_everything
     CMP #$07 : BEQ .gamemode_dungeon
     CMP #$09 : BEQ .gamemode_overworld
     CMP #$0B : BEQ .gamemode_overworld ; "Special" overworld (?)
@@ -214,14 +214,6 @@ gamemode_hook:
 
     ; Just killed a boss. Loading overworld.
     CMP #$08 : BEQ .show_and_reset_counters
-
-    JMP .end
-
-  .gamemode_load_game
-    LDA $10
-
-    ; Link in bed
-    CMP #$07 : BEQ .show_and_reset_counters
 
     JMP .end
 
@@ -270,9 +262,15 @@ gamemode_hook:
 
     JMP .end
 
+  .show_and_reset_everything
+  %a16()
+    STZ !lowram_seg_frames
+    STZ !lowram_seg_seconds
+    STZ !lowram_seg_minutes
+
   .show_and_reset_counters
     ; Reset per-room counters
-    %a16()
+  %a16()
     LDA !lowram_room_realtime : STA !lowram_room_realtime_copy : STZ !lowram_room_realtime
     LDA !lowram_room_gametime : STA !lowram_room_gametime_copy : STZ !lowram_room_gametime
 

@@ -171,6 +171,7 @@ preset_load_overworld:
     STZ $EE
 
     JSR preset_reset_link_state
+    JSR preset_reset_counters
   %a16()
 
     ; Makes it possible to spawn in the middle of a field/not inside doorway?
@@ -270,6 +271,7 @@ preset_load_dungeon:
     LDA ($00) : %a16() : INC $00 : %a8() : AND.b #$0F : STA $0476
 
     JSR preset_reset_link_state
+    JSR preset_reset_counters
 
   %ai16()
     LDA ($00) : STA !ram_preset_end_of_sram_state
@@ -374,5 +376,15 @@ preset_reset_link_state:
     STZ $5D
     RTS
 
+
+preset_reset_counters:
+  %a16()
+    STZ !lowram_room_realtime
+    STZ !lowram_room_gametime
+    STZ !lowram_seg_frames
+    STZ !lowram_seg_seconds
+    STZ !lowram_seg_minutes
+  %a8()
+    RTS
 
 incsrc preset_data.asm

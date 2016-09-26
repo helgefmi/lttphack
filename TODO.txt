@@ -3,7 +3,7 @@ Rough todo
 
 V8:
 
-- Reset segment timer on file/preset load.
+- Bughunting
 
 V9:
 
