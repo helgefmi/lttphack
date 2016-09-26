@@ -328,6 +328,7 @@ preset_load_state:
     JSL !Sprite_LoadGfxProperties
 
   %ai8()
+    JSL !UpdateBarrierTileChr
     LDA $7EF3CC : BEQ .done
     JSL !Tagalong_LoadGfx
 
