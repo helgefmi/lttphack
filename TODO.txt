@@ -14,13 +14,6 @@ x Code some general menu:
     - Initialize cm_ values on menu open.
 
 - Teleport "anywhere" w/presets.
-    - Fix Link's state for when loading:
-        - Sleeping state: Load anything from link's bed.
-        - Falling state: Big Room
-        - Damaged state
-        - Dead state. Might want to not allow menues there.
-        - Movable: Load anything while opening chest.
-        NOTE: Some of these are fixed when entering from a hole.
     - Remove killed sprites: 2nd key guard, backtrack from Ball'n Chains.
     - Tagalong sprite is wrong: Secret Passage.
     - Remember solved secrets within your quadrant:

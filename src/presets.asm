@@ -151,6 +151,11 @@ preset_load_overworld:
   %a8()
     ; LW/DW
     LDA $8A : AND #$40 : STA $7EF3CA
+
+    ; Reset which BG to interact with (can be set to 1 during falling animations and more)
+    STZ $EE
+
+    JSR preset_reset_link_state
   %a16()
 
     ; Makes it possible to spawn in the middle of a field/not inside doorway?
@@ -257,6 +262,8 @@ preset_load_dungeon:
     ; Set Pseudo bg level
     LDA ($00) : %a16() : INC $00 : %a8() : AND.b #$0F : STA $0476
 
+    JSR preset_reset_link_state
+
     JSR preset_load_state
 
   PLB
@@ -310,6 +317,20 @@ preset_clear_sram:
     INX #2 : CPX.w #$0100 : BNE .loop
 
   %ai8()
+    RTS
+
+
+preset_reset_link_state:
+    ; Assumes A=8
+
+    ; Reset a bunch of Link state (sleeping, falling in hole etc).
+    JSL !Player_ResetState
+
+    ; Resets "Link Immovable" flag
+    STZ $02E4
+
+    ; Link general state (makes him not sleep..)
+    STZ $5D
     RTS
 
 incsrc preset_data.asm
