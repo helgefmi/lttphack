@@ -3,7 +3,34 @@ Rough todo
 
 V8:
 
-- Bughunting
+- Holding dpad, then pressing A, will make the menu move one extra time for no reason.
+- Presets doesn't always work while in text:
+    - Zelda (prison)
+    - Sanctuary
+    - Kiki
+- Loading presets during in-dungeon transitions does funny things.
+- Zelda is OOB in Sanctuary cutscene if you just hold down from the preset.
+- Load correct sword palette/graphics when changing swords using CM.
+- Sexy statue secret
+- Load preset while falling down hole at Moldorm 2.
+- antifairy room, block state
+- Restore ability to pause/select after using medallion and loading a preset.
+- Starting from an actualy end-game save messes something up when loading presets.
+- Right dpad input should not work for CM_PRESET.
+- Remember arc variable.
+- Lost Woods mosaic effect (hitting R+start during transition)
+- Fix presets:
+  - Outside Thieves'
+  - Dash to SW
+  - T-Rock peg puzzle
+  - Kholdstare
+  - Outside ice (DW)
+  - Swamp: Main Hub ??
+  - Chomps
+  - DM presets are weird because there's no walking delay.
+- Warp vortex should be cleared when before loading presets.
+- Features should persist through acm's save state code.
+- Loading preset while swimming puts Link in weird state.
 
 V9:
 
