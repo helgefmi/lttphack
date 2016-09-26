@@ -55,6 +55,8 @@ CM_Init:
     JSR cm_transfer_tileset
   %ppu_on()
 
+  JSR cm_init_item_variables
+
   %a16()
     ; Make sure we don't go infinite loop in the next submodule if normal item menu is down.
     LDA $EA : BEQ .end
@@ -212,13 +214,49 @@ CM_Return:
 ; Utilities
 ; ----------
 
+cm_init_item_variables:
+    ; Bow
+    LDA !ram_item_bow : BEQ .store_bow
+    CMP #$03 : BCC .normal_bow
+
+    LDA.b #$02
+    BRA .store_bow
+
+  .normal_bow
+    LDA.b #$01
+  .store_bow
+    STA !ram_cm_item_bow
+
+    ; Bottle
+    LDA !ram_item_bottle : BEQ .store_bottle
+    LDA.b #$01
+  .store_bottle
+    STA !ram_cm_item_bottle
+
+    ; Mirror
+    LDA !ram_item_mirror : LSR : STA !ram_cm_item_mirror
+
+    ; Boots
+    LDA !ram_equipment_boots_menu : STA !ram_cm_equipment_boots
+
+    ; Flippers
+    LDA !ram_equipment_flippers_menu : STA !ram_cm_equipment_flippers
+
+    ; MaxHP
+    LDA !ram_equipment_maxhp
+    LSR : LSR : LSR
+    DEC : DEC : DEC
+    STA !ram_cm_equipment_maxhp
+
+    RTS
+
 cm_get_pressed_button:
   %ai16()
-    LDA !ram_ctrl1_word : CMP !cm_last_frame_input : BEQ .same_as_last_frame
+    LDA !ram_ctrl1_word : CMP !ram_cm_last_frame_input : BEQ .same_as_last_frame
 
-    STA !cm_last_frame_input
+    STA !ram_cm_last_frame_input
   PHA
-    LDA.w #12 : STA !cm_input_timer
+    LDA.w #12 : STA !ram_cm_input_timer
   PLA
     
     BRA .do_it
@@ -226,9 +264,9 @@ cm_get_pressed_button:
   .same_as_last_frame
     CMP #$0000 : BEQ .end
 
-    LDA !cm_input_timer : DEC : STA !cm_input_timer : BNE .no_input
+    LDA !ram_cm_input_timer : DEC : STA !ram_cm_input_timer : BNE .no_input
 
-    LDA.w #4 : STA !cm_input_timer
+    LDA.w #4 : STA !ram_cm_input_timer
 
   .do_it
     LDA !ram_ctrl1_word

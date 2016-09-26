@@ -54,12 +54,15 @@ cm_items_bow:
     db #$FF
 
   .set_ram_value
-    ; 0 -> 1 -> 3
-    ASL : BNE .end
-    INC
+    ; 0 = No bow
+    ; 1/2 = Normal bow without/with arrows
+    ; 3/4 = Silver bow without/with arrows
+    ASL : TAX : BEQ .end
+
+    LDA !ram_equipment_arrows : BNE .end
+    DEX
   .end
-    DEC
-    STA !ram_item_bow
+    TXA : STA !ram_item_bow
     RTS
 
 cm_items_boom:
@@ -126,6 +129,7 @@ cm_items_flute:
     db #$24, "Flute", #$FF
     db #$24, "No", #$FF
     db #$24, "Shovel", #$FF
+    db #$24, "Flute (no)", #$FF
     db #$24, "Flute", #$FF
     db #$FF
 
@@ -400,7 +404,7 @@ cm_equipment_bombs:
 
 cm_equipment_arrows:
     dw !CM_ACTION_NUMFIELD
-    dl !ram_equipment_arrows
+    dl !ram_equipment_arrows_filler
     db #$00, #$1E
     db #$05
     db #$24, "Arrows", #$FF

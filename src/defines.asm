@@ -55,8 +55,8 @@
 !ram_cm_menu_stack = $7F76B0 ; 0x10
 !lowram_cm_cursor_stack = $0648 ; 0x10
 !lowram_cm_stack_index = $0658
-!cm_last_frame_input = $7F76C6
-!cm_input_timer = $7F76C8
+!ram_cm_last_frame_input = $7F76C6
+!ram_cm_input_timer = $7F76C8
 
 ;-------------------------
 ; HUD
@@ -161,7 +161,8 @@
 !ram_equipment_maxhp = $7EF36C
     !ram_cm_equipment_maxhp = $7F76C5
 !ram_equipment_curhp = $7EF36D
-!ram_equipment_arrows = $7EF376
+!ram_equipment_arrows_filler = $7EF377
+!ram_equipment_arrows = $7EF377
 !ram_equipment_keys = $7EF36F
 !ram_equipment_half_magic = $7EF37B
 !ram_equipment_magic_meter = $7EF36E

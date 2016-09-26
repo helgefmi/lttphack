@@ -5,10 +5,9 @@ V8:
 
 x Code some general menu:
     x Number widget (min and max).
-        - Should maybe make a general function to handle checking these bounds since it comes up all the time.
-        - Support repeating inputs (holding dpad button).
         - Word-sized number widget for rupees.
-    - Initialize cm_ values on menu open.
+    - Align numbers to the left. Or use 000.
+    - Fix bug where second 0 is not shown correctly.
 
 x Teleport "anywhere" w/presets.
 
