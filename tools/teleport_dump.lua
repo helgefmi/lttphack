@@ -202,7 +202,7 @@ end
 local debug_file = io.open("debug.txt", "w")
 
 local function debug(...)
-    print(unpack(arg))
+    -- print(unpack(arg))
     debug_file:write(table.concat(arg, " ") .. "\n")
     debug_file:flush()
 end
@@ -218,6 +218,11 @@ end
 
 local function in_overworld()
     return memory.readbyte(0x7E001B) == 0
+end
+
+
+local function in_underworld()
+    return not in_overworld()
 end
 
 
@@ -691,11 +696,15 @@ local function annotate_overworld_value(val)
 end
 
 local function annotate_address(addr, val)
+    if addr >= 0x7EC140 and addr < 0x7EC172 then
+        return "Underworld exit cache"
+    end
+
     if addr == 0x7E002F then
         return "Link's direction"
     end
 
-    if addr == 0x0D0202 then
+    if addr == 0x0D0202 or (addr >= 0x0D0302 and addr <= 0x0D0303) then
         return "Selected menu item"
     end
 
@@ -707,7 +716,7 @@ local function annotate_address(addr, val)
         return "Selected menu gfx, row 2"
     end
 
-    if addr == 0x7EC172 then
+    if addr >= 0x7EC172 and addr <= 0x7EC173 then
         return "Crystal switch state"
     end
 
@@ -938,14 +947,19 @@ end
 
 
 function save_sram_delta(slug)
-    if not in_overworld() then
+    if in_underworld() then
         put_quadrant_info_in_state_table()
     end
+
+    local room_idx = memory.readword(0x7E00A0)
+
     sram_output = sram_output .. "\nsram_" .. slug .. ":\n"
     for addr, size_and_val in pairs(current_state) do
         local size = size_and_val[1]
         local val = size_and_val[2]
-        if last_save_state[addr] ~= val then
+
+        local should_skip_underworld_cache = (addr >= 0x7EC140 and addr < 0x7EC172) and (in_overworld() or (in_underworld() and room_idx < 0x100))
+        if last_save_state[addr] ~= val and not should_skip_underworld_cache then
             last_save_state[addr] = val
 
             -- Don't store 0 writes to the first state, since we'll clear SRAM before loading these.
@@ -1047,6 +1061,9 @@ function main()
 
     -- Link's direction
     memory.registerwrite(0x7E002F, 0x1, state_changed)
+
+    -- Underworld exit cache (for room index >= 0x100, except Link's House & Zoras Domain)
+    memory.registerwrite(0x7EC140, 0x32, state_changed)
 
     gui.register(draw_ui)
 

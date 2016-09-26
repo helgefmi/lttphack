@@ -19,8 +19,8 @@ x Code some general menu:
         - Octoroc
         - Hera -> Fake Flippers
         - Aga -> Lost Woods
-    - Make one-exit rooms work.
-        - Desert -> EP Spinspeed
+    - Sword Sprite is wrong.
+    - Warp location
 
 - Show all 3 digits for enemy HP.
 
