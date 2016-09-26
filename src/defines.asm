@@ -55,6 +55,8 @@
 !ram_cm_menu_stack = $7F76B0 ; 0x10
 !lowram_cm_cursor_stack = $0648 ; 0x10
 !lowram_cm_stack_index = $0658
+!cm_last_frame_input = $7F76C6
+!cm_input_timer = $7F76C8
 
 ;-------------------------
 ; HUD

@@ -94,16 +94,21 @@ CM_MenuDown:
 
 
 CM_Active:
-    ; $F4 = BYST | udlr
-    ; $F6 = AXLR | ....
+    JSR cm_get_pressed_button
 
-    LDA $F4 : CMP #$10 : BEQ .pressed_start
-              CMP #$04 : BEQ .pressed_down
-              CMP #$08 : BEQ .pressed_up
-              CMP #$02 : BEQ .pressed_left
-              CMP #$01 : BEQ .pressed_right
-              CMP #$80 : BEQ .pressed_b
-    LDA $F6 : CMP #$80 : BEQ .pressed_a
+    CPX.b #$04 : BEQ .pressed_down
+    CPX.b #$08 : BEQ .pressed_up
+    CPX.b #$02 : BEQ .pressed_left
+    CPX.b #$01 : BEQ .pressed_right
+
+    ; F4 = BYST | udlr
+    TXA : AND $F4
+    CMP.b #$10 : BEQ .pressed_start
+    CMP.b #$80 : BEQ .pressed_b
+
+    ; F6 = AXLR | ....
+    TYA : AND $F6
+    CMP.b #$80 : BEQ .pressed_a
 
     ; Did not press anything
     BRA .done
@@ -206,6 +211,39 @@ CM_Return:
 ; -----------
 ; Utilities
 ; ----------
+
+cm_get_pressed_button:
+  %ai16()
+    LDA !ram_ctrl1_word : CMP !cm_last_frame_input : BEQ .same_as_last_frame
+
+    STA !cm_last_frame_input
+  PHA
+    LDA.w #12 : STA !cm_input_timer
+  PLA
+    
+    BRA .do_it
+
+  .same_as_last_frame
+    CMP #$0000 : BEQ .end
+
+    LDA !cm_input_timer : DEC : STA !cm_input_timer : BNE .no_input
+
+    LDA.w #4 : STA !cm_input_timer
+
+  .do_it
+    LDA !ram_ctrl1_word
+    BRA .end
+
+  .no_input
+    LDA #$0000
+
+  .end
+  TAX
+  XBA
+  TAY
+  %ai8()
+    RTS
+
 
 cm_clear_stack:
     ; Assumes I=8
