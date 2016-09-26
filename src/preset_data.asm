@@ -408,16 +408,16 @@ dw sram_east_after_cutscene_after
 
 preset_east_octoroc:
 db $01 ; Overworld
-dw $0025 ; Screen Index
+dw $001D ; Screen Index
 dw $0B10 ; Link X
-dw $07E5 ; Link Y
+dw $07DC ; Link Y
 dw $068F ; BG1 Vertical Scroll
 dw $071E ; BG2 Vertical Scroll
 dw $0A4F ; BG1 Horizontal Scroll
 dw $0A9E ; BG2 Horizontal Scroll
 dw $0B1B ; Scroll X
 dw $078B ; Scroll Y
-dw $1814 ; Unknown 1
+dw $0894 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0002 ; Unknown 3
 dw sram_east_octoroc_after
@@ -1016,8 +1016,8 @@ dw sram_hera_outside_desert_palace_after
 
 preset_hera_fake_flippers:
 db $01 ; Overworld
-dw $0035 ; Screen Index
-dw $09E8 ; Link X
+dw $003C ; Screen Index
+dw $09E0 ; Link X
 dw $0F7C ; Link Y
 dw $0D8F ; BG1 Vertical Scroll
 dw $0F1E ; BG2 Vertical Scroll
@@ -1025,7 +1025,7 @@ dw $0880 ; BG1 Horizontal Scroll
 dw $0900 ; BG2 Horizontal Scroll
 dw $097D ; Scroll X
 dw $0F8B ; Scroll Y
-dw $1860 ; Unknown 1
+dw $0820 ; Unknown 1
 dw $FFF2 ; Unknown 2
 dw $0000 ; Unknown 3
 dw sram_hera_fake_flippers_after
@@ -1290,17 +1290,17 @@ dw sram_aga_first_rupee_tree_after
 
 preset_aga_lost_woods:
 db $01 ; Overworld
-dw $0000 ; Screen Index
-dw $0405 ; Link X
-dw $0079 ; Link Y
+dw $0002 ; Screen Index
+dw $0406 ; Link X
+dw $007A ; Link Y
 dw $009C ; BG1 Vertical Scroll
-dw $0015 ; BG2 Vertical Scroll
+dw $0016 ; BG2 Vertical Scroll
 dw $0480 ; BG1 Horizontal Scroll
 dw $0400 ; BG2 Horizontal Scroll
 dw $048D ; Scroll X
-dw $0084 ; Scroll Y
-dw $0180 ; Unknown 1
-dw $0009 ; Unknown 2
+dw $0085 ; Scroll Y
+dw $0100 ; Unknown 1
+dw $0008 ; Unknown 2
 dw $0000 ; Unknown 3
 dw sram_aga_lost_woods_after
 
@@ -4002,26 +4002,26 @@ dw sram_gtower_mimics2_after
 
 preset_gtower_spike_room:
 db $02 ; Dungeon
-dw $005B ; Room Index
+dw $006B ; Room Index
 dw $0C00 ; BG1 Vertical Scroll
 dw $0C00 ; BG2 Vertical Scroll
 dw $1700 ; BG1 Horizontal Scroll
 dw $1700 ; BG2 Horizontal Scroll
 dw $1778 ; Link X
-dw $0C10 ; Link Y
+dw $0C1C ; Link Y
 dw $017F ; Camera X
-dw $0188 ; Camera Y
+dw $0078 ; Camera Y
 dw $0000 ; Door Settings
-dw $0B00 ; Relative Coords HU
-dw $0A00 ; Relative Coords FU
-dw $0B10 ; Relative Coords HD
-dw $0B10 ; Relative Coords FD
+dw $0C00 ; Relative Coords HU
+dw $0C00 ; Relative Coords FU
+dw $0C10 ; Relative Coords HD
+dw $0D10 ; Relative Coords FD
 dw $1700 ; Relative Coords HL
 dw $1600 ; Relative Coords FL
 dw $1700 ; Relative Coords HR
 dw $1700 ; Relative Coords FR
-dw $0000 ; Quadrant 1
-dw $0201 ; Quadrant 2
+dw $0002 ; Quadrant 1
+dw $0001 ; Quadrant 2
 db $0E ; Main Graphics
 db $16 ; Music Track
 db $02 ; Starting Floor
@@ -7049,7 +7049,6 @@ dl $7E002F : db $01 : db $06 ; Link's direction
 
 sram_gtower_spike_room:
 dl $7EF377 : db $01 : db $0A ; Arrows
-dl $7EF0B6 : db $02 : dw $800F ; Room $005B: Ganon's Tower (Spike Pit Room) (.d...........qqq)
 dl $7EF0D6 : db $02 : dw $800F ; Room $006B: Ganon's Tower (Mimics Rooms) (.d...........qqq)
 dl $7E0468 : db $01 : db $01 ; Trap door state
 dl $7FE056 : db $02 : dw $2640 ; Room $6B persistent: Ganon's Tower (Mimics Rooms)
@@ -7062,6 +7061,7 @@ dl $7E0546 : db $02 : dw $19D8 ; Object tilemap state
 dl $7E054A : db $02 : dw $19E4 ; Object tilemap state
 dl $7E054E : db $02 : dw $16E4 ; Object tilemap state
 dl $7EF0B8 : db $02 : dw $000C ; Room $005C: Ganon's Tower (Ganon-Ball Z) (.............qq.)
+dl $7EF0B6 : db $02 : dw $8005 ; Room $005B: Ganon's Tower (Spike Pit Room) (.d............q.)
 dl $7E0540 : db $02 : dw $165E ; Object tilemap state
 dl $7E0544 : db $02 : dw $1854 ; Object tilemap state
 dl $7E0548 : db $02 : dw $1A5E ; Object tilemap state

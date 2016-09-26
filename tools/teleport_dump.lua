@@ -21,7 +21,7 @@ local movie_steps = { -- {{{
     -- Eastern
     [22184] = "east_before_cutscene",
     [23743] = "east_after_cutscene",
-    [25720] = "east_octoroc",
+    [25707] = "east_octoroc",
     [26541] = "east_outside_palace",
     [28086] = "east_entrance",
     [29962] = "east_stalfos_room",
@@ -47,7 +47,7 @@ local movie_steps = { -- {{{
     [58995] = "desert_lanmolas",
     -- Hera
     [61408] = "hera_outside_desert_palace",
-    [62920] = "hera_fake_flippers",
+    [62918] = "hera_fake_flippers",
     [66550] = "hera_dm",
     [67499] = "hera_after_mirror",
     [69321] = "hera_entrance",
@@ -59,7 +59,7 @@ local movie_steps = { -- {{{
     -- Agatower
     [80099] = "aga_outside_hera",
     [81427] = "aga_first_rupee_tree",
-    [82375] = "aga_lost_woods",
+    [82373] = "aga_lost_woods",
     [87154] = "aga_after_lost_woods",
     [89759] = "aga_tower_entrance",
     [91220] = "aga_dark_room_of_despair",
@@ -177,7 +177,7 @@ local movie_steps = { -- {{{
     [273164] = "gtower_floor_2",
     [273797] = "gtower_mimics1",
     [274202] = "gtower_mimics2",
-    [274696] = "gtower_spike_room",
+    [274693] = "gtower_spike_room",
     [275862] = "gtower_gauntlet",
     [277800] = "gtower_lanmola2",
     [279593] = "gtower_wizz2",
@@ -207,12 +207,12 @@ local function call_for_each_bank(address, fn, ...)
 end
 
 
-local debug_file = io.open("debug.txt", "w")
+-- local debug_file = io.open("debug.txt", "w")
 
 local function debug(...)
     -- print(unpack(arg))
-    debug_file:write(table.concat(arg, " ") .. "\n")
-    debug_file:flush()
+    -- debug_file:write(table.concat(arg, " ") .. "\n")
+    -- debug_file:flush()
 end
 
 

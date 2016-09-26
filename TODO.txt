@@ -10,12 +10,7 @@ x Code some general menu:
         - Word-sized number widget for rupees.
     - Initialize cm_ values on menu open.
 
-- Teleport "anywhere" w/presets.
-    - Fix/investigate save states:
-        - Octoroc
-        - Hera -> Fake Flippers
-        - Aga -> Lost Woods
-        - GTower: Spike Room
+x Teleport "anywhere" w/presets.
 
 - Show all 3 digits for enemy HP.
 
