@@ -11,10 +11,7 @@ x Code some general menu:
     - Initialize cm_ values on menu open.
 
 - Teleport "anywhere" w/presets.
-    - Remove killed sprites: 2nd key guard, backtrack from Ball'n Chains.
     - Remember solved secrets within your quadrant:
-        - 2nd key guard
-        - Backtrack from Ball'n Chains.
         - Before Sanctuary
         - Eastern -> Dark Key Room
         - Eastern -> Zeldagamer Room

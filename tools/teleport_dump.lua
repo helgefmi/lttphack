@@ -238,73 +238,73 @@ local function db(n, comment)
 end
 
 local equipment_verbose = { -- {{{
-    [0x340] = "Bow",
-    [0x341] = "Boomerang",
-    [0x342] = "Hookshot",
-    [0x343] = "Bombs",
-    [0x344] = "Mushroom",
-    [0x345] = "Fire Rod",
-    [0x346] = "Ice Rod",
-    [0x347] = "Bombos Medallion",
-    [0x348] = "Ether Medallion",
-    [0x349] = "Quake Medallion",
-    [0x34A] = "Torch",
-    [0x34B] = "Hammer",
-    [0x34C] = "Flute",
-    [0x34D] = "Bug Catching Net",
-    [0x34E] = "Book of Mudora",
-    [0x34F] = "Bottles",
-    [0x350] = "Cane of Somaria",
-    [0x351] = "Cane of Byrna",
-    [0x352] = "Magic Cape",
-    [0x353] = "Magic Mirror",
-    [0x354] = "Gloves",
-    [0x355] = "Boots",
-    [0x356] = "Flippers",
-    [0x357] = "Moon Pearl",
-    [0x359] = "Sword",
-    [0x35A] = "Shield",
-    [0x35B] = "Armor",
-    [0x35C] = "Bottle",
-    [0x360] = "Rupees (goal)",
-    [0x362] = "Rupees (actual)",
-    [0x364] = "Compass1",
-    [0x365] = "Compass2",
-    [0x366] = "BigKey1",
-    [0x367] = "BigKey2",
-    [0x368] = "Dungeon map1",
-    [0x369] = "Dungeon map2",
-    [0x36B] = "Heart pieces collected",
-    [0x36C] = "Health (goal)",
-    [0x36D] = "Health (actual)",
-    [0x36E] = "Magic Power",
-    [0x36F] = "Keys",
-    [0x370] = "Bomb Upgrades",
-    [0x371] = "Arrow Upgrades",
-    [0x372] = "Hearts filler",
-    [0x373] = "Magic filler",
-    [0x374] = "Pendants",
-    [0x375] = "Bomb filler",
-    [0x376] = "Arrow filler",
-    [0x377] = "Arrows",
-    [0x378] = "????",
-    [0x379] = "Ability Flags",
-    [0x37A] = "Crystals",
-    [0x37B] = "Magic usage",
-    [0x3C5] = "Game Phase 1",
-    [0x3C6] = "Game Phase 2",
-    [0x3C7] = "Map Phase",
-    [0x3C8] = "Entrances Phase",
-    [0x3C9] = "Game Phase 3",
-    [0x3CA] = "LW/DW",
-    [0x3CC] = "Tagalong",
-    [0x3CD] = "Tagalong Y",
-    [0x3CF] = "Tagalong X",
-    [0x3D3] = "Super Bomb Boom",
-    [0x3E5] = "Validity (checksum)",
-    [0x403] = "Num Saves/Deaths",
-    [0x405] = "Post-game Death Counter",
-    [0x4FE] = "Inverse checksum",
+    [0x7EF340] = "Bow",
+    [0x7EF341] = "Boomerang",
+    [0x7EF342] = "Hookshot",
+    [0x7EF343] = "Bombs",
+    [0x7EF344] = "Mushroom",
+    [0x7EF345] = "Fire Rod",
+    [0x7EF346] = "Ice Rod",
+    [0x7EF347] = "Bombos Medallion",
+    [0x7EF348] = "Ether Medallion",
+    [0x7EF349] = "Quake Medallion",
+    [0x7EF34A] = "Torch",
+    [0x7EF34B] = "Hammer",
+    [0x7EF34C] = "Flute",
+    [0x7EF34D] = "Bug Catching Net",
+    [0x7EF34E] = "Book of Mudora",
+    [0x7EF34F] = "Bottles",
+    [0x7EF350] = "Cane of Somaria",
+    [0x7EF351] = "Cane of Byrna",
+    [0x7EF352] = "Magic Cape",
+    [0x7EF353] = "Magic Mirror",
+    [0x7EF354] = "Gloves",
+    [0x7EF355] = "Boots",
+    [0x7EF356] = "Flippers",
+    [0x7EF357] = "Moon Pearl",
+    [0x7EF359] = "Sword",
+    [0x7EF35A] = "Shield",
+    [0x7EF35B] = "Armor",
+    [0x7EF35C] = "Bottle",
+    [0x7EF360] = "Rupees (goal)",
+    [0x7EF362] = "Rupees (actual)",
+    [0x7EF364] = "Compass1",
+    [0x7EF365] = "Compass2",
+    [0x7EF366] = "BigKey1",
+    [0x7EF367] = "BigKey2",
+    [0x7EF368] = "Dungeon map1",
+    [0x7EF369] = "Dungeon map2",
+    [0x7EF36B] = "Heart pieces collected",
+    [0x7EF36C] = "Health (goal)",
+    [0x7EF36D] = "Health (actual)",
+    [0x7EF36E] = "Magic Power",
+    [0x7EF36F] = "Keys",
+    [0x7EF370] = "Bomb Upgrades",
+    [0x7EF371] = "Arrow Upgrades",
+    [0x7EF372] = "Hearts filler",
+    [0x7EF373] = "Magic filler",
+    [0x7EF374] = "Pendants",
+    [0x7EF375] = "Bomb filler",
+    [0x7EF376] = "Arrow filler",
+    [0x7EF377] = "Arrows",
+    [0x7EF378] = "????",
+    [0x7EF379] = "Ability Flags",
+    [0x7EF37A] = "Crystals",
+    [0x7EF37B] = "Magic usage",
+    [0x7EF3C5] = "Game Phase 1",
+    [0x7EF3C6] = "Game Phase 2",
+    [0x7EF3C7] = "Map Phase",
+    [0x7EF3C8] = "Entrances Phase",
+    [0x7EF3C9] = "Game Phase 3",
+    [0x7EF3CA] = "LW/DW",
+    [0x7EF3CC] = "Tagalong",
+    [0x7EF3CD] = "Tagalong Y",
+    [0x7EF3CF] = "Tagalong X",
+    [0x7EF3D3] = "Super Bomb Boom",
+    [0x7EF3E5] = "Validity (checksum)",
+    [0x7EF403] = "Num Saves/Deaths",
+    [0x7EF405] = "Post-game Death Counter",
+    [0x7EF4FE] = "Inverse checksum",
 } -- }}}
 local overworld_names = { -- {{{
     [0x00] = "Lost Woods",
@@ -690,15 +690,22 @@ local function annotate_overworld_value(val)
     return table.concat(selected_bits, "")
 end
 
-local function annotate_address(real_addr, val)
-    local addr = real_addr - 0x7EF000
+local function annotate_address(addr, val)
+    if addr >= 0x7FDF80 and addr <= 0x7FE200 then
+        local screen_index = math.floor((addr - 0x7FDF80) / 2)
+        if in_overworld() then
+            return "Overworld " .. tohex(screen_index) .. " persistent: " .. (overworld_names[screen_index] or 'UNKNOWN')
+        else
+            return "Room " .. tohex(screen_index) .. " persistent: " .. (underworld_names[screen_index] or 'UNKNOWN')
+        end
+    end
 
-    if addr <= 0x24F then
-        local room_index = math.floor(addr / 2)
+    if addr >= 0x7EF000 and addr <= 0x7EF24F then
+        local room_index = math.floor((addr - 0x7EF000)/ 2)
         local name = underworld_names[room_index] or "Unknown"
         return "Room " .. tohex(room_index, 4) .. ": " .. name .. " (" .. annotate_room_value(val) .. ")"
-    elseif addr >= 0x280 and addr <= 0x300 then
-        local screen_index = addr - 0x280
+    elseif addr >= 0x7EF280 and addr <= 0x7EF300 then
+        local screen_index = addr - 0x7EF280
         local name = overworld_names[room_index] or "Unknown"
         return "Overworld " .. tohex(screen_index, 2) .. ": " .. name .. " (" .. annotate_overworld_value(val) .. ")"
     end
@@ -707,19 +714,19 @@ local function annotate_address(real_addr, val)
         return equipment_verbose[addr]
     end
 
-    if addr >= 0x37C and addr <= 0x389 then
-        return "Key for dungeon " .. tohex(addr - 0x37C, 2)
+    if addr >= 0x7EF37C and addr <= 0x7EF389 then
+        return "Key for dungeon " .. tohex(addr - 0x7EF37C, 2)
     end
 
-    if addr >= 0x3D9 and addr <= 0x3E4 then
+    if addr >= 0x7EF3D9 and addr <= 0x7EF3E4 then
         return "Player name"
     end
 
-    if addr >= 0x3E7 and addr <= 0x402 then
+    if addr >= 0x7EF3E7 and addr <= 0x7EF402 then
         return "Deaths"
     end
 
-    debug("Unknown address: ", tohex(real_addr, 6))
+    debug("Unknown address: ", tohex(addr, 6))
     return ""
 end
 
@@ -972,6 +979,8 @@ end
 
 function main()
     memory.registerwrite(0x7EF000, 0x4FF, state_changed)
+    memory.registerwrite(0x7FDF80, 0x280, state_changed)
+    memory.registerwrite(0x7FEF80, 0x200, state_changed)
     gui.register(draw_ui)
 
     while true do

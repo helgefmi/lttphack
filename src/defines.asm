@@ -100,7 +100,7 @@
 
 !ram_preset_type = $04E2
 !ram_preset_destination = $7F8000
-!ram_preset_data = $7F8002
+!ram_preset_end_of_sram_state = $7F8004
 
 ;-------------------------
 ; From ROM
@@ -111,6 +111,7 @@
 !BirdTravel_LoadTargetAreaData_AfterData = $02EA30
 !Player_ResetState = $07F18C
 !Tagalong_LoadGfx = $00D463
+!Sprite_ResetAll = $09C44E
 
 ; ITEM MENU
 

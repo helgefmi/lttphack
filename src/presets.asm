@@ -8,6 +8,10 @@ org $028154
     JSR load_entrance_local
 
 
+; Replaces the JSL from PreDungeon module to Sprite_ResetAll
+org $028252
+    JSL preset_sprite_reset_all
+
 org $02C240
 load_entrance_local:
     ; Enters AI=8
@@ -146,7 +150,13 @@ preset_load_overworld:
 
     LDA ($00) : INC $00 : INC $00 : STA $0628
     LDA.w #$0000 : SEC : SBC $0628 : STA $062A
+
+    LDA ($00) : STA !ram_preset_end_of_sram_state
   PLB
+
+  %i16()
+    JSR preset_load_state
+  %i8()
 
   %a8()
     ; LW/DW
@@ -163,10 +173,6 @@ preset_load_overworld:
     
     ; Clears RAM in case it's needed (used for when lifting big rocks?).
     STZ $0698
-
-  %a8()
-    JSR preset_load_state
-  %a16()
 
     JML !BirdTravel_LoadTargetAreaData_AfterData
 
@@ -264,21 +270,36 @@ preset_load_dungeon:
 
     JSR preset_reset_link_state
 
+  %ai16()
+    LDA ($00) : STA !ram_preset_end_of_sram_state
     JSR preset_load_state
+  %ai8()
 
   PLB
     RTL
 
 
+preset_sprite_reset_all:
+    ; Enters AI=8
+    ; Call the original routine
+    JSL !Sprite_ResetAll
+
+    ; Check if we want to load our own state.
+  %ai16()
+    LDA !ram_preset_end_of_sram_state : BEQ .end
+    JSR preset_load_state
+    LDA.w #$0000 : STA !ram_preset_end_of_sram_state
+  .end
+  %ai8()
+    RTL
+
+
 preset_load_state:
-    ; Enteres A=8
+    ; Enteres AI=16
     JSR preset_clear_sram
   PHB : PHK : PLB
-  %a16()
-    ; $00-$01 = pointer to the end of preset table, which contains a pointer to where
-    ;           we want to stop restoring state form.
-    LDA ($00) : STA $06
-    LDA #sram_first_state : STA $00
+    LDA !ram_preset_end_of_sram_state : STA $06
+    LDA #sram_esc_bed : STA $00
 
   .next_item
     ; Sets up $02-$04 with the long address we want to manipulate.
@@ -300,20 +321,19 @@ preset_load_state:
     BRA .next_item
 
   .done_with_state
-  %a8()
     PLB
 
+  %ai8()
     LDA $7EF3CC : BEQ .done
     JSL !Tagalong_LoadGfx
 
   .done
+  %ai16()
     RTS
 
 
 preset_clear_sram:
-    ; Enteres A=8
-  %ai16()
-
+    ; Enteres AI=16
     LDA.w #$0000
     LDX.w #$0000
 
@@ -321,7 +341,6 @@ preset_clear_sram:
     STA $7EF000, X : STA $7EF100, X : STA $7EF200, X : STA $7EF300, X : STA $7EF400, X
     INX #2 : CPX.w #$0100 : BNE .loop
 
-  %ai8()
     RTS
 
 
@@ -337,5 +356,6 @@ preset_reset_link_state:
     ; Link general state (makes him not sleep..)
     STZ $5D
     RTS
+
 
 incsrc preset_data.asm
