@@ -171,7 +171,7 @@ local movie_steps = { -- {{{
     [263886] = "gtower_outside_trock",
     [265964] = "gtower_entrance",
     [267262] = "gtower_spike_skip",
-    [268512] = "gtower_firebar_room",
+    [268195] = "gtower_pre_firebar_room",
     [270901] = "gtower_bombable_floor",
     [271498] = "gtower_ice_armos",
     [273164] = "gtower_floor_2",
@@ -888,7 +888,39 @@ end
 
 -- SRAM state
 
+local function put_quadrant_info_in_state_table()
+    -- We're reversing the following:
+    --
+    -- ; What room are we in... use it as an index.
+    -- LDA $A0 : ASL A : TAX
+    --
+    -- ; Store other data, like chests opened, bosses killed, etc.
+    -- LDA $0402 : LSR #4 : STA $06
+    --
+    -- ; Store information about this room when it changes.
+    -- LDA $0400 : AND.w #$F000 : ORA $0408 : ORA $06 : STA $7EF000, X
+
+    local room_index = bit.lshift(memory.readword(0x7E00A0), 1)
+    local data_06 = bit.rshift(memory.readword(0x7E0402), 4)
+    local data_0400 = bit.band(memory.readword(0x7E0400), 0xF000)
+    local data_0408 = memory.readword(0x7E0408)
+    local data_value = bit.bor(bit.bor(data_0400, data_0408), data_06)
+
+    local addr = 0x7EF000 + room_index
+    local cache_value = memory.readword(addr)
+    local value = bit.bor(data_value, cache_value)
+
+    -- I write to memory to make sure it actually works (would be desynced quite fast if not)
+    memory.writeword(addr, value)
+    debug("-> wrote ", tohex(0x7EF000 + room_index), "=", tohex(value))
+    state_changed(addr, 2)
+end
+
+
 function save_sram_delta(slug)
+    if not in_overworld() then
+        put_quadrant_info_in_state_table()
+    end
     sram_output = sram_output .. "\nsram_" .. slug .. ":\n"
     for addr, size_and_val in pairs(current_state) do
         local size = size_and_val[1]

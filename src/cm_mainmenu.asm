@@ -1508,7 +1508,7 @@ cm_presets_gtower:
     dw cm_gtower_outside_trock
     dw cm_gtower_entrance
     dw cm_gtower_spike_skip
-    dw cm_gtower_firebar_room
+    dw cm_gtower_pre_firebar_room
     dw cm_gtower_bombable_floor
     dw cm_gtower_ice_armos
     dw cm_gtower_floor_2
@@ -1543,10 +1543,10 @@ cm_gtower_spike_skip:
 	dw #preset_gtower_spike_skip
     db #$24, "Spike Skip", #$FF
 
-cm_gtower_firebar_room:
+cm_gtower_pre_firebar_room:
     dw !CM_ACTION_PRESET
-	dw #preset_gtower_firebar_room
-    db #$24, "Firebar Room", #$FF
+	dw #preset_gtower_pre_firebar_room
+    db #$24, "Pre Firebar Room", #$FF
 
 cm_gtower_bombable_floor:
     dw !CM_ACTION_PRESET

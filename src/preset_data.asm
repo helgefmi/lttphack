@@ -3820,35 +3820,35 @@ db $02 ; Door Orientation
 db $00 ; Starting Background
 dw sram_gtower_spike_skip_after
 
-preset_gtower_firebar_room:
+preset_gtower_pre_firebar_room:
 db $02 ; Dungeon
-dw $007D ; Room Index
-dw $120D ; BG1 Vertical Scroll
-dw $120D ; BG2 Vertical Scroll
-dw $1700 ; BG1 Horizontal Scroll
-dw $1700 ; BG2 Horizontal Scroll
-dw $17BC ; Link X
-dw $127A ; Link Y
-dw $017F ; Camera X
-dw $0085 ; Camera Y
+dw $009B ; Room Index
+dw $120B ; BG1 Vertical Scroll
+dw $120B ; BG2 Vertical Scroll
+dw $1600 ; BG1 Horizontal Scroll
+dw $1600 ; BG2 Horizontal Scroll
+dw $16D4 ; Link X
+dw $1278 ; Link Y
+dw $007F ; Camera X
+dw $0083 ; Camera Y
 dw $0000 ; Door Settings
 dw $1200 ; Relative Coords HU
 dw $1200 ; Relative Coords FU
 dw $1210 ; Relative Coords HD
 dw $1310 ; Relative Coords FD
-dw $1700 ; Relative Coords HL
+dw $1600 ; Relative Coords HL
 dw $1600 ; Relative Coords FL
-dw $1700 ; Relative Coords HR
+dw $1600 ; Relative Coords HR
 dw $1700 ; Relative Coords FR
 dw $0000 ; Quadrant 1
-dw $0001 ; Quadrant 2
+dw $0000 ; Quadrant 2
 db $0E ; Main Graphics
 db $16 ; Music Track
 db $00 ; Starting Floor
 db $1A ; Palace No
-db $00 ; Door Orientation
+db $02 ; Door Orientation
 db $00 ; Starting Background
-dw sram_gtower_firebar_room_after
+dw sram_gtower_pre_firebar_room_after
 
 preset_gtower_bombable_floor:
 db $02 ; Dungeon
@@ -4391,14 +4391,13 @@ dl $7EF084 : db $02 : dw $000C ; Room $0042: Hyrule Castle (6 Ropes Room) (.....
 .after
 
 sram_esc_last_two_screens:
-dl $7EF022 : db $02 : dw $0005 ; Room $0011: Hyrule Castle (Bombable Stock Room) (..............q.)
+dl $7EF022 : db $02 : dw $2005 ; Room $0011: Hyrule Castle (Bombable Stock Room) (...d..........q.)
 dl $7EF042 : db $02 : dw $840F ; Room $0021: Hyrule Castle (Key-rat Room) (.d....K......qqq)
 dl $7FDFC2 : db $02 : dw $0001 ; Room $21 persistent: Hyrule Castle (Key-rat Room)
 .after
 
 sram_east_before_cutscene:
 dl $7EF004 : db $02 : dw $000F ; Room $0002: Hyrule Castle (Switch Room) (.............qqq)
-dl $7EF022 : db $02 : dw $2005 ; Room $0011: Hyrule Castle (Bombable Stock Room) (...d..........q.)
 dl $7FDF84 : db $02 : dw $000A ; Room $2 persistent: Hyrule Castle (Switch Room)
 .after
 
@@ -4471,6 +4470,7 @@ dl $7EF154 : db $02 : dw $000A ; Room $00AA: Eastern Palace (Map Chest Room) (..
 
 sram_east_big_key_dmg_boost:
 dl $7EF360 : db $02 : dw $0015 ; Rupees (goal)
+dl $7EF172 : db $02 : dw $800F ; Room $00B9: Eastern Palace (Lobby Cannonballs Room) (.d...........qqq)
 dl $7EF362 : db $02 : dw $0015 ; Rupees (actual)
 dl $7FE0F4 : db $02 : dw $0050 ; Room $BA persistent: Eastern Palace (Dark Antifairy / Key Pot Room)
 dl $7EF174 : db $02 : dw $840C ; Room $00BA: Eastern Palace (Dark Antifairy / Key Pot Room) (.d....K......qq.)
@@ -4478,23 +4478,21 @@ dl $7EF174 : db $02 : dw $840C ; Room $00BA: Eastern Palace (Dark Antifairy / Ke
 
 sram_east_big_chest_room:
 dl $7EF36D : db $01 : db $0C ; Health (actual)
-dl $7EF172 : db $02 : dw $800F ; Room $00B9: Eastern Palace (Lobby Cannonballs Room) (.d...........qqq)
 dl $7EF366 : db $02 : dw $6000 ; BigKey1
 dl $7EF170 : db $02 : dw $8015 ; Room $00B8: Eastern Palace (Big Key Room) (.d..........q.q.)
+dl $7EF150 : db $02 : dw $200F ; Room $00A8: Eastern Palace (Stalfos Spawn Room) (...d.........qqq)
 .after
 
 sram_east_gwg:
 dl $7EF377 : db $01 : db $0A ; Arrows
 dl $7EF340 : db $01 : db $02 ; Bow
-dl $7EF152 : db $02 : dw $001F ; Room $00A9: Eastern Palace (Big Chest Room) (............qqqq)
+dl $7EF152 : db $02 : dw $201F ; Room $00A9: Eastern Palace (Big Chest Room) (...d........qqqq)
 dl $7FE0F4 : db $02 : dw $0000 ; Room $BA persistent: Eastern Palace (Dark Antifairy / Key Pot Room)
-dl $7EF150 : db $02 : dw $200F ; Room $00A8: Eastern Palace (Stalfos Spawn Room) (...d.........qqq)
 .after
 
 sram_east_pot_room:
 dl $7EF360 : db $02 : dw $001B ; Rupees (goal)
-dl $7EF132 : db $02 : dw $0003 ; Room $0099: Eastern Palace (Eyegore Key Room) (...............q)
-dl $7EF152 : db $02 : dw $201F ; Room $00A9: Eastern Palace (Big Chest Room) (...d........qqqq)
+dl $7EF132 : db $02 : dw $C403 ; Room $0099: Eastern Palace (Eyegore Key Room) (.dd...K........q)
 dl $7EF362 : db $02 : dw $001B ; Rupees (actual)
 dl $7EF36E : db $01 : db $20 ; Magic Power
 dl $7FE0B2 : db $02 : dw $00D8 ; Room $99 persistent: Eastern Palace (Eyegore Key Room)
@@ -4503,7 +4501,6 @@ dl $7FE0B2 : db $02 : dw $00D8 ; Room $99 persistent: Eastern Palace (Eyegore Ke
 sram_east_zeldagamer_room:
 dl $7EF377 : db $01 : db $14 ; Arrows
 dl $7EF1B4 : db $02 : dw $0002 ; Room $00DA: Eastern Palace (...............q)
-dl $7EF132 : db $02 : dw $C403 ; Room $0099: Eastern Palace (Eyegore Key Room) (.dd...K........q)
 dl $7EF1B2 : db $02 : dw $0003 ; Room $00D9: Eastern Palace (Canonball Room) (...............q)
 .after
 
@@ -4595,7 +4592,7 @@ dl $7FF032 : db $01 : db $00 ;
 sram_desert_pre_cannonball_room:
 dl $7EF0E6 : db $02 : dw $0405 ; Room $0073: Desert Palace (Big Chest Room) (......K.......q.)
 dl $7EF0EA : db $02 : dw $0002 ; Room $0075: Desert Palace (Big Key Chest Room) (...............q)
-dl $7EF10A : db $02 : dw $000A ; Room $0085: Desert Palace (East Entrance Room) (.............q.q)
+dl $7EF10A : db $02 : dw $400A ; Room $0085: Desert Palace (East Entrance Room) (..d..........q.q)
 .after
 
 sram_desert_pot_room:
@@ -4622,14 +4619,14 @@ dl $7FE08A : db $01 : db $00 ; Room $85 persistent: Desert Palace (East Entrance
 .after
 
 sram_desert_torches:
-dl $7EF086 : db $02 : dw $0001 ; Room $0043: Desert Palace (Torch Puzzle / Moving Wall Room) (................)
+dl $7EF086 : db $02 : dw $6401 ; Room $0043: Desert Palace (Torch Puzzle / Moving Wall Room) (..dd..K.........)
 dl $7EF0A6 : db $02 : dw $240F ; Room $0053: Desert Palace (Popos 2 / Beamos Hellway Room) (...d..K......qqq)
 dl $7FE026 : db $02 : dw $06E0 ; Room $53 persistent: Desert Palace (Popos 2 / Beamos Hellway Room)
 .after
 
 sram_desert_lanmolas:
 dl $7EF377 : db $01 : db $19 ; Arrows
-dl $7EF086 : db $02 : dw $640D ; Room $0043: Desert Palace (Torch Puzzle / Moving Wall Room) (..dd..K......qq.)
+dl $7EF086 : db $02 : dw $E48D ; Room $0043: Desert Palace (Torch Puzzle / Moving Wall Room) (.ddd..K..c...qq.)
 dl $7EF36E : db $01 : db $70 ; Magic Power
 .after
 
@@ -4641,7 +4638,6 @@ dl $7EF374 : db $01 : db $06 ; Pendants
 dl $7EF36D : db $01 : db $28 ; Health (actual)
 dl $7EF3E9 : db $02 : dw $0000 ; Deaths
 dl $7EF066 : db $02 : dw $0802 ; Room $0033: Desert Palace (Lanmolas[Boss]) (.....k.........q)
-dl $7EF086 : db $02 : dw $E48D ; Room $0043: Desert Palace (Torch Puzzle / Moving Wall Room) (.ddd..K..c...qq.)
 dl $7EF36E : db $01 : db $80 ; Magic Power
 dl $7FE026 : db $01 : db $00 ; Overworld $53 persistent: Dark Sanctuary
 .after
@@ -4691,14 +4687,13 @@ dl $7FF136 : db $01 : db $00 ;
 sram_hera_tile_room:
 dl $7EF36F : db $02 : dw $0000 ; Keys
 dl $7FF04C : db $01 : db $00 ; 
-dl $7EF0EE : db $02 : dw $000F ; Room $0077: Tower of Hera (Entrance Room) (.............qqq)
+dl $7EF0EE : db $02 : dw $800F ; Room $0077: Tower of Hera (Entrance Room) (.d...........qqq)
 dl $7EF10E : db $02 : dw $0402 ; Room $0087: Tower of Hera (Tile Room) (......K........q)
 dl $7EF386 : db $01 : db $01 ; Key for dungeon $0A
 dl $7FDFCB : db $01 : db $00 ; Room $25 persistent: Empty Clone Room
 .after
 
 sram_hera_torches:
-dl $7EF0EE : db $02 : dw $800F ; Room $0077: Tower of Hera (Entrance Room) (.d...........qqq)
 dl $7EF10E : db $02 : dw $040E ; Room $0087: Tower of Hera (Tile Room) (......K......qqq)
 .after
 
@@ -4802,13 +4797,12 @@ dl $7EF180 : db $02 : dw $0001 ; Room $00C0: Agahnim's Tower (Dark Bridge Room) 
 
 sram_aga_red_spears:
 dl $7FE100 : db $02 : dw $0018 ; Room $C0 persistent: Agahnim's Tower (Dark Bridge Room)
-dl $7EF180 : db $02 : dw $000F ; Room $00C0: Agahnim's Tower (Dark Bridge Room) (.............qqq)
+dl $7EF180 : db $02 : dw $240F ; Room $00C0: Agahnim's Tower (Dark Bridge Room) (...d..K......qqq)
 .after
 
 sram_aga_circle_of_pot:
 dl $7EF377 : db $01 : db $03 ; Arrows
 dl $7FE0E0 : db $02 : dw $003F ; Room $B0 persistent: Agahnim's Tower (Circle of Pots)
-dl $7EF180 : db $02 : dw $240F ; Room $00C0: Agahnim's Tower (Dark Bridge Room) (...d..K......qqq)
 dl $7EF160 : db $02 : dw $000C ; Room $00B0: Agahnim's Tower (Circle of Pots) (.............qq.)
 .after
 
@@ -4820,7 +4814,7 @@ dl $7FDFE0 : db $02 : dw $0001 ; Room $30 persistent: Agahnim's Tower (Maiden Sa
 dl $7FE0E0 : db $02 : dw $043F ; Room $B0 persistent: Agahnim's Tower (Circle of Pots)
 dl $7FE120 : db $02 : dw $0000 ; Room $D0 persistent: Agahnim's Tower (Dark Maze)
 dl $7FE140 : db $02 : dw $0000 ; Room $E0 persistent: Agahnim's Tower (Entrance Room)
-dl $7EF060 : db $02 : dw $000A ; Room $0030: Agahnim's Tower (Maiden Sacrifice Chamber) (.............q.q)
+dl $7EF060 : db $02 : dw $840A ; Room $0030: Agahnim's Tower (Maiden Sacrifice Chamber) (.d....K......q.q)
 dl $7EF080 : db $02 : dw $000B ; Room $0040: Agahnim's Tower (Final Bridge Room) (.............q.q)
 dl $7EF160 : db $02 : dw $240F ; Room $00B0: Agahnim's Tower (Circle of Pots) (...d..K......qqq)
 .after
@@ -4836,7 +4830,6 @@ dl $7EF3CA : db $01 : db $40 ; LW/DW
 dl $7FDFE0 : db $01 : db $00 ; Overworld $30 persistent: Desert of Mystery
 dl $7FE0E0 : db $01 : db $00 ; Overworld $B0 persistent: UNKNOWN
 dl $7FE100 : db $01 : db $00 ; Overworld $C0 persistent: UNKNOWN
-dl $7EF060 : db $02 : dw $840A ; Room $0030: Agahnim's Tower (Maiden Sacrifice Chamber) (.d....K......q.q)
 .after
 
 sram_pod_pod_overworld:
@@ -4876,7 +4869,7 @@ dl $7EF012 : db $02 : dw $0018 ; Room $0009: Palace of Darkness (............qq.
 dl $7EF382 : db $01 : db $01 ; Key for dungeon $06
 dl $7FF041 : db $01 : db $00 ; 
 dl $7FDFCD : db $01 : db $00 ; Room $26 persistent: Swamp Palace (Statue Room)
-dl $7EF094 : db $02 : dw $000F ; Room $004A: Palace of Darkness (Entrance Room) (.............qqq)
+dl $7EF094 : db $02 : dw $200F ; Room $004A: Palace of Darkness (Entrance Room) (...d.........qqq)
 dl $7FF022 : db $01 : db $00 ; 
 .after
 
@@ -4885,9 +4878,8 @@ dl $7EF343 : db $01 : db $04 ; Bombs
 dl $7EF014 : db $02 : dw $801F ; Room $000A: Palace of Darkness (Stalfos Trap Room) (.d..........qqqq)
 dl $7EF366 : db $02 : dw $7220 ; BigKey1
 dl $7EF382 : db $01 : db $00 ; Key for dungeon $06
-dl $7EF054 : db $02 : dw $002F ; Room $002A: Palace of Darkness (Big Hub Room) (...........c.qqq)
+dl $7EF054 : db $02 : dw $402F ; Room $002A: Palace of Darkness (Big Hub Room) (..d........c.qqq)
 dl $7EF074 : db $02 : dw $801F ; Room $003A: Palace of Darkness (Bombable Floor Room) (.d..........qqqq)
-dl $7EF094 : db $02 : dw $200F ; Room $004A: Palace of Darkness (Entrance Room) (...d.........qqq)
 .after
 
 sram_pod_before_sexy_statue:
@@ -4897,7 +4889,6 @@ dl $7EF034 : db $02 : dw $301A ; Room $001A: Palace of Darkness (Big Chest Room)
 dl $7EF36D : db $01 : db $28 ; Health (actual)
 dl $7EF032 : db $02 : dw $802F ; Room $0019: Palace of Darkness (Dark Maze) (.d.........c.qqq)
 dl $7EF382 : db $01 : db $01 ; Key for dungeon $06
-dl $7EF054 : db $02 : dw $402F ; Room $002A: Palace of Darkness (Big Hub Room) (..d........c.qqq)
 .after
 
 sram_pod_mimics:
@@ -4917,7 +4908,7 @@ dl $7FDFB6 : db $02 : dw $0038 ; Room $1B persistent: Palace of Darkness (Mimics
 sram_pod_helma:
 dl $7EF016 : db $02 : dw $200F ; Room $000B: Palace of Darkness (Turtle Room) (...d.........qqq)
 dl $7FE054 : db $02 : dw $0010 ; Room $6A persistent: Palace of Darkness (Rupee Room)
-dl $7EF0D4 : db $02 : dw $0005 ; Room $006A: Palace of Darkness (Rupee Room) (..............q.)
+dl $7EF0D4 : db $02 : dw $8005 ; Room $006A: Palace of Darkness (Rupee Room) (.d............q.)
 dl $7FDF96 : db $02 : dw $03F0 ; Room $B persistent: Palace of Darkness (Turtle Room)
 .after
 
@@ -4933,7 +4924,6 @@ dl $7FF041 : db $01 : db $01 ;
 dl $7FE054 : db $01 : db $00 ; Overworld $6A persistent: Haunted Grove
 dl $7FDFCD : db $01 : db $23 ; Overworld $26 persistent: UNKNOWN
 dl $7EF0B4 : db $02 : dw $0801 ; Room $005A: Palace of Darkness (Helmasaur King[Boss]) (.....k..........)
-dl $7EF0D4 : db $02 : dw $8005 ; Room $006A: Palace of Darkness (Rupee Room) (.d............q.)
 dl $7FDF96 : db $01 : db $00 ; Overworld $B persistent: UNKNOWN
 dl $7FDFB6 : db $01 : db $00 ; Overworld $1B persistent: Hyrule Castle
 .after
@@ -5198,7 +5188,7 @@ dl $7FF022 : db $01 : db $20 ;
 
 sram_sw_mummy_hellway:
 dl $7EF36F : db $02 : dw $0000 ; Keys
-dl $7EF092 : db $02 : dw $0002 ; Room $0049: Skull Woods (Gibdo Torch Puzzle Room) (...............q)
+dl $7EF092 : db $02 : dw $2002 ; Room $0049: Skull Woods (Gibdo Torch Puzzle Room) (...d...........q)
 dl $7EF0B2 : db $02 : dw $800A ; Room $0059: Skull Woods (Final Section Entrance Room) (.d...........q.q)
 dl $7FE032 : db $02 : dw $0003 ; Room $59 persistent: Skull Woods (Final Section Entrance Room)
 dl $7FE0FA : db $01 : db $00 ; Room $BD persistent: Empty Clone Room
@@ -5206,14 +5196,13 @@ dl $7FF022 : db $01 : db $00 ;
 .after
 
 sram_sw_mummy_key:
-dl $7EF092 : db $02 : dw $200F ; Room $0049: Skull Woods (Gibdo Torch Puzzle Room) (...d.........qqq)
+dl $7EF092 : db $02 : dw $A00F ; Room $0049: Skull Woods (Gibdo Torch Puzzle Room) (.d.d.........qqq)
 dl $7EF36E : db $01 : db $30 ; Magic Power
 dl $7FE012 : db $02 : dw $0801 ; Room $49 persistent: Skull Woods (Gibdo Torch Puzzle Room)
 .after
 
 sram_sw_mothula:
-dl $7EF072 : db $02 : dw $0002 ; Room $0039: Skull Woods (Gibdo Key / Mothula Hole Room) (...............q)
-dl $7EF092 : db $02 : dw $A00F ; Room $0049: Skull Woods (Gibdo Torch Puzzle Room) (.d.d.........qqq)
+dl $7EF072 : db $02 : dw $4402 ; Room $0039: Skull Woods (Gibdo Key / Mothula Hole Room) (..d...K........q)
 dl $7FDFF2 : db $02 : dw $0002 ; Room $39 persistent: Skull Woods (Gibdo Key / Mothula Hole Room)
 .after
 
@@ -5348,12 +5337,11 @@ dl $7EF07C : db $02 : dw $0004 ; Room $003E: Ice Palace (Stalfos Knights / Conve
 sram_ice_ipbj:
 dl $7EF36D : db $01 : db $40 ; Health (actual)
 dl $7FDFFC : db $02 : dw $0306 ; Room $3E persistent: Ice Palace (Stalfos Knights / Conveyor Hellway)
-dl $7EF07C : db $02 : dw $0007 ; Room $003E: Ice Palace (Stalfos Knights / Conveyor Hellway) (..............qq)
+dl $7EF07C : db $02 : dw $4407 ; Room $003E: Ice Palace (Stalfos Knights / Conveyor Hellway) (..d...K.......qq)
 .after
 
 sram_ice_penguin_room:
 dl $7EF343 : db $01 : db $00 ; Bombs
-dl $7EF07C : db $02 : dw $4407 ; Room $003E: Ice Palace (Stalfos Knights / Conveyor Hellway) (..d...K.......qq)
 dl $7EF09C : db $02 : dw $400C ; Room $004E: Ice Palace (Bomb-Jump Room) (..d..........qq.)
 .after
 
@@ -5450,7 +5438,7 @@ dl $7EF36F : db $02 : dw $0000 ; Keys
 dl $7FEFB4 : db $01 : db $00 ; 
 dl $7FF028 : db $01 : db $00 ; 
 dl $7FF030 : db $01 : db $00 ; 
-dl $7EF06E : db $02 : dw $0003 ; Room $0037: Swamp Palace (Map Chest / Water Fill Room) (...............q)
+dl $7EF06E : db $02 : dw $1003 ; Room $0037: Swamp Palace (Map Chest / Water Fill Room) (....b..........q)
 dl $7FDFD0 : db $02 : dw $000E ; Room $28 persistent: Swamp Palace (Entrance Room)
 dl $7FE07D : db $01 : db $00 ; Room $7E persistent: Ice Palace (Hidden Chest / Bombable Floor Room)
 dl $7EF050 : db $02 : dw $811F ; Room $0028: Swamp Palace (Entrance Room) (.d......c...qqqq)
@@ -5467,13 +5455,12 @@ sram_swamp_switch_room:
 dl $7EF06A : db $02 : dw $040F ; Room $0035: Swamp Palace (Big Key / BS Room) (......K......qqq)
 dl $7FDFD0 : db $02 : dw $0000 ; Room $28 persistent: Swamp Palace (Entrance Room)
 dl $7FDFEC : db $02 : dw $0031 ; Room $36 persistent: Swamp Palace (Big Chest Room)
-dl $7EF06C : db $02 : dw $000F ; Room $0036: Swamp Palace (Big Chest Room) (.............qqq)
+dl $7EF06C : db $02 : dw $200F ; Room $0036: Swamp Palace (Big Chest Room) (...d.........qqq)
 .after
 
 sram_swamp_sociable_firebar:
 dl $7EF06A : db $02 : dw $848F ; Room $0035: Swamp Palace (Big Key / BS Room) (.d....K..c...qqq)
 dl $7EF068 : db $02 : dw $000F ; Room $0034: Swamp Palace (Push Block Puzzle / Pre-Big Key Room) (.............qqq)
-dl $7EF06C : db $02 : dw $200F ; Room $0036: Swamp Palace (Big Chest Room) (...d.........qqq)
 .after
 
 sram_swamp_backtracking:
@@ -5488,7 +5475,7 @@ dl $7FDFE8 : db $02 : dw $0001 ; Room $34 persistent: Swamp Palace (Push Block P
 
 sram_swamp_hookdash:
 dl $7EF342 : db $01 : db $01 ; Hookshot
-dl $7EF06C : db $02 : dw $201F ; Room $0036: Swamp Palace (Big Chest Room) (...d........qqqq)
+dl $7EF06C : db $02 : dw $641F ; Room $0036: Swamp Palace (Big Chest Room) (..dd..K.....qqqq)
 .after
 
 sram_swamp_restock:
@@ -5499,7 +5486,6 @@ dl $7FDFEC : db $02 : dw $0000 ; Room $36 persistent: Swamp Palace (Big Chest Ro
 dl $7FE04C : db $02 : dw $0080 ; Room $66 persistent: Swamp Palace (Hidden Chest / Hidden Door Room)
 dl $7FE06C : db $02 : dw $0002 ; Room $76 persistent: Swamp Palace (Water Drain Room)
 dl $7EF04C : db $02 : dw $8007 ; Room $0026: Swamp Palace (Statue Room) (.d............qq)
-dl $7EF06C : db $02 : dw $641F ; Room $0036: Swamp Palace (Big Chest Room) (..dd..K.....qqqq)
 dl $7EF0CC : db $02 : dw $0003 ; Room $0066: Swamp Palace (Hidden Chest / Hidden Door Room) (...............q)
 dl $7EF0EC : db $02 : dw $008E ; Room $0076: Swamp Palace (Water Drain Room) (.........c...qqq)
 .after
@@ -5624,13 +5610,12 @@ dl $7EF166 : db $02 : dw $841A ; Room $00B3: Misery Mire (Spike Key Chest Room) 
 dl $7EF362 : db $02 : dw $0065 ; Rupees (actual)
 dl $7FE0E4 : db $02 : dw $0001 ; Room $B2 persistent: Misery Mire (Slug Room)
 dl $7EF164 : db $02 : dw $800D ; Room $00B2: Misery Mire (Slug Room) (.d...........qq.)
-dl $7EF144 : db $02 : dw $000F ; Room $00A2: Misery Mire (Bridge Key Chest Room) (.............qqq)
+dl $7EF144 : db $02 : dw $800F ; Room $00A2: Misery Mire (Bridge Key Chest Room) (.d...........qqq)
 .after
 
 sram_mire_cane_dash:
 dl $7EF126 : db $02 : dw $000E ; Room $0093: Misery Mire (Dark Cane Floor Switch Puzzle Room) (.............qqq)
 dl $7EF36E : db $01 : db $38 ; Magic Power
-dl $7EF144 : db $02 : dw $800F ; Room $00A2: Misery Mire (Bridge Key Chest Room) (.d...........qqq)
 .after
 
 sram_mire_bombable_wall:
@@ -5646,7 +5631,7 @@ dl $7EF36E : db $01 : db $40 ; Magic Power
 dl $7FE0A4 : db $02 : dw $0200 ; Room $92 persistent: Misery Mire (Dark Bomb Wall / Switches Room)
 dl $7FE0E4 : db $02 : dw $0000 ; Room $B2 persistent: Misery Mire (Slug Room)
 dl $7EF124 : db $02 : dw $400F ; Room $0092: Misery Mire (Dark Bomb Wall / Switches Room) (..d..........qqq)
-dl $7EF140 : db $02 : dw $000F ; Room $00A0: Misery Mire (Pre-Vitreous Room) (.............qqq)
+dl $7EF140 : db $02 : dw $800F ; Room $00A0: Misery Mire (Pre-Vitreous Room) (.d...........qqq)
 .after
 
 sram_trock_ouside_mire:
@@ -5660,7 +5645,6 @@ dl $7EF36E : db $01 : db $80 ; Magic Power
 dl $7EF37A : db $01 : db $77 ; Crystals
 dl $7FE0A4 : db $01 : db $00 ; Overworld $92 persistent: UNKNOWN
 dl $7EF120 : db $02 : dw $0802 ; Room $0090: Misery Mire (Vitreous[Boss]) (.....k.........q)
-dl $7EF140 : db $02 : dw $800F ; Room $00A0: Misery Mire (Pre-Vitreous Room) (.d...........qqq)
 .after
 
 sram_trock_icerod_overworld:
@@ -5741,14 +5725,14 @@ sram_trock_lonely_pokey:
 dl $7EF36D : db $01 : db $40 ; Health (actual)
 dl $7EF16E : db $02 : dw $002A ; Room $00B7: Turtle Rock (Map Chest / Key Chest / Roller Room) (...........c.q.q)
 dl $7EF36E : db $01 : db $30 ; Magic Power
+dl $7EF18C : db $02 : dw $800F ; Room $00C6: Turtle Rock (.d...........qqq)
 .after
 
 sram_trock_chomps:
 dl $7EF36D : db $01 : db $48 ; Health (actual)
 dl $7EF372 : db $01 : db $30 ; Hearts filler
 dl $7FE0EC : db $02 : dw $0020 ; Room $B6 persistent: Turtle Rock (Chain Chomps Room)
-dl $7EF16C : db $02 : dw $0002 ; Room $00B6: Turtle Rock (Chain Chomps Room) (...............q)
-dl $7EF18C : db $02 : dw $800F ; Room $00C6: Turtle Rock (.d...........qqq)
+dl $7EF16C : db $02 : dw $3402 ; Room $00B6: Turtle Rock (Chain Chomps Room) (...db.K........q)
 .after
 
 sram_trock_pokies_1:
@@ -5773,6 +5757,7 @@ dl $7FDFA6 : db $02 : dw $0040 ; Room $13 persistent: Turtle Rock (Hokku-Bokku K
 .after
 
 sram_trock_firebar_key:
+dl $7EF028 : db $02 : dw $C01F ; Room $0014: Turtle Rock (Big Key Room) (.dd.........qqqq)
 dl $7FDFC8 : db $02 : dw $0028 ; Room $24 persistent: Turtle Rock (Double Hokku-Bokku / Big chest Room)
 dl $7FE0EC : db $02 : dw $0000 ; Room $B6 persistent: Turtle Rock (Chain Chomps Room)
 dl $7EF048 : db $02 : dw $800C ; Room $0024: Turtle Rock (Double Hokku-Bokku / Big chest Room) (.d...........qq.)
@@ -5780,7 +5765,6 @@ dl $7EF048 : db $02 : dw $800C ; Room $0024: Turtle Rock (Double Hokku-Bokku / B
 
 sram_trock_lazer_skip:
 dl $7EF008 : db $02 : dw $C01A ; Room $0004: Turtle Rock (Crysta-roller Room) (.dd.........qq.q)
-dl $7EF028 : db $02 : dw $C01F ; Room $0014: Turtle Rock (Big Key Room) (.dd.........qqqq)
 dl $7EF36D : db $01 : db $58 ; Health (actual)
 dl $7EF16A : db $02 : dw $000F ; Room $00B5: Turtle Rock (Dark Maze) (.............qqq)
 dl $7EF18A : db $02 : dw $000A ; Room $00C5: Turtle Rock (Laser Bridge) (.............q.q)
@@ -5790,15 +5774,15 @@ dl $7FE10A : db $02 : dw $0040 ; Room $C5 persistent: Turtle Rock (Laser Bridge)
 .after
 
 sram_trock_switch_room:
+dl $7EF18A : db $02 : dw $800A ; Room $00C5: Turtle Rock (Laser Bridge) (.d...........q.q)
 dl $7EF1AA : db $02 : dw $008A ; Room $00D5: Turtle Rock (Laser Key Room) (.........c...q.q)
 dl $7FDFC8 : db $02 : dw $0000 ; Room $24 persistent: Turtle Rock (Double Hokku-Bokku / Big chest Room)
 dl $7FE12A : db $02 : dw $0010 ; Room $D5 persistent: Turtle Rock (Laser Key Room)
 .after
 
 sram_trock_trinexx:
-dl $7EF18A : db $02 : dw $800A ; Room $00C5: Turtle Rock (Laser Bridge) (.d...........q.q)
 dl $7EF36E : db $01 : db $60 ; Magic Power
-dl $7EF168 : db $02 : dw $000F ; Room $00B4: Turtle Rock (Pre-Trinexx Room) (.............qqq)
+dl $7EF168 : db $02 : dw $800F ; Room $00B4: Turtle Rock (Pre-Trinexx Room) (.d...........qqq)
 dl $7EF188 : db $02 : dw $800F ; Room $00C4: Turtle Rock (Final Crystal Switch Puzzle Room) (.d...........qqq)
 .after
 
@@ -5811,7 +5795,6 @@ dl $7EF36D : db $01 : db $68 ; Health (actual)
 dl $7EF3C7 : db $01 : db $08 ; Map Phase
 dl $7EF36E : db $01 : db $80 ; Magic Power
 dl $7EF37A : db $01 : db $7F ; Crystals
-dl $7EF168 : db $02 : dw $800F ; Room $00B4: Turtle Rock (Pre-Trinexx Room) (.d...........qqq)
 dl $7EF148 : db $02 : dw $0802 ; Room $00A4: Turtle Rock (Trinexx[Boss]) (.....k.........q)
 dl $7FE10A : db $01 : db $00 ; Overworld $C5 persistent: UNKNOWN
 dl $7FE12A : db $01 : db $00 ; Overworld $D5 persistent: UNKNOWN
@@ -5826,14 +5809,14 @@ dl $7FEFD9 : db $01 : db $01 ;
 sram_gtower_spike_skip:
 dl $7EF36F : db $01 : db $01 ; Keys
 dl $7EF018 : db $02 : dw $000F ; Room $000C: Ganon's Tower (Entrance Room) (.............qqq)
-dl $7EF116 : db $02 : dw $0004 ; Room $008B: Ganon's Tower (Block Puzzle / Spike Skip / Map Chest Room) (..............q.)
+dl $7EF116 : db $02 : dw $0404 ; Room $008B: Ganon's Tower (Block Puzzle / Spike Skip / Map Chest Room) (......K.......q.)
 dl $7FEFD9 : db $01 : db $00 ; 
 dl $7EF118 : db $02 : dw $0008 ; Room $008C: Ganon's Tower (East and West Downstairs / Big Chest Room) (.............q..)
 .after
 
-sram_gtower_firebar_room:
+sram_gtower_pre_firebar_room:
 dl $7EF116 : db $02 : dw $040E ; Room $008B: Ganon's Tower (Block Puzzle / Spike Skip / Map Chest Room) (......K......qqq)
-dl $7EF136 : db $02 : dw $840C ; Room $009B: Ganon's Tower (Many Spikes / Warp Maze Room) (.d....K......qq.)
+dl $7EF136 : db $02 : dw $8408 ; Room $009B: Ganon's Tower (Many Spikes / Warp Maze Room) (.d....K......q..)
 .after
 
 sram_gtower_bombable_floor:
@@ -5872,12 +5855,12 @@ dl $7FE056 : db $02 : dw $0240 ; Room $6B persistent: Ganon's Tower (Mimics Room
 
 sram_gtower_spike_room:
 dl $7EF377 : db $01 : db $0A ; Arrows
+dl $7EF0B6 : db $02 : dw $800F ; Room $005B: Ganon's Tower (Spike Pit Room) (.d...........qqq)
 dl $7EF0D6 : db $02 : dw $800F ; Room $006B: Ganon's Tower (Mimics Rooms) (.d...........qqq)
 dl $7FE056 : db $02 : dw $2640 ; Room $6B persistent: Ganon's Tower (Mimics Rooms)
 .after
 
 sram_gtower_gauntlet:
-dl $7EF0B6 : db $02 : dw $8005 ; Room $005B: Ganon's Tower (Spike Pit Room) (.d............q.)
 dl $7EF0B8 : db $02 : dw $000C ; Room $005C: Ganon's Tower (Ganon-Ball Z) (.............qq.)
 .after
 
@@ -5920,7 +5903,7 @@ dl $7EF36E : db $01 : db $40 ; Magic Power
 
 sram_gtower_bombable_wall:
 dl $7EF36D : db $01 : db $40 ; Health (actual)
-dl $7EF07A : db $02 : dw $0005 ; Room $003D: Ganon's Tower (Torch Room 2) (..............q.)
+dl $7EF07A : db $02 : dw $4405 ; Room $003D: Ganon's Tower (Torch Room 2) (..d...K.......q.)
 dl $7FDFFA : db $02 : dw $000C ; Room $3D persistent: Ganon's Tower (Torch Room 2)
 .after
 
@@ -5928,12 +5911,11 @@ sram_gtower_moldorm_2:
 dl $7EF343 : db $01 : db $00 ; Bombs
 dl $7EF36F : db $02 : dw $0000 ; Keys
 dl $7EF36D : db $01 : db $38 ; Health (actual)
-dl $7EF07A : db $02 : dw $540F ; Room $003D: Ganon's Tower (Torch Room 2) (..d.b.K......qqq)
+dl $7EF07A : db $02 : dw $740F ; Room $003D: Ganon's Tower (Torch Room 2) (..ddb.K......qqq)
 .after
 
 sram_gtower_agahnim_2:
-dl $7EF03A : db $02 : dw $000C ; Room $001D: Ganon's Tower (Final Hallway) (.............qq.)
-dl $7EF07A : db $02 : dw $740F ; Room $003D: Ganon's Tower (Torch Room 2) (..ddb.K......qqq)
+dl $7EF03A : db $02 : dw $800C ; Room $001D: Ganon's Tower (Final Hallway) (.d...........qq.)
 dl $7EF09A : db $02 : dw $800F ; Room $004D: Ganon's Tower (Moldorm Room) (.d...........qqq)
 dl $7EF098 : db $02 : dw $0005 ; Room $004C: Ganon's Tower (Mini-Helmasaur Conveyor Room) (..............q.)
 dl $7FE0CA : db $02 : dw $0000 ; Room $A5 persistent: Ganon's Tower (Wizzrobes Rooms)
@@ -5945,6 +5927,5 @@ dl $7EF36F : db $01 : db $FF ; Keys
 dl $7EF3FD : db $02 : dw $0000 ; Deaths
 dl $7EF389 : db $01 : db $00 ; Key for dungeon $0D
 dl $7EF01A : db $02 : dw $0802 ; Room $000D: Ganon's Tower (Agahnim2[Boss]) (.....k.........q)
-dl $7EF03A : db $02 : dw $800C ; Room $001D: Ganon's Tower (Final Hallway) (.d...........qq.)
 dl $7FDFFA : db $01 : db $00 ; Overworld $3D persistent: UNKNOWN
 .after
