@@ -199,6 +199,14 @@ local function tohex(n, size)
 end
 
 
+local function call_for_each_bank(address, fn, ...)
+    for i = 0x00, 0x1F do
+        fn(bit.lshift(i, 16) + address, unpack(arg))
+    end
+    fn(0x7E0000 + address, unpack(arg))
+end
+
+
 local debug_file = io.open("debug.txt", "w")
 
 local function debug(...)
@@ -696,7 +704,11 @@ local function annotate_overworld_value(val)
 end
 
 local function annotate_address(addr, val)
-    if addr == 0x071ABF or addr == 0x071ACF or addr == 0x071ADF or addr == 0x071AEF then
+    if addr >= 0x7E0641 and addr <= 0x7E0642 then
+        return "Room puzzle state (?)"
+    end
+
+    if addr == 0x7E1ABF or addr == 0x7E1ACF or addr == 0x7E1ADF or addr == 0x7E1AEF then
         return "Warp Vortex Coordinate"
     end
 
@@ -708,7 +720,7 @@ local function annotate_address(addr, val)
         return "Link's direction"
     end
 
-    if addr == 0x0D0202 or (addr >= 0x0D0302 and addr <= 0x0D0303) then
+    if addr == 0x7E0202 or (addr >= 0x7E0302 and addr <= 0x7E0303) then
         return "Selected menu item"
     end
 
@@ -1025,6 +1037,11 @@ end
 -- Callbacks
 
 function state_changed(addr, size)
+    if addr < 0x200000 then
+        addr = bit.band(addr, 0xFFFF)
+        addr = 0x7E0000 + addr
+    end
+
     val = size == 1 and memory.readbyte(addr) or memory.readword(addr)
     if current_state[addr] == nil or current_state[addr][2] ~= val then
         local line = "[" .. tohex(memory.getregister("pb"), 2) .. ":" .. tohex(memory.getregister("pc"), 4) .. "] "
@@ -1070,10 +1087,17 @@ function main()
     memory.registerwrite(0x7EC140, 0x32, state_changed)
 
     -- Warp location (where the warp vortex is located after warping from DW to LW)
-    memory.registerwrite(0x071ABF, 0x1, state_changed)
-    memory.registerwrite(0x071ACF, 0x1, state_changed)
-    memory.registerwrite(0x071ADF, 0x1, state_changed)
-    memory.registerwrite(0x071AEF, 0x1, state_changed)
+    call_for_each_bank(0x0000, function (bank_only)
+        memory.registerwrite(bank_only + 0x1ABF, 0x1, state_changed)
+        memory.registerwrite(bank_only + 0x1ACF, 0x1, state_changed)
+        memory.registerwrite(bank_only + 0x1ADF, 0x1, state_changed)
+        memory.registerwrite(bank_only + 0x1AEF, 0x1, state_changed)
+    end)
+
+    -- Indicates if we solved a puzzle (to e.g. open a door) in the current room.
+    call_for_each_bank(0x0641, function (addr_with_bank)
+        memory.registerwrite(addr_with_bank, 0x2, state_changed)
+    end)
 
     gui.register(draw_ui)
 
