@@ -110,6 +110,7 @@
 !BirdTravel_LoadTargetAreaData = $02E99D
 !BirdTravel_LoadTargetAreaData_AfterData = $02EA30
 !Player_ResetState = $07F18C
+!Tagalong_LoadGfx = $00D463
 
 ; ITEM MENU
 

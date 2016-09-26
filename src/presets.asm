@@ -282,7 +282,7 @@ preset_load_state:
 
   .next_item
     ; Sets up $02-$04 with the long address we want to manipulate.
-    LDA $00 : CMP $06 : BEQ .done
+    LDA $00 : CMP $06 : BEQ .done_with_state
     LDA ($00) : INC $00 : INC $00 : STA $02
     LDA ($00) : INC $00 : INC $00 : STA $04
 
@@ -299,9 +299,14 @@ preset_load_state:
     INC $00
     BRA .next_item
 
-  .done
+  .done_with_state
   %a8()
     PLB
+
+    LDA $7EF3CC : BEQ .done
+    JSL !Tagalong_LoadGfx
+
+  .done
     RTS
 
 

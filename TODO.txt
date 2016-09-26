@@ -8,14 +8,10 @@ x Code some general menu:
         - Should maybe make a general function to handle checking these bounds since it comes up all the time.
         - Support repeating inputs (holding dpad button).
         - Word-sized number widget for rupees.
-    - Make sure to only go to this game mode when its safe to do so.
-        - Item menu, before selecting file.
-        - Infinite pause item menu
     - Initialize cm_ values on menu open.
 
 - Teleport "anywhere" w/presets.
     - Remove killed sprites: 2nd key guard, backtrack from Ball'n Chains.
-    - Tagalong sprite is wrong: Secret Passage.
     - Remember solved secrets within your quadrant:
         - 2nd key guard
         - Backtrack from Ball'n Chains.
@@ -45,6 +41,7 @@ x Code some general menu:
         - Desert -> Beetles
         - Desert -> Petting Zoo (good place to debug)
         NOTE: Map fixes this
+    - Remember current selected inventory item
 
 - Show all 3 digits for enemy HP.
 
