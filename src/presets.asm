@@ -8,6 +8,11 @@ org $028154
     JSR load_entrance_local
 
 
+; Replaces the JSL from BirdTravel_LoadTargetAreaData module to Sprite_ResetAll
+org $02EA33
+    JSL preset_sprite_reset_all
+
+
 ; Replaces the JSL from PreDungeon module to Sprite_ResetAll
 org $028252
     JSL preset_sprite_reset_all
