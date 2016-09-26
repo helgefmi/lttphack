@@ -3,13 +3,7 @@ Rough todo
 
 V8:
 
-x Teleport "anywhere" w/presets.
-
-- Show all 3 digits for enemy HP.
-
 - Reset segment timer on file/preset load.
-
-- Only show full hearts icon when you can use sword beams.
 
 V9:
 

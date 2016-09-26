@@ -136,7 +136,7 @@ hud_draw_hearts:
 
     ; Check if we have full hp
   %a8()
-    LDA !ram_equipment_maxhp : CMP !ram_equipment_curhp : BNE .not_full_hp
+    LDA !ram_equipment_maxhp : SEC : SBC !ram_equipment_curhp : CMP.b #$04 : BCS .not_full_hp
 
   %a16()
     LDA #$24A0
