@@ -116,6 +116,7 @@
 !UpdateBarrierTileChr = $0296AD ; $117B2-$117C7
 !DecompSwordGfx = $00D308
 !Palette_Sword = $1BED03
+!Dungeon_AnimateTrapDoors = $01D38D
 
 ; ITEM MENU
 

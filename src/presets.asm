@@ -332,6 +332,15 @@ preset_load_state:
     JSL !Palette_Sword
     JSL !UpdateBarrierTileChr
 
+    LDA $1B : BEQ .done
+
+    ; Underworld stuff here
+
+  LDA $11 : PHA
+    LDA.b #$07 : STA $0690
+    JSL !Dungeon_AnimateTrapDoors
+  PLA : STA $11
+
     LDA $7EF3CC : BEQ .done
     JSL !Tagalong_LoadGfx
 

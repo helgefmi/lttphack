@@ -704,6 +704,10 @@ local function annotate_overworld_value(val)
 end
 
 local function annotate_address(addr, val)
+    if addr >= 0x7E0468 and addr <= 0x7E0469 then
+        return "Trap door state"
+    end
+
     if addr >= 0x7E0641 and addr <= 0x7E0642 then
         return "Room puzzle state (?)"
     end
@@ -1096,6 +1100,11 @@ function main()
 
     -- Indicates if we solved a puzzle (to e.g. open a door) in the current room.
     call_for_each_bank(0x0641, function (addr_with_bank)
+        memory.registerwrite(addr_with_bank, 0x2, state_changed)
+    end)
+
+    -- State of trap doors (opened or not)
+    call_for_each_bank(0x0468, function (addr_with_bank)
         memory.registerwrite(addr_with_bank, 0x2, state_changed)
     end)
 
