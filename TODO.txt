@@ -20,7 +20,6 @@ x Code some general menu:
         - Hera -> Fake Flippers
         - Aga -> Lost Woods
     - Sword Sprite is wrong.
-    - Warp location
 
 - Show all 3 digits for enemy HP.
 

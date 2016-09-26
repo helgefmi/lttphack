@@ -696,6 +696,10 @@ local function annotate_overworld_value(val)
 end
 
 local function annotate_address(addr, val)
+    if addr == 0x071ABF or addr == 0x071ACF or addr == 0x071ADF or addr == 0x071AEF then
+        return "Warp Vortex Coordinate"
+    end
+
     if addr >= 0x7EC140 and addr < 0x7EC172 then
         return "Underworld exit cache"
     end
@@ -1064,6 +1068,12 @@ function main()
 
     -- Underworld exit cache (for room index >= 0x100, except Link's House & Zoras Domain)
     memory.registerwrite(0x7EC140, 0x32, state_changed)
+
+    -- Warp location (where the warp vortex is located after warping from DW to LW)
+    memory.registerwrite(0x071ABF, 0x1, state_changed)
+    memory.registerwrite(0x071ACF, 0x1, state_changed)
+    memory.registerwrite(0x071ADF, 0x1, state_changed)
+    memory.registerwrite(0x071AEF, 0x1, state_changed)
 
     gui.register(draw_ui)
 

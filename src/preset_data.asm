@@ -4735,12 +4735,16 @@ dl $7E002F : db $01 : db $06 ; Link's direction
 .after
 
 sram_hera_entrance:
+dl $071ADF : db $01 : db $38 ; Warp Vortex Coordinate
+dl $071AEF : db $01 : db $01 ; Warp Vortex Coordinate
 dl $7EC74A : db $02 : dw $2C62 ; Selected menu gfx, row 1
 dl $7EC78A : db $02 : dw $2C72 ; Selected menu gfx, row 2
 dl $0D0202 : db $01 : db $14 ; Selected menu item
 dl $7EC74C : db $02 : dw $2C63 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $2C73 ; Selected menu gfx, row 2
 dl $0D0303 : db $01 : db $14 ; Selected menu item
+dl $071ABF : db $01 : db $1C ; Warp Vortex Coordinate
+dl $071ACF : db $01 : db $08 ; Warp Vortex Coordinate
 dl $7E002F : db $01 : db $00 ; Link's direction
 .after
 
@@ -5045,6 +5049,8 @@ dl $7FE124 : db $01 : db $00 ; Overworld $D2 persistent: UNKNOWN
 .after
 
 sram_thieves_usain_bolt:
+dl $071ADF : db $01 : db $9C ; Warp Vortex Coordinate
+dl $071AEF : db $01 : db $0A ; Warp Vortex Coordinate
 dl $7EC74A : db $02 : dw $2CD4 ; Selected menu gfx, row 1
 dl $7EC78A : db $02 : dw $2CE4 ; Selected menu gfx, row 2
 dl $7EF34C : db $01 : db $02 ; Flute
@@ -5063,6 +5069,8 @@ dl $7FE04E : db $01 : db $9F ; Overworld $67 persistent: UNKNOWN
 dl $7FE06E : db $01 : db $2F ; Overworld $77 persistent: Black Ice Cave
 dl $7EC172 : db $02 : dw $0900 ; Crystal switch state
 dl $0D0303 : db $01 : db $08 ; Selected menu item
+dl $071ABF : db $01 : db $9D ; Warp Vortex Coordinate
+dl $071ACF : db $01 : db $04 ; Warp Vortex Coordinate
 .after
 
 sram_thieves_after_activating_flute:
@@ -5203,9 +5211,9 @@ dl $7FE008 : db $01 : db $00 ; Overworld $44 persistent: UNKNOWN
 dl $7FE0F8 : db $01 : db $00 ; Overworld $BC persistent: UNKNOWN
 dl $7EC74C : db $02 : dw $2CB3 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $6CC2 ; Selected menu gfx, row 2
+dl $7EF387 : db $01 : db $00 ; Key for dungeon $0B
 dl $7FE00A : db $01 : db $00 ; Overworld $45 persistent: Death Mountain East
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
-dl $7EF387 : db $01 : db $00 ; Key for dungeon $0B
 dl $0D0303 : db $01 : db $01 ; Selected menu item
 dl $7FE0E3 : db $01 : db $13 ; Overworld $B1 persistent: UNKNOWN
 dl $7E002F : db $01 : db $06 ; Link's direction
@@ -5216,6 +5224,8 @@ sram_sw_cursed_dwarf:
 .after
 
 sram_sw_got_tempered:
+dl $071ADF : db $01 : db $78 ; Warp Vortex Coordinate
+dl $071AEF : db $01 : db $08 ; Warp Vortex Coordinate
 dl $7EC74A : db $02 : dw $2C62 ; Selected menu gfx, row 1
 dl $7EC78A : db $02 : dw $2C72 ; Selected menu gfx, row 2
 dl $7EF360 : db $02 : dw $012C ; Rupees (goal)
@@ -5228,6 +5238,7 @@ dl $7FDFDD : db $01 : db $B5 ; Overworld $2E persistent: South of Eastern Palace
 dl $7EC74C : db $02 : dw $2C63 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $2C73 ; Selected menu gfx, row 2
 dl $0D0303 : db $01 : db $14 ; Selected menu item
+dl $071ABF : db $01 : db $D8 ; Warp Vortex Coordinate
 dl $7FE0E3 : db $01 : db $00 ; Overworld $B1 persistent: UNKNOWN
 dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7FE148 : db $01 : db $00 ; Overworld $E4 persistent: UNKNOWN
@@ -5315,6 +5326,8 @@ dl $7E002F : db $01 : db $06 ; Link's direction
 .after
 
 sram_ice_outside_skull:
+dl $071ADF : db $01 : db $CB ; Warp Vortex Coordinate
+dl $071AEF : db $01 : db $00 ; Warp Vortex Coordinate
 dl $7EC74A : db $02 : dw $2C62 ; Selected menu gfx, row 1
 dl $7EF36F : db $01 : db $FF ; Keys
 dl $7EC78A : db $02 : dw $2C72 ; Selected menu gfx, row 2
@@ -5334,6 +5347,8 @@ dl $7FE012 : db $01 : db $00 ; Overworld $49 persistent: UNKNOWN
 dl $7FE032 : db $01 : db $00 ; Overworld $59 persistent: UNKNOWN
 dl $7FE0FA : db $01 : db $23 ; Overworld $BD persistent: UNKNOWN
 dl $0D0303 : db $01 : db $14 ; Selected menu item
+dl $071ABF : db $01 : db $98 ; Warp Vortex Coordinate
+dl $071ACF : db $01 : db $00 ; Warp Vortex Coordinate
 dl $7FDFF2 : db $01 : db $00 ; Overworld $39 persistent: UNKNOWN
 dl $7E002F : db $01 : db $02 ; Link's direction
 .after
@@ -5379,6 +5394,8 @@ dl $7FE128 : db $01 : db $09 ; Overworld $D4 persistent: UNKNOWN
 .after
 
 sram_ice_zoras_domain:
+dl $071ADF : db $01 : db $A6 ; Warp Vortex Coordinate
+dl $071AEF : db $01 : db $02 ; Warp Vortex Coordinate
 dl $7EF349 : db $01 : db $01 ; Quake Medallion
 dl $7EF3CA : db $01 : db $00 ; LW/DW
 dl $7FDFCC : db $01 : db $00 ; Overworld $26 persistent: UNKNOWN
@@ -5387,6 +5404,8 @@ dl $7FDFA6 : db $01 : db $38 ; Overworld $13 persistent: Sanctuary
 dl $7FE06E : db $01 : db $00 ; Overworld $77 persistent: Black Ice Cave
 dl $7FE106 : db $01 : db $00 ; Overworld $C3 persistent: UNKNOWN
 dl $7EC172 : db $02 : dw $091E ; Crystal switch state
+dl $071ABF : db $01 : db $9D ; Warp Vortex Coordinate
+dl $071ACF : db $01 : db $0E ; Warp Vortex Coordinate
 dl $7FE128 : db $01 : db $00 ; Overworld $D4 persistent: UNKNOWN
 .after
 
@@ -5501,6 +5520,8 @@ dl $7E002F : db $01 : db $02 ; Link's direction
 .after
 
 sram_swamp_outside_ice:
+dl $071ADF : db $01 : db $CB ; Warp Vortex Coordinate
+dl $071AEF : db $01 : db $0D ; Warp Vortex Coordinate
 dl $7EC74A : db $02 : dw $2C62 ; Selected menu gfx, row 1
 dl $7EF36F : db $01 : db $FF ; Keys
 dl $7EC78A : db $02 : dw $2C72 ; Selected menu gfx, row 2
@@ -5517,7 +5538,9 @@ dl $7EC74C : db $02 : dw $2C63 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $2C73 ; Selected menu gfx, row 2
 dl $7FDFDA : db $01 : db $D4 ; Overworld $2D persistent: Bridge to Hyrule Castle
 dl $0D0303 : db $01 : db $14 ; Selected menu item
+dl $071ABF : db $01 : db $B8 ; Warp Vortex Coordinate
 dl $7FE01B : db $01 : db $42 ; Overworld $4D persistent: UNKNOWN
+dl $071ACF : db $01 : db $0C ; Warp Vortex Coordinate
 .after
 
 sram_swamp_links_house:
@@ -5547,6 +5570,8 @@ dl $0D0303 : db $01 : db $04 ; Selected menu item
 .after
 
 sram_swamp_antifairy_room:
+dl $071ADF : db $01 : db $07 ; Warp Vortex Coordinate
+dl $071AEF : db $01 : db $0F ; Warp Vortex Coordinate
 dl $7EC74A : db $02 : dw $2C62 ; Selected menu gfx, row 1
 dl $7EC78A : db $02 : dw $2C72 ; Selected menu gfx, row 2
 dl $0D0202 : db $01 : db $14 ; Selected menu item
@@ -5582,6 +5607,8 @@ dl $7EC16A : db $02 : dw $0007 ; Underworld exit cache
 dl $7EC16E : db $02 : dw $0006 ; Underworld exit cache
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
 dl $0D0303 : db $01 : db $14 ; Selected menu item
+dl $071ABF : db $01 : db $7C ; Warp Vortex Coordinate
+dl $071ACF : db $01 : db $07 ; Warp Vortex Coordinate
 dl $7E002F : db $01 : db $00 ; Link's direction
 .after
 
@@ -5700,6 +5727,8 @@ dl $7FE126 : db $01 : db $AB ; Overworld $D3 persistent: UNKNOWN
 .after
 
 sram_mire_dm:
+dl $071ADF : db $01 : db $FD ; Warp Vortex Coordinate
+dl $071AEF : db $01 : db $0E ; Warp Vortex Coordinate
 dl $7EF2BB : db $01 : db $00 ; Overworld $3B: Unknown (........)
 dl $7EF2FB : db $01 : db $00 ; Overworld $7B: Unknown (........)
 dl $7EC74A : db $02 : dw $24F5 ; Selected menu gfx, row 1
@@ -5718,6 +5747,8 @@ dl $7FE126 : db $01 : db $00 ; Overworld $D3 persistent: UNKNOWN
 .after
 
 sram_mire_mire_darkworld_warp:
+dl $071ADF : db $01 : db $3D ; Warp Vortex Coordinate
+dl $071AEF : db $01 : db $01 ; Warp Vortex Coordinate
 dl $7EC74A : db $02 : dw $2CD4 ; Selected menu gfx, row 1
 dl $7EC78A : db $02 : dw $2CE4 ; Selected menu gfx, row 2
 dl $7EF348 : db $01 : db $01 ; Ether Medallion
@@ -5725,7 +5756,9 @@ dl $0D0202 : db $01 : db $0D ; Selected menu item
 dl $7EC74C : db $02 : dw $2CD5 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $2CE5 ; Selected menu gfx, row 2
 dl $0D0303 : db $01 : db $08 ; Selected menu item
+dl $071ABF : db $01 : db $1C ; Warp Vortex Coordinate
 dl $7FDFCB : db $01 : db $00 ; Overworld $25 persistent: Octorok Area
+dl $071ACF : db $01 : db $08 ; Warp Vortex Coordinate
 .after
 
 sram_mire_mire_entrance:
@@ -5870,6 +5903,8 @@ dl $7E002F : db $01 : db $02 ; Link's direction
 .after
 
 sram_trock_icerod_overworld:
+dl $071ADF : db $01 : db $DA ; Warp Vortex Coordinate
+dl $071AEF : db $01 : db $0C ; Warp Vortex Coordinate
 dl $7EC74A : db $02 : dw $2CD4 ; Selected menu gfx, row 1
 dl $7EC78A : db $02 : dw $2CE4 ; Selected menu gfx, row 2
 dl $0D0202 : db $01 : db $0D ; Selected menu item
@@ -5878,7 +5913,9 @@ dl $7EC74C : db $02 : dw $2CD5 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $2CE5 ; Selected menu gfx, row 2
 dl $7FE0D6 : db $01 : db $0B ; Overworld $AB persistent: UNKNOWN
 dl $0D0303 : db $01 : db $08 ; Selected menu item
+dl $071ABF : db $01 : db $28 ; Warp Vortex Coordinate
 dl $7FE047 : db $01 : db $BB ; Overworld $63 persistent: UNKNOWN
+dl $071ACF : db $01 : db $01 ; Warp Vortex Coordinate
 dl $7E002F : db $01 : db $00 ; Link's direction
 .after
 
