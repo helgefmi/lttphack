@@ -4341,7 +4341,9 @@ dl $7E0303 : db $01 : db $00 ; Selected menu item
 dl $7E0540 : db $02 : dw $18E6 ; Object tilemap state
 dl $7E0544 : db $02 : dw $1850 ; Object tilemap state
 dl $7E0202 : db $01 : db $00 ; Selected menu item
+dl $7E010F : db $01 : db $00 ; 
 dl $7EF051 : db $01 : db $00 ; Room $0028: Swamp Palace (Entrance Room) (................)
+dl $7E010E : db $01 : db $7D ; Dungeon entrance
 .after
 
 sram_esc_entrance:
@@ -4358,6 +4360,7 @@ dl $7EF0C2 : db $02 : dw $000F ; Room $0061: Hyrule Castle (Main Entrance Room) 
 dl $7FE0EF : db $01 : db $00 ; Room $B7 persistent: Turtle Rock (Map Chest / Key Chest / Roller Room)
 dl $7E0540 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
+dl $7E010E : db $01 : db $04 ; Dungeon entrance
 .after
 
 sram_esc_big_room:
@@ -4535,6 +4538,7 @@ dl $7E0540 : db $02 : dw $138A ; Object tilemap state
 dl $7E0544 : db $02 : dw $1C8A ; Object tilemap state
 dl $7E0548 : db $02 : dw $181E ; Object tilemap state
 dl $7FE06E : db $01 : db $00 ; Room $77 persistent: Tower of Hera (Entrance Room)
+dl $7E010E : db $01 : db $08 ; Dungeon entrance
 dl $7E002F : db $01 : db $04 ; Link's direction
 .after
 
@@ -4722,6 +4726,7 @@ dl $7EC162 : db $02 : dw $1000 ; Underworld exit cache
 dl $7EC166 : db $01 : db $25 ; Underworld exit cache
 dl $7EC16A : db $02 : dw $0009 ; Underworld exit cache
 dl $7EC16E : db $02 : dw $000A ; Underworld exit cache
+dl $7E010E : db $01 : db $45 ; Dungeon entrance
 .after
 
 sram_desert_unholy_spinspeed:
@@ -4752,6 +4757,7 @@ dl $7E054C : db $02 : dw $1BD6 ; Object tilemap state
 dl $7FE161 : db $01 : db $00 ; Overworld $F0 persistent: UNKNOWN
 dl $7FE04E : db $01 : db $00 ; Overworld $67 persistent: UNKNOWN
 dl $7FE06E : db $01 : db $00 ; Overworld $77 persistent: Black Ice Cave
+dl $7E010E : db $01 : db $49 ; Dungeon entrance
 dl $7E002F : db $01 : db $02 ; Link's direction
 .after
 
@@ -4763,6 +4769,7 @@ dl $7EC74C : db $02 : dw $3CA6 ; Selected menu gfx, row 1
 dl $7E0202 : db $01 : db $0F ; Selected menu item
 dl $7EC78C : db $02 : dw $3CD9 ; Selected menu gfx, row 2
 dl $7EC172 : db $02 : dw $05A0 ; Crystal switch state
+dl $7E010E : db $01 : db $09 ; Dungeon entrance
 dl $7E002F : db $01 : db $00 ; Link's direction
 .after
 
@@ -4863,6 +4870,7 @@ dl $7E0544 : db $02 : dw $0B64 ; Object tilemap state
 dl $7E0548 : db $02 : dw $08E2 ; Object tilemap state
 dl $7E054C : db $02 : dw $1864 ; Object tilemap state
 dl $7FE08A : db $01 : db $00 ; Room $85 persistent: Desert Palace (East Entrance Room)
+dl $7E010E : db $01 : db $0C ; Dungeon entrance
 .after
 
 sram_desert_torches:
@@ -4952,6 +4960,7 @@ dl $7E0468 : db $02 : dw $0001 ; Trap door state
 dl $7E0540 : db $02 : dw $0540 ; Object tilemap state
 dl $7FE07E : db $01 : db $00 ; Room $7F persistent: Ice Palace ( Big Spike Traps Room)
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
+dl $7E010E : db $01 : db $06 ; Dungeon entrance
 dl $7E002F : db $01 : db $02 ; Link's direction
 .after
 
@@ -4990,6 +4999,7 @@ dl $7EC74C : db $02 : dw $2CB9 ; Selected menu gfx, row 1
 dl $7E0202 : db $01 : db $02 ; Selected menu item
 dl $7EC78C : db $02 : dw $2CC9 ; Selected menu gfx, row 2
 dl $7FDFCB : db $01 : db $00 ; Room $25 persistent: Empty Clone Room
+dl $7E010E : db $01 : db $33 ; Dungeon entrance
 .after
 
 sram_hera_torches:
@@ -5107,6 +5117,7 @@ dl $7E0540 : db $02 : dw $0C6C ; Object tilemap state
 dl $7E0544 : db $02 : dw $1448 ; Object tilemap state
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
 dl $7FDFCB : db $01 : db $00 ; Room $25 persistent: Empty Clone Room
+dl $7E010E : db $01 : db $2F ; Dungeon entrance
 dl $7FE14E : db $02 : dw $0008 ; Room $E7 persistent: Cave
 .after
 
@@ -5139,6 +5150,7 @@ dl $7FE1E8 : db $01 : db $00 ; Overworld $134 persistent: UNKNOWN
 dl $7E0540 : db $02 : dw $0470 ; Object tilemap state
 dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
+dl $7E010E : db $01 : db $04 ; Dungeon entrance
 dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7FE132 : db $01 : db $00 ; Overworld $D9 persistent: UNKNOWN
 .after
@@ -5160,6 +5172,7 @@ dl $7E0548 : db $02 : dw $14B0 ; Object tilemap state
 dl $7E054C : db $02 : dw $1C0C ; Object tilemap state
 dl $7E0550 : db $02 : dw $0A1E ; Object tilemap state
 dl $7E0554 : db $02 : dw $1012 ; Object tilemap state
+dl $7E010E : db $01 : db $24 ; Dungeon entrance
 dl $7E002F : db $01 : db $04 ; Link's direction
 dl $7FE140 : db $02 : dw $000F ; Room $E0 persistent: Agahnim's Tower (Entrance Room)
 .after
@@ -5302,6 +5315,7 @@ dl $7E0550 : db $02 : dw $0B5C ; Object tilemap state
 dl $7EC74C : db $02 : dw $2C63 ; Selected menu gfx, row 1
 dl $7E0202 : db $01 : db $14 ; Selected menu item
 dl $7EC78C : db $02 : dw $2C73 ; Selected menu gfx, row 2
+dl $7E010E : db $01 : db $26 ; Dungeon entrance
 .after
 
 sram_pod_hammeryump:
@@ -5543,6 +5557,7 @@ dl $7E0540 : db $02 : dw $040C ; Object tilemap state
 dl $7E0544 : db $02 : dw $1058 ; Object tilemap state
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
 dl $7FE0E3 : db $01 : db $00 ; Room $B1 persistent: Misery Mire (Hourglass Room)
+dl $7E010E : db $01 : db $34 ; Dungeon entrance
 dl $7E002F : db $01 : db $06 ; Link's direction
 dl $7FE148 : db $01 : db $00 ; Room $E4 persistent: Cave (Lost Old Man Final Cave)
 .after
@@ -5732,6 +5747,7 @@ dl $7EC78C : db $02 : dw $6CC2 ; Selected menu gfx, row 2
 dl $7FE00A : db $01 : db $00 ; Overworld $45 persistent: Death Mountain East
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
 dl $7FE0E3 : db $01 : db $13 ; Overworld $B1 persistent: UNKNOWN
+dl $7E010E : db $01 : db $48 ; Dungeon entrance
 dl $7E002F : db $01 : db $06 ; Link's direction
 dl $7FE148 : db $01 : db $26 ; Overworld $E4 persistent: UNKNOWN
 .after
@@ -5757,6 +5773,7 @@ dl $7EC74C : db $02 : dw $2C63 ; Selected menu gfx, row 1
 dl $7E0202 : db $01 : db $14 ; Selected menu item
 dl $7EC78C : db $02 : dw $2C73 ; Selected menu gfx, row 2
 dl $7FE0E3 : db $01 : db $00 ; Overworld $B1 persistent: UNKNOWN
+dl $7E010E : db $01 : db $64 ; Dungeon entrance
 dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7FE148 : db $01 : db $00 ; Overworld $E4 persistent: UNKNOWN
 .after
@@ -5767,6 +5784,7 @@ dl $7EF360 : db $02 : dw $0258 ; Rupees (goal)
 dl $7EF362 : db $02 : dw $0258 ; Rupees (actual)
 dl $7FDFDD : db $01 : db $00 ; Overworld $2E persistent: South of Eastern Palace
 dl $7FE0E3 : db $01 : db $13 ; Overworld $B1 persistent: UNKNOWN
+dl $7E010E : db $01 : db $54 ; Dungeon entrance
 dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7FE148 : db $01 : db $26 ; Overworld $E4 persistent: UNKNOWN
 .after
@@ -5793,6 +5811,7 @@ dl $7E0548 : db $02 : dw $1430 ; Object tilemap state
 dl $7E054C : db $02 : dw $1954 ; Object tilemap state
 dl $7E0550 : db $02 : dw $1764 ; Object tilemap state
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
+dl $7E010E : db $01 : db $29 ; Dungeon entrance
 dl $7E002F : db $01 : db $00 ; Link's direction
 .after
 
@@ -5841,6 +5860,7 @@ dl $7EC74C : db $02 : dw $24B1 ; Selected menu gfx, row 1
 dl $7E0202 : db $01 : db $06 ; Selected menu item
 dl $7EC78C : db $02 : dw $24C1 ; Selected menu gfx, row 2
 dl $7FE0FA : db $01 : db $23 ; Overworld $BD persistent: UNKNOWN
+dl $7E010E : db $01 : db $2B ; Dungeon entrance
 dl $7E002F : db $01 : db $00 ; Link's direction
 .after
 
@@ -6024,6 +6044,7 @@ dl $7EC78C : db $02 : dw $24C1 ; Selected menu gfx, row 2
 dl $7FDFDA : db $01 : db $00 ; Room $2D persistent: Empty Clone Room
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
 dl $7FE01B : db $01 : db $00 ; Room $4D persistent: Ganon's Tower (Moldorm Room)
+dl $7E010E : db $01 : db $2D ; Dungeon entrance
 dl $7E002F : db $01 : db $04 ; Link's direction
 .after
 
@@ -6257,6 +6278,7 @@ dl $7EC166 : db $01 : db $27 ; Underworld exit cache
 dl $7EC16A : db $02 : dw $0007 ; Underworld exit cache
 dl $7EC16E : db $02 : dw $0006 ; Underworld exit cache
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
+dl $7E010E : db $01 : db $4E ; Dungeon entrance
 dl $7E002F : db $01 : db $00 ; Link's direction
 .after
 
@@ -6291,6 +6313,7 @@ dl $7EC74C : db $02 : dw $20B7 ; Selected menu gfx, row 1
 dl $7E0202 : db $01 : db $0C ; Selected menu item
 dl $7EC78C : db $02 : dw $20C7 ; Selected menu gfx, row 2
 dl $7FE0E2 : db $01 : db $00 ; Room $B1 persistent: Misery Mire (Hourglass Room)
+dl $7E010E : db $01 : db $25 ; Dungeon entrance
 dl $7FE126 : db $01 : db $00 ; Room $D3 persistent: Empty Clone Room
 .after
 
@@ -6509,6 +6532,7 @@ dl $7E0303 : db $01 : db $05 ; Selected menu item
 dl $7EC74C : db $02 : dw $24B1 ; Selected menu gfx, row 1
 dl $7E0202 : db $01 : db $06 ; Selected menu item
 dl $7EC78C : db $02 : dw $24C1 ; Selected menu gfx, row 2
+dl $7E010E : db $01 : db $27 ; Dungeon entrance
 .after
 
 sram_mire_left_dash:
@@ -6688,6 +6712,7 @@ dl $7EF346 : db $01 : db $01 ; Ice Rod
 dl $7FE0D6 : db $01 : db $00 ; Overworld $AB persistent: UNKNOWN
 dl $7FDFCB : db $01 : db $F3 ; Overworld $25 persistent: Octorok Area
 dl $7FE047 : db $01 : db $00 ; Overworld $63 persistent: UNKNOWN
+dl $7E010E : db $01 : db $84 ; Dungeon entrance
 dl $7E002F : db $01 : db $06 ; Link's direction
 .after
 
@@ -6706,6 +6731,7 @@ dl $7EC78C : db $02 : dw $24F5 ; Selected menu gfx, row 2
 dl $7FE16E : db $01 : db $28 ; Overworld $F7 persistent: UNKNOWN
 dl $7FDFCB : db $01 : db $00 ; Overworld $25 persistent: Octorok Area
 dl $7FE037 : db $01 : db $28 ; Overworld $5B persistent: Pyramid of Power
+dl $7E010E : db $01 : db $1F ; Dungeon entrance
 .after
 
 sram_trock_entrance:
@@ -6736,6 +6762,7 @@ dl $7EF1AC : db $02 : dw $8005 ; Room $00D6: Turtle Rock (Entrance Room) (.d....
 dl $7EF36E : db $01 : db $70 ; Magic Power
 dl $7FE10C : db $02 : dw $0028 ; Room $C6 persistent: Turtle Rock
 dl $7E0540 : db $02 : dw $070C ; Object tilemap state
+dl $7E010E : db $01 : db $35 ; Dungeon entrance
 dl $7E002F : db $01 : db $06 ; Link's direction
 .after
 
@@ -6882,6 +6909,7 @@ dl $7FE12A : db $01 : db $00 ; Overworld $D5 persistent: UNKNOWN
 
 sram_gtower_entrance:
 dl $7EF2C3 : db $01 : db $20 ; Overworld $43: Unknown (...?....)
+dl $7E010E : db $01 : db $37 ; Dungeon entrance
 dl $7E002F : db $01 : db $00 ; Link's direction
 .after
 

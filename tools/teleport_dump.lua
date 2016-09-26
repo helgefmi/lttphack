@@ -704,6 +704,10 @@ local function annotate_overworld_value(val)
 end
 
 local function annotate_address(addr, val)
+    if addr >= 0x7E010E and addr < 0x7E010F then
+        return "Dungeon entrance"
+    end
+
     if addr >= 0x7E0540 and addr < 0x7E0560 then
         return "Object tilemap state"
     end
@@ -1115,6 +1119,11 @@ function main()
     -- Object tilemap attributes (MoN says position but I think its more?)
     call_for_each_bank(0x0540, function (addr_with_bank)
         memory.registerwrite(addr_with_bank, 0x20, state_changed)
+    end)
+
+    -- Object tilemap attributes (MoN says position but I think its more?)
+    call_for_each_bank(0x010E, function (addr_with_bank)
+        memory.registerwrite(addr_with_bank, 0x2, state_changed)
     end)
 
     gui.register(draw_ui)
