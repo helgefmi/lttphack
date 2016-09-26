@@ -142,7 +142,31 @@ gamemode_hook:
   %a8()
 
     ; Custom Menu
-    LDA $10 : CMP.b #$0C : BEQ .no_custom_menu
+    LDA $10 : CMP.b #$06 : BCC .no_custom_menu ; Startup/File select etc
+              CMP.b #$0C : BEQ .no_custom_menu ; Custom Menu
+              CMP.b #$0F : BEQ .no_custom_menu ; Closing Spotlight
+              CMP.b #$10 : BEQ .no_custom_menu ; Opening Spotlight
+              CMP.b #$12 : BEQ .no_custom_menu ; Death Mode
+              CMP.b #$17 : BEQ .no_custom_menu ; Quitting mode (s&q)
+              CMP.b #$1B : BEQ .no_custom_menu ; Entrance select
+              CMP.b #$14 : BEQ .no_custom_menu ; Attract Mode
+              CMP.b #$19 : BEQ .no_custom_menu ; Triforce Room scene
+              CMP.b #$1A : BEQ .no_custom_menu ; End sequence
+
+    ; We still allow the following:
+    ; 0x06 - Pre Dungeon Mode
+    ; 0x07 - Dungeon Mode
+    ; 0x08 - Pre Overworld Mode
+    ; 0x09 - Overworld Mode
+    ; 0x0A - Pre Overworld Mode (special overworld)
+    ; 0x0B - Overworld Mode (special overworld)
+    ; 0x0D - Blank Screen
+    ; 0x0E - Text Mode/Item Screen/Map
+    ; 0x11 - Happens when you fall into a hole from the OW.
+    ; 0x13 - Boss Victory Mode (refills stats)
+    ; 0x15 - Module for Magic Mirror
+    ; 0x16 - Module for refilling stats after boss.
+    ; 0x18 - Ganon exits from Agahnim's body. Chase Mode.
 
   %a16()
     LDA !ram_ctrl1_word : AND #$1000 : CMP #$1000 : BNE .no_custom_menu
