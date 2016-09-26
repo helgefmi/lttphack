@@ -328,7 +328,10 @@ preset_load_state:
     JSL !Sprite_LoadGfxProperties
 
   %ai8()
+    JSL !DecompSwordGfx
+    JSL !Palette_Sword
     JSL !UpdateBarrierTileChr
+
     LDA $7EF3CC : BEQ .done
     JSL !Tagalong_LoadGfx
 

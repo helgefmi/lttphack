@@ -19,7 +19,6 @@ x Code some general menu:
         - Octoroc
         - Hera -> Fake Flippers
         - Aga -> Lost Woods
-    - Sword Sprite is wrong.
 
 - Show all 3 digits for enemy HP.
 
