@@ -3,12 +3,6 @@ Rough todo
 
 V8:
 
-x Code some general menu:
-    x Number widget (min and max).
-        - Word-sized number widget for rupees.
-    - Align numbers to the left. Or use 000.
-    - Fix bug where second 0 is not shown correctly.
-
 x Teleport "anywhere" w/presets.
 
 - Show all 3 digits for enemy HP.

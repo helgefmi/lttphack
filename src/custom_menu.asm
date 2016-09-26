@@ -982,13 +982,15 @@ cm_draw_numfield:
     ; Draw numbers
     LDA !ram_hex2dec_first_digit : BEQ .second_digit
     CLC : ADC $0E : STA $1000, X
+    INX : INX
 
   .second_digit
     LDA !ram_hex2dec_second_digit : BEQ .third_digit
-    CLC : ADC $0E : STA $1000+2, X
+    CLC : ADC $0E : STA $1000, X
+    INX : INX
 
   .third_digit
-    LDA !ram_hex2dec_third_digit : CLC : ADC $0E : STA $1000+4, X
+    LDA !ram_hex2dec_third_digit : CLC : ADC $0E : STA $1000, X
 
     RTS
 
