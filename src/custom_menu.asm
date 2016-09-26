@@ -55,6 +55,13 @@ CM_Init:
     JSR cm_transfer_tileset
   %ppu_on()
 
+  %a16()
+    ; Make sure we don't go infinite loop in the next submodule if normal item menu is down.
+    LDA $EA : BEQ .end
+    LDA.w #$0000 : STA $EA
+
+  .end
+  %a8()
     INC $11
     RTS
 
@@ -181,6 +188,19 @@ CM_Return:
 
     LDA !ram_cm_old_gamemode : STA $10
     LDA !ram_cm_old_submode : STA $11
+
+    ; Make sure that the item menu doesn't scroll forever by us resettings EA in previous submodule.
+    LDA $10 : CMP.b #$0E : BNE .end
+    LDA $11 : CMP.b #$01 : BNE .end
+    LDA $0200 : CMP.b #$03 : BCS .item_menu_is_scrolled
+    BRA .end
+
+  .item_menu_is_scrolled
+  %a16()
+    LDA #$FF18 : STA $EA
+
+  .end
+  %a8()
     RTS
 
 ; -----------
