@@ -11,17 +11,11 @@ x Code some general menu:
     - Initialize cm_ values on menu open.
 
 - Teleport "anywhere" w/presets.
-    - Remember solved secrets within your quadrant:
-        - Eastern -> Dark Key Room
-        - Eastern -> Zeldagamer Room
     - Fix/investigate save states:
         - Octoroc
         - Hera -> Fake Flippers
         - Aga -> Lost Woods
         - GTower: Spike Room
-    - Torches secrets
-        - TRock: Rolle room
-        - GTower: Helma key
 
 - Show all 3 digits for enemy HP.
 
