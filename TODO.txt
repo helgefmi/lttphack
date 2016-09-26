@@ -16,7 +16,6 @@ x Code some general menu:
         - Eastern -> Dark Key Room
         - Eastern -> Zeldagamer Room
     - Fix/investigate save states:
-        - After Sanctuary save state.
         - Octoroc
         - Eastern -> Entrance (enemy sprites are wrong)
         - Hera -> Fake Flippers

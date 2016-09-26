@@ -379,14 +379,14 @@ dw sram_east_before_cutscene_after
 preset_east_after_cutscene:
 db $02 ; Dungeon
 dw $0012 ; Room Index
-dw $0200 ; BG1 Vertical Scroll
-dw $0200 ; BG2 Vertical Scroll
+dw $0208 ; BG1 Vertical Scroll
+dw $0208 ; BG2 Vertical Scroll
 dw $0480 ; BG1 Horizontal Scroll
 dw $0480 ; BG2 Horizontal Scroll
 dw $04F8 ; Link X
-dw $0245 ; Link Y
+dw $0275 ; Link Y
 dw $00FF ; Camera X
-dw $0078 ; Camera Y
+dw $0080 ; Camera Y
 dw $0000 ; Door Settings
 dw $0200 ; Relative Coords HU
 dw $0200 ; Relative Coords FU
@@ -402,7 +402,7 @@ db $04 ; Main Graphics
 db $10 ; Music Track
 db $00 ; Starting Floor
 db $00 ; Palace No
-db $01 ; Door Orientation
+db $00 ; Door Orientation
 db $00 ; Starting Background
 dw sram_east_after_cutscene_after
 

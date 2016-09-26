@@ -20,7 +20,7 @@ local movie_steps = { -- {{{
     [21335] = "esc_last_two_screens",
     -- Eastern
     [22184] = "east_before_cutscene",
-    [23708] = "east_after_cutscene",
+    [23743] = "east_after_cutscene",
     [25720] = "east_octoroc",
     [26541] = "east_outside_palace",
     [28086] = "east_entrance",
