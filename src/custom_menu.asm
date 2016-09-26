@@ -641,7 +641,7 @@ cm_execute_toggle_jsr:
 cm_execute_jsr:
     ; < and > should do nothing here
   %a8()
-    LDA $F4 : CMP.b #$01 : BEQ .end
+    LDA $F0 : CMP.b #$01 : BEQ .end
             : CMP.b #$02 : BEQ .end
 
   %a16()
@@ -658,7 +658,7 @@ cm_execute_jsr:
 cm_execute_submenu:
     ; dpad should do nothing here
   %a8()
-    LDA $F4 : BNE .end
+    LDA $F0 : BNE .end
 
     ; Increments stack index and puts the submenu into the stack.
   %a16()
@@ -672,7 +672,7 @@ cm_execute_submenu:
 cm_execute_back:
     ; > should do nothing here
   %a8()
-    LDA $F4 : CMP.b #$01 : BEQ .end
+    LDA $F0 : CMP.b #$01 : BEQ .end
 
     ; Decrements the stack index.
   %a16()
@@ -698,7 +698,7 @@ cm_execute_choice:
   %ai8()
 
     ; we either increment or decrement
-    LDA $F4 : CMP #$02 : BEQ .pressed_left
+    LDA $F0 : CMP #$02 : BEQ .pressed_left
     LDA [$02] : INC : BRA .bounds_check
 
   .pressed_left
@@ -763,7 +763,7 @@ cm_execute_numfield:
     LDA ($00) : INC $00 : INC $00 : INC : STA $06
   %ai8()
 
-    LDA $F4 : CMP.b #$02 : BEQ .pressed_left
+    LDA $F0 : CMP.b #$02 : BEQ .pressed_left
 
     LDA [$02] : CLC : ADC $07
 
