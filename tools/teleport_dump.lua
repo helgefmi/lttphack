@@ -691,6 +691,22 @@ local function annotate_overworld_value(val)
 end
 
 local function annotate_address(addr, val)
+    if addr == 0x0D0202 then
+        return "Selected menu item"
+    end
+
+    if addr >= 0x7EC74A and addr <= 0x7EC74D then
+        return "Selected menu gfx, row 1"
+    end
+
+    if addr >= 0x7EC78A and addr <= 0x7EC78D then
+        return "Selected menu gfx, row 2"
+    end
+
+    if addr == 0x7EC172 then
+        return "Crystal switch state"
+    end
+
     if addr >= 0x7FDF80 and addr <= 0x7FE200 then
         local screen_index = math.floor((addr - 0x7FDF80) / 2)
         if in_overworld() then
@@ -1010,9 +1026,25 @@ end
 -- Main
 
 function main()
+    -- SRAM working data
     memory.registerwrite(0x7EF000, 0x4FF, state_changed)
+
+    -- Underworld sprite state (killed or not)
     memory.registerwrite(0x7FDF80, 0x280, state_changed)
-    memory.registerwrite(0x7FEF80, 0x200, state_changed)
+
+    -- Crystal Switch state
+    memory.registerwrite(0x7EC172, 0x2, state_changed)
+
+    -- Selected menu item
+    memory.registerwrite(0x0D0202, 0x1, state_changed) -- used in equipment.asm
+    memory.registerwrite(0x0D0302, 0x2, state_changed) -- what ability link has when pressing Y 
+    memory.registerwrite(0x7EC74A, 0x4, state_changed) -- graphics, row 1
+    memory.registerwrite(0x7EC78A, 0x4, state_changed) -- graphics, row 2
+
+    -- This seems to not be needed. I think it manages when
+    -- sprites are "active" or not depending on E2/E6 (bg scroll)
+    -- memory.registerwrite(0x7FEF80, 0x200, state_changed)
+
     gui.register(draw_ui)
 
     while true do

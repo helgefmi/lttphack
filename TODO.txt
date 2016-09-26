@@ -24,11 +24,6 @@ x Code some general menu:
     - Fix Link's direction.
     - Make one-exit rooms work.
         - Desert -> EP Spinspeed
-    - Remember switch state:
-        - Desert -> Beetles
-        - Desert -> Petting Zoo (good place to debug)
-        NOTE: Map fixes this
-    - Remember current selected inventory item
 
 - Show all 3 digits for enemy HP.
 
