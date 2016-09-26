@@ -21,7 +21,6 @@ x Code some general menu:
         - Eastern -> Entrance (enemy sprites are wrong)
         - Hera -> Fake Flippers
         - Aga -> Lost Woods
-    - Fix Link's direction.
     - Make one-exit rooms work.
         - Desert -> EP Spinspeed
 

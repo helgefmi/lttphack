@@ -233,10 +233,6 @@ preset_load_dungeon:
     ; Set link to be in the Overworld
     LDA.b #$01 : STA $1B
 
-    ; Make it so Link faces south (down) at most entrances.
-    ; \todo we removed the special case where Link faces down.
-    LDA.b #$02 : STA $2F
-
     ; Main blockset value (main graphics)
     LDA ($00) : %a16() : INC $00 : %a8() : STA $0AA1
 

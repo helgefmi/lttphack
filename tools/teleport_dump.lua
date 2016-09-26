@@ -691,6 +691,10 @@ local function annotate_overworld_value(val)
 end
 
 local function annotate_address(addr, val)
+    if addr == 0x7E002F then
+        return "Link's direction"
+    end
+
     if addr == 0x0D0202 then
         return "Selected menu item"
     end
@@ -1041,9 +1045,8 @@ function main()
     memory.registerwrite(0x7EC74A, 0x4, state_changed) -- graphics, row 1
     memory.registerwrite(0x7EC78A, 0x4, state_changed) -- graphics, row 2
 
-    -- This seems to not be needed. I think it manages when
-    -- sprites are "active" or not depending on E2/E6 (bg scroll)
-    -- memory.registerwrite(0x7FEF80, 0x200, state_changed)
+    -- Link's direction
+    memory.registerwrite(0x7E002F, 0x1, state_changed)
 
     gui.register(draw_ui)
 
