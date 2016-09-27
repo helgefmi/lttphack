@@ -3,8 +3,23 @@ Rough todo
 
 V8:
 
-- Features should persist through acm's save state code.
-- DM presets are weird because there's no walking delay.
+- Feature toggle (like "show input display") should persist through loading a save state.
+
+- Presets in DM (hera, mire, trock etc) are kind aweird since there's no delay before you start walking.
+
+- The spotlight animation of some transitions covers the menu.
+
+- Preset: Pre Sexy Statue Room. Sometimes Link is put on the wrong layer here. Related to kiki somehow?
+
+- Loading a preset while in Mothula's room, to and overworld split, has weird effects.
+
+- Remove Ice "Fall in Hole" preset, as it doesn't work and isn't neccessary.
+
+- Sprite of pot above Link's head sometimes weird. No idea why it happened one time.
+
+- Game crashes sometimes after killing aga2. Same bug as in v7 I presume.
+
+- Got black shield while loading presets in Thieves' a couple times.
 
 V9:
 
