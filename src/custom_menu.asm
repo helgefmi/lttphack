@@ -790,6 +790,8 @@ cm_execute_numfield:
 
 
 cm_execute_preset:
+    LDA $F0 : BNE .end
+
   %a16()
     LDA ($00) : STA $02
     INC : STA !ram_preset_destination 
@@ -799,6 +801,7 @@ cm_execute_preset:
     LDA ($02) : STA !ram_preset_type
   PLB
     INC $11
+  .end
   %a16()
     RTS
 
