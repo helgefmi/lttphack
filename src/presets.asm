@@ -29,6 +29,7 @@ load_entrance_local:
 
   .custom
     LDA.b #$00 : STA !ram_preset_type
+    JSR $D617 ; Dungeon_LoadEntrance
     JSL preset_load_dungeon
   %ai8()
     RTS

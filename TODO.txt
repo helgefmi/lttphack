@@ -8,7 +8,7 @@ x Load correct sword palette/graphics when changing swords using CM.
 x ^ Same for armor and (possibly) shield
 x Holding dpad, then pressing A, will make the menu move one extra time for no reason.
 x Restore ability to pause/select after using medallion and loading a preset.
-- Starting from an actualy endgame-save messes something up when loading presets.
+x Loading a file from an overworld screen messes up presets.
 - Remember arc variable.
 - Lost Woods mosaic effect (hitting R+start during transition)
 - Warp vortex should be cleared before loading presets.
@@ -156,3 +156,9 @@ $A8: DW version = LW version OR 0x40
 
 $02:8154 = `JSR Dungeon_LoadEntrance` from Module_PreDungeon
 $02:D617 = ^ the destination (Dungeon_LoadEntrance)
+
+----------
+
+$01:88A7 = start of the loop
+$01:88C7 = found a torch that matched the room we're loading
+$02:D836 = some stuff we're currently not doing in load_dungeon
