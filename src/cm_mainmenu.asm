@@ -1423,11 +1423,10 @@ cm_presets_trock:
     dw cm_trock_ouside_mire
     dw cm_trock_icerod_overworld
     dw cm_trock_dm
-    dw cm_trock_trock_overworld
+    dw cm_trock_peg_puzzle
     dw cm_trock_entrance
     dw cm_trock_lanterns
     dw cm_trock_roller_room
-    dw cm_trock_lonely_pokey
     dw cm_trock_chomps
     dw cm_trock_pokies_1
     dw cm_trock_pokies_2
@@ -1455,9 +1454,9 @@ cm_trock_dm:
 	dw #preset_trock_dm
     db #$24, "Death Mountain", #$FF
 
-cm_trock_trock_overworld:
+cm_trock_peg_puzzle:
     dw !CM_ACTION_PRESET
-	dw #preset_trock_trock_overworld
+	dw #preset_trock_peg_puzzle
     db #$24, "Peg Puzzle", #$FF
 
 cm_trock_entrance:
@@ -1474,11 +1473,6 @@ cm_trock_roller_room:
     dw !CM_ACTION_PRESET
 	dw #preset_trock_roller_room
     db #$24, "Roller Room", #$FF
-
-cm_trock_lonely_pokey:
-    dw !CM_ACTION_PRESET
-	dw #preset_trock_lonely_pokey
-    db #$24, "Lonely Pokey", #$FF
 
 cm_trock_chomps:
     dw !CM_ACTION_PRESET
