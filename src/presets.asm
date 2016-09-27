@@ -392,6 +392,9 @@ preset_reset_state_after_loading:
 
     ; Link general state (makes him not sleep..)
     STZ $5D
+
+    ; Resets a scroll value for intra-room transitions
+    STZ $0126
     RTS
 
 

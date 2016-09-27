@@ -8,7 +8,6 @@ V8:
         - Zelda (prison)
         - Sanctuary
         - Kiki
-    - During in-dungeon transitions
 
 - Antifairy room, block state.
 - Zelda is OOB in Sanctuary cutscene if you just hold down from the preset.
