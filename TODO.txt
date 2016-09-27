@@ -7,7 +7,7 @@ x Right dpad input should not work for CM_PRESET.
 x Load correct sword palette/graphics when changing swords using CM.
 x ^ Same for armor and (possibly) shield
 x Holding dpad, then pressing A, will make the menu move one extra time for no reason.
-- Restore ability to pause/select after using medallion and loading a preset.
+x Restore ability to pause/select after using medallion and loading a preset.
 - Starting from an actualy endgame-save messes something up when loading presets.
 - Remember arc variable.
 - Lost Woods mosaic effect (hitting R+start during transition)

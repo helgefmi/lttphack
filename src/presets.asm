@@ -378,6 +378,9 @@ preset_reset_link_state:
     ; Resets "Link Immovable" flag
     STZ $02E4
 
+    ; Makes Link able to use pause/select menu (reset during medallion usage)
+    STZ $0112
+
     ; Link general state (makes him not sleep..)
     STZ $5D
     RTS
