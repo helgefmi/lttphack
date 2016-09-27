@@ -4,8 +4,6 @@ Rough todo
 V8:
 
 - Features should persist through acm's save state code.
-- Antifairy room, block state.
-
 - DM presets are weird because there's no walking delay.
 
 V9:

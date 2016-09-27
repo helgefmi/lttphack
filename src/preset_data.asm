@@ -710,6 +710,22 @@ dw $0000 ; Unknown 2
 dw $FFFA ; Unknown 3
 dw sram_desert_outside_eastern_palace_after
 
+preset_custom_26:
+db $01 ; Overworld
+dw $001E ; Screen Index
+dw $0EB4 ; Link X
+dw $06B2 ; Link Y
+dw $062A ; BG1 Vertical Scroll
+dw $0654 ; BG2 Vertical Scroll
+dw $0E88 ; BG1 Horizontal Scroll
+dw $0E3A ; BG2 Horizontal Scroll
+dw $0EBF ; Scroll X
+dw $06C1 ; Scroll Y
+dw $02C8 ; Unknown 1
+dw $FFFC ; Unknown 2
+dw $0006 ; Unknown 3
+dw sram_custom_26_after
+
 preset_desert_ep_spinspeed:
 db $02 ; Dungeon
 dw $0105 ; Room Index
@@ -2699,33 +2715,19 @@ dw $0000 ; Unknown 3
 dw sram_swamp_swamp_overworld_after
 
 preset_swamp_antifairy_room:
-db $02 ; Dungeon
-dw $010B ; Room Index
-dw $2100 ; BG1 Vertical Scroll
-dw $2100 ; BG2 Vertical Scroll
-dw $1680 ; BG1 Horizontal Scroll
-dw $1680 ; BG2 Horizontal Scroll
-dw $16F8 ; Link X
-dw $2122 ; Link Y
-dw $00FF ; Camera X
-dw $0177 ; Camera Y
-dw $0000 ; Door Settings
-dw $2100 ; Relative Coords HU
-dw $2000 ; Relative Coords FU
-dw $2110 ; Relative Coords HD
-dw $2110 ; Relative Coords FD
-dw $1600 ; Relative Coords HL
-dw $1600 ; Relative Coords FL
-dw $1600 ; Relative Coords HR
-dw $1700 ; Relative Coords FR
-dw $0002 ; Quadrant 1
-dw $0200 ; Quadrant 2
-db $08 ; Main Graphics
-db $18 ; Music Track
-db $00 ; Starting Floor
-db $FF ; Palace No
-db $01 ; Door Orientation
-db $00 ; Starting Background
+db $01 ; Overworld
+dw $003B ; Screen Index
+dw $0778 ; Link X
+dw $0EF0 ; Link Y
+dw $0E9C ; BG1 Vertical Scroll
+dw $0E91 ; BG2 Vertical Scroll
+dw $06FC ; BG1 Horizontal Scroll
+dw $06FA ; BG2 Horizontal Scroll
+dw $077F ; Scroll X
+dw $0EFE ; Scroll Y
+dw $0520 ; Unknown 1
+dw $000F ; Unknown 2
+dw $0006 ; Unknown 3
 dw sram_swamp_antifairy_room_after
 
 preset_swamp_entrance:
@@ -4651,6 +4653,10 @@ dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7FE130 : db $01 : db $00 ; Overworld $D8 persistent: UNKNOWN
 .after
 
+sram_custom_26:
+dl $7E002F : db $01 : db $04 ; Link's direction
+.after
+
 sram_desert_ep_spinspeed:
 dl $7E0542 : db $02 : dw $1520 ; Object tilemap state
 dl $7EF3C7 : db $01 : db $03 ; Map Phase
@@ -4688,6 +4694,7 @@ dl $7EC166 : db $01 : db $25 ; Underworld exit cache
 dl $7EC16A : db $02 : dw $0009 ; Underworld exit cache
 dl $7EC16E : db $02 : dw $000A ; Underworld exit cache
 dl $7E010E : db $01 : db $45 ; Dungeon entrance
+dl $7E002F : db $01 : db $02 ; Link's direction
 .after
 
 sram_desert_unholy_spinspeed:
@@ -5329,14 +5336,16 @@ dl $7E054E : db $02 : dw $095E ; Object tilemap state
 dl $7E0552 : db $02 : dw $085E ; Object tilemap state
 dl $7E0556 : db $02 : dw $1814 ; Object tilemap state
 dl $7E055A : db $02 : dw $1854 ; Object tilemap state
-dl $7E0642 : db $01 : db $00 ; Room puzzle state (?)
+dl $7EF343 : db $01 : db $06 ; Bombs
 dl $7EC74A : db $02 : dw $20B6 ; Selected menu gfx, row 1
 dl $7EF36F : db $02 : dw $0000 ; Keys
+dl $7EF377 : db $01 : db $06 ; Arrows
 dl $7EC78A : db $02 : dw $20C6 ; Selected menu gfx, row 2
+dl $7EF36D : db $01 : db $30 ; Health (actual)
 dl $7EF016 : db $02 : dw $200C ; Room $000B: Palace of Darkness (Turtle Room) (...d.........qq.)
 dl $7EF036 : db $02 : dw $008E ; Room $001B: Palace of Darkness (Mimics / Moving Wall Room) (.........c...qqq)
+dl $7EF056 : db $02 : dw $000A ; Room $002B: Palace of Darkness (Map Chest / Fairy Room) (.............q.q)
 dl $7E0303 : db $01 : db $04 ; Selected menu item
-dl $7E0468 : db $01 : db $01 ; Trap door state
 dl $7E0540 : db $02 : dw $0962 ; Object tilemap state
 dl $7E0544 : db $02 : dw $096A ; Object tilemap state
 dl $7E0548 : db $02 : dw $0CCA ; Object tilemap state
@@ -5349,6 +5358,7 @@ dl $7EC74C : db $02 : dw $20B7 ; Selected menu gfx, row 1
 dl $7E0202 : db $01 : db $0C ; Selected menu item
 dl $7EC78C : db $02 : dw $20C7 ; Selected menu gfx, row 2
 dl $7FDFB6 : db $02 : dw $0038 ; Room $1B persistent: Palace of Darkness (Mimics / Moving Wall Room)
+dl $7EC172 : db $01 : db $01 ; Crystal switch state
 dl $7E002F : db $01 : db $02 ; Link's direction
 .after
 
@@ -6201,64 +6211,46 @@ dl $7EC172 : db $02 : dw $00A0 ; Crystal switch state
 .after
 
 sram_swamp_antifairy_room:
-dl $7E0542 : db $02 : dw $193E ; Object tilemap state
-dl $7E0B0D : db $01 : db $20 ; Arc variable
 dl $7EC74A : db $02 : dw $2C62 ; Selected menu gfx, row 1
 dl $7EC78A : db $02 : dw $2C72 ; Selected menu gfx, row 2
-dl $7E0B0E : db $01 : db $00 ; Arc variable
 dl $7E1ABF : db $01 : db $7C ; Warp Vortex Coordinate
 dl $7E1ACF : db $01 : db $07 ; Warp Vortex Coordinate
 dl $7E1ADF : db $01 : db $07 ; Warp Vortex Coordinate
 dl $7E1AEF : db $01 : db $0F ; Warp Vortex Coordinate
-dl $7EF216 : db $02 : dw $0003 ; Room $010B: Unknown (...............q)
 dl $7EF3CA : db $01 : db $00 ; LW/DW
-dl $7EC167 : db $01 : db $20 ; Underworld exit cache
-dl $7FE147 : db $01 : db $00 ; Room $E3 persistent: Cave (1/2 Magic)
+dl $7FE147 : db $01 : db $00 ; Overworld $E3 persistent: UNKNOWN
+dl $7FE153 : db $01 : db $D3 ; Overworld $E9 persistent: UNKNOWN
 dl $7E0303 : db $01 : db $14 ; Selected menu item
-dl $7EC140 : db $02 : dw $003B ; Underworld exit cache
-dl $7EC144 : db $02 : dw $0E89 ; Underworld exit cache
-dl $7EC148 : db $02 : dw $0EE7 ; Underworld exit cache
-dl $7EC14C : db $02 : dw $003B ; Underworld exit cache
-dl $7EC150 : db $02 : dw $0EF6 ; Underworld exit cache
-dl $7EC154 : db $02 : dw $0E00 ; Underworld exit cache
-dl $7EC158 : db $02 : dw $0600 ; Underworld exit cache
-dl $7EC15C : db $02 : dw $0D20 ; Underworld exit cache
-dl $7EC160 : db $02 : dw $0500 ; Underworld exit cache
-dl $7EC16C : db $02 : dw $FFF9 ; Underworld exit cache
-dl $7EC170 : db $02 : dw $FFFA ; Underworld exit cache
-dl $7FE164 : db $01 : db $00 ; Room $F2 persistent: House
-dl $7FE059 : db $01 : db $00 ; Room $6C persistent: Ganon's Tower (Lanmolas Room)
-dl $7E0540 : db $02 : dw $193A ; Object tilemap state
-dl $7E0544 : db $02 : dw $1842 ; Object tilemap state
-dl $7E0B0F : db $01 : db $D0 ; Arc variable
+dl $7FE07C : db $01 : db $09 ; Overworld $7E persistent: UNKNOWN
+dl $7FE164 : db $01 : db $EC ; Overworld $F2 persistent: UNKNOWN
+dl $7FE059 : db $01 : db $00 ; Overworld $6C persistent: Dark Link's House
 dl $7EC74C : db $02 : dw $2C63 ; Selected menu gfx, row 1
 dl $7E0202 : db $01 : db $14 ; Selected menu item
 dl $7EC78C : db $02 : dw $2C73 ; Selected menu gfx, row 2
-dl $7EC146 : db $02 : dw $06FA ; Underworld exit cache
-dl $7EC14A : db $02 : dw $0778 ; Underworld exit cache
-dl $7EC14E : db $02 : dw $04A0 ; Underworld exit cache
-dl $7EC152 : db $02 : dw $077F ; Underworld exit cache
-dl $7EC156 : db $02 : dw $0F1E ; Underworld exit cache
-dl $7EC15A : db $02 : dw $0700 ; Underworld exit cache
-dl $7EC15E : db $02 : dw $1000 ; Underworld exit cache
-dl $7EC162 : db $02 : dw $0800 ; Underworld exit cache
-dl $7EC166 : db $01 : db $27 ; Underworld exit cache
-dl $7EC16A : db $02 : dw $0007 ; Underworld exit cache
-dl $7EC16E : db $02 : dw $0006 ; Underworld exit cache
-dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
-dl $7E0B0C : db $01 : db $F0 ; Arc variable
-dl $7E010E : db $01 : db $4E ; Dungeon entrance
+dl $7EC172 : db $02 : dw $0020 ; Crystal switch state
 dl $7E002F : db $01 : db $00 ; Link's direction
 .after
 
 sram_swamp_entrance:
+dl $7E0542 : db $02 : dw $193E ; Object tilemap state
 dl $7EF2BB : db $01 : db $20 ; Overworld $3B: Unknown (...?....)
+dl $7E0B0D : db $01 : db $20 ; Arc variable
 dl $7EF2FB : db $01 : db $20 ; Overworld $7B: Unknown (...?....)
+dl $7E0B0E : db $01 : db $00 ; Arc variable
 dl $7EF216 : db $02 : dw $008F ; Room $010B: Unknown (.........c...qqq)
 dl $7EF3CA : db $01 : db $40 ; LW/DW
+dl $7FE153 : db $01 : db $00 ; Overworld $E9 persistent: UNKNOWN
+dl $7FE07C : db $01 : db $00 ; Overworld $7E persistent: UNKNOWN
+dl $7FE164 : db $01 : db $00 ; Overworld $F2 persistent: UNKNOWN
 dl $7FE07D : db $01 : db $13 ; Overworld $7E persistent: UNKNOWN
+dl $7E0540 : db $02 : dw $193A ; Object tilemap state
+dl $7E0544 : db $02 : dw $1842 ; Object tilemap state
+dl $7E0B0F : db $01 : db $D0 ; Arc variable
 dl $7EF051 : db $01 : db $01 ; Room $0028: Swamp Palace (Entrance Room) (................)
 dl $7FE0E2 : db $01 : db $AA ; Overworld $B1 persistent: UNKNOWN
+dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
+dl $7E0B0C : db $01 : db $F0 ; Arc variable
+dl $7E010E : db $01 : db $4E ; Dungeon entrance
 dl $7FE126 : db $01 : db $AB ; Overworld $D3 persistent: UNKNOWN
 .after
 
