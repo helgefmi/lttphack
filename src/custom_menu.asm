@@ -256,10 +256,14 @@ cm_get_pressed_button:
 
     STA !ram_cm_last_frame_input
   PHA
-    LDA.w #12 : STA !ram_cm_input_timer
+    LDA.w #15 : STA !ram_cm_input_timer
   PLA
     
-    BRA .do_it
+    ; If we're pressing a new button (e.g. holding down v then pressing A), make sure
+    ; to not do anything that frame (since dpad has priority over face buttons).
+    LDA !ram_ctrl1_word : CMP !ram_ctrl1_filtered : BEQ .do_it
+    LDA.w #$0000
+    BRA .end
 
   .same_as_last_frame
     CMP #$0000 : BEQ .end
