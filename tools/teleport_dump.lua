@@ -704,6 +704,10 @@ local function annotate_overworld_value(val)
 end
 
 local function annotate_address(addr, val)
+    if addr >= 0x7E0B08 and addr <= 0x7E0BFF then
+        return "Arc variable"
+    end
+
     if addr >= 0x7E010E and addr < 0x7E010F then
         return "Dungeon entrance"
     end
@@ -1015,6 +1019,7 @@ function make_preset_save(slug)
         save_dungeon(slug)
     end
 
+    print("Saved", slug)
     debug("Saved", slug)
     local file = io.open("data.txt", "w")
     file:write("; Preset locations\n" .. preset_output .. "\n\n")
@@ -1124,6 +1129,11 @@ function main()
     -- Object tilemap attributes (MoN says position but I think its more?)
     call_for_each_bank(0x010E, function (addr_with_bank)
         memory.registerwrite(addr_with_bank, 0x2, state_changed)
+    end)
+
+    -- Arc variable
+    call_for_each_bank(0x0B08, function (addr_with_bank)
+        memory.registerwrite(addr_with_bank, 0x8, state_changed)
     end)
 
     gui.register(draw_ui)
