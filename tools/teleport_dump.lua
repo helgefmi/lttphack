@@ -74,7 +74,6 @@ local movie_steps = { -- {{{
     [108249] = "pod_main_hub",
     [112313] = "pod_hammeryump",
     [114430] = "pod_before_sexy_statue",
-    [115630] = "pod_mimics",
     [118081] = "pod_turtle_room",
     [119315] = "pod_helma",
     -- Theieves

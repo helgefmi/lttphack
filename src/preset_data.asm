@@ -1624,36 +1624,6 @@ db $01 ; Door Orientation
 db $00 ; Starting Background
 dw sram_pod_before_sexy_statue_after
 
-preset_pod_mimics:
-db $02 ; Dungeon
-dw $002B ; Room Index
-dw $0400 ; BG1 Vertical Scroll
-dw $0400 ; BG2 Vertical Scroll
-dw $1600 ; BG1 Horizontal Scroll
-dw $1600 ; BG2 Horizontal Scroll
-dw $1678 ; Link X
-dw $0422 ; Link Y
-dw $007F ; Camera X
-dw $0078 ; Camera Y
-dw $0000 ; Door Settings
-dw $0400 ; Relative Coords HU
-dw $0400 ; Relative Coords FU
-dw $0410 ; Relative Coords HD
-dw $0510 ; Relative Coords FD
-dw $1600 ; Relative Coords HL
-dw $1600 ; Relative Coords FL
-dw $1600 ; Relative Coords HR
-dw $1700 ; Relative Coords FR
-dw $0200 ; Quadrant 1
-dw $0000 ; Quadrant 2
-db $07 ; Main Graphics
-db $16 ; Music Track
-db $00 ; Starting Floor
-db $0C ; Palace No
-db $01 ; Door Orientation
-db $00 ; Starting Background
-dw sram_pod_mimics_after
-
 preset_pod_turtle_room:
 db $02 ; Dungeon
 dw $000B ; Room Index
@@ -5349,35 +5319,6 @@ dl $7E0540 : db $02 : dw $0B1C ; Object tilemap state
 dl $7E0544 : db $02 : dw $0C1C ; Object tilemap state
 dl $7E0548 : db $02 : dw $4E64 ; Object tilemap state
 dl $7E0B0F : db $01 : db $80 ; Arc variable
-.after
-
-sram_pod_mimics:
-dl $7E0542 : db $02 : dw $0610 ; Object tilemap state
-dl $7E0546 : db $02 : dw $052C ; Object tilemap state
-dl $7E054A : db $02 : dw $072C ; Object tilemap state
-dl $7E054E : db $02 : dw $1692 ; Object tilemap state
-dl $7E0552 : db $02 : dw $16AA ; Object tilemap state
-dl $7E0556 : db $02 : dw $151E ; Object tilemap state
-dl $7E0642 : db $01 : db $01 ; Room puzzle state (?)
-dl $7EF343 : db $01 : db $06 ; Bombs
-dl $7EC74A : db $02 : dw $28BA ; Selected menu gfx, row 1
-dl $7EF377 : db $01 : db $06 ; Arrows
-dl $7EC78A : db $02 : dw $2849 ; Selected menu gfx, row 2
-dl $7EF36D : db $01 : db $30 ; Health (actual)
-dl $7EF056 : db $02 : dw $000A ; Room $002B: Palace of Darkness (Map Chest / Fairy Room) (.............q.q)
-dl $7E0303 : db $01 : db $03 ; Selected menu item
-dl $7E0468 : db $02 : dw $0000 ; Trap door state
-dl $7E0540 : db $02 : dw $0510 ; Object tilemap state
-dl $7E0544 : db $02 : dw $0710 ; Object tilemap state
-dl $7E0548 : db $02 : dw $062C ; Object tilemap state
-dl $7E054C : db $02 : dw $1592 ; Object tilemap state
-dl $7E0550 : db $02 : dw $15AA ; Object tilemap state
-dl $7E0554 : db $02 : dw $151A ; Object tilemap state
-dl $7E0558 : db $02 : dw $1522 ; Object tilemap state
-dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
-dl $7E0202 : db $01 : db $01 ; Selected menu item
-dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
-dl $7EC172 : db $01 : db $01 ; Crystal switch state
 .after
 
 sram_pod_turtle_room:

@@ -3,7 +3,6 @@ Rough todo
 
 V8:
 
-- Sexy statue secret.
 - Features should persist through acm's save state code.
 - Antifairy room, block state.
 

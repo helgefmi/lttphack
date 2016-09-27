@@ -880,7 +880,6 @@ cm_presets_pod:
     dw cm_pod_main_hub
     dw cm_pod_hammeryump
     dw cm_pod_before_sexy_statue
-    dw cm_pod_mimics
     dw cm_pod_turtle_room
     dw cm_pod_helma
     dw #$0000
@@ -917,11 +916,6 @@ cm_pod_before_sexy_statue:
     dw !CM_ACTION_PRESET
 	dw #preset_pod_before_sexy_statue
     db #$24, "Pre Sexy Statue", #$FF
-
-cm_pod_mimics:
-    dw !CM_ACTION_PRESET
-	dw #preset_pod_mimics
-    db #$24, "Mimics", #$FF
 
 cm_pod_turtle_room:
     dw !CM_ACTION_PRESET
