@@ -387,6 +387,9 @@ preset_reset_link_state:
     ; Makes Link able to use pause/select menu (reset during medallion usage)
     STZ $0112
 
+    ; Resets some state variable that makes Link "jump off" water after the first movement into land.
+    STZ $0345
+
     ; Link general state (makes him not sleep..)
     STZ $5D
     RTS
