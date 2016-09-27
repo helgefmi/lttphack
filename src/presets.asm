@@ -332,17 +332,19 @@ preset_load_state:
   %ai8()
     JSL !DecompSwordGfx
     JSL !Palette_Sword
+
+    ; Check if we're in overworld
+    LDA $1B : BEQ .in_overworld
+
     JSL !UpdateBarrierTileChr
-
-    LDA $1B : BEQ .done
-
-    ; Underworld stuff here
 
   LDA $11 : PHA
     LDA.b #$07 : STA $0690
     JSL !Dungeon_AnimateTrapDoors
   PLA : STA $11
 
+  .in_overworld
+    ; Check if we currently have a tagalong
     LDA $7EF3CC : BEQ .done
     JSL !Tagalong_LoadGfx
 
