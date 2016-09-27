@@ -39,7 +39,7 @@ warnpc $02C270
 org $278000
 preset_load_next_frame:
   %ai8()
-    JSR preset_deinit_current_submodule
+    JSR preset_deinit_current_state
 
     LDA !ram_preset_type : CMP #$02 : BEQ .dungeon
 
@@ -71,9 +71,14 @@ preset_load_next_frame:
     RTL
 
 
-preset_deinit_current_submodule:
+preset_deinit_current_state:
     ; Enters: AI=8
     ; Leaves: AI=8
+
+    STZ $1ABF
+    STZ $1ACF
+    STZ $1ADF
+    STZ $1AEF
 
     LDA !ram_cm_old_gamemode : CMP.b #$0E : BNE .not_message_module
     LDA !ram_cm_old_submode : CMP.b #$02 : BNE .not_message_module

@@ -11,7 +11,7 @@ x Restore ability to pause/select after using medallion and loading a preset.
 x Loading a file from an overworld screen messes up presets.
 - Remember arc variable.
 - Lost Woods mosaic effect (hitting R+start during transition)
-- Warp vortex should be cleared before loading presets.
+x Warp vortex should be cleared before loading presets.
 - Loading preset while swimming puts Link in weird state.
 
 - Fix presets:
