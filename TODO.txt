@@ -4,7 +4,6 @@ Rough todo
 V8:
 
 - Load preset fails when:
-    - Falling down hole at Moldorm 2.
     - Sometimes in text mode:
         - Zelda (prison)
         - Sanctuary

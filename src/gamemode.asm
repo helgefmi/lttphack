@@ -146,6 +146,7 @@ gamemode_hook:
               CMP.b #$0C : BEQ .no_custom_menu ; Custom Menu
               CMP.b #$0F : BEQ .no_custom_menu ; Closing Spotlight
               CMP.b #$10 : BEQ .no_custom_menu ; Opening Spotlight
+              CMP.b #$11 : BEQ .no_custom_menu ; Fall into dungeon via hole
               CMP.b #$12 : BEQ .no_custom_menu ; Death Mode
               CMP.b #$17 : BEQ .no_custom_menu ; Quitting mode (s&q)
               CMP.b #$1B : BEQ .no_custom_menu ; Entrance select
@@ -162,11 +163,16 @@ gamemode_hook:
     ; 0x0B - Overworld Mode (special overworld)
     ; 0x0D - Blank Screen
     ; 0x0E - Text Mode/Item Screen/Map
-    ; 0x11 - Happens when you fall into a hole from the OW.
     ; 0x13 - Boss Victory Mode (refills stats)
     ; 0x15 - Module for Magic Mirror
     ; 0x16 - Module for refilling stats after boss.
     ; 0x18 - Ganon exits from Agahnim's body. Chase Mode.
+
+    LDA $10 : CMP #$07 : BNE .not_dungeon
+    LDA $11 : CMP #$06 : BEQ .no_custom_menu ; Upwards floor transition
+              CMP #$07 : BEQ .no_custom_menu ; Downward floor transition
+
+  .not_dungeon
 
     ; Don't allow custom menu during mosaic effects
     LDA $7EC011 : BNE .no_custom_menu
