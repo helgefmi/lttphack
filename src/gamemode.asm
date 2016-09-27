@@ -168,6 +168,9 @@ gamemode_hook:
     ; 0x16 - Module for refilling stats after boss.
     ; 0x18 - Ganon exits from Agahnim's body. Chase Mode.
 
+    ; Don't allow custom menu during mosaic effects
+    LDA $7EC011 : BNE .no_custom_menu
+
   %a16()
     LDA !ram_ctrl1_word : AND #$1000 : CMP #$1000 : BNE .no_custom_menu
   %a8()

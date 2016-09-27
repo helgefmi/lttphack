@@ -12,7 +12,7 @@ x Loading a file from an overworld screen messes up presets.
 x Remember arc variable.
 x Warp vortex should be cleared before loading presets.
 x Loading preset while swimming puts Link in weird state.
-- Lost Woods mosaic effect (hitting R+start during transition)
+x Lost Woods mosaic effect (hitting R+start during transition)
 
 - Fix presets:
   - Outside Thieves'

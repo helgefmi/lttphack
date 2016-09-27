@@ -176,7 +176,7 @@ preset_load_overworld:
     ; Reset which BG to interact with (can be set to 1 during falling animations and more)
     STZ $EE
 
-    JSR preset_reset_link_state
+    JSR preset_reset_state_after_loading
     JSR preset_reset_counters
   %a16()
 
@@ -276,7 +276,7 @@ preset_load_dungeon:
     ; Set Pseudo bg level
     LDA ($00) : %a16() : INC $00 : %a8() : AND.b #$0F : STA $0476
 
-    JSR preset_reset_link_state
+    JSR preset_reset_state_after_loading
     JSR preset_reset_counters
 
   %ai16()
@@ -375,7 +375,7 @@ preset_clear_sram:
     RTS
 
 
-preset_reset_link_state:
+preset_reset_state_after_loading:
     ; Assumes A=8
 
     ; Reset a bunch of Link state (sleeping, falling in hole etc).
