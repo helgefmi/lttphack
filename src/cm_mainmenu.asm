@@ -304,6 +304,7 @@ cm_equipment_sword:
     db #$24, "Tempered", #$FF
     db #$24, "Gold", #$FF
     db #$FF
+
   .toggle_sword
     CMP.b #$00 : BEQ .reset_game_phase
     LDA !ram_game_phase : ORA.b #$01 : STA !ram_game_phase
@@ -313,10 +314,13 @@ cm_equipment_sword:
     LDA !ram_game_phase : AND.b #$FE : STA !ram_game_phase
 
   .end
+    JSL !DecompSwordGfx
+    JSL !Palette_Sword
     RTS
 
 cm_equipment_shield:
-    dw !CM_ACTION_CHOICE
+    dw !CM_ACTION_CHOICE_JSR
+    dw #.toggle_shield
     dl !ram_equipment_shield
     db #$24, "Shield", #$FF
     db #$24, "No", #$FF
@@ -325,14 +329,24 @@ cm_equipment_shield:
     db #$24, "Mirror", #$FF
     db #$FF
 
+  .toggle_shield
+    JSL !DecompShieldGfx
+    JSL !Palette_Shield
+    RTS
+
 cm_equipment_armor:
-    dw !CM_ACTION_CHOICE
+    dw !CM_ACTION_CHOICE_JSR
+    dw #.toggle_armor
     dl !ram_equipment_armor
     db #$24, "Armor", #$FF
     db #$24, "Green", #$FF
     db #$24, "Blue", #$FF
     db #$24, "Red", #$FF
     db #$FF
+
+  .toggle_armor
+    JSL !Palette_Armor
+    RTS
 
 cm_equipment_fill_magic:
     dw !CM_ACTION_JSR

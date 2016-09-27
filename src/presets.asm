@@ -330,8 +330,12 @@ preset_load_state:
     JSL !Sprite_LoadGfxProperties
 
   %ai8()
+    ; Reload graphics and palette for sword, shield and armor
     JSL !DecompSwordGfx
     JSL !Palette_Sword
+    JSL !DecompShieldGfx
+    JSL !Palette_Shield
+    JSL !Palette_Armor
 
     ; Check if we're in overworld
     LDA $1B : BEQ .in_overworld

@@ -116,9 +116,13 @@
 !Sprite_ResetAll = $09C44E
 !Sprite_LoadGfxProperties = $00FC41
 !UpdateBarrierTileChr = $0296AD ; $117B2-$117C7
+!Dungeon_AnimateTrapDoors = $01D38D
+
 !DecompSwordGfx = $00D308
 !Palette_Sword = $1BED03
-!Dungeon_AnimateTrapDoors = $01D38D
+!DecompShieldGfx = $00D348
+!Palette_Shield = $1BED29
+!Palette_Armor = $1BEDF9
 
 ; ITEM MENU
 
