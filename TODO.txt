@@ -3,16 +3,9 @@ Rough todo
 
 V8:
 
-- Load preset fails when:
-    - Sometimes in text mode:
-        - Zelda (prison)
-        - Sanctuary
-        - Kiki
-
-- Antifairy room, block state.
-- Zelda is OOB in Sanctuary cutscene if you just hold down from the preset.
 - Sexy statue secret.
 - Features should persist through acm's save state code.
+- Antifairy room, block state.
 
 - DM presets are weird because there's no walking delay.
 

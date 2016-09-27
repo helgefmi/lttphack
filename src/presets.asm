@@ -75,6 +75,8 @@ preset_deinit_current_state:
     ; Enters: AI=8
     ; Leaves: AI=8
 
+    JSL !Sprite_ResetAll
+
     STZ $1ABF
     STZ $1ACF
     STZ $1ADF
