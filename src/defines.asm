@@ -112,6 +112,7 @@
 !Player_ResetState = $07F18C
 !Tagalong_LoadGfx = $00D463
 !Sprite_ResetAll = $09C44E
+!Sprite_DisableAll = $09C44E
 !Sprite_LoadGfxProperties = $00FC41
 !UpdateBarrierTileChr = $0296AD ; $117B2-$117C7
 !Dungeon_AnimateTrapDoors = $01D38D
