@@ -161,7 +161,6 @@ gamemode_hook:
     ; 0x09 - Overworld Mode
     ; 0x0A - Pre Overworld Mode (special overworld)
     ; 0x0B - Overworld Mode (special overworld)
-    ; 0x0D - Blank Screen
     ; 0x0E - Text Mode/Item Screen/Map
     ; 0x13 - Boss Victory Mode (refills stats)
     ; 0x15 - Module for Magic Mirror
@@ -185,9 +184,9 @@ gamemode_hook:
 
     LDA $10 : STA !ram_cm_old_gamemode
     LDA $11 : STA !ram_cm_old_submode
-    LDA.b #$00 : STA $11
+
     LDA.b #$0C : STA $10
-    LDA.b #$00 : STA $11
+    STZ $11
 
     RTL
 

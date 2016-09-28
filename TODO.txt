@@ -1,19 +1,22 @@
-Rough todo
-==========
-
 V8:
+===
+
+- Better presets:
+  - Only 1 bomb for IPBJ
+  - Sanc heart and other safeties not an option
+  - Ice rod grabbed after Mire
+  - Agahnim's tower - Outside hera: Put it inside hera.
+
 
 - Feature toggle (like "show input display") should persist through loading a save state.
-
-- Presets in DM (hera, mire, trock etc) are kind aweird since there's no delay before you start walking.
 
 - The spotlight animation of some transitions covers the menu.
 
 - Preset: Pre Sexy Statue Room. Sometimes Link is put on the wrong layer here. Related to kiki somehow?
 
-- Loading a preset while in Mothula's room, to and overworld split, has weird effects.
+  Same with Hammeryump and Turtle rock - Lazer skip.
 
-- Remove Ice "Fall in Hole" preset, as it doesn't work and isn't neccessary.
+- Loading preset from Mothula's room to an overworld preset has weird effects.
 
 - Sprite of pot above Link's head sometimes weird. No idea why it happened one time.
 
@@ -21,7 +24,10 @@ V8:
 
 - Got black shield while loading presets in Thieves' a couple times.
 
+- QW indicator disappears when you open & close the start menu.
+
 V9:
+===
 
 - Hack Module_Intro to go to file select as soon as everything needed is initialized.
 
@@ -34,6 +40,7 @@ V9:
 - Reenable floor indicator and position it somewhere else.
 
 V10:
+====
 
 - Toggle music.
 
@@ -42,7 +49,7 @@ V10:
 - Lagometer. Toggleable feature that makes the magic go down/up depending on how laggy a frame was.
 
 - Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances
-        the game one frame. Would be good for clip practice.
+  the game one frame. Would be good for clip practice.
 
 - Slowdown.
 
@@ -59,91 +66,3 @@ Future:
 - Mashing and pumping minigame (mps, max frames w/o mash, frames lost total etc).
 
 - Reconfigurable controls (save/load state mostly).
-
-Notes
-=====
-%a16()
-LDA.w #$6 : STA $1AF0
-
-%ai8()
-LDA $10 : STA $010C
-LDA #$0E : STA $10
-LDA #$0A : STA $11
-LDA #$6 : STA $0200
-
---
-
-7EF3C5-7EF3C8 = diff game phase things.
-7EF3C5=1 = got sword from uncle
-7EF3CC = zelda bitching (set to 0)
-
---
-
-BCC = BLT
-BCS = BGT
-
---
-
-7EF366 = Big key array, indexed by 040C. Masks found in 98C0:
-  LDY $040C : LDA $7EF366 : AND $98C0, Y : BNE .haveKey
-
---
-
-SNES fps = 60.098814
-
---
-
-$02E99D = BirdTravel_LoadTargetAreaData
-$02EA30 = After the PLB
-$0AB90D = JSL BirdTravel_LoadTargetAreaData
-
---
-
-http://wiki.nesdev.com/w/images/7/76/Programmanual.pdf
-
---
-
-$7B[0x1]: 0x00 = LW, 0x40 = DW?
-$8A[0x1]: 0x00 = LW, 0x40 = DW?
-$7EF3CA[0x01] - 0x00 = LW, 0x40 = DW
-$02DB[0x1]: Set when warping to DW?
-
-$0AA1 = 0x21 for dark world, 0x20 for light world.
-$0AA4 = 0x08 for dark world, 0x00 for light world.
-$0AA4 = 0x01 in LW, 0x0B in DW
-
-Can look at $7EFD40, X (X=$8A aka ow index). Might be set up differently for lw/dw.
-
-
-0AA4[0x1]: 
-    Misc. Sprite Graphics index. Valid values are: 0x01, 0x0A, or 0x0B.
-    0x01 - Light world Overworld
-    0x0A - Dungeons
-    0x0B - Dark World Overworld
-
-$0AB3[0x1] - Selects BP-2 through BP-6 (first halves)
-    0 - Light World
-    1 - Dark World
-    2 - Light World Death Mountain
-    3 - Dark World Death Mountain
-    4 - Used during history mode
-    5 - Seems to be used during initialization
-$0AB4[0x01] - Selects BP-2 through BP-4 (second halves). Values 0x00 to 0x13 are valid. Only used during loading the overworld and the title screen.
-$0AB5[0x01] - Selects BP-5 through BP-7 (second halves). Values 0x00 to 0x13 are valid. Only used during loading the overworld and the title screen.
-
-$0FFF[0x01] - Indicates whether you are in the light world or dark world (0,1 respectively)
-
---
-
-$A8: DW version = LW version OR 0x40
-
---
-
-$02:8154 = `JSR Dungeon_LoadEntrance` from Module_PreDungeon
-$02:D617 = ^ the destination (Dungeon_LoadEntrance)
-
-----------
-
-$01:88A7 = start of the loop
-$01:88C7 = found a torch that matched the room we're loading
-$02:D836 = some stuff we're currently not doing in load_dungeon

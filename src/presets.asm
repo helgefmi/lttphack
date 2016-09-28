@@ -1,21 +1,22 @@
-; Hooks the "load target area" JSL call done after choosing a destination in the Bird menu.
+; Replaces `JSL BirdTravel_LoadTargetAreaData` from BirdTravel_LoadTargetArea.
 org $0AB90D
     JSL preset_load_overworld
 
 
-; Replaces the address of Dungeon_LoadEntrance from the PreDungeon Module.
-org $028154
-    JSR load_entrance_local
-
-
-; Replaces the JSL from BirdTravel_LoadTargetAreaData module to Sprite_ResetAll
+; Replaces `JSL Sprite_ResetAll` from BirdTravel_LoadTargetAreaData.
 org $02EA33
     JSL preset_sprite_reset_all
 
 
-; Replaces the JSL from PreDungeon module to Sprite_ResetAll
+; Replaces `JSL Sprite_ResetAll` from Module_PreOverworld:.
 org $028252
     JSL preset_sprite_reset_all
+
+
+; Replaces `JSL Dungeon_LoadEntrance` from Module_PreDungeon.
+org $028154
+    JSR load_entrance_local
+
 
 org $02C240
 load_entrance_local:
@@ -23,13 +24,13 @@ load_entrance_local:
     ; This is called without using presets too, so need to redirect to the correct code.
     LDA !ram_preset_type : BNE .custom
 
-    JSR $D617 ; Dungeon_LoadEntrance
+    JSR !Dungeon_LoadEntrance
   %ai8()
     RTS
 
   .custom
     LDA.b #$00 : STA !ram_preset_type
-    JSR $D617 ; Dungeon_LoadEntrance
+    JSR !Dungeon_LoadEntrance
     JSL preset_load_dungeon
   %ai8()
     RTS
@@ -45,6 +46,7 @@ preset_load_next_frame:
 
     ; Jumps to Bird Menu module
     LDA.b #$0E : STA $10
+    LDA.b #$0A : STA $11
 
     ; Make sure we're back into light word after the Messaging module is done.
     LDA.b #$09 : STA $010C
@@ -52,14 +54,13 @@ preset_load_next_frame:
     ; Skip the opening of overworld map and such. We want instaport.
     LDA.b #$06 : STA $0200
 
-    LDA.b #$0A : STA $11
-
     RTL
 
   .dungeon
     ; Makes PreDungeon not use a smaller "entrance only" table for data.
-    STZ $04AA ; 
-    STZ $010A ; death
+    STZ $04AA
+    ; We didn't die
+    STZ $010A
 
     ; Put us in Spotlight_close Module.
     LDA.b #$0F : STA $10
@@ -75,8 +76,10 @@ preset_deinit_current_state:
     ; Enters: AI=8
     ; Leaves: AI=8
 
+    ; This is mainly needed to stop interactions with nearby sprites (e.g. talking to Kiki)
     JSL !Sprite_ResetAll
 
+    ; Clears the warp vortex.
     STZ $1ABF
     STZ $1ACF
     STZ $1ADF
@@ -125,11 +128,10 @@ preset_load_overworld:
     JML !BirdTravel_LoadTargetAreaData
 
   .preset
+    LDA.b #$00 : STA !ram_preset_type
+
     ; Set link to be in the Overworld
     STZ $1B
-
-    ; So we don't load infinitely
-    LDA.b #$00 : STA !ram_preset_type
 
   %a16()
   PHB : PHK : PLB
@@ -167,10 +169,6 @@ preset_load_overworld:
     LDA ($00) : STA !ram_preset_end_of_sram_state
   PLB
 
-  %i16()
-    JSR preset_load_state
-  %i8()
-
   %a8()
     ; LW/DW
     LDA $8A : AND #$40 : STA $7EF3CA
@@ -181,6 +179,10 @@ preset_load_overworld:
     JSR preset_reset_state_after_loading
     JSR preset_reset_counters
   %a16()
+
+  %i16()
+    JSR preset_load_state
+  %i8()
 
     ; Makes it possible to spawn in the middle of a field/not inside doorway?
     STZ $0696
@@ -306,8 +308,10 @@ preset_sprite_reset_all:
 
 
 preset_load_state:
-    ; Enteres AI=16
-    JSR preset_clear_sram
+    ; Enters AI=16
+
+    JSR preset_clear_state
+
   PHB : PHK : PLB
     LDA !ram_preset_end_of_sram_state : STA $06
     LDA #sram_esc_bed : STA $00
@@ -365,7 +369,7 @@ preset_load_state:
     RTS
 
 
-preset_clear_sram:
+preset_clear_state:
     ; Enteres AI=16
     LDA.w #$0000
     LDX.w #$0000
@@ -397,6 +401,7 @@ preset_reset_state_after_loading:
 
     ; Resets a scroll value for intra-room transitions
     STZ $0126
+
     RTS
 
 
@@ -409,5 +414,6 @@ preset_reset_counters:
     STZ !lowram_seg_minutes
   %a8()
     RTS
+
 
 incsrc preset_data.asm

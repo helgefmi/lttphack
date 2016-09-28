@@ -2,8 +2,6 @@
 ;
 ; 04CB[0x25] (04F0)
 ; $7F7667[0x6719] (7FDD80)
-;  * 7F767E[0x982] = Different stuff
-;  * 7F8000[0xA00] = OW save data (lol)
 ; $7EC900[0x1F00] (7EE800)
 ;  * 7ED000 - 7ED780 = VRAM buffer backup in custom_menu.asm
 
@@ -117,6 +115,7 @@
 !Sprite_LoadGfxProperties = $00FC41
 !UpdateBarrierTileChr = $0296AD ; $117B2-$117C7
 !Dungeon_AnimateTrapDoors = $01D38D
+!Dungeon_LoadEntrance = $D617
 
 !DecompSwordGfx = $00D308
 !Palette_Sword = $1BED03

@@ -105,9 +105,9 @@ local movie_steps = { -- {{{
     [163757] = "sw_mummy_key",
     [164126] = "sw_mothula",
     -- Ice
-    [168490] = "ice_outside_skull",
+    [168480] = "ice_outside_skull",
     [169346] = "ice_bridge_warp",
-    [170871] = "ice_lottery",
+    [170869] = "ice_lottery",
     [171950] = "ice_medallion",
     [173468] = "ice_zoras_domain",
     [177042] = "ice_tiny_warp",
@@ -118,8 +118,7 @@ local movie_steps = { -- {{{
     [181658] = "ice_conveyor_room",
     [182094] = "ice_ipbj",
     [183013] = "ice_penguin_room",
-    [183742] = "ice_lonely_fireball",
-    [184753] = "ice_fall_in_hole",
+    [183742] = "ice_lonely_firebar",
     [185763] = "ice_kholdstare",
     -- Swamp
     [190374] = "swamp_outside_ice",
@@ -138,7 +137,6 @@ local movie_steps = { -- {{{
     [209302] = "swamp_arrghus",
     -- Mire
     [214178] = "mire_outside_swamp",
-    [215011] = "mire_dm",
     [217918] = "mire_mire_darkworld_warp",
     [219615] = "mire_mire_entrance",
     [220125] = "mire_mire2",
@@ -153,7 +151,6 @@ local movie_steps = { -- {{{
     --  TRock
     [237271] = "trock_ouside_mire",
     [238140] = "trock_icerod_overworld",
-    [240138] = "trock_dm",
     [242449] = "trock_peg_puzzle",
     [244468] = "trock_entrance",
     [245557] = "trock_lanterns",
@@ -161,7 +158,7 @@ local movie_steps = { -- {{{
     [247905] = "trock_chomps",
     [250460] = "trock_pokies_1",
     [252864] = "trock_pokies_2",
-    [253878] = "trock_firebar_key",
+    [253878] = "trock_roller_key",
     [256484] = "trock_lazer_skip",
     [257241] = "trock_switch_room",
     [258382] = "trock_trinexx",
@@ -169,7 +166,7 @@ local movie_steps = { -- {{{
     [263886] = "gtower_outside_trock",
     [265964] = "gtower_entrance",
     [267262] = "gtower_spike_skip",
-    [268195] = "gtower_pre_firebar_room",
+    [268195] = "gtower_pre_firesnakes_room",
     [270901] = "gtower_bombable_floor",
     [271498] = "gtower_ice_armos",
     [273164] = "gtower_floor_2",
@@ -707,7 +704,7 @@ local function annotate_address(addr, val)
     end
 
     if addr >= 0x7E010E and addr < 0x7E010F then
-        return "Dungeon entrance"
+        return "Dungeon entrance index"
     end
 
     if addr >= 0x7E0540 and addr < 0x7E0560 then
@@ -1124,14 +1121,14 @@ function main()
         memory.registerwrite(addr_with_bank, 0x20, state_changed)
     end)
 
-    -- Object tilemap attributes (MoN says position but I think its more?)
+    -- Dungeon entrance index
     call_for_each_bank(0x010E, function (addr_with_bank)
         memory.registerwrite(addr_with_bank, 0x2, state_changed)
     end)
 
     -- Arc variable
     call_for_each_bank(0x0B08, function (addr_with_bank)
-        memory.registerwrite(addr_with_bank, 0x8, state_changed)
+        memory.registerwrite(addr_with_bank, 0x2, state_changed)
     end)
 
     gui.register(draw_ui)

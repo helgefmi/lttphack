@@ -6,12 +6,9 @@
 
 
 ; Overrides Game Mode 0x0C.
-org $00806D
-    db #$00
-org $008089
-    db #$80
-org $0080A5
-    db #$25
+org $00806D : db #$00
+org $008089 : db #$80
+org $0080A5 : db #$25
 
 
 org $258000
@@ -96,21 +93,17 @@ CM_MenuDown:
 
 
 CM_Active:
-    JSR cm_get_pressed_button
-
-    CPX.b #$04 : BEQ .pressed_down
-    CPX.b #$08 : BEQ .pressed_up
-    CPX.b #$02 : BEQ .pressed_left
-    CPX.b #$01 : BEQ .pressed_right
+    JSR cm_get_pressed_button : CPX.b #$04 : BEQ .pressed_down
+                                CPX.b #$08 : BEQ .pressed_up
+                                CPX.b #$02 : BEQ .pressed_left
+                                CPX.b #$01 : BEQ .pressed_right
 
     ; F4 = BYST | udlr
-    TXA : AND $F4
-    CMP.b #$10 : BEQ .pressed_start
-    CMP.b #$80 : BEQ .pressed_b
+    TXA : AND $F4 : CMP.b #$10 : BEQ .pressed_start
+                    CMP.b #$80 : BEQ .pressed_b
 
     ; F6 = AXLR | ....
-    TYA : AND $F6
-    CMP.b #$80 : BEQ .pressed_a
+    TYA : AND $F6 : CMP.b #$80 : BEQ .pressed_a
 
     ; Did not press anything
     BRA .done

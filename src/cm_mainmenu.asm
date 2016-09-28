@@ -141,7 +141,7 @@ cm_items_net:
 cm_items_book:
     dw !CM_ACTION_TOGGLE
     dl #!ram_item_book
-    db #$24, "B of Medura", #$FF
+    db #$24, "Book", #$FF
 
 cm_items_bottle:
     dw !CM_ACTION_TOGGLE_JSR
@@ -173,12 +173,12 @@ cm_items_bottle:
 cm_items_somaria:
     dw !CM_ACTION_TOGGLE
     dl #!ram_item_somaria
-    db #$24, "C of Somaria", #$FF
+    db #$24, "Somaria", #$FF
 
 cm_items_byrna:
     dw !CM_ACTION_TOGGLE
     dl #!ram_item_byrna
-    db #$24, "C of Byrna", #$FF
+    db #$24, "Byrna", #$FF
 
 cm_items_cape:
     dw !CM_ACTION_TOGGLE
@@ -583,12 +583,12 @@ cm_east_after_cutscene:
 cm_east_octoroc:
     dw !CM_ACTION_PRESET
 	dw #preset_east_octoroc
-    db #$24, "Octoroc", #$FF
+    db #$24, "Octoroc OW", #$FF
 
 cm_east_outside_palace:
     dw !CM_ACTION_PRESET
 	dw #preset_east_outside_palace
-    db #$24, "Outside Palace", #$FF
+    db #$24, "EP Overworld", #$FF
 
 cm_east_entrance:
     dw !CM_ACTION_PRESET
@@ -663,7 +663,7 @@ cm_presets_desert:
 cm_desert_outside_eastern_palace:
     dw !CM_ACTION_PRESET
 	dw #preset_desert_outside_eastern_palace
-    db #$24, "Palace Overworld", #$FF
+    db #$24, "Outside Eastern Palace", #$FF
 
 cm_desert_ep_spinspeed:
     dw !CM_ACTION_PRESET
@@ -813,7 +813,7 @@ cm_presets_atower:
     dw cm_aga_agahnim
     dw #$0000
   table ../resources/header.tbl
-    db #$2C, "AGAHNIM'S TOWER", #$FF
+    db #$2C, "AGAHNIMS TOWER", #$FF
   table ../resources/normal.tbl
 
 cm_aga_outside_hera:
@@ -895,7 +895,7 @@ cm_pod_pyramid:
 cm_pod_pod_overworld:
     dw !CM_ACTION_PRESET
 	dw #preset_pod_pod_overworld
-    db #$24, "Palace Overworld", #$FF
+    db #$24, "Palace Overworld Screen", #$FF
 
 cm_pod_entrance:
     dw !CM_ACTION_PRESET
@@ -952,7 +952,7 @@ cm_presets_thieves:
     dw cm_thieves_blind
     dw #$0000
   table ../resources/header.tbl
-    db #$2C, "THIEVES' TOWN", #$FF
+    db #$2C, "THIEVES TOWN", #$FF
   table ../resources/normal.tbl
 
 cm_thieves_outside_pod:
@@ -1130,8 +1130,7 @@ cm_presets_ice:
     dw cm_ice_conveyor_room
     dw cm_ice_ipbj
     dw cm_ice_penguin_room
-    dw cm_ice_lonely_fireball
-    dw cm_ice_fall_in_hole
+    dw cm_ice_lonely_firebar
     dw cm_ice_kholdstare
     dw #$0000
   table ../resources/header.tbl
@@ -1166,7 +1165,7 @@ cm_ice_zoras_domain:
 cm_ice_tiny_warp:
     dw !CM_ACTION_PRESET
 	dw #preset_ice_tiny_warp
-    db #$24, "Tiny Warp", #$FF
+    db #$24, "Tiny Warp Dik", #$FF
 
 cm_ice_ice_entrance:
     dw !CM_ACTION_PRESET
@@ -1201,17 +1200,12 @@ cm_ice_ipbj:
 cm_ice_penguin_room:
     dw !CM_ACTION_PRESET
 	dw #preset_ice_penguin_room
-    db #$24, "Penguin Room", #$FF
+    db #$24, "Penguin Lineup Room", #$FF
 
-cm_ice_lonely_fireball:
+cm_ice_lonely_firebar:
     dw !CM_ACTION_PRESET
-	dw #preset_ice_lonely_fireball
+	dw #preset_ice_lonely_firebar
     db #$24, "Lonely Firebar", #$FF
-
-cm_ice_fall_in_hole:
-    dw !CM_ACTION_PRESET
-	dw #preset_ice_fall_in_hole
-    db #$24, "Fall in Hole", #$FF
 
 cm_ice_kholdstare:
     dw !CM_ACTION_PRESET
@@ -1324,7 +1318,6 @@ cm_presets_goto_mire:
 
 cm_presets_mire:
     dw cm_mire_outside_swamp
-    dw cm_mire_dm
     dw cm_mire_mire_darkworld_warp
     dw cm_mire_mire_entrance
     dw cm_mire_mire2
@@ -1346,15 +1339,10 @@ cm_mire_outside_swamp:
 	dw #preset_mire_outside_swamp
     db #$24, "Outside Swamp", #$FF
 
-cm_mire_dm:
-    dw !CM_ACTION_PRESET
-	dw #preset_mire_dm
-    db #$24, "Death Mountain", #$FF
-
 cm_mire_mire_darkworld_warp:
     dw !CM_ACTION_PRESET
 	dw #preset_mire_mire_darkworld_warp
-    db #$24, "Mire DW Warp", #$FF
+    db #$24, "Mire Overworld Screen", #$FF
 
 cm_mire_mire_entrance:
     dw !CM_ACTION_PRESET
@@ -1369,7 +1357,7 @@ cm_mire_mire2:
 cm_mire_left_dash:
     dw !CM_ACTION_PRESET
 	dw #preset_mire_left_dash
-    db #$24, "Left Dash", #$FF
+    db #$24, "Beat the Fireball", #$FF
 
 cm_mire_dodongos:
     dw !CM_ACTION_PRESET
@@ -1404,7 +1392,7 @@ cm_mire_bombable_wall:
 cm_mire_vitty:
     dw !CM_ACTION_PRESET
 	dw #preset_mire_vitty
-    db #$24, "Vitty", #$FF
+    db #$24, "Vitreous", #$FF
 
 ; Turtle Rock
 
@@ -1416,7 +1404,6 @@ cm_presets_goto_trock:
 cm_presets_trock:
     dw cm_trock_ouside_mire
     dw cm_trock_icerod_overworld
-    dw cm_trock_dm
     dw cm_trock_peg_puzzle
     dw cm_trock_entrance
     dw cm_trock_lanterns
@@ -1424,7 +1411,7 @@ cm_presets_trock:
     dw cm_trock_chomps
     dw cm_trock_pokies_1
     dw cm_trock_pokies_2
-    dw cm_trock_firebar_key
+    dw cm_trock_roller_key
     dw cm_trock_lazer_skip
     dw cm_trock_switch_room
     dw cm_trock_trinexx
@@ -1443,11 +1430,6 @@ cm_trock_icerod_overworld:
 	dw #preset_trock_icerod_overworld
     db #$24, "Ice Rod Overworld", #$FF
 
-cm_trock_dm:
-    dw !CM_ACTION_PRESET
-	dw #preset_trock_dm
-    db #$24, "Death Mountain", #$FF
-
 cm_trock_peg_puzzle:
     dw !CM_ACTION_PRESET
 	dw #preset_trock_peg_puzzle
@@ -1461,7 +1443,7 @@ cm_trock_entrance:
 cm_trock_lanterns:
     dw !CM_ACTION_PRESET
 	dw #preset_trock_lanterns
-    db #$24, "Lanterns", #$FF
+    db #$24, "Torches", #$FF
 
 cm_trock_roller_room:
     dw !CM_ACTION_PRESET
@@ -1483,10 +1465,10 @@ cm_trock_pokies_2:
 	dw #preset_trock_pokies_2
     db #$24, "Pokeys 2", #$FF
 
-cm_trock_firebar_key:
+cm_trock_roller_key:
     dw !CM_ACTION_PRESET
-	dw #preset_trock_firebar_key
-    db #$24, "Firebar Key", #$FF
+	dw #preset_trock_roller_key
+    db #$24, "Roller Key", #$FF
 
 cm_trock_lazer_skip:
     dw !CM_ACTION_PRESET
@@ -1514,7 +1496,7 @@ cm_presets_gtower:
     dw cm_gtower_outside_trock
     dw cm_gtower_entrance
     dw cm_gtower_spike_skip
-    dw cm_gtower_pre_firebar_room
+    dw cm_gtower_pre_firesnakes_room
     dw cm_gtower_bombable_floor
     dw cm_gtower_ice_armos
     dw cm_gtower_floor_2
@@ -1531,7 +1513,7 @@ cm_presets_gtower:
     dw cm_gtower_agahnim_2
     dw #$0000
   table ../resources/header.tbl
-    db #$2C, "GANON'S TOWER", #$FF
+    db #$2C, "GANONS TOWER", #$FF
   table ../resources/normal.tbl
 
 cm_gtower_outside_trock:
@@ -1549,10 +1531,10 @@ cm_gtower_spike_skip:
 	dw #preset_gtower_spike_skip
     db #$24, "Spike Skip", #$FF
 
-cm_gtower_pre_firebar_room:
+cm_gtower_pre_firesnakes_room:
     dw !CM_ACTION_PRESET
-	dw #preset_gtower_pre_firebar_room
-    db #$24, "Pre Firebar Room", #$FF
+	dw #preset_gtower_pre_firesnakes_room
+    db #$24, "Pre Firesnakes Room", #$FF
 
 cm_gtower_bombable_floor:
     dw !CM_ACTION_PRESET
