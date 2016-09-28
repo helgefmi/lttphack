@@ -24,8 +24,6 @@ V8:
 
 - Got black shield while loading presets in Thieves' a couple times.
 
-- QW indicator disappears when you open & close the start menu.
-
 V9:
 ===
 

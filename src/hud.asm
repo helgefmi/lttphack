@@ -53,6 +53,11 @@ hud_template_hook:
     STA $7EC734 : STA $7EC736
 
     JSL draw_counters
+
+    LDA !ram_qw_toggle : BEQ .dont_update_qw
+    JSR hud_draw_qw
+  .dont_update_qw
+
     SEP #$30
     INC $16
     RTL
