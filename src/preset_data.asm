@@ -4473,6 +4473,12 @@ dl $7E0548 : db $02 : dw $2B90 ; Object tilemap state
 dl $7E054C : db $02 : dw $2BEC ; Object tilemap state
 dl $7E0641 : db $01 : db $00 ; Room puzzle state (?)
 dl $7E002F : db $01 : db $00 ; Link's direction
+dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
+dl $7EC74A : db $02 : dw $28BA ; Selected menu gfx, row 1
+dl $7EC78A : db $02 : dw $2849 ; Selected menu gfx, row 2
+dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
+dl $7E0303 : db $01 : db $03 ; Selected menu item
+dl $7E0202 : db $01 : db $01 ; Selected menu item
 .after
 
 sram_east_pot_room:
@@ -4509,21 +4515,15 @@ dl $7E0542 : db $02 : dw $0ACA ; Object tilemap state
 dl $7E0546 : db $02 : dw $0AF2 ; Object tilemap state
 dl $7E054A : db $02 : dw $08F2 ; Object tilemap state
 dl $7E054E : db $02 : dw $1860 ; Object tilemap state
-dl $7EC74A : db $02 : dw $28BA ; Selected menu gfx, row 1
 dl $7EF34F : db $01 : db $00 ; Bottles
 dl $7EF377 : db $01 : db $12 ; Arrows
-dl $7EC78A : db $02 : dw $2849 ; Selected menu gfx, row 2
 dl $7EF1B0 : db $02 : dw $0005 ; Room $00D8: Eastern Palace (Zeldagamer Room / Pre-Armos Knights Room) (..............q.)
 dl $7EF360 : db $02 : dw $001C ; Rupees (goal)
 dl $7EF362 : db $02 : dw $001C ; Rupees (actual)
-dl $7E0303 : db $01 : db $03 ; Selected menu item
 dl $7E0540 : db $02 : dw $08CA ; Object tilemap state
 dl $7E0544 : db $02 : dw $0CCA ; Object tilemap state
 dl $7E0548 : db $02 : dw $0CF2 ; Object tilemap state
 dl $7E054C : db $02 : dw $185C ; Object tilemap state
-dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
-dl $7E0202 : db $01 : db $01 ; Selected menu item
-dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
 dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7FE130 : db $02 : dw $07FF ; Room $D8 persistent: Eastern Palace (Zeldagamer Room / Pre-Armos Knights Room)
 .after
