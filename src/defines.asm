@@ -43,7 +43,8 @@
 !ram_counters_toggle = $7F76A6
 !ram_input_display_toggle = $7F76A8
 !lowram_oob_toggle = $037F
-!ram_los_toggle = $7F76AC
+!ram_lanmola_cycles = $7F7700 ; 3 bytes
+!ram_toggle_lanmola_cycles = $7F76AC
 
 !ram_debug = $7F7777
 !ram_debug2 = $7F7779

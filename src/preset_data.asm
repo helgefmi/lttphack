@@ -5937,6 +5937,7 @@ dl $7E002F : db $01 : db $02 ; Link's direction
 .after
 
 sram_ice_ipbj:
+dl $7EF343 : db $01 : db $02 ; Bombs
 dl $7EF07C : db $02 : dw $4407 ; Room $003E: Ice Palace (Stalfos Knights / Conveyor Hellway) (..d...K.......qq)
 dl $7EF36D : db $01 : db $40 ; Health (actual)
 dl $7FDFFC : db $02 : dw $0306 ; Room $3E persistent: Ice Palace (Stalfos Knights / Conveyor Hellway)
