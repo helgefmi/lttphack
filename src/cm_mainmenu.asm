@@ -1747,7 +1747,10 @@ cm_feature_save_p2:
     db #$FF
 	
 	.toggle_save_control
-		CMP #$00 : BEQ .tsp1
+	    STA !ram_debug
+		%ai16()
+		AND #$00FF
+		CMP #$0000 : BEQ .tsp1
 		LDA !shortcut_load_p2
 		STA !ram_savestate_load_shortcut
 		LDA !shortcut_save_p2
@@ -1761,7 +1764,8 @@ cm_feature_save_p2:
 			STA !ram_savestate_save_shortcut
 			LDA #!ram_ctrl1_word
 		.mlocal_end
-		STA !lowram_savestate_ctrl_to_use  
+		STA !lowram_savestate_ctrl_to_use
+		%ai8()
 		RTS
 
 cm_feature_los:
