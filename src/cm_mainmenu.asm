@@ -1642,6 +1642,7 @@ cm_submenu_features:
     dw cm_feature_lit_rooms
     dw cm_feature_oob
     dw cm_feature_los
+	dw cm_feature_save_p2
     dw #$0000
   table ../resources/header.tbl
     db #$2C, "FEATURES", #$FF
@@ -1735,6 +1736,33 @@ cm_feature_oob:
     dw !CM_ACTION_TOGGLE
     dl !lowram_oob_toggle
     db #$24, "OoB Mode", #$FF
+	
+cm_feature_save_p2:
+	dw !CM_ACTION_CHOICE_JSR
+    dw #.toggle_save_control
+    dl !ram_savestate_p2_control_toggle
+	db #$24, "Savestate control", #$FF
+	db #$24, "P1", #$FF
+	db #$24, "P2", #$FF
+    db #$FF
+	
+	.toggle_save_control
+		CMP #$00 : BEQ .tsp1
+		LDA !shortcut_load_p2
+		STA !ram_savestate_load_shortcut
+		LDA !shortcut_save_p2
+		STA !ram_savestate_save_shortcut
+		LDA #!ram_ctrl2_word
+		JMP .mlocal_end
+		.tsp1
+			LDA !shortcut_load_p1
+			STA !ram_savestate_load_shortcut
+			LDA !shortcut_save_p1
+			STA !ram_savestate_save_shortcut
+			LDA #!ram_ctrl1_word
+		.mlocal_end
+		STA !lowram_savestate_ctrl_to_use  
+		RTS
 
 cm_feature_los:
     ; \todo implement

@@ -22,5 +22,15 @@ init_expand:
     STA !ram_enemy_hp_toggle
     STA !ram_counters_toggle
     STA !ram_input_display_toggle
+	;LDA.b #$00
+	;STA !ram_savestate_p2_control_toggle
+	%ai16() ; Init control for savestate
+	LDA #!ram_ctrl1_word
+	STA !lowram_savestate_ctrl_to_use
+	LDA !shortcut_load_p1
+	STA !ram_savestate_load_shortcut
+	LDA !shortcut_save_p1
+	STA !ram_savestate_save_shortcut
+	%ai8()
 
     RTS

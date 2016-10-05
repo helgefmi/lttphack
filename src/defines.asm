@@ -20,13 +20,24 @@
 !lowram_draw_tmp2 = $04DE
 !lowram_draw_tmp3 = $04E0
 
+!ram_ctrl1_word = $04E4
+!ram_ctrl1_byte2 = $04E5
+!ram_ctrl2_word = $04E6
+!ram_ctrl2_byte2 = $04E7
+
+; etheir !ram_ctrl1_word or !ram_ctrl2_word value
+!lowram_savestate_ctrl_to_use = $8E
+
 !ram_gamemode_copy = $7F767E
 !ram_submode_copy = $7F7680
 
-!ram_ctrl1_word = $7F7682
-!ram_ctrl1_byte2 = $7F7683
 !ram_ctrl1_filtered = $7F7684
 !ram_ctrl1_filtered_byte2 = $7F7685
+
+
+;!ram_ctrl2_filtered = $7F7812
+;!ram_ctrl2_filtered_byte2 = $7F7813
+
 
 !ram_ctrl1_word_copy = $7F7686
 !ram_received_item_copy = $7F7688
@@ -55,6 +66,16 @@
 !lowram_cm_stack_index = $0658
 !ram_cm_last_frame_input = $7F76C6
 !ram_cm_input_timer = $7F76C8
+
+!ram_savestate_p2_control_toggle = $7F7800
+!ram_savestate_load_shortcut = $7F7802
+!ram_savestate_save_shortcut = $7F7804
+
+!shortcut_load_p1 = #$1060
+!shortcut_save_p1 = #$2060
+
+!shortcut_load_p2 = #$4000
+!shortcut_save_p2 = #$0040
 
 ;-------------------------
 ; HUD
