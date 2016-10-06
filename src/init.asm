@@ -26,7 +26,8 @@ init_expand:
 	;STA !ram_savestate_p2_control_toggle
 	%ai16() ; Init control for savestate
 	LDA #!ram_ctrl1_word
-	STA !lowram_savestate_ctrl_to_use
+	STA !ram_savestate_ctrl_to_use
+	STA !ram_savestate_ctrl_to_use_cpy
 	LDA !shortcut_load_p1
 	STA !ram_savestate_load_shortcut
 	LDA !shortcut_save_p1

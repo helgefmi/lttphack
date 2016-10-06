@@ -26,7 +26,8 @@
 !ram_ctrl2_byte2 = $04E7
 
 ; etheir !ram_ctrl1_word or !ram_ctrl2_word value
-!lowram_savestate_ctrl_to_use = $35
+!ram_savestate_ctrl_to_use = $AB
+!ram_savestate_ctrl_to_use_cpy = $7F7810
 
 !ram_gamemode_copy = $7F767E
 !ram_submode_copy = $7F7680

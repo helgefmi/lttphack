@@ -18,7 +18,7 @@ gamemode_hook:
     ; Acmlm's Save State {{{
 
   %ai16()
-    LDA (!lowram_savestate_ctrl_to_use)
+	LDA (!ram_savestate_ctrl_to_use)
 	CMP !ram_savestate_load_shortcut : BEQ +
     JMP b
 

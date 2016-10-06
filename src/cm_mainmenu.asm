@@ -1741,9 +1741,9 @@ cm_feature_save_p2:
 	dw !CM_ACTION_CHOICE_JSR
     dw #.toggle_save_control
     dl !ram_savestate_p2_control_toggle
-	db #$24, "Savestate control", #$FF
-	db #$24, "P1", #$FF
-	db #$24, "P2", #$FF
+	db #$24, "SState ctrl", #$FF
+	db #$24, "Player 1", #$FF
+	db #$24, "Player 2", #$FF
     db #$FF
 	
 	.toggle_save_control
@@ -1764,7 +1764,7 @@ cm_feature_save_p2:
 			STA !ram_savestate_save_shortcut
 			LDA #!ram_ctrl1_word
 		.mlocal_end
-		STA !lowram_savestate_ctrl_to_use
+		STA !ram_savestate_ctrl_to_use
 		%ai8()
 		RTS
 
