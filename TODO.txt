@@ -5,7 +5,10 @@ V8:
   - Only 1 bomb for IPBJ
   - Sanc heart and other safeties not an option
   - Ice rod grabbed after Mire
-  - Agahnim's tower - Outside hera: Put it inside hera.
+  - Hookshot on pyramid
+  - One extra bomb in swamp (cus of jadin route differences)
+
+- R+Start doesn't work on map screen.
 
 
 - Feature toggle (like "show input display") should persist through loading a save state.
