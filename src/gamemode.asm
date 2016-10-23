@@ -208,7 +208,6 @@ gamemode_hook:
   .gamemode_changed
     LDA !ram_gamemode_copy
 
-    CMP #$05 : BEQ .show_and_reset_everything
     CMP #$07 : BEQ .gamemode_dungeon
     CMP #$09 : BEQ .gamemode_overworld
     CMP #$0B : BEQ .gamemode_overworld ; "Special" overworld (?)
@@ -269,12 +268,6 @@ gamemode_hook:
     CMP #$09 : BEQ .submode_overworld
 
     JMP .end
-
-  .show_and_reset_everything
-  %a16()
-    STZ !lowram_seg_frames
-    STZ !lowram_seg_seconds
-    STZ !lowram_seg_minutes
 
   .show_and_reset_counters
     ; Reset per-room counters
