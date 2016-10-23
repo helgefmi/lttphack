@@ -1,16 +1,5 @@
 V8:
 ===
-
-- Better presets:
-  - Only 1 bomb for IPBJ
-  - Sanc heart and other safeties not an option
-  - Ice rod grabbed after Mire
-  - Hookshot on pyramid
-  - One extra bomb in swamp (cus of jadin route differences)
-
-- R+Start doesn't work on map screen.
-
-
 - Feature toggle (like "show input display") should persist through loading a save state.
 
 - The spotlight animation of some transitions covers the menu.

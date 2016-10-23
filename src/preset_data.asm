@@ -5918,7 +5918,7 @@ sram_ice_conveyor_room:
 dl $7E0542 : db $02 : dw $0664 ; Object tilemap state
 dl $7E0546 : db $02 : dw $0A5C ; Object tilemap state
 dl $7E054A : db $02 : dw $0000 ; Object tilemap state
-dl $7EF343 : db $01 : db $01 ; Bombs
+dl $7EF343 : db $01 : db $02 ; Bombs
 dl $7EC74A : db $02 : dw $2CB2 ; Selected menu gfx, row 1
 dl $7EC78A : db $02 : dw $2CC2 ; Selected menu gfx, row 2
 dl $7EF03C : db $02 : dw $0007 ; Room $001E: Ice Palace (Bomb Floor / Bari Room) (..............qq)
@@ -5937,7 +5937,6 @@ dl $7E002F : db $01 : db $02 ; Link's direction
 .after
 
 sram_ice_ipbj:
-dl $7EF343 : db $01 : db $02 ; Bombs
 dl $7EF07C : db $02 : dw $4407 ; Room $003E: Ice Palace (Stalfos Knights / Conveyor Hellway) (..d...K.......qq)
 dl $7EF36D : db $01 : db $40 ; Health (actual)
 dl $7FDFFC : db $02 : dw $0306 ; Room $3E persistent: Ice Palace (Stalfos Knights / Conveyor Hellway)
@@ -6012,16 +6011,19 @@ dl $7E0552 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0556 : db $02 : dw $0000 ; Object tilemap state
 dl $7E055A : db $02 : dw $0000 ; Object tilemap state
 dl $7E055E : db $02 : dw $0000 ; Object tilemap state
-dl $7EC74A : db $02 : dw $2C62 ; Selected menu gfx, row 1
 dl $7EF36F : db $01 : db $FF ; Keys
-dl $7EC78A : db $02 : dw $2C72 ; Selected menu gfx, row 2
 dl $7EF1BC : db $02 : dw $0804 ; Room $00DE: Ice Palace (Kholdstare[Boss]) (.....k........q.)
 dl $7EF36C : db $01 : db $50 ; Health (goal)
 dl $7EF36D : db $01 : db $50 ; Health (actual)
 dl $7EF385 : db $01 : db $00 ; Key for dungeon $09
 dl $7EF3F5 : db $02 : dw $0000 ; Deaths
 dl $7EF37A : db $01 : db $66 ; Crystals
+dl $7E0202 : db $01 : db $14 ; Selected menu item
 dl $7E0303 : db $01 : db $14 ; Selected menu item
+dl $7EC74A : db $02 : dw $2C62 ; Selected menu gfx, row 1
+dl $7EC74C : db $02 : dw $2C63 ; Selected menu gfx, row 1
+dl $7EC78A : db $02 : dw $2C72 ; Selected menu gfx, row 2
+dl $7EC78C : db $02 : dw $2C73 ; Selected menu gfx, row 2
 dl $7FDFF9 : db $01 : db $42 ; Overworld $3C persistent: Great Swamp SE
 dl $7E0540 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
@@ -6031,9 +6033,6 @@ dl $7E0550 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0554 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0558 : db $02 : dw $0000 ; Object tilemap state
 dl $7E055C : db $02 : dw $0000 ; Object tilemap state
-dl $7EC74C : db $02 : dw $2C63 ; Selected menu gfx, row 1
-dl $7E0202 : db $01 : db $14 ; Selected menu item
-dl $7EC78C : db $02 : dw $2C73 ; Selected menu gfx, row 2
 dl $7FDFDA : db $01 : db $D4 ; Overworld $2D persistent: Bridge to Hyrule Castle
 dl $7FE01B : db $01 : db $42 ; Overworld $4D persistent: UNKNOWN
 .after
@@ -6199,11 +6198,8 @@ dl $7E054A : db $02 : dw $0470 ; Object tilemap state
 dl $7E054E : db $02 : dw $1072 ; Object tilemap state
 dl $7E0552 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0556 : db $02 : dw $0000 ; Object tilemap state
-dl $7EC74A : db $02 : dw $24F5 ; Selected menu gfx, row 1
-dl $7EC78A : db $02 : dw $24C0 ; Selected menu gfx, row 2
 dl $7EF06C : db $02 : dw $641F ; Room $0036: Swamp Palace (Big Chest Room) (..dd..K.....qqqq)
 dl $7EF342 : db $01 : db $01 ; Hookshot
-dl $7E0303 : db $01 : db $0E ; Selected menu item
 dl $7E0540 : db $02 : dw $100A ; Object tilemap state
 dl $7E0544 : db $02 : dw $05BC ; Object tilemap state
 dl $7E0548 : db $02 : dw $046C ; Object tilemap state
@@ -6211,8 +6207,11 @@ dl $7E054C : db $02 : dw $0FDE ; Object tilemap state
 dl $7E0550 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0554 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0558 : db $02 : dw $0000 ; Object tilemap state
-dl $7EC74C : db $02 : dw $24F6 ; Selected menu gfx, row 1
 dl $7E0202 : db $01 : db $03 ; Selected menu item
+dl $7E0303 : db $01 : db $0E ; Selected menu item
+dl $7EC74A : db $02 : dw $24F5 ; Selected menu gfx, row 1
+dl $7EC74C : db $02 : dw $24F6 ; Selected menu gfx, row 1
+dl $7EC78A : db $02 : dw $24C0 ; Selected menu gfx, row 2
 dl $7EC78C : db $02 : dw $24F5 ; Selected menu gfx, row 2
 dl $7E002F : db $01 : db $00 ; Link's direction
 .after
@@ -6294,6 +6293,7 @@ dl $7FE126 : db $01 : db $AB ; Overworld $D3 persistent: UNKNOWN
 .after
 
 sram_mire_mire_darkworld_warp:
+dl $7EF346 : db $01 : db $01 ; Ice Rod
 dl $7EF2BB : db $01 : db $00 ; Overworld $3B: Unknown (........)
 dl $7EF2FB : db $01 : db $00 ; Overworld $7B: Unknown (........)
 dl $7EC74A : db $02 : dw $2CD4 ; Selected menu gfx, row 1
@@ -6518,7 +6518,6 @@ dl $7EC78A : db $02 : dw $24C0 ; Selected menu gfx, row 2
 dl $7EF240 : db $02 : dw $001A ; Room $0120: Unknown (............qq.q)
 dl $7EF1BE : db $02 : dw $0003 ; Room $00DF: Cave (...............q)
 dl $7EF1DE : db $02 : dw $0003 ; Room $00EF: Cave (Crystal Switch / 5 Chests Room) (...............q)
-dl $7EF346 : db $01 : db $01 ; Ice Rod
 dl $7FE17F : db $01 : db $CA ; Overworld $FF persistent: UNKNOWN
 dl $7FE1BF : db $01 : db $EC ; Overworld $11F persistent: UNKNOWN
 dl $7E0303 : db $01 : db $0E ; Selected menu item
@@ -7002,6 +7001,12 @@ dl $7E0550 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0554 : db $02 : dw $0000 ; Object tilemap state
 dl $7FE0CA : db $02 : dw $0000 ; Room $A5 persistent: Ganon's Tower (Wizzrobes Rooms)
 dl $7E002F : db $01 : db $00 ; Link's direction
+dl $7E0202 : db $01 : db $03 ; Selected menu item
+dl $7E0303 : db $01 : db $0E ; Selected menu item
+dl $7EC74A : db $02 : dw $24F5 ; Selected menu gfx, row 1
+dl $7EC74C : db $02 : dw $24F6 ; Selected menu gfx, row 1
+dl $7EC78A : db $02 : dw $24C0 ; Selected menu gfx, row 2
+dl $7EC78C : db $02 : dw $24F5 ; Selected menu gfx, row 2
 .after
 
 sram_ganon_pyramid:
