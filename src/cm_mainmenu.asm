@@ -1641,8 +1641,8 @@ cm_submenu_features:
     dw cm_feature_qw
     dw cm_feature_lit_rooms
     dw cm_feature_oob
-    dw cm_feature_los
 	dw cm_feature_save_p2
+    dw cm_feature_lanmola_cycle_count
     dw #$0000
   table ../resources/header.tbl
     db #$2C, "FEATURES", #$FF
@@ -1768,10 +1768,18 @@ cm_feature_save_p2:
 		%ai8()
 		RTS
 
-cm_feature_los:
-    ; \todo implement
-    dw !CM_ACTION_TOGGLE
-    dl !ram_los_toggle
-    db #$24, "LoS Sprites", #$FF
+cm_feature_lanmola_cycle_count:
+    dw !CM_ACTION_TOGGLE_JSR
+    dw #.turn_off_xy
+    dl !ram_toggle_lanmola_cycles
+    db #$24, "Lanmola Cycs", #$FF
+
+  .turn_off_xy
+  %a8()
+    LDA #$00 : STA !ram_lanmola_cycles
+               STA !ram_lanmola_cycles+1
+               STA !ram_lanmola_cycles+2
+    RTS
+
 
 ; }}}

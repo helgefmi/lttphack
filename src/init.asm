@@ -22,6 +22,7 @@ init_expand:
     STA !ram_enemy_hp_toggle
     STA !ram_counters_toggle
     STA !ram_input_display_toggle
+	STA !ram_toggle_lanmola_cycles
 	;LDA.b #$00
 	;STA !ram_savestate_p2_control_toggle
 	%ai16() ; Init control for savestate

@@ -1,13 +1,5 @@
 V8:
 ===
-
-- Better presets:
-  - Only 1 bomb for IPBJ
-  - Sanc heart and other safeties not an option
-  - Ice rod grabbed after Mire
-  - Agahnim's tower - Outside hera: Put it inside hera.
-
-
 - Feature toggle (like "show input display") should persist through loading a save state.
 
 - The spotlight animation of some transitions covers the menu.
@@ -23,8 +15,6 @@ V8:
 - Game crashes sometimes after killing aga2. Same bug as in v7 I presume.
 
 - Got black shield while loading presets in Thieves' a couple times.
-
-- QW indicator disappears when you open & close the start menu.
 
 V9:
 ===

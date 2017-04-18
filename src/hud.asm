@@ -53,6 +53,11 @@ hud_template_hook:
     STA $7EC734 : STA $7EC736
 
     JSL draw_counters
+
+    LDA !ram_qw_toggle : BEQ .dont_update_qw
+    JSR hud_draw_qw
+  .dont_update_qw
+
     SEP #$30
     INC $16
     RTL
@@ -123,12 +128,46 @@ update_hearts_hook:
 
   .dont_update_xy
   %a8()
-    LDA !ram_lit_rooms_toggle : BEQ .end
+    LDA !ram_lit_rooms_toggle : BEQ .dont_update_lit_rooms
     LDA.b #$03 : STA $045A
+
+  .dont_update_lit_rooms
+
+    LDA !ram_toggle_lanmola_cycles : BEQ .end
+
+    ; Make sure we're indoors and in the boss fight room
+    LDA $A0 : CMP.b #$33 : BNE .end
+    LDA $1B : BEQ .end
+
+    LDA $0DF0 : CMP.b #$01 : BNE .lanmola2
+    LDA $0D80 : CMP.b #$01 : BNE .lanmola2
+    LDA !ram_lanmola_cycles : INC : STA !ram_lanmola_cycles
+
+  .lanmola2
+    LDA $0DF1 : CMP.b #$01 : BNE .lanmola3
+    LDA $0D81 : CMP.b #$01 : BNE .lanmola3
+    LDA !ram_lanmola_cycles+1 : INC : STA !ram_lanmola_cycles+1
+
+  .lanmola3
+    LDA $0DF2 : CMP.b #$01 : BNE .draw_cycles
+    LDA $0D82 : CMP.b #$01 : BNE .draw_cycles
+    LDA !ram_lanmola_cycles+2 : INC : STA !ram_lanmola_cycles+2
+
+  .draw_cycles
+  %a16()
+    JSR hud_draw_lanmola_cycles
 
   .end
   %ai16()
     RTL
+
+
+hud_draw_lanmola_cycles:
+    LDA !ram_lanmola_cycles+0 : AND #$00FF : ORA #$2090 : STA $7EC810
+    LDA !ram_lanmola_cycles+1 : AND #$00FF : ORA #$2090 : STA $7EC812
+    LDA !ram_lanmola_cycles+2 : AND #$00FF : ORA #$2090 : STA $7EC814
+    RTS
+
 
 
 hud_draw_hearts:
@@ -180,6 +219,7 @@ hud_draw_qw:
     LDA #$340D : STA $7EC80C
 
   .end
+  %a16()
     RTS
 
 

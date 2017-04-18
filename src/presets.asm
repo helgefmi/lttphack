@@ -41,6 +41,9 @@ org $278000
 preset_load_next_frame:
   %ai8()
     JSR preset_deinit_current_state
+  %ai16()
+    JSR preset_clear_tilemap
+  %ai8()
 
     LDA !ram_preset_type : CMP #$02 : BEQ .dungeon
 
@@ -310,7 +313,7 @@ preset_sprite_reset_all:
 preset_load_state:
     ; Enters AI=16
 
-    JSR preset_clear_state
+    JSR preset_clear_sram
 
   PHB : PHK : PLB
     LDA !ram_preset_end_of_sram_state : STA $06
@@ -369,7 +372,7 @@ preset_load_state:
     RTS
 
 
-preset_clear_state:
+preset_clear_sram:
     ; Enteres AI=16
     LDA.w #$0000
     LDX.w #$0000
@@ -377,6 +380,20 @@ preset_clear_state:
   .loop
     STA $7EF000, X : STA $7EF100, X : STA $7EF200, X : STA $7EF300, X : STA $7EF400, X
     INX #2 : CPX.w #$0100 : BNE .loop
+
+    RTS
+
+preset_clear_tilemap:
+    ; Enteres AI=16
+    LDA.w #$0000
+    LDX.w #$0000
+
+  .loop
+    STA $7F2000, X : STA $7F2200, X : STA $7F2400, X : STA $7F2600, X
+    STA $7F2800, X : STA $7F2A00, X : STA $7F2C00, X : STA $7F2E00, X
+    STA $7F3000, X : STA $7F3200, X : STA $7F3400, X : STA $7F3600, X
+    STA $7F3800, X : STA $7F3A00, X : STA $7F3C00, X : STA $7F3E00, X
+    INX #2 : CPX.w #$0200 : BNE .loop
 
     RTS
 
@@ -401,6 +418,9 @@ preset_reset_state_after_loading:
 
     ; Resets a scroll value for intra-room transitions
     STZ $0126
+
+    ; I think maybe this resets being on a conveyorbelt? At least the first one ..
+    STZ $03F3 : STZ $0322
 
     RTS
 
