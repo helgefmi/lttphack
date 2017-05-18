@@ -12,14 +12,14 @@ gamemode_hook:
     LDA $F4 : STA !ram_ctrl1_filtered
     LDA $F6 : STA !ram_ctrl1_filtered_byte2
 	
-	LDA $F1 : STA !ram_ctrl2_word
-	LDA $F3 : STA !ram_ctrl2_byte2
+    LDA $F1 : STA !ram_ctrl2_word
+    LDA $F3 : STA !ram_ctrl2_byte2
 
     ; Acmlm's Save State {{{
 
   %ai16()
-	LDA (!ram_savestate_ctrl_to_use)
-	CMP !ram_savestate_load_shortcut : BEQ +
+    LDA (!ram_savestate_ctrl_to_use)
+    CMP !ram_savestate_load_shortcut : BEQ +
     JMP b
 
 + %a8()

@@ -73,11 +73,11 @@
 !ram_savestate_load_shortcut = $7F7802
 !ram_savestate_save_shortcut = $7F7804
 
-!shortcut_load_p1 = #$1060
-!shortcut_save_p1 = #$2060
+!SHORTCUT_LOAD_P1 = #$1060
+!SHORTCUT_SAVE_P1 = #$2060
 
-!shortcut_load_p2 = #$4000
-!shortcut_save_p2 = #$0040
+!SHORTCUT_LOAD_P2 = #$4000
+!SHORTCUT_SAVE_P2 = #$0040
 
 ;-------------------------
 ; HUD
