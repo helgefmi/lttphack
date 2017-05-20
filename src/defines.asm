@@ -27,7 +27,7 @@
 
 ; etheir !ram_ctrl1_word or !ram_ctrl2_word value
 !ram_savestate_ctrl_to_use = $AB
-!ram_savestate_ctrl_to_use_cpy = $7F7810
+!ram_savestate_ctrl_to_use_cpy = $7F7710
 
 !ram_gamemode_copy = $7F767E
 !ram_submode_copy = $7F7680
@@ -69,9 +69,9 @@
 !ram_cm_last_frame_input = $7F76C6
 !ram_cm_input_timer = $7F76C8
 
-!ram_savestate_p2_control_toggle = $7F7800
-!ram_savestate_load_shortcut = $7F7802
-!ram_savestate_save_shortcut = $7F7804
+!ram_savestate_p2_control_toggle = $7F7712
+!ram_savestate_load_shortcut = $7F7714
+!ram_savestate_save_shortcut = $7F7716
 
 !SHORTCUT_LOAD_P1 = #$1060
 !SHORTCUT_SAVE_P1 = #$2060
