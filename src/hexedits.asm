@@ -19,17 +19,18 @@ org $0083F8
 org $008039
     NOP : NOP
 
+		
 ; Overrides the following
 ; $00803B: A5 F6  LDA $F6
 ; $00803D: 29 20  AND #$20
 org $00803B
-    LDA $F5 : AND.b #$40
+    LDA $F5 : AND.b #$00
 
 ; Overrides the following
 ; $008044: A5 F6  LDA $F6
 ; $008046: 29 10  AND #$10
 org $008044
-    LDA $F7 : AND.b #$80
+    LDA $F7 : AND.b #$00
 
 
 ; == BAGE CHEAT CODE ==
