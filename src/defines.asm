@@ -73,11 +73,16 @@
 !ram_savestate_load_shortcut = $7F7714
 !ram_savestate_save_shortcut = $7F7716
 
+!ram_previous_preset_destination = $7F7720
+!ram_previous_preset_type = $7F7722
+
 !SHORTCUT_LOAD_P1 = #$1060
 !SHORTCUT_SAVE_P1 = #$2060
 
 !SHORTCUT_LOAD_P2 = #$4000
 !SHORTCUT_SAVE_P2 = #$0040
+;!SHORTCUT_LOAD_LAST_PRESET_P2 = #$
+!SHORTCUT_LOAD_LAST_PRESET = #$2010 ; Start + L
 
 ;-------------------------
 ; HUD

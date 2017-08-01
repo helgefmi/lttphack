@@ -791,11 +791,11 @@ cm_execute_preset:
 
   %a16()
     LDA ($00) : STA $02
-    INC : STA !ram_preset_destination 
+    INC : STA !ram_preset_destination  : STA !ram_previous_preset_destination
   %a8()
   PHB
     LDA.b #$27 : PHA : PLB
-    LDA ($02) : STA !ram_preset_type
+    LDA ($02) : STA !ram_preset_type : STA !ram_previous_preset_type
   PLB
     INC $11
   .end
