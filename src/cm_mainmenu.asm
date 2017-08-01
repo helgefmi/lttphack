@@ -453,7 +453,7 @@ cm_submenu_presets:
     dw cm_presets_goto_trock
     dw cm_presets_goto_gtower
     dw cm_presets_goto_ganon
-	dw cm_presets_goto_boss
+    dw cm_presets_goto_boss
     dw #$0000
   table ../resources/header.tbl
     db #$2C, "PRESETS", #$FF
