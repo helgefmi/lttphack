@@ -454,7 +454,7 @@ cm_submenu_presets:
     dw cm_presets_goto_trock
     dw cm_presets_goto_gtower
     dw cm_presets_goto_ganon
-    dw cm_presets_goto_boss
+    dw cm_presets_goto_bosses
     dw #$0000
   table ../resources/header.tbl
     db #$2C, "PRESETS", #$FF
@@ -1627,14 +1627,14 @@ cm_ganon_pyramid:
     dw #preset_ganon_pyramid
     db #$24, "Pyramid", #$FF
 
-;; BOSS
+; BOSS
 
-cm_presets_goto_boss:
+cm_presets_goto_bosses:
     dw !CM_ACTION_SUBMENU
-    dw cm_presets_boss
-    db #$24, "Boss", #$FF
+    dw cm_presets_bosses
+    db #$24, "Bosses", #$FF
 
-cm_presets_boss:
+cm_presets_bosses:
     dw cm_east_armos
     dw cm_desert_lanmolas
     dw cm_hera_moldorm
@@ -1646,13 +1646,11 @@ cm_presets_boss:
     dw cm_swamp_arrghus
     dw cm_mire_vitty
     dw cm_trock_trinexx
-    dw cm_gtower_ice_armos
-    dw cm_gtower_moldorm_2
     dw cm_gtower_agahnim_2
     dw cm_ganon_pyramid
     dw #$0000
   table ../resources/header.tbl
-    db #$2C, "BOSS", #$FF
+    db #$2C, "BOSSES", #$FF
   table ../resources/normal.tbl
 
 ; }}}
@@ -1671,7 +1669,7 @@ cm_submenu_features:
     dw cm_feature_qw
     dw cm_feature_lit_rooms
     dw cm_feature_oob
-    dw cm_feature_save_p2
+    dw cm_feature_savestate_controller
     dw cm_feature_lanmola_cycle_count
     dw #$0000
   table ../resources/header.tbl
@@ -1767,33 +1765,30 @@ cm_feature_oob:
     dl !lowram_oob_toggle
     db #$24, "OoB Mode", #$FF
     
-cm_feature_save_p2:
+cm_feature_savestate_controller:
     dw !CM_ACTION_CHOICE_JSR
     dw #.toggle_save_control
-    dl !ram_savestate_p2_control_toggle
+    dl !ram_savestate_controller
     db #$24, "SState ctrl", #$FF
     db #$24, "Player 1", #$FF
     db #$24, "Player 2", #$FF
     db #$FF
     
     .toggle_save_control
-        STA !ram_debug
         %ai16()
-        AND #$00FF
-        CMP #$0000 : BEQ .tsp1
-        LDA !SHORTCUT_LOAD_P2
-        STA !ram_savestate_load_shortcut
-        LDA !SHORTCUT_SAVE_P2
-        STA !ram_savestate_save_shortcut
+        AND #$00FF : CMP #$0000 : BEQ .p1
+
+        LDA !SHORTCUT_LOAD_P2 : STA !ram_savestate_load_shortcut
+        LDA !SHORTCUT_SAVE_P2 : STA !ram_savestate_save_shortcut
         LDA #!ram_ctrl2_word
-        JMP .mlocal_end
-        .tsp1
-            LDA !SHORTCUT_LOAD_P1
-            STA !ram_savestate_load_shortcut
-            LDA !SHORTCUT_SAVE_P1
-            STA !ram_savestate_save_shortcut
-            LDA #!ram_ctrl1_word
-        .mlocal_end
+        JMP .end
+
+      .p1
+        LDA !SHORTCUT_LOAD_P1 : STA !ram_savestate_load_shortcut
+        LDA !SHORTCUT_SAVE_P1 : STA !ram_savestate_save_shortcut
+        LDA #!ram_ctrl1_word
+
+      .end
         STA !ram_savestate_ctrl_to_use
         %ai8()
         RTS
