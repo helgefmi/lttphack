@@ -4,6 +4,7 @@ cm_mainmenu_indices:
     dw cm_main_goto_presets
     dw cm_main_goto_items
     dw cm_main_goto_equipment
+    dw cm_main_goto_game_state
     dw cm_main_goto_features
     ; dw cm_main_goto_minigames
     dw #$0000
@@ -1784,7 +1785,7 @@ cm_feature_oob:
     dw !CM_ACTION_TOGGLE
     dl !lowram_oob_toggle
     db #$24, "OoB Mode", #$FF
-    
+
 cm_feature_savestate_controller:
     dw !CM_ACTION_CHOICE_JSR
     dw #.toggle_save_control
@@ -1793,7 +1794,7 @@ cm_feature_savestate_controller:
     db #$24, "Player 1", #$FF
     db #$24, "Player 2", #$FF
     db #$FF
-    
+
     .toggle_save_control
         %ai16()
         AND #$00FF : CMP #$0000 : BEQ .p1
@@ -1826,6 +1827,116 @@ cm_feature_lanmola_cycle_count:
                STA !ram_lanmola_cycles+2
     RTS
 
+
+; }}}
+; GAME STATE {{{
+
+
+cm_main_goto_game_state:
+    dw !CM_ACTION_SUBMENU
+    dw cm_submenu_game_state
+    db #$24, "Game state", #$FF
+
+cm_submenu_game_state:
+    dw cm_game_state_progress
+    dw cm_game_state_goto_flags_submenu
+    dw cm_game_state_map_indicator
+    dw #$0000
+  table ../resources/header.tbl
+    db #$2C, "GAME STATE", #$FF
+  table ../resources/normal.tbl
+
+cm_game_state_progress:
+    dw !CM_ACTION_CHOICE
+    dl !ram_game_progress
+    db #$24, "Progress", #$FF
+    db #$24, "Started", #$FF
+    db #$24, "Uncle", #$FF
+    db #$24, "Zelda", #$FF
+    db #$24, "Agahnim", #$FF
+    db #$FF
+
+cm_game_state_map_indicator:
+    dw !CM_ACTION_CHOICE
+    dl !ram_game_map_indicator
+    db #$24, "Map Indicator", #$FF
+    db #$24, "Castle", #$FF
+    db #$24, "Kakariko", #$FF
+    db #$24, "Sahashrala", #$FF
+    db #$24, "Pendants", #$FF
+    db #$24, "MS", #$FF
+    db #$24, "Agatower", #$FF
+    db #$24, "PoD", #$FF
+    db #$24, "Crystals", #$FF
+    db #$24, "Ganon Tower", #$FF
+    db #$FF
+
+cm_game_state_goto_flags_submenu:
+    dw !CM_ACTION_SUBMENU
+    dw cm_submenu_game_state_flags
+    db #$24, "Game flags", #$FF
+
+cm_submenu_game_state_flags:
+    dw cm_game_state_flags_uncle
+    dw cm_game_state_flags_sanc_priest
+    dw cm_game_state_flags_escaped
+    dw cm_game_state_flags_not_used
+    dw cm_game_state_flags_uncle_left_home
+    dw cm_game_state_flags_talked_to_aginah
+    dw cm_game_state_flags_fortune_teller_cycle
+    dw cm_game_state_flags_not_used_2
+    dw #$0000
+  table ../resources/header.tbl
+    db #$2C, "GAME FLAGS", #$FF
+  table ../resources/normal.tbl
+
+cm_game_state_flags_uncle:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_flags
+    db #$01
+    db #$24, "Uncle dead", #$FF
+
+cm_game_state_flags_sanc_priest:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_flags
+    db #$02
+    db #$24, "Sanc priest", #$FF
+
+cm_game_state_flags_escaped:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_flags
+    db #$04
+    db #$24, "Escaped", #$FF
+
+cm_game_state_flags_not_used:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_flags
+    db #$08
+    db #$24, "Not used", #$FF
+
+cm_game_state_flags_uncle_left_home:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_flags
+    db #$10
+    db #$24, "Uncle left", #$FF
+
+cm_game_state_flags_talked_to_aginah:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_flags
+    db #$20
+    db #$24, "Aginah", #$FF
+
+cm_game_state_flags_fortune_teller_cycle:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_flags
+    db #$40
+    db #$24, "Fortune cycle", #$FF
+
+cm_game_state_flags_not_used_2:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_flags
+    db #$80
+    db #$24, "Not used", #$FF
 
 ; }}}
 ; MINIGAMES {{{

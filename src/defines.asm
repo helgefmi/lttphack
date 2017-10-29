@@ -206,8 +206,10 @@
 
 ; OTHER
 
+!ram_game_progress = $7EF3C5
+!ram_game_flags = $7EF3C6
+!ram_game_map_indicator = $7EF3C7
 !ram_capabilities = $7EF379
-!ram_game_phase = $7EF3C5
 
 ;-------------------------
 ; Macros
