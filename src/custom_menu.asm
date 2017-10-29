@@ -625,6 +625,7 @@ cm_execute_action_table:
     dw cm_execute_choice_jsr
     dw cm_execute_numfield
     dw cm_execute_preset
+    dw cm_execute_toggle_bit
 
 
 cm_execute_toggle:
@@ -812,6 +813,17 @@ cm_execute_preset:
   %a16()
     RTS
 
+
+cm_execute_toggle_bit:
+    ; Will only toggle the first bit.
+    LDA ($00) : INC $00 : INC $00 : STA $02
+    LDA ($00) : INC $00 : STA $04
+    LDA ($00) : INC $00 : STA $05
+  %ai8()
+    LDA [$02] : EOR $05 : STA [$02]
+    RTS
+
+
 ; -------------
 ; Draw Action
 ; -------------
@@ -832,6 +844,7 @@ cm_draw_action_table:
     dw cm_draw_choice_jsr
     dw cm_draw_numfield
     dw cm_draw_preset
+    dw cm_draw_toggle_bit
 
 
 macro item_index_to_vram_index()
@@ -1010,6 +1023,46 @@ cm_draw_preset:
     INC $02 : INC $02
     %item_index_to_vram_index()
     JSR cm_draw_text
+    RTS
+
+
+cm_draw_toggle_bit:
+    ; grab the memory address (long)
+    LDA ($02) : INC $02 : INC $02 : STA $04
+    LDA ($02) : INC $02 : STA $06
+    ; grab bitmask
+    LDA ($02) : INC $02 : STA $07
+
+    ; Draw the text first (since it uses A)
+    %item_index_to_vram_index()
+  PHX
+    JSR cm_draw_text
+  PLX
+
+    ; Set position for ON/OFF
+    TXA : CLC : ADC #$001C : TAX
+
+  %a8()
+    ; set palette
+    LDA $0E : STA $1001, X : STA $1003, X : STA $1005, X
+
+    ; grab the value at that memory address
+    LDA [$04] : AND $07 : BNE .checked
+
+    ; No
+    LDA.b #$0D : STA $1000, X
+    LDA.b #$38 : STA $1002, X
+
+    BRA .end
+
+  .checked
+    ; Yes
+    LDA.b #$18 : STA $1000, X
+    LDA.b #$2E : STA $1002, X
+    LDA.b #$3C : STA $1004, X
+
+  .end
+  %a16()
     RTS
 
 ; ------
