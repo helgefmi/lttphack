@@ -114,6 +114,15 @@
 !CM_ACTION_NUMFIELD = #$0E
 !CM_ACTION_PRESET = #$10
 
+!ram_minigame_submode = $7F76CE
+
+!ram_react_counter = $7F76CA
+!ram_react_frames = $7F76CC
+
+!ram_mash_counter = $7F76D0
+!ram_mash_inputs = $7F76D2
+
+
 ;-------------------------
 ; PRESETS
 ;-------------------------
@@ -129,6 +138,7 @@
 ; From ROM
 ;-------------------------
 
+!RandomNumGen = $0DBA71
 !UseImplicitRegIndexedLocalJumpTable = $008781
 !BirdTravel_LoadTargetAreaData = $02E99D
 !BirdTravel_LoadTargetAreaData_AfterData = $02EA30

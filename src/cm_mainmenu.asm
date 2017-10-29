@@ -5,6 +5,7 @@ cm_mainmenu_indices:
     dw cm_main_goto_items
     dw cm_main_goto_equipment
     dw cm_main_goto_features
+    ; dw cm_main_goto_minigames
     dw #$0000
   table ../resources/header.tbl
     db #$2C, "LTTPHACK MENU", #$FF
@@ -1781,5 +1782,41 @@ cm_feature_lanmola_cycle_count:
                STA !ram_lanmola_cycles+2
     RTS
 
+
+; }}}
+; MINIGAMES {{{
+
+cm_main_goto_minigames:
+    dw !CM_ACTION_SUBMENU
+    dw cm_submenu_minigames
+    db #$24, "Minigames", #$FF
+
+cm_submenu_minigames:
+    dw cm_minigame_react
+    dw cm_minigame_mash
+    dw #$0000
+  table ../resources/header.tbl
+    db #$2C, "MINIGAMES", #$FF
+  table ../resources/normal.tbl
+
+cm_minigame_react:
+    dw !CM_ACTION_JSR
+    dw #.start_react_minigame
+    db #$24, "Reaction", #$FF
+
+  .start_react_minigame
+    LDA #1 : STA $B0
+    LDA #0 : STA !ram_minigame_submode
+    RTS
+
+cm_minigame_mash:
+    dw !CM_ACTION_JSR
+    dw #.start_mashing_minigame
+    db #$24, "Mashing", #$FF
+
+  .start_mashing_minigame
+    LDA #2 : STA $B0
+    LDA #0 : STA !ram_minigame_submode
+    RTS
 
 ; }}}

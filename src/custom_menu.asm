@@ -41,6 +41,7 @@ CM_Local:
 CM_Init:
     ; Start with new state when opening the menu.
     JSR cm_clear_stack
+    STZ $B0
 
   ; Put the main menu onto the stack.
   %a16()
@@ -93,6 +94,13 @@ CM_MenuDown:
 
 
 CM_Active:
+    LDA $B0 : BEQ .in_menu
+    JSR cm_do_minigame
+
+    RTS
+
+
+  .in_menu
     JSR cm_get_pressed_button : CPX.b #$04 : BEQ .pressed_down
                                 CPX.b #$08 : BEQ .pressed_up
                                 CPX.b #$02 : BEQ .pressed_left
@@ -202,6 +210,8 @@ CM_Return:
   .end
   %a8()
     RTS
+
+incsrc minigames.asm
 
 ; -----------
 ; Utilities
