@@ -254,6 +254,7 @@ cm_submenu_equipment:
     dw cm_equipment_bombs
     dw cm_equipment_arrows
     dw cm_equipment_keys
+    dw cm_equipment_goto_big_keys_submenu
 
     dw #$0000
   table ../resources/header.tbl
@@ -451,6 +452,110 @@ cm_equipment_keys:
     db #$00, #$09
     db #$01
     db #$24, "Keys", #$FF
+
+cm_equipment_goto_big_keys_submenu:
+    dw !CM_ACTION_SUBMENU
+    dw cm_submenu_big_keys
+    db #$24, "Big keys", #$FF
+
+cm_submenu_big_keys:
+    dw cm_big_keys_hc
+    dw cm_big_keys_eastern
+    dw cm_big_keys_desert
+    dw cm_big_keys_hera
+    dw cm_big_keys_aga
+    dw cm_big_keys_pod
+    dw cm_big_keys_thieves
+    dw cm_big_keys_skull
+    dw cm_big_keys_ice
+    dw cm_big_keys_swamp
+    dw cm_big_keys_mire
+    dw cm_big_keys_trock
+    dw cm_big_keys_gtower
+
+    dw #$0000
+  table ../resources/header.tbl
+    db #$2C, "BIG KEYS", #$FF
+  table ../resources/normal.tbl
+
+cm_big_keys_hc:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_big_keys_2
+    db #$40
+    db #$24, "Hyrule Castle", #$FF
+
+cm_big_keys_eastern:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_big_keys_2
+    db #$20
+    db #$24, "Eastern", #$FF
+
+cm_big_keys_desert:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_big_keys_2
+    db #$10
+    db #$24, "Desert", #$FF
+
+cm_big_keys_aga:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_big_keys_2
+    db #$08
+    db #$24, "ATower", #$FF
+
+cm_big_keys_swamp:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_big_keys_2
+    db #$04
+    db #$24, "Swamp", #$FF
+
+cm_big_keys_pod:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_big_keys_2
+    db #$02
+    db #$24, "Darkness", #$FF
+
+cm_big_keys_mire:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_big_keys_2
+    db #$01
+    db #$24, "Mire", #$FF
+
+cm_big_keys_skull:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_big_keys_1
+    db #$80
+    db #$24, "Skull", #$FF
+
+cm_big_keys_ice:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_big_keys_1
+    db #$40
+    db #$24, "Ice", #$FF
+
+cm_big_keys_hera:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_big_keys_1
+    db #$20
+    db #$24, "Hera", #$FF
+
+cm_big_keys_thieves:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_big_keys_1
+    db #$10
+    db #$24, "Thieves", #$FF
+
+cm_big_keys_trock:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_big_keys_1
+    db #$08
+    db #$24, "TRock", #$FF
+
+cm_big_keys_gtower:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_big_keys_1
+    db #$04
+    db #$24, "GTower", #$FF
+
 
 ; }}}
 ; PRESETS {{{
@@ -1865,10 +1970,10 @@ cm_game_state_map_indicator:
     db #$24, "Sahashrala", #$FF
     db #$24, "Pendants", #$FF
     db #$24, "MS", #$FF
-    db #$24, "Agatower", #$FF
-    db #$24, "PoD", #$FF
+    db #$24, "ATower", #$FF
+    db #$24, "Darkness", #$FF
     db #$24, "Crystals", #$FF
-    db #$24, "Ganon Tower", #$FF
+    db #$24, "GTower", #$FF
     db #$FF
 
 cm_game_state_goto_flags_submenu:
