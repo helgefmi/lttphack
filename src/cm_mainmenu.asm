@@ -335,14 +335,6 @@ cm_equipment_sword:
     db #$FF
 
   .toggle_sword
-    CMP.b #$00 : BEQ .reset_game_phase
-    LDA !ram_game_phase : ORA.b #$01 : STA !ram_game_phase
-    BRA .end
-
-  .reset_game_phase
-    LDA !ram_game_phase : AND.b #$FE : STA !ram_game_phase
-
-  .end
     JSL !DecompSwordGfx
     JSL !Palette_Sword
     RTS
