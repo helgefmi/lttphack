@@ -1946,6 +1946,7 @@ cm_submenu_game_state:
     dw cm_game_state_progress
     dw cm_game_state_goto_flags_submenu
     dw cm_game_state_map_indicator
+    dw cm_game_state_goto_bosses_submenu
     dw #$0000
   table ../resources/header.tbl
     db #$2C, "GAME STATE", #$FF
@@ -2042,6 +2043,101 @@ cm_game_state_flags_not_used_2:
     dl #!ram_game_flags
     db #$80
     db #$24, "Not used", #$FF
+
+cm_game_state_goto_bosses_submenu:
+    dw !CM_ACTION_SUBMENU
+    dw cm_game_state_bosses_submenu
+    db #$24, "Bosses", #$FF
+
+cm_game_state_bosses_submenu:
+    dw cm_game_state_bosses_armos
+    dw cm_game_state_bosses_lanmolas
+    dw cm_game_state_bosses_moldorm
+    dw cm_game_state_bosses_agahnim
+    dw cm_game_state_bosses_helma
+    dw cm_game_state_bosses_blind
+    dw cm_game_state_bosses_mothula
+    dw cm_game_state_bosses_kholdstare
+    dw cm_game_state_bosses_arrghus
+    dw cm_game_state_bosses_vitty
+    dw cm_game_state_bosses_trinexx
+    dw cm_game_state_bosses_agahnim_2
+    dw #$0000
+  table ../resources/header.tbl
+    db #$2C, "GAME FLAGS", #$FF
+  table ../resources/normal.tbl
+
+cm_game_state_bosses_armos:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #$7EF191
+    db #$08
+    db #$24, "Armos", #$FF
+
+cm_game_state_bosses_lanmolas:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #$7EF067
+    db #$08
+    db #$24, "Lanmola", #$FF
+
+cm_game_state_bosses_moldorm:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #$7EF00F
+    db #$08
+    db #$24, "Moldorm", #$FF
+
+cm_game_state_bosses_agahnim:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #$7EF041
+    db #$08
+    db #$24, "Agahnim", #$FF
+
+cm_game_state_bosses_helma:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #$7EF0B5
+    db #$08
+    db #$24, "Helmasaur", #$FF
+
+cm_game_state_bosses_blind:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #$7EF159
+    db #$08
+    db #$24, "Blind", #$FF
+
+cm_game_state_bosses_mothula:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #$7EF053
+    db #$08
+    db #$24, "Mothula", #$FF
+
+cm_game_state_bosses_kholdstare:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #$7EF1BD
+    db #$08
+    db #$24, "Kholdstare", #$FF
+
+cm_game_state_bosses_arrghus:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #$7EF00D
+    db #$08
+    db #$24, "Arrghus", #$FF
+
+cm_game_state_bosses_vitty:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #$7EF121
+    db #$08
+    db #$24, "Vitreous", #$FF
+
+cm_game_state_bosses_trinexx:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #$7EF149
+    db #$08
+    db #$24, "Trinexx", #$FF
+
+cm_game_state_bosses_agahnim_2:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #$7EF01B
+    db #$08
+    db #$24, "Agahnim 2", #$FF
 
 ; }}}
 ; MINIGAMES {{{
