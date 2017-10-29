@@ -173,15 +173,17 @@ gamemode_hook:
     LDA $10 : CMP #$07 : BNE .not_dungeon
     LDA $11 : CMP #$06 : BEQ .no_custom_menu ; Upwards floor transition
               CMP #$07 : BEQ .no_custom_menu ; Downward floor transition
-  .not_dungeon
 
+  .not_dungeon
     ; Don't allow custom menu during mosaic effects
     LDA $7EC011 : BNE .no_custom_menu
+
   %a16()
     ; Load last preset shortcut check
     LDA !ram_ctrl1_word : CMP !SHORTCUT_LOAD_LAST_PRESET : BNE .no_load_preset
-	  JMP .load_last_preset
-    .no_load_preset
+    JMP .load_last_preset
+
+  .no_load_preset
   %a16()
     LDA !ram_ctrl1_word : AND #$1000 : CMP #$1000 : BNE .no_custom_menu
   %a8()
@@ -198,17 +200,21 @@ gamemode_hook:
 
   .no_custom_menu
     JMP .after_load_last_preset
-  .load_last_preset ; this is here otherwise no_custom_menu label is too far away
+
+  ; This is here otherwise no_custom_menu label is too far away
+  .load_last_preset
   %a8()
-    LDA $10 : CMP #$0E : BEQ .after_load_last_preset ; loading during text mode make the text stay or the item menu to bug
+    ; Loading during text mode make the text stay or the item menu to bug
+    LDA $10 : CMP #$0E : BEQ .after_load_last_preset
   %a16()
-    LDA !ram_previous_preset_destination
+    LDA !ram_previous_preset_destination : BEQ .after_load_last_preset
 	STA !ram_preset_destination
   %a8()
     LDA !ram_previous_preset_type : STA !ram_preset_type
     LDA.b #12 : STA $10
     LDA.b #05 : STA $11
     RTL
+
   .after_load_last_preset
     ; Transition detection {{{
 
