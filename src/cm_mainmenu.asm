@@ -34,7 +34,7 @@ cm_submenu_items:
     dw cm_items_flute
     dw cm_items_net
     dw cm_items_book
-    dw cm_items_bottle
+    dw cm_items_submenu_bottles
     dw cm_items_somaria
     dw cm_items_byrna
     dw cm_items_cape
@@ -144,33 +144,6 @@ cm_items_book:
     dl #!ram_item_book
     db #$24, "Book", #$FF
 
-cm_items_bottle:
-    dw !CM_ACTION_TOGGLE_JSR
-    dw #.toggle_bottles
-    dl #!ram_cm_item_bottle
-    db #$24, "Bottle", #$FF
-
-  .toggle_bottles
-    CMP #$00 : BEQ .no_bottles
-
-    ; Creates 4 bottles of various colors
-    LDA.b #$03 : STA !ram_item_bottle_array
-    LDA.b #$04 : STA !ram_item_bottle_array+1
-    LDA.b #$05 : STA !ram_item_bottle_array+2
-    LDA.b #$06 : STA !ram_item_bottle_array+3
-    LDA.b #$01 : STA !ram_item_bottle
-
-    BRA .end
-
-  .no_bottles
-    LDA.b #$00 : STA !ram_item_bottle_array
-                 STA !ram_item_bottle_array+1
-                 STA !ram_item_bottle_array+2
-                 STA !ram_item_bottle_array+3
-    LDA.b #$00 : STA !ram_item_bottle
-  .end
-    RTS
-
 cm_items_somaria:
     dw !CM_ACTION_TOGGLE
     dl #!ram_item_somaria
@@ -197,6 +170,61 @@ cm_items_mirror:
     ; 0 -> 2
     ASL : STA !ram_item_mirror
     RTS
+
+
+; Bottles submenu
+
+cm_items_submenu_bottles:
+    dw !CM_ACTION_SUBMENU
+    dw cm_submenu_bottles
+    db #$24, "Bottles", #$FF
+
+cm_submenu_bottles:
+    dw cm_items_bottle_1
+    dw cm_items_bottle_2
+    dw cm_items_bottle_3
+    dw cm_items_bottle_4
+    dw #$0000
+  table ../resources/header.tbl
+    db #$2C, "BOTTLES", #$FF
+  table ../resources/normal.tbl
+
+macro bottle_contents()
+    db #$24, "No bottle", #$FF
+    db #$24, "Shroooom", #$FF
+    db #$24, "Empty", #$FF
+    db #$24, "Red", #$FF
+    db #$24, "Green", #$FF
+    db #$24, "Blue", #$FF
+    db #$24, "Fairy", #$FF
+    db #$24, "Bee", #$FF
+    db #$24, "Golden bee", #$FF
+    db #$FF
+endmacro
+
+cm_items_bottle_1:
+    dw !CM_ACTION_CHOICE
+    dl !ram_item_bottle_array
+    db #$24, "Bottle 1", #$FF
+    %bottle_contents()
+
+cm_items_bottle_2:
+    dw !CM_ACTION_CHOICE
+    dl !ram_item_bottle_array+1
+    db #$24, "Bottle 2", #$FF
+    %bottle_contents()
+
+cm_items_bottle_3:
+    dw !CM_ACTION_CHOICE
+    dl !ram_item_bottle_array+2
+    db #$24, "Bottle 3", #$FF
+    %bottle_contents()
+
+cm_items_bottle_4:
+    dw !CM_ACTION_CHOICE
+    dl !ram_item_bottle_array+3
+    db #$24, "Bottle 4", #$FF
+    %bottle_contents()
 
 ; }}}
 ; EQUIPMENT {{{
