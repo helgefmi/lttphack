@@ -227,6 +227,7 @@ cm_init_item_variables:
 
   .normal_bow
     LDA.b #$01
+
   .store_bow
     STA !ram_cm_item_bow
 
@@ -251,6 +252,9 @@ cm_init_item_variables:
     DEC : DEC : DEC
     STA !ram_cm_equipment_maxhp
 
+    ; EG
+    LDA $7E047A : STA !ram_cm_armed_eg
+    LDA $7E044A : AND #$01 : STA !ram_cm_eg_strength
     RTS
 
 cm_get_pressed_button:

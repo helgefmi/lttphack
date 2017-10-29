@@ -206,6 +206,9 @@
 
 ; OTHER
 
+!ram_cm_armed_eg = $7EF380
+!ram_cm_eg_strength = $7EF382
+
 !ram_game_big_keys_1 = $7EF366
 !ram_game_big_keys_2 = $7EF367
 

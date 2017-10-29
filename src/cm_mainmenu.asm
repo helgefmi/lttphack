@@ -1943,15 +1943,70 @@ cm_main_goto_game_state:
     db #$24, "Game state", #$FF
 
 cm_submenu_game_state:
+    dw cm_game_state_reset_screen
     dw cm_game_state_goto_bosses_submenu
     dw cm_game_state_goto_crystals_submenu
     dw cm_game_state_goto_flags_submenu
     dw cm_game_state_progress
     dw cm_game_state_map_indicator
+    dw cm_game_state_armed_eg
+    dw cm_game_state_eg_strength
     dw #$0000
   table ../resources/header.tbl
     db #$2C, "GAME STATE", #$FF
   table ../resources/normal.tbl
+
+cm_game_state_armed_eg:
+    dw !CM_ACTION_TOGGLE_JSR
+    dw #.toggle
+    dl #!ram_cm_armed_eg
+    db #$24, "Armed EG", #$FF
+
+  .toggle
+    LDA !ram_cm_armed_eg : BEQ .not_set
+
+    LDA #$00 : STA $7E047A
+    RTS
+
+  .not_set
+    LDA #$01 : STA $7E047A
+    RTS
+
+cm_game_state_eg_strength:
+    dw !CM_ACTION_TOGGLE_JSR
+    dw #.toggle
+    dl #!ram_cm_eg_strength
+    db #$24, "Strong EG", #$FF
+
+  .toggle
+    LDA !ram_cm_eg_strength : BEQ .weak
+
+    LDA #$02 : STA $7E044A
+    RTS
+
+  .weak
+    LDA #$01 : STA $7E044A
+    RTS
+
+cm_game_state_reset_screen:
+    dw !CM_ACTION_JSR
+    dw #.reset_screen
+    db #$24, "Reset screen state", #$FF
+
+  .reset_screen
+    LDA $1B : BEQ .overworld
+
+    STZ $0400 : STZ $0401 : STZ $0402 : STZ $0403 : STZ $0408
+    LDA $A0 : ASL : TAX
+    LDA #$00 : STA $7EF000, X
+    BRA .end
+
+  .overworld
+    LDX $8A
+    LDA #$00 : STA $7EF280, X
+
+  .end
+    RTS
 
 cm_game_state_progress:
     dw !CM_ACTION_CHOICE
