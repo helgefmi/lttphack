@@ -144,10 +144,9 @@ gamemode_hook:
   %a16()
     INC !lowram_room_gametime
   %a8()
-
+ 
     ; Custom Menu
     LDA $10 : CMP.b #$06 : BCC .no_custom_menu ; Startup/File select etc
-              CMP.b #$0C : BEQ .no_custom_menu ; Custom Menu
               CMP.b #$0F : BEQ .no_custom_menu ; Closing Spotlight
               CMP.b #$10 : BEQ .no_custom_menu ; Opening Spotlight
               CMP.b #$11 : BEQ .no_custom_menu ; Fall into dungeon via hole
@@ -174,16 +173,19 @@ gamemode_hook:
     LDA $10 : CMP #$07 : BNE .not_dungeon
     LDA $11 : CMP #$06 : BEQ .no_custom_menu ; Upwards floor transition
               CMP #$07 : BEQ .no_custom_menu ; Downward floor transition
-
   .not_dungeon
 
     ; Don't allow custom menu during mosaic effects
     LDA $7EC011 : BNE .no_custom_menu
-
+  %a16()
+    ; Load last preset shortcut check
+    LDA !ram_ctrl1_word : CMP !SHORTCUT_LOAD_LAST_PRESET : BNE .no_load_preset
+	  JMP .load_last_preset
+    .no_load_preset
   %a16()
     LDA !ram_ctrl1_word : AND #$1000 : CMP #$1000 : BNE .no_custom_menu
   %a8()
-
+    LDA $10 : CMP.b #$0C : BEQ .no_custom_menu ; Custom Menu
     LDA $F4 : CMP #$10 : BNE .no_custom_menu
 
     LDA $10 : STA !ram_cm_old_gamemode
@@ -195,6 +197,19 @@ gamemode_hook:
     RTL
 
   .no_custom_menu
+    JMP .after_load_last_preset
+  .load_last_preset ; this is here otherwise no_custom_menu label is too far away
+  %a8()
+    LDA $10 : CMP #$0E : BEQ .after_load_last_preset ; loading during text mode make the text stay or the item menu to bug
+  %a16()
+    LDA !ram_previous_preset_destination
+	STA !ram_preset_destination
+  %a8()
+    LDA !ram_previous_preset_type : STA !ram_preset_type
+    LDA.b #12 : STA $10
+    LDA.b #05 : STA $11
+    RTL
+  .after_load_last_preset
     ; Transition detection {{{
 
     %ai8()

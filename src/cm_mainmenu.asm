@@ -454,6 +454,7 @@ cm_submenu_presets:
     dw cm_presets_goto_trock
     dw cm_presets_goto_gtower
     dw cm_presets_goto_ganon
+    dw cm_presets_goto_boss
     dw #$0000
   table ../resources/header.tbl
     db #$2C, "PRESETS", #$FF
@@ -1625,6 +1626,34 @@ cm_ganon_pyramid:
     dw !CM_ACTION_PRESET
     dw #preset_ganon_pyramid
     db #$24, "Pyramid", #$FF
+
+;; BOSS
+
+cm_presets_goto_boss:
+    dw !CM_ACTION_SUBMENU
+    dw cm_presets_boss
+    db #$24, "Boss", #$FF
+
+cm_presets_boss:
+    dw cm_east_armos
+    dw cm_desert_lanmolas
+    dw cm_hera_moldorm
+    dw cm_aga_agahnim
+    dw cm_pod_helma
+    dw cm_thieves_blind
+    dw cm_sw_mothula
+    dw cm_ice_kholdstare
+    dw cm_swamp_arrghus
+    dw cm_mire_vitty
+    dw cm_trock_trinexx
+    dw cm_gtower_ice_armos
+    dw cm_gtower_moldorm_2
+    dw cm_gtower_agahnim_2
+    dw cm_ganon_pyramid
+    dw #$0000
+  table ../resources/header.tbl
+    db #$2C, "BOSS", #$FF
+  table ../resources/normal.tbl
 
 ; }}}
 ; FEATURES {{{
