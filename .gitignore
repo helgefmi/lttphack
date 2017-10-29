@@ -4,3 +4,4 @@
 .*.sw[nop]
 std*.txt
 *.srm
+target/

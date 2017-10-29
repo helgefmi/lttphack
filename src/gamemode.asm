@@ -19,13 +19,13 @@ gamemode_hook:
 
   %ai16()
     LDA (!ram_savestate_ctrl_to_use)
-    CMP !ram_savestate_load_shortcut : BEQ +
-    JMP b
+    CMP !ram_savestate_load_shortcut : BEQ .do_save_state
+    JMP .test_load_state
 
-+ %a8()
+  .do_save_state
+  %a8()
     ; store DMA to SRAM
     LDY #$0000 : LDX #$0000
-
 -   LDA $4300, X : STA $770000, X
     INX
     INY : CPY #$000B : BNE -
@@ -43,11 +43,12 @@ gamemode_hook:
     LDA #$39 : STA $4311
     JMP end
 
-  b:
-    CMP !ram_savestate_save_shortcut : BEQ +
+  .test_load_state
+    CMP !ram_savestate_save_shortcut : BEQ .do_load_state
     JMP after_save_state
 
-+ %a8()
+  .do_load_state
+  %a8()
     STZ $420C
     JSR ppuoff
     STZ $4310
@@ -119,9 +120,8 @@ gamemode_hook:
 
     ; load DMA from SRAM
     LDY #$0000 : LDX #$0000
-
   %a8()
--   LDA $770000, X : STA $4300, X
+  - LDA $770000, X : STA $4300, X
     INX
     INY : CPY #$000B : BNE -
     CPX #$007B : BEQ +
@@ -140,7 +140,7 @@ gamemode_hook:
 
   after_save_state:
 
-  ; Update Game Time counter
+    ; Update Game Time counter
   %a16()
     INC !lowram_room_gametime
   %a8()

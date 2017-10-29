@@ -7,7 +7,7 @@ cm_mainmenu_indices:
     dw cm_main_goto_features
     dw #$0000
   table ../resources/header.tbl
-    db #$2C, "MAIN MENU", #$FF
+    db #$2C, "LTTPHACK MENU", #$FF
   table ../resources/normal.tbl
 
 ; ITEMS {{{

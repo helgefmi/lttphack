@@ -1,5 +1,6 @@
 V8:
 ===
+
 - Feature toggle (like "show input display") should persist through loading a save state.
 
 - The spotlight animation of some transitions covers the menu.
@@ -15,6 +16,18 @@ V8:
 - Game crashes sometimes after killing aga2. Same bug as in v7 I presume.
 
 - Got black shield while loading presets in Thieves' a couple times.
+
+- Fix pegs for pokeys 1
+
+- Fix names on some of these splits
+
+- Add back "Reset segment timer" input.
+
+- Custom controller inputs for everything.
+
+- "Low%-ify" controller input (goes nmg -> low).
+
+- asar is a continuation of xkas0.06 and try to be compatible x)
 
 V9:
 ===
