@@ -209,6 +209,9 @@
 !ram_game_big_keys_1 = $7EF366
 !ram_game_big_keys_2 = $7EF367
 
+!ram_game_pendants = $7EF374
+!ram_game_crystals = $7EF37A
+
 !ram_game_progress = $7EF3C5
 !ram_game_flags = $7EF3C6
 !ram_game_map_indicator = $7EF3C7

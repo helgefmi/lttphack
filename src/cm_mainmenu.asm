@@ -1943,10 +1943,11 @@ cm_main_goto_game_state:
     db #$24, "Game state", #$FF
 
 cm_submenu_game_state:
-    dw cm_game_state_progress
-    dw cm_game_state_goto_flags_submenu
-    dw cm_game_state_map_indicator
     dw cm_game_state_goto_bosses_submenu
+    dw cm_game_state_goto_crystals_submenu
+    dw cm_game_state_goto_flags_submenu
+    dw cm_game_state_progress
+    dw cm_game_state_map_indicator
     dw #$0000
   table ../resources/header.tbl
     db #$2C, "GAME STATE", #$FF
@@ -2047,7 +2048,7 @@ cm_game_state_flags_not_used_2:
 cm_game_state_goto_bosses_submenu:
     dw !CM_ACTION_SUBMENU
     dw cm_game_state_bosses_submenu
-    db #$24, "Bosses", #$FF
+    db #$24, "Bosses defeated", #$FF
 
 cm_game_state_bosses_submenu:
     dw cm_game_state_bosses_armos
@@ -2064,7 +2065,7 @@ cm_game_state_bosses_submenu:
     dw cm_game_state_bosses_agahnim_2
     dw #$0000
   table ../resources/header.tbl
-    db #$2C, "GAME FLAGS", #$FF
+    db #$2C, "BOSSES DEFEATED", #$FF
   table ../resources/normal.tbl
 
 cm_game_state_bosses_armos:
@@ -2138,6 +2139,88 @@ cm_game_state_bosses_agahnim_2:
     dl #$7EF01B
     db #$08
     db #$24, "Agahnim 2", #$FF
+
+cm_game_state_goto_crystals_submenu:
+    dw !CM_ACTION_SUBMENU
+    dw cm_game_state_crystals_submenu
+    db #$24, "Pendants and crystals", #$FF
+
+cm_game_state_crystals_submenu:
+    dw cm_game_state_pendant_eastern
+    dw cm_game_state_pendant_desert
+    dw cm_game_state_pendant_hera
+    dw cm_game_state_crystal_pod
+    dw cm_game_state_crystal_theives
+    dw cm_game_state_crystal_skull
+    dw cm_game_state_crystal_ice
+    dw cm_game_state_crystal_swamp
+    dw cm_game_state_crystal_mire
+    dw cm_game_state_crystal_trock
+    dw #$0000
+  table ../resources/header.tbl
+    db #$2C, "PENDANTS AND CRYSTALS", #$FF
+  table ../resources/normal.tbl
+
+cm_game_state_pendant_eastern:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_pendants
+    db #$04
+    db #$24, "Eastern", #$FF
+
+cm_game_state_pendant_desert:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_pendants
+    db #$02
+    db #$24, "Desert", #$FF
+
+cm_game_state_pendant_hera:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_pendants
+    db #$01
+    db #$24, "Hera", #$FF
+
+cm_game_state_crystal_pod:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_crystals
+    db #$02
+    db #$24, "Darkness", #$FF
+
+cm_game_state_crystal_theives:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_crystals
+    db #$20
+    db #$24, "Thieves", #$FF
+
+cm_game_state_crystal_skull:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_crystals
+    db #$40
+    db #$24, "Skull", #$FF
+
+cm_game_state_crystal_ice:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_crystals
+    db #$04
+    db #$24, "Ice", #$FF
+
+cm_game_state_crystal_swamp:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_crystals
+    db #$10
+    db #$24, "Swamp", #$FF
+
+cm_game_state_crystal_mire:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_crystals
+    db #$01
+    db #$24, "Mire", #$FF
+
+cm_game_state_crystal_trock:
+    dw !CM_ACTION_TOGGLE_BIT
+    dl #!ram_game_crystals
+    db #$08
+    db #$24, "TRock", #$FF
+
 
 ; }}}
 ; MINIGAMES {{{
