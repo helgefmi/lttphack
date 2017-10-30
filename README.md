@@ -2,8 +2,4 @@ See http://milde.no/lttp/ for info.
 
 Pull requests very much appreciated.
 
-I use [xkas 0.06.1](http://www.smwcentral.net/?p=section&a=details&id=4615) to patch the original rom:
-
-```
-xkas lttphack.asm zelda_original_jp_1_0_rom.sfc
-```
+I use a custom version of [Asar](https://github.com/AndreaOrru/Asar) forked [here](https://github.com/helgefmi/Asar) as an assembler. See the Makefile for more information.

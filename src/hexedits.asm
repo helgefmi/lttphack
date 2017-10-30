@@ -1,6 +1,8 @@
 ; == SRAM ==
-org $00FFD8
-    db $08 ; 256kb
+if !FEATURE_SS
+    org $00FFD8
+        db $08 ; 256kb
+endif
 
 
 ; == CTRL 2 ==

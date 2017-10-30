@@ -18,11 +18,13 @@ init_hook:
 init_expand:
     ; enters AI=16
     ; must leave at AI=16
-    LDA.b #$01
-    STA !ram_enemy_hp_toggle
-    STA !ram_counters_toggle
-    STA !ram_input_display_toggle
-    STA !ram_toggle_lanmola_cycles
+    if !FEATURE_HUD
+        LDA.b #$01
+        STA !ram_enemy_hp_toggle
+        STA !ram_counters_toggle
+        STA !ram_input_display_toggle
+        STA !ram_toggle_lanmola_cycles
+    endif
 
   %ai16() ; Init control for savestate
     LDA #!ram_ctrl1_word : STA !ram_savestate_ctrl_to_use

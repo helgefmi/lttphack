@@ -15,6 +15,7 @@ gamemode_hook:
     LDA $F1 : STA !ram_ctrl2_word
     LDA $F3 : STA !ram_ctrl2_byte2
 
+    if !FEATURE_SS
     ; Acmlm's Save State {{{
 
   %ai16()
@@ -137,6 +138,7 @@ gamemode_hook:
     RTL
 
     ; }}}
+    endif
 
   after_save_state:
 

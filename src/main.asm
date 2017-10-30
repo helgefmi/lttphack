@@ -1,13 +1,18 @@
 lorom
 
+!FEATURE_HUD ?= 1
+!FEATURE_SS ?= 1
+
 incsrc defines.asm
 incsrc hexedits.asm
 
 incsrc gamemode.asm     ; $208000
 warnpc $218000
 
-incsrc hud.asm          ; $218000
-warnpc $228000
+if !FEATURE_HUD
+    incsrc hud.asm          ; $218000
+    warnpc $228000
+endif
 
 incsrc nmi.asm          ; $228000
 warnpc $238000

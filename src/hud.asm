@@ -254,8 +254,8 @@ hud_draw_input_display:
     STA !ram_ctrl1_word_copy : TAY
     LDX #$0000
 
--   TYA : AND ctrl_top_bit_table, X : BEQ +
-    LDA ctrl_top_gfx_table, X
+-   TYA : AND.l ctrl_top_bit_table, X : BEQ +
+    LDA.l ctrl_top_gfx_table, X
     JMP ++
 +   LDA #$207F
 ++  STA !POS_MEM_INPUT_DISPLAY_TOP, X
@@ -263,8 +263,8 @@ hud_draw_input_display:
 
     LDX #$0000
 
--   TYA : AND ctrl_bot_bit_table, X : BEQ +
-    LDA ctrl_bot_gfx_table, X
+-   TYA : AND.l ctrl_bot_bit_table, X : BEQ +
+    LDA.l ctrl_bot_gfx_table, X
     JMP ++
 +   LDA #$207F
 ++  STA !POS_MEM_INPUT_DISPLAY_BOT, X
@@ -285,12 +285,12 @@ hud_draw_xy_display:
 
 ; L, u, R, Y, X, SL
 ctrl_top_bit_table:
-    DW #$2000, #$0008, #$1000, #$0040, #$4000, #$0020
+    dw #$2000, #$0008, #$1000, #$0040, #$4000, #$0020
 ctrl_top_gfx_table:
-    DW #$2404, #$2406, #$2405, #$2403, #$2402, #$240A
+    dw #$2404, #$2406, #$2405, #$2403, #$2402, #$240A
 
 ; l, d, r, B, A, ST
 ctrl_bot_bit_table:
-    DW #$0002, #$0004, #$0001, #$0080, #$8000, #$0010
+    dw #$0002, #$0004, #$0001, #$0080, #$8000, #$0010
 ctrl_bot_gfx_table:
-    DW #$2409, #$2407, #$2408, #$2401, #$2400, #$240B
+    dw #$2409, #$2407, #$2408, #$2401, #$2400, #$240B

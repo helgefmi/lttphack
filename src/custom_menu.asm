@@ -537,7 +537,7 @@ cm_draw_text:
   %a8()
     LDY #$0000
     ; grab palette info
-    LDA ($02), Y : INY : CMP.b #$FF : BEQ .end
+    LDA ($02), Y : INY : CMP #$FF : BEQ .end
     ORA $0E : STA $0E
 
   .loop
@@ -653,8 +653,8 @@ cm_execute_toggle_jsr:
 cm_execute_jsr:
     ; < and > should do nothing here
   %a8()
-    LDA $F0 : CMP.b #$01 : BEQ .end
-            : CMP.b #$02 : BEQ .end
+    LDA $F0 : CMP #$01 : BEQ .end
+              CMP #$02 : BEQ .end
 
   %a16()
     LDA ($00) : INC $00 : INC $00 : STA $02
