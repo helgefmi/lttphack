@@ -76,7 +76,7 @@
 !SHORTCUT_LOAD_P2 = #$4000
 !SHORTCUT_SAVE_P2 = #$0040
 
-!SHORTCUT_LOAD_LAST_PRESET = #$1020 ; R + Select
+!SHORTCUT_LOAD_LAST_PRESET = #$20A0 ; B + Select + L
 
 ;-------------------------
 ; HUD
