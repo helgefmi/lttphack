@@ -819,9 +819,10 @@ cm_execute_preset:
 
 
 cm_execute_toggle_bit:
-    ; Will only toggle the first bit.
+    ; Load the address
     LDA ($00) : INC $00 : INC $00 : STA $02
     LDA ($00) : INC $00 : STA $04
+    ; Load which bit(s) to toggle
     LDA ($00) : INC $00 : STA $05
   %ai8()
     LDA [$02] : EOR $05 : STA [$02]
