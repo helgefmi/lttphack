@@ -25,9 +25,6 @@
 !ram_ctrl2_word = $04E6
 !ram_ctrl2_byte2 = $04E7
 
-; Either !ram_ctrl1_word or !ram_ctrl2_word
-!ram_savestate_ctrl_to_use = $AB
-
 !ram_gamemode_copy = $7F767E
 !ram_submode_copy = $7F7680
 
@@ -41,16 +38,39 @@
 !ram_hex2dec_second_digit = $7F768E
 !ram_hex2dec_third_digit = $7F7690
 
-!ram_lit_rooms_toggle = $7F769A
-!ram_qw_toggle = $7F769C
 !ram_qw_last_scroll = $7F76A2
-!ram_xy_toggle = $7F769E
-!ram_enemy_hp_toggle = $7F76A4
-!ram_counters_toggle = $7F76A6
-!ram_input_display_toggle = $7F76A8
-!lowram_oob_toggle = $037F
 !ram_lanmola_cycles = $7F7700 ; 3 bytes
-!ram_toggle_lanmola_cycles = $7F76AC
+
+; If save state feature is enabled, store RAM to toggle prachack features in $77 (extended SRAM)
+; If not, store it in $7F8 (just some free WRAM)
+; This makes sure the "Features" menu persists both through save/load function, and resets, when the
+; save state feature is enabled.
+
+if !FEATURE_SS
+    !offset = $771000
+else
+    !offset = $7F8000
+endif
+
+!ram_sram_initialized = !offset+0
+!ram_counters_toggle = !offset+2
+!ram_input_display_toggle = !offset+4
+!ram_enemy_hp_toggle = !offset+6
+!ram_xy_toggle = !offset+8
+!ram_qw_toggle = !offset+10
+!ram_lit_rooms_toggle = !offset+12
+!ram_oob_toggle = !offset+14
+!ram_toggle_lanmola_cycles = !offset+16
+
+!ram_savestate_controller = !offset+18
+!ram_savestate_load_shortcut = !offset+20
+!ram_savestate_save_shortcut = !offset+22
+
+!ram_previous_preset_destination = !offset+24
+!ram_previous_preset_type = !offset+26
+
+!ram_savestate_ctrl_to_use = $AB
+!lowram_oob_toggle = $037F
 
 !ram_debug = $7F7777
 !ram_debug2 = $7F7779
@@ -62,13 +82,6 @@
 !lowram_cm_stack_index = $0658
 !ram_cm_last_frame_input = $7F76C6
 !ram_cm_input_timer = $7F76C8
-
-!ram_savestate_controller = $7F7712
-!ram_savestate_load_shortcut = $7F7714
-!ram_savestate_save_shortcut = $7F7716
-
-!ram_previous_preset_destination = $7F7720
-!ram_previous_preset_type = $7F7722
 
 !SHORTCUT_LOAD_P1 = #$1060
 !SHORTCUT_SAVE_P1 = #$2060
@@ -131,8 +144,8 @@
 !PRESET_DUNGEON = #$02
 
 !ram_preset_type = $04E2
-!ram_preset_destination = $7F8000
-!ram_preset_end_of_sram_state = $7F8004
+!ram_preset_destination = $7F7900
+!ram_preset_end_of_sram_state = $7F7902
 
 ;-------------------------
 ; From ROM

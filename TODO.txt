@@ -1,71 +1,17 @@
-V8:
-===
-
-- Feature toggle (like "show input display") should persist through loading a save state.
-
-- The spotlight animation of some transitions covers the menu.
-
-- Preset: Pre Sexy Statue Room. Sometimes Link is put on the wrong layer here. Related to kiki somehow?
-
-  Same with Hammeryump and Turtle rock - Lazer skip.
-
-- Loading preset from Mothula's room to an overworld preset has weird effects.
-
-- Sprite of pot above Link's head sometimes weird. No idea why it happened one time.
-
 - Game crashes sometimes after killing aga2. Same bug as in v7 I presume.
-
-- Got black shield while loading presets in Thieves' a couple times.
-
-- Fix pegs for pokeys 1
-
-- Fix names on some of these splits
-
-- Add back "Reset segment timer" input.
-
-- Custom controller inputs for everything.
-
-- "Low%-ify" controller input (goes nmg -> low).
-
-- asar is a continuation of xkas0.06 and try to be compatible x)
-
-V9:
-===
-
-- Hack Module_Intro to go to file select as soon as everything needed is initialized.
-
-- Add some footprint w/version (intro, file select, pause menu).
 
 - Set RNG for rooms (trock pokies, aga etc).
 
 - Ingame manual counter (to practice a trick X times and see your success rate).
 
-- Reenable floor indicator and position it somewhere else.
-
-V10:
-====
-
 - Toggle music.
-
-- LoS sprite viewer.
 
 - Lagometer. Toggleable feature that makes the magic go down/up depending on how laggy a frame was.
 
 - Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances
-  the game one frame. Would be good for clip practice.
-
-- Slowdown.
-
-- Make it possible to draw hearts the normal way.
-
-- Make counters not run while game is paused (frame advance mode). Can be useful for TAS-ing rooms.
-
-Future:
-
-- Save best room times. Make them persist through save/load state.
-  This can then be exportable through a web ui. Could even include WR times in next version. Or perhaps a "patch your
-  SRM with WR times" web ui. Holy carp.  
+  the game one frame. Would be good for clip practice. Maybe stop timer during this.
 
 - Mashing and pumping minigame (mps, max frames w/o mash, frames lost total etc).
 
 - Reconfigurable controls (save/load state mostly).
+    - Add back "Reset segment timer" input.
