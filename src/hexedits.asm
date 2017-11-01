@@ -53,3 +53,20 @@ org $0CDB7E
     NOP : NOP : NOP : NOP   ; AF D9 03 70   LDA $7003D9
     NOP : NOP : NOP         ; C9 01 00      CMP #$0001
     NOP : NOP               ; D0 18         BNE $0CDC49
+
+
+; == Intro mash skip ==
+; 0cc106 lda $f6
+; 0cc108 and #$c0
+; 0cc10a ora $f4
+; 0cc10c and #$d0
+; 0cc10e beq $c113
+
+org $0CC10E
+    BNE $C113
+
+; 0cc204 dec $13       [000013] A:0c0c X:00fc Y:00ff S:01f9 D:0000 DB:00 nvMXdizC V:240 H: 196 F:24
+; 0cc206 bne $c26a     [0cc26a] A:0c0c X:00fc Y:00ff S:01f9 D:0000 DB:00 nvMXdizC V:240 H: 204 F:24
+; 0cc26a rtl                    A:0c0c X:00fc Y:00ff S:01f9 D:0000 DB:00 nvMXdizC V:240 H: 226 F:24
+org $0CC204
+    STZ $13
