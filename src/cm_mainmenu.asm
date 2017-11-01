@@ -1,3 +1,54 @@
+macro cm_header(title)
+    table ../resources/header.tbl
+        db #$2C, "<title>", #$FF
+    table ../resources/normal.tbl
+endmacro
+
+macro cm_preset(title, addr)
+    dw !CM_ACTION_PRESET
+    dw <addr>
+    db #$24, "<title>", #$FF
+endmacro
+
+macro cm_toggle(title, addr)
+    dw !CM_ACTION_TOGGLE
+    dl #<addr>
+    db #$24, "<title>", #$FF
+endmacro
+
+macro cm_toggle_jsr(title, addr)
+    dw !CM_ACTION_TOGGLE_JSR
+    dw .toggle
+    dl <addr>
+    db #$24, "<title>", #$FF
+endmacro
+
+macro cm_submenu(title, addr)
+    dw !CM_ACTION_SUBMENU
+    dw <addr>
+    db #$24, "<title>", #$FF
+endmacro
+
+macro cm_numfield(title, addr, start, end, increment)
+    dw !CM_ACTION_NUMFIELD
+    dl <addr>
+    db <start>, <end>, <increment>
+    db #$24, "<title>", #$FF
+endmacro
+
+macro cm_toggle_bit(title, addr, mask)
+    dw !CM_ACTION_TOGGLE_BIT
+    dl <addr>
+    db <mask>
+    db #$24, "<title>", #$FF
+endmacro
+
+macro cm_jsr(title)
+    dw !CM_ACTION_JSR
+    dw .routine
+    db #$24, "<title>", #$FF
+endmacro
+
 ; MAIN MENU
 
 cm_mainmenu_indices:
@@ -8,16 +59,12 @@ cm_mainmenu_indices:
     dw cm_main_goto_features
     ; dw cm_main_goto_minigames
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "LTTPHACK MENU", #$FF
-  table ../resources/normal.tbl
+    %cm_header("LTTPHACK !VERSION")
 
 ; ITEMS {{{
 
 cm_main_goto_items:
-    dw !CM_ACTION_SUBMENU
-    dw cm_submenu_items
-    db #$24, "Items", #$FF
+    %cm_submenu("Items", cm_submenu_items)
 
 cm_submenu_items:
     dw cm_items_bow
@@ -41,9 +88,7 @@ cm_submenu_items:
     dw cm_items_cape
     dw cm_items_mirror
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "ITEMS", #$FF
-  table ../resources/normal.tbl
+    %cm_header("ITEMS")
 
 cm_items_bow:
     dw !CM_ACTION_CHOICE_JSR
@@ -77,9 +122,7 @@ cm_items_boom:
     db #$FF
 
 cm_items_hook:
-    dw !CM_ACTION_TOGGLE
-    dl #!ram_item_hook
-    db #$24, "Hook", #$FF
+    %cm_toggle("Hook", !ram_item_hook)
 
 cm_items_powder:
     dw !CM_ACTION_CHOICE
@@ -91,39 +134,25 @@ cm_items_powder:
     db #$FF
 
 cm_items_fire_rod:
-    dw !CM_ACTION_TOGGLE
-    dl #!ram_item_fire_rod
-    db #$24, "Fire Rod", #$FF
+    %cm_toggle("Fire Rod", !ram_item_fire_rod)
 
 cm_items_ice_rod:
-    dw !CM_ACTION_TOGGLE
-    dl #!ram_item_ice_rod
-    db #$24, "Ice Rod", #$FF
+    %cm_toggle("Ice Rod", !ram_item_ice_rod)
 
 cm_items_bombos:
-    dw !CM_ACTION_TOGGLE
-    dl #!ram_item_bombos
-    db #$24, "Bombos", #$FF
+    %cm_toggle("Bombos", !ram_item_bombos)
 
 cm_items_ether:
-    dw !CM_ACTION_TOGGLE
-    dl #!ram_item_ether
-    db #$24, "Ether", #$FF
+    %cm_toggle("Ether", !ram_item_ether)
 
 cm_items_quake:
-    dw !CM_ACTION_TOGGLE
-    dl #!ram_item_2quake
-    db #$24, "Quake", #$FF
+    %cm_toggle("Quake", !ram_item_2quake)
 
 cm_items_lantern:
-    dw !CM_ACTION_TOGGLE
-    dl #!ram_item_lantern
-    db #$24, "Lantern", #$FF
+    %cm_toggle("Lantern", !ram_item_lantern)
 
 cm_items_hammer:
-    dw !CM_ACTION_TOGGLE
-    dl #!ram_item_hammer
-    db #$24, "Hammer", #$FF
+    %cm_toggle("Hammer", !ram_item_hammer)
 
 cm_items_flute:
     dw !CM_ACTION_CHOICE
@@ -136,49 +165,32 @@ cm_items_flute:
     db #$FF
 
 cm_items_net:
-    dw !CM_ACTION_TOGGLE
-    dl #!ram_item_net
-    db #$24, "Net", #$FF
+    %cm_toggle("Net", !ram_item_net)
 
 cm_items_book:
-    dw !CM_ACTION_TOGGLE
-    dl #!ram_item_book
-    db #$24, "Book", #$FF
+    %cm_toggle("Book", !ram_item_book)
 
 cm_items_somaria:
-    dw !CM_ACTION_TOGGLE
-    dl #!ram_item_somaria
-    db #$24, "Somaria", #$FF
+    %cm_toggle("Somaria", !ram_item_somaria)
 
 cm_items_byrna:
-    dw !CM_ACTION_TOGGLE
-    dl #!ram_item_byrna
-    db #$24, "Byrna", #$FF
+    %cm_toggle("Byrna", !ram_item_byrna)
 
 cm_items_cape:
-    dw !CM_ACTION_TOGGLE
-    dl #!ram_item_cape
-    db #$24, "Cape", #$FF
+    %cm_toggle("Cape", !ram_item_cape)
 
 cm_items_mirror:
-    dw !CM_ACTION_TOGGLE_JSR
-    dw #.toggle_mirror
-    dl #!ram_cm_item_mirror
-    db #$24, "Mirror", #$FF
+    %cm_toggle_jsr("Mirror", !ram_cm_item_mirror)
 
-
-  .toggle_mirror
+  .toggle
     ; 0 -> 2
     ASL : STA !ram_item_mirror
     RTS
 
-
 ; Bottles submenu
 
 cm_items_submenu_bottles:
-    dw !CM_ACTION_SUBMENU
-    dw cm_submenu_bottles
-    db #$24, "Bottles", #$FF
+    %cm_submenu("Bottles", cm_submenu_bottles)
 
 cm_submenu_bottles:
     dw cm_items_bottle_1
@@ -186,9 +198,7 @@ cm_submenu_bottles:
     dw cm_items_bottle_3
     dw cm_items_bottle_4
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "BOTTLES", #$FF
-  table ../resources/normal.tbl
+    %cm_header("BOTTLES")
 
 macro bottle_contents()
     db #$24, "No bottle", #$FF
@@ -231,9 +241,7 @@ cm_items_bottle_4:
 ; EQUIPMENT {{{
 
 cm_main_goto_equipment:
-    dw !CM_ACTION_SUBMENU
-    dw cm_submenu_equipment
-    db #$24, "Equipment", #$FF
+    %cm_submenu("Equipment", cm_submenu_equipment)
 
 cm_submenu_equipment:
     dw cm_equipment_fill_magic
@@ -257,17 +265,12 @@ cm_submenu_equipment:
     dw cm_equipment_goto_big_keys_submenu
 
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "EQUIPMENT", #$FF
-  table ../resources/normal.tbl
+    %cm_header("EQUIPMENT")
 
 cm_equipment_boots:
-    dw !CM_ACTION_TOGGLE_JSR
-    dw #.toggle_boots
-    dl !ram_cm_equipment_boots
-    db #$24, "Boots", #$FF
+    %cm_toggle_jsr("Boots", !ram_cm_equipment_boots)
 
-  .toggle_boots
+  .toggle
     CMP #$00 : BEQ .set_no_boots
 
     LDA #$04 : ORA !ram_capabilities : STA !ram_capabilities
@@ -293,12 +296,9 @@ cm_equipment_gloves:
     db #$FF
 
 cm_equipment_flippers:
-    dw !CM_ACTION_TOGGLE_JSR
-    dw #.toggle_flippers
-    dl !ram_cm_equipment_flippers
-    db #$24, "Flippers", #$FF
+    %cm_toggle_jsr("Flippers", !ram_cm_equipment_flippers)
 
-  .toggle_flippers
+  .toggle
     CMP #$00 : BEQ .set_no_flippers
 
     LDA #$02 : ORA !ram_capabilities : STA !ram_capabilities
@@ -315,14 +315,10 @@ cm_equipment_flippers:
     RTS
 
 cm_equipment_moon_pearl:
-    dw !CM_ACTION_TOGGLE
-    dl !ram_equipment_moon_pearl
-    db #$24, "Moon Pearl", #$FF
+    %cm_toggle("Moon Pearl", !ram_equipment_moon_pearl)
 
 cm_equipment_half_magic:
-    dw !CM_ACTION_TOGGLE
-    dl !ram_equipment_half_magic
-    db #$24, "Half Magic", #$FF
+    %cm_toggle("Half Magic", !ram_equipment_half_magic)
 
 cm_equipment_sword:
     dw !CM_ACTION_CHOICE_JSR
@@ -372,31 +368,25 @@ cm_equipment_armor:
     RTS
 
 cm_equipment_fill_magic:
-    dw !CM_ACTION_JSR
-    dw #.set_full_magic
-    db #$24, "Fill Magic", #$FF
+    %cm_jsr("Fill Magic")
 
-  .set_full_magic
+  .routine
     LDA #$80 : STA !ram_equipment_magic_meter
     RTS
 
 cm_equipment_fill_rupees:
-    dw !CM_ACTION_JSR
-    dw #.set_full_rupees
-    db #$24, "Fill Rupees", #$FF
+    %cm_jsr("Fill Rupees")
 
-  .set_full_rupees
+  .routine
   %a16()
     ; Sets 999 rupees.
     LDA #$03E7 : STA $7EF360
     RTS
 
 cm_equipment_fill_hearts:
-    dw !CM_ACTION_JSR
-    dw #.set_full_hp
-    db #$24, "Fill HP", #$FF
+    %cm_jsr("Fill HP")
 
-  .set_full_hp
+  .routine
     LDA !ram_equipment_maxhp : STA !ram_equipment_curhp
     RTS
 
@@ -433,30 +423,16 @@ cm_equipment_maxhp:
     RTS
 
 cm_equipment_bombs:
-    dw !CM_ACTION_NUMFIELD
-    dl !ram_item_bombs
-    db #$00, #$1E
-    db #$05
-    db #$24, "Bombs", #$FF
+    %cm_numfield("Bombs", !ram_item_bombs, #$00, #$1E, #$05)
 
 cm_equipment_arrows:
-    dw !CM_ACTION_NUMFIELD
-    dl !ram_equipment_arrows_filler
-    db #$00, #$1E
-    db #$05
-    db #$24, "Arrows", #$FF
+    %cm_numfield("Arrows", !ram_equipment_arrows_filler, #$00, #$1E, #$05)
 
 cm_equipment_keys:
-    dw !CM_ACTION_NUMFIELD
-    dl !ram_equipment_keys
-    db #$00, #$09
-    db #$01
-    db #$24, "Keys", #$FF
+    %cm_numfield("Keys", !ram_equipment_keys, #$00, #$09, #$01)
 
 cm_equipment_goto_big_keys_submenu:
-    dw !CM_ACTION_SUBMENU
-    dw cm_submenu_big_keys
-    db #$24, "Big keys", #$FF
+    %cm_submenu("Big keys", cm_submenu_big_keys)
 
 cm_submenu_big_keys:
     dw cm_big_keys_hc
@@ -474,96 +450,52 @@ cm_submenu_big_keys:
     dw cm_big_keys_gtower
 
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "BIG KEYS", #$FF
-  table ../resources/normal.tbl
+    %cm_header("BIG KEYS")
 
 cm_big_keys_hc:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_big_keys_2
-    db #$40
-    db #$24, "Hyrule Castle", #$FF
+    %cm_toggle_bit("Hyrule Castle", !ram_game_big_keys_2, #$40)
 
 cm_big_keys_eastern:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_big_keys_2
-    db #$20
-    db #$24, "Eastern", #$FF
+    %cm_toggle_bit("Eastern", !ram_game_big_keys_2, #$20)
 
 cm_big_keys_desert:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_big_keys_2
-    db #$10
-    db #$24, "Desert", #$FF
+    %cm_toggle_bit("Desert", !ram_game_big_keys_2, #$10)
 
 cm_big_keys_aga:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_big_keys_2
-    db #$08
-    db #$24, "ATower", #$FF
+    %cm_toggle_bit("ATower", !ram_game_big_keys_2, #$08)
 
 cm_big_keys_swamp:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_big_keys_2
-    db #$04
-    db #$24, "Swamp", #$FF
+    %cm_toggle_bit("Swamp", !ram_game_big_keys_2, #$04)
 
 cm_big_keys_pod:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_big_keys_2
-    db #$02
-    db #$24, "Darkness", #$FF
+    %cm_toggle_bit("Darkness", !ram_game_big_keys_2, #$02)
 
 cm_big_keys_mire:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_big_keys_2
-    db #$01
-    db #$24, "Mire", #$FF
+    %cm_toggle_bit("Mire", !ram_game_big_keys_2, #$01)
 
 cm_big_keys_skull:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_big_keys_1
-    db #$80
-    db #$24, "Skull", #$FF
+    %cm_toggle_bit("Skull", !ram_game_big_keys_1, #$80)
 
 cm_big_keys_ice:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_big_keys_1
-    db #$40
-    db #$24, "Ice", #$FF
+    %cm_toggle_bit("Ice", !ram_game_big_keys_1, #$40)
 
 cm_big_keys_hera:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_big_keys_1
-    db #$20
-    db #$24, "Hera", #$FF
+    %cm_toggle_bit("Hera", !ram_game_big_keys_1, #$20)
 
 cm_big_keys_thieves:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_big_keys_1
-    db #$10
-    db #$24, "Thieves", #$FF
+    %cm_toggle_bit("Thieves", !ram_game_big_keys_1, #$10)
 
 cm_big_keys_trock:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_big_keys_1
-    db #$08
-    db #$24, "TRock", #$FF
+    %cm_toggle_bit("TRock", !ram_game_big_keys_1, #$08)
 
 cm_big_keys_gtower:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_big_keys_1
-    db #$04
-    db #$24, "GTower", #$FF
-
+    %cm_toggle_bit("GTower", !ram_game_big_keys_1, #$04)
 
 ; }}}
 ; PRESETS {{{
 
 cm_main_goto_presets:
-    dw !CM_ACTION_SUBMENU
-    dw cm_submenu_presets
-    db #$24, "Presets", #$FF
+    %cm_submenu("Presets", cm_submenu_presets)
 
 cm_submenu_presets:
     dw cm_presets_goto_escape
@@ -582,17 +514,12 @@ cm_submenu_presets:
     dw cm_presets_goto_ganon
     dw cm_presets_goto_bosses
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "PRESETS", #$FF
-  table ../resources/normal.tbl
-
+    %cm_header("PRESETS")
 
 ; ESCAPE
 
 cm_presets_goto_escape:
-    dw !CM_ACTION_SUBMENU
-    dw cm_presets_escape
-    db #$24, "Escape", #$FF
+    %cm_submenu("Escape", cm_presets_escape)
 
 cm_presets_escape:
     dw cm_esc_bed
@@ -608,76 +535,48 @@ cm_presets_escape:
     dw cm_esc_keyrat
     dw cm_esc_last_two_screens
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "ESCAPE", #$FF
-  table ../resources/normal.tbl
+    %cm_header("ESCAPE")
 
 cm_esc_bed:
-    dw !CM_ACTION_PRESET
-    dw #preset_esc_bed
-    db #$24, "Link's Bed", #$FF
+    %cm_preset("Link's Bed", preset_esc_bed)
 
 cm_esc_courtyard:
-    dw !CM_ACTION_PRESET
-    dw #preset_esc_courtyard
-    db #$24, "Courtyard", #$FF
+    %cm_preset("Courtyard", preset_esc_courtyard)
 
 cm_esc_entrance:
-    dw !CM_ACTION_PRESET
-    dw #preset_esc_entrance
-    db #$24, "Entrance", #$FF
+    %cm_preset("Entrance", preset_esc_entrance)
 
 cm_esc_1st_keyguard:
-    dw !CM_ACTION_PRESET
-    dw #preset_esc_1st_keyguard
-    db #$24, "1st Key Guard", #$FF
+    %cm_preset("1st Key Guard", preset_esc_1st_keyguard)
 
 cm_esc_big_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_esc_big_room
-    db #$24, "Big Room", #$FF
+    %cm_preset("Big Room", preset_esc_big_room)
 
 cm_esc_2nd_keyguard:
-    dw !CM_ACTION_PRESET
-    dw #preset_esc_2nd_keyguard
-    db #$24, "2nd Key Guard", #$FF
+    %cm_preset("2nd Key Guard", preset_esc_2nd_keyguard)
 
 cm_esc_ball_n_chains:
-    dw !CM_ACTION_PRESET
-    dw #preset_esc_ball_n_chains
-    db #$24, "Ball'n Chains", #$FF
+    %cm_preset("Ball'n Chains", preset_esc_ball_n_chains)
 
 cm_esc_keyguard_revisited:
-    dw !CM_ACTION_PRESET
-    dw #preset_esc_keyguard_revisited
-    db #$24, "Key Guard Revisited", #$FF
+    %cm_preset("Key Guard Revisited", preset_esc_keyguard_revisited)
 
 cm_esc_secret_passage:
-    dw !CM_ACTION_PRESET
-    dw #preset_esc_secret_passage
-    db #$24, "Secret Passage", #$FF
+    %cm_preset("Secret Passage", preset_esc_secret_passage)
 
 cm_esc_snake_avoidance_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_esc_snake_avoidance_room
-    db #$24, "Snake Avoidance Room", #$FF
+    %cm_preset("Snake Avoidance Room", preset_esc_snake_avoidance_room)
 
 cm_esc_keyrat:
-    dw !CM_ACTION_PRESET
-    dw #preset_esc_keyrat
-    db #$24, "Key Rat", #$FF
+    %cm_preset("Key Rat", preset_esc_keyrat)
 
 cm_esc_last_two_screens:
-    dw !CM_ACTION_PRESET
-    dw #preset_esc_last_two_screens
-    db #$24, "Last Two Screens", #$FF
+    %cm_preset("Last Two Screens", preset_esc_last_two_screens)
 
 ; EASTERN
 
 cm_presets_goto_eastern:
-    dw !CM_ACTION_SUBMENU
-    dw cm_presets_eastern
-    db #$24, "Eastern", #$FF
+    %cm_submenu("Eastern", cm_presets_eastern)
 
 cm_presets_eastern:
     dw cm_east_before_cutscene
@@ -694,81 +593,51 @@ cm_presets_eastern:
     dw cm_east_zeldagamer_room
     dw cm_east_armos
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "EASTERN", #$FF
-  table ../resources/normal.tbl
+    %cm_header("EASTERN")
 
 cm_east_before_cutscene:
-    dw !CM_ACTION_PRESET
-    dw #preset_east_before_cutscene
-    db #$24, "Before Cutscene", #$FF
+    %cm_preset("Before Cutscene", preset_east_before_cutscene)
 
 cm_east_after_cutscene:
-    dw !CM_ACTION_PRESET
-    dw #preset_east_after_cutscene
-    db #$24, "After Cutscene", #$FF
+    %cm_preset("After Cutscene", preset_east_after_cutscene)
 
 cm_east_octoroc:
-    dw !CM_ACTION_PRESET
-    dw #preset_east_octoroc
-    db #$24, "Octoroc OW", #$FF
+    %cm_preset("Octoroc OW", preset_east_octoroc)
 
 cm_east_outside_palace:
-    dw !CM_ACTION_PRESET
-    dw #preset_east_outside_palace
-    db #$24, "EP Overworld", #$FF
+    %cm_preset("EP Overworld", preset_east_outside_palace)
 
 cm_east_entrance:
-    dw !CM_ACTION_PRESET
-    dw #preset_east_entrance
-    db #$24, "Entrance", #$FF
+    %cm_preset("Entrance", preset_east_entrance)
 
 cm_east_stalfos_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_east_stalfos_room
-    db #$24, "Stalfos Room", #$FF
+    %cm_preset("Stalfos Room", preset_east_stalfos_room)
 
 cm_east_dark_key_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_east_dark_key_room
-    db #$24, "Dark Key Room", #$FF
+    %cm_preset("Dark Key Room", preset_east_dark_key_room)
 
 cm_east_big_key_dmg_boost:
-    dw !CM_ACTION_PRESET
-    dw #preset_east_big_key_dmg_boost
-    db #$24, "Big Key DMG Boost", #$FF
+    %cm_preset("Big Key DMG Boost", preset_east_big_key_dmg_boost)
 
 cm_east_big_chest_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_east_big_chest_room
-    db #$24, "Big Chest Room", #$FF
+    %cm_preset("Big Chest Room", preset_east_big_chest_room)
 
 cm_east_gwg:
-    dw !CM_ACTION_PRESET
-    dw #preset_east_gwg
-    db #$24, "Gifted With Greenies", #$FF
+    %cm_preset("Gifted With Greenies", preset_east_gwg)
 
 cm_east_pot_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_east_pot_room
-    db #$24, "Pot Room", #$FF
+    %cm_preset("Pot Room", preset_east_pot_room)
 
 cm_east_zeldagamer_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_east_zeldagamer_room
-    db #$24, "Zeldagamer Room", #$FF
+    %cm_preset("Zeldagamer Room", preset_east_zeldagamer_room)
 
 cm_east_armos:
-    dw !CM_ACTION_PRESET
-    dw #preset_east_armos
-    db #$24, "Armos", #$FF
+    %cm_preset("Armos", preset_east_armos)
 
 ; DESERT
 
 cm_presets_goto_desert:
-    dw !CM_ACTION_SUBMENU
-    dw cm_presets_desert
-    db #$24, "Desert", #$FF
+    %cm_submenu("Desert", cm_presets_desert)
 
 cm_presets_desert:
     dw cm_desert_outside_eastern_palace
@@ -784,76 +653,48 @@ cm_presets_desert:
     dw cm_desert_torches
     dw cm_desert_lanmolas
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "DESERT", #$FF
-  table ../resources/normal.tbl
+    %cm_header("DESERT")
 
 cm_desert_outside_eastern_palace:
-    dw !CM_ACTION_PRESET
-    dw #preset_desert_outside_eastern_palace
-    db #$24, "Outside Eastern Palace", #$FF
+    %cm_preset("Outside Eastern Palace", preset_desert_outside_eastern_palace)
 
 cm_desert_ep_spinspeed:
-    dw !CM_ACTION_PRESET
-    dw #preset_desert_ep_spinspeed
-    db #$24, "Eastern Palace Spinspeed", #$FF
+    %cm_preset("Eastern Palace Spinspeed", preset_desert_ep_spinspeed)
 
 cm_desert_unholy_spinspeed:
-    dw !CM_ACTION_PRESET
-    dw #preset_desert_unholy_spinspeed
-    db #$24, "Unholy Spinspeed", #$FF
+    %cm_preset("Unholy Spinspeed", preset_desert_unholy_spinspeed)
 
 cm_desert_water_dash:
-    dw !CM_ACTION_PRESET
-    dw #preset_desert_water_dash
-    db #$24, "Water Dash", #$FF
+    %cm_preset("Water Dash", preset_desert_water_dash)
 
 cm_desert_desert_entrance:
-    dw !CM_ACTION_PRESET
-    dw #preset_desert_desert_entrance
-    db #$24, "Entrance", #$FF
+    %cm_preset("Entrance", preset_desert_desert_entrance)
 
 cm_desert_keybonk:
-    dw !CM_ACTION_PRESET
-    dw #preset_desert_keybonk
-    db #$24, "Key Bonk", #$FF
+    %cm_preset("Key Bonk", preset_desert_keybonk)
 
 cm_desert_pre_cannonball_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_desert_pre_cannonball_room
-    db #$24, "Cannonball Room", #$FF
+    %cm_preset("Cannonball Room", preset_desert_pre_cannonball_room)
 
 cm_desert_pot_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_desert_pot_room
-    db #$24, "Pot Room", #$FF
+    %cm_preset("Pot Room", preset_desert_pot_room)
 
 cm_desert_desert2_spinspeed:
-    dw !CM_ACTION_PRESET
-    dw #preset_desert_desert2_spinspeed
-    db #$24, "Desert 2 Spinspeed", #$FF
+    %cm_preset("Desert 2 Spinspeed", preset_desert_desert2_spinspeed)
 
 cm_desert_popo_genocide_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_desert_popo_genocide_room
-    db #$24, "Popo Genocide", #$FF
+    %cm_preset("Popo Genocide", preset_desert_popo_genocide_room)
 
 cm_desert_torches:
-    dw !CM_ACTION_PRESET
-    dw #preset_desert_torches
-    db #$24, "Torches", #$FF
+    %cm_preset("Torches", preset_desert_torches)
 
 cm_desert_lanmolas:
-    dw !CM_ACTION_PRESET
-    dw #preset_desert_lanmolas
-    db #$24, "Lanmolas", #$FF
+    %cm_preset("Lanmolas", preset_desert_lanmolas)
 
 ; HERA
 
 cm_presets_goto_hera:
-    dw !CM_ACTION_SUBMENU
-    dw cm_presets_hera
-    db #$24, "Hera", #$FF
+    %cm_submenu("Hera", cm_presets_hera)
 
 cm_presets_hera:
     dw cm_hera_outside_desert_palace
@@ -867,66 +708,42 @@ cm_presets_hera:
     dw cm_hera_petting_zoo
     dw cm_hera_moldorm
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "HERA", #$FF
-  table ../resources/normal.tbl
+    %cm_header("HERA")
 
 cm_hera_outside_desert_palace:
-    dw !CM_ACTION_PRESET
-    dw #preset_hera_outside_desert_palace
-    db #$24, "Outside Desert Palace", #$FF
+    %cm_preset("Outside Desert Palace", preset_hera_outside_desert_palace)
 
 cm_hera_fake_flippers:
-    dw !CM_ACTION_PRESET
-    dw #preset_hera_fake_flippers
-    db #$24, "Fake Flippers", #$FF
+    %cm_preset("Fake Flippers", preset_hera_fake_flippers)
 
 cm_hera_dm:
-    dw !CM_ACTION_PRESET
-    dw #preset_hera_dm
-    db #$24, "Death Mountain", #$FF
+    %cm_preset("Death Mountain", preset_hera_dm)
 
 cm_hera_after_mirror:
-    dw !CM_ACTION_PRESET
-    dw #preset_hera_after_mirror
-    db #$24, "After Mirror", #$FF
+    %cm_preset("After Mirror", preset_hera_after_mirror)
 
 cm_hera_entrance:
-    dw !CM_ACTION_PRESET
-    dw #preset_hera_entrance
-    db #$24, "Entrance", #$FF
+    %cm_preset("Entrance", preset_hera_entrance)
 
 cm_hera_tile_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_hera_tile_room
-    db #$24, "Tile room", #$FF
+    %cm_preset("Tile room", preset_hera_tile_room)
 
 cm_hera_torches:
-    dw !CM_ACTION_PRESET
-    dw #preset_hera_torches
-    db #$24, "Torches", #$FF
+    %cm_preset("Torches", preset_hera_torches)
 
 cm_hera_beetles:
-    dw !CM_ACTION_PRESET
-    dw #preset_hera_beetles
-    db #$24, "Beetles", #$FF
+    %cm_preset("Beetles", preset_hera_beetles)
 
 cm_hera_petting_zoo:
-    dw !CM_ACTION_PRESET
-    dw #preset_hera_petting_zoo
-    db #$24, "Petting Zoo", #$FF
+    %cm_preset("Petting Zoo", preset_hera_petting_zoo)
 
 cm_hera_moldorm:
-    dw !CM_ACTION_PRESET
-    dw #preset_hera_moldorm
-    db #$24, "Moldorm", #$FF
+    %cm_preset("Moldorm", preset_hera_moldorm)
 
 ; ATOWER
 
 cm_presets_goto_atower:
-    dw !CM_ACTION_SUBMENU
-    dw cm_presets_atower
-    db #$24, "Agahnim's Tower", #$FF
+    %cm_submenu("Agahnim's Tower", cm_presets_atower)
 
 cm_presets_atower:
     dw cm_aga_outside_hera
@@ -940,66 +757,42 @@ cm_presets_atower:
     dw cm_aga_circle_of_pot
     dw cm_aga_agahnim
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "AGAHNIMS TOWER", #$FF
-  table ../resources/normal.tbl
+    %cm_header("AGAHNIMS TOWER")
 
 cm_aga_outside_hera:
-    dw !CM_ACTION_PRESET
-    dw #preset_aga_outside_hera
-    db #$24, "Outside Hera", #$FF
+    %cm_preset("Outside Hera", preset_aga_outside_hera)
 
 cm_aga_first_rupee_tree:
-    dw !CM_ACTION_PRESET
-    dw #preset_aga_first_rupee_tree
-    db #$24, "First Rupee Tree", #$FF
+    %cm_preset("First Rupee Tree", preset_aga_first_rupee_tree)
 
 cm_aga_lost_woods:
-    dw !CM_ACTION_PRESET
-    dw #preset_aga_lost_woods
-    db #$24, "Lost Woods", #$FF
+    %cm_preset("Lost Woods", preset_aga_lost_woods)
 
 cm_aga_after_lost_woods:
-    dw !CM_ACTION_PRESET
-    dw #preset_aga_after_lost_woods
-    db #$24, "After Lost Woods", #$FF
+    %cm_preset("After Lost Woods", preset_aga_after_lost_woods)
 
 cm_aga_tower_entrance:
-    dw !CM_ACTION_PRESET
-    dw #preset_aga_tower_entrance
-    db #$24, "Entrance", #$FF
+    %cm_preset("Entrance", preset_aga_tower_entrance)
 
 cm_aga_dark_room_of_despair:
-    dw !CM_ACTION_PRESET
-    dw #preset_aga_dark_room_of_despair
-    db #$24, "Dark Room of Despair", #$FF
+    %cm_preset("Dark Room of Despair", preset_aga_dark_room_of_despair)
 
 cm_aga_dark_room_of_melancholy:
-    dw !CM_ACTION_PRESET
-    dw #preset_aga_dark_room_of_melancholy
-    db #$24, "Dark Room of Melancholy", #$FF
+    %cm_preset("Dark Room of Melancholy", preset_aga_dark_room_of_melancholy)
 
 cm_aga_red_spears:
-    dw !CM_ACTION_PRESET
-    dw #preset_aga_red_spears
-    db #$24, "Red Spears", #$FF
+    %cm_preset("Red Spears", preset_aga_red_spears)
 
 cm_aga_circle_of_pot:
-    dw !CM_ACTION_PRESET
-    dw #preset_aga_circle_of_pot
-    db #$24, "Circle of Pot", #$FF
+    %cm_preset("Circle of Pot", preset_aga_circle_of_pot)
 
 cm_aga_agahnim:
-    dw !CM_ACTION_PRESET
-    dw #preset_aga_agahnim
-    db #$24, "Agahnim", #$FF
+    %cm_preset("Agahnim", preset_aga_agahnim)
 
 ; POD
 
 cm_presets_goto_pod:
-    dw !CM_ACTION_SUBMENU
-    dw cm_presets_pod
-    db #$24, "Palace of Darkness", #$FF
+    %cm_submenu("Palace of Darkness", cm_presets_pod)
 
 cm_presets_pod:
     dw cm_pod_pyramid
@@ -1011,56 +804,36 @@ cm_presets_pod:
     dw cm_pod_turtle_room
     dw cm_pod_helma
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "PALACE OF DARKNESS", #$FF
-  table ../resources/normal.tbl
+    %cm_header("PALACE OF DARKNESS")
 
 cm_pod_pyramid:
-    dw !CM_ACTION_PRESET
-    dw #preset_pod_pyramid
-    db #$24, "Pyramid", #$FF
+    %cm_preset("Pyramid", preset_pod_pyramid)
 
 cm_pod_pod_overworld:
-    dw !CM_ACTION_PRESET
-    dw #preset_pod_pod_overworld
-    db #$24, "Palace Overworld Screen", #$FF
+    %cm_preset("Palace Overworld Screen", preset_pod_pod_overworld)
 
 cm_pod_entrance:
-    dw !CM_ACTION_PRESET
-    dw #preset_pod_entrance
-    db #$24, "Entrance", #$FF
+    %cm_preset("Entrance", preset_pod_entrance)
 
 cm_pod_main_hub:
-    dw !CM_ACTION_PRESET
-    dw #preset_pod_main_hub
-    db #$24, "Main Hub", #$FF
+    %cm_preset("Main Hub", preset_pod_main_hub)
 
 cm_pod_hammeryump:
-    dw !CM_ACTION_PRESET
-    dw #preset_pod_hammeryump
-    db #$24, "Hammeryump", #$FF
+    %cm_preset("Hammeryump", preset_pod_hammeryump)
 
 cm_pod_before_sexy_statue:
-    dw !CM_ACTION_PRESET
-    dw #preset_pod_before_sexy_statue
-    db #$24, "Pre Sexy Statue", #$FF
+    %cm_preset("Pre Sexy Statue", preset_pod_before_sexy_statue)
 
 cm_pod_turtle_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_pod_turtle_room
-    db #$24, "Turtle Room", #$FF
+    %cm_preset("Turtle Room", preset_pod_turtle_room)
 
 cm_pod_helma:
-    dw !CM_ACTION_PRESET
-    dw #preset_pod_helma
-    db #$24, "Helma", #$FF
+    %cm_preset("Helma", preset_pod_helma)
 
 ; Thieves
 
 cm_presets_goto_thieves:
-    dw !CM_ACTION_SUBMENU
-    dw cm_presets_thieves
-    db #$24, "Thieves's Town", #$FF
+    %cm_submenu("Thieves's Town", cm_presets_thieves)
 
 cm_presets_thieves:
     dw cm_thieves_outside_pod
@@ -1079,91 +852,57 @@ cm_presets_thieves:
     dw cm_thieves_pot_hammerdash
     dw cm_thieves_blind
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "THIEVES TOWN", #$FF
-  table ../resources/normal.tbl
+    %cm_header("THIEVES TOWN")
 
 cm_thieves_outside_pod:
-    dw !CM_ACTION_PRESET
-    dw #preset_thieves_outside_pod
-    db #$24, "Outside PoD", #$FF
+    %cm_preset("Outside PoD", preset_thieves_outside_pod)
 
 cm_thieves_ow_hammerdash:
-    dw !CM_ACTION_PRESET
-    dw #preset_thieves_ow_hammerdash
-    db #$24, "Overworld Hammerdash", #$FF
+    %cm_preset("Overworld Hammerdash", preset_thieves_ow_hammerdash)
 
 cm_thieves_getting_flute:
-    dw !CM_ACTION_PRESET
-    dw #preset_thieves_getting_flute
-    db #$24, "Getting Flute", #$FF
+    %cm_preset("Getting Flute", preset_thieves_getting_flute)
 
 cm_thieves_usain_bolt:
-    dw !CM_ACTION_PRESET
-    dw #preset_thieves_usain_bolt
-    db #$24, "Usain Bolt", #$FF
+    %cm_preset("Usain Bolt", preset_thieves_usain_bolt)
 
 cm_thieves_after_activating_flute:
-    dw !CM_ACTION_PRESET
-    dw #preset_thieves_after_activating_flute
-    db #$24, "After Activating Flute", #$FF
+    %cm_preset("After Activating Flute", preset_thieves_after_activating_flute)
 
 cm_thieves_darkworld:
-    dw !CM_ACTION_PRESET
-    dw #preset_thieves_darkworld
-    db #$24, "After Warp", #$FF
+    %cm_preset("After Warp", preset_thieves_darkworld)
 
 cm_thieves_entrance:
-    dw !CM_ACTION_PRESET
-    dw #preset_thieves_entrance
-    db #$24, "Entrance", #$FF
+    %cm_preset("Entrance", preset_thieves_entrance)
 
 cm_thieves_after_big_key:
-    dw !CM_ACTION_PRESET
-    dw #preset_thieves_after_big_key
-    db #$24, "After Big Key", #$FF
+    %cm_preset("After Big Key", preset_thieves_after_big_key)
 
 cm_thieves_fire_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_thieves_fire_room
-    db #$24, "Fire Room", #$FF
+    %cm_preset("Fire Room", preset_thieves_fire_room)
 
 cm_thieves_hellway:
-    dw !CM_ACTION_PRESET
-    dw #preset_thieves_hellway
-    db #$24, "Hellway", #$FF
+    %cm_preset("Hellway", preset_thieves_hellway)
 
 cm_thieves_bombable_floor:
-    dw !CM_ACTION_PRESET
-    dw #preset_thieves_bombable_floor
-    db #$24, "Bombable Floor", #$FF
+    %cm_preset("Bombable Floor", preset_thieves_bombable_floor)
 
 cm_thieves_prison:
-    dw !CM_ACTION_PRESET
-    dw #preset_thieves_prison
-    db #$24, "Prison", #$FF
+    %cm_preset("Prison", preset_thieves_prison)
 
 cm_thieves_after_gloves:
-    dw !CM_ACTION_PRESET
-    dw #preset_thieves_after_gloves
-    db #$24, "Gloves", #$FF
+    %cm_preset("Gloves", preset_thieves_after_gloves)
 
 cm_thieves_pot_hammerdash:
-    dw !CM_ACTION_PRESET
-    dw #preset_thieves_pot_hammerdash
-    db #$24, "Pot Hammerdash", #$FF
+    %cm_preset("Pot Hammerdash", preset_thieves_pot_hammerdash)
 
 cm_thieves_blind:
-    dw !CM_ACTION_PRESET
-    dw #preset_thieves_blind
-    db #$24, "Blind", #$FF
+    %cm_preset("Blind", preset_thieves_blind)
 
 ; Skull Woods
 
 cm_presets_goto_skull:
-    dw !CM_ACTION_SUBMENU
-    dw cm_presets_skull
-    db #$24, "Skull Woods", #$FF
+    %cm_submenu("Skull Woods", cm_presets_skull)
 
 cm_presets_skull:
     dw cm_sw_outside_thieves
@@ -1178,71 +917,45 @@ cm_presets_skull:
     dw cm_sw_mummy_key
     dw cm_sw_mothula
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "SKULL WOODS", #$FF
-  table ../resources/normal.tbl
+    %cm_header("SKULL WOODS")
 
 cm_sw_outside_thieves:
-    dw !CM_ACTION_PRESET
-    dw #preset_sw_outside_thieves
-    db #$24, "Outside Thieves", #$FF
+    %cm_preset("Outside Thieves", preset_sw_outside_thieves)
 
 cm_sw_cursed_dwarf:
-    dw !CM_ACTION_PRESET
-    dw #preset_sw_cursed_dwarf
-    db #$24, "Cursed Dwarf", #$FF
+    %cm_preset("Cursed Dwarf", preset_sw_cursed_dwarf)
 
 cm_sw_got_tempered:
-    dw !CM_ACTION_PRESET
-    dw #preset_sw_got_tempered
-    db #$24, "Got Tempered", #$FF
+    %cm_preset("Got Tempered", preset_sw_got_tempered)
 
 cm_sw_dash_to_sw:
-    dw !CM_ACTION_PRESET
-    dw #preset_sw_dash_to_sw
-    db #$24, "Dash to Skull Woods", #$FF
+    %cm_preset("Dash to Skull Woods", preset_sw_dash_to_sw)
 
 cm_sw_mummy_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_sw_mummy_room
-    db #$24, "Mummy Room", #$FF
+    %cm_preset("Mummy Room", preset_sw_mummy_room)
 
 cm_sw_bomb_jump:
-    dw !CM_ACTION_PRESET
-    dw #preset_sw_bomb_jump
-    db #$24, "Bomb Jump", #$FF
+    %cm_preset("Bomb Jump", preset_sw_bomb_jump)
 
 cm_sw_key_pot:
-    dw !CM_ACTION_PRESET
-    dw #preset_sw_key_pot
-    db #$24, "Key Pot", #$FF
+    %cm_preset("Key Pot", preset_sw_key_pot)
 
 cm_sw_skull_entrance:
-    dw !CM_ACTION_PRESET
-    dw #preset_sw_skull_entrance
-    db #$24, "Skull Entrance", #$FF
+    %cm_preset("Skull Entrance", preset_sw_skull_entrance)
 
 cm_sw_mummy_hellway:
-    dw !CM_ACTION_PRESET
-    dw #preset_sw_mummy_hellway
-    db #$24, "Mummy Hellway", #$FF
+    %cm_preset("Mummy Hellway", preset_sw_mummy_hellway)
 
 cm_sw_mummy_key:
-    dw !CM_ACTION_PRESET
-    dw #preset_sw_mummy_key
-    db #$24, "Mummy Key", #$FF
+    %cm_preset("Mummy Key", preset_sw_mummy_key)
 
 cm_sw_mothula:
-    dw !CM_ACTION_PRESET
-    dw #preset_sw_mothula
-    db #$24, "Mothula", #$FF
+    %cm_preset("Mothula", preset_sw_mothula)
 
 ; Ice Palace
 
 cm_presets_goto_ice:
-    dw !CM_ACTION_SUBMENU
-    dw cm_presets_ice
-    db #$24, "Ice Palace", #$FF
+    %cm_submenu("Ice Palace", cm_presets_ice)
 
 cm_presets_ice:
     dw cm_ice_outside_skull
@@ -1261,91 +974,57 @@ cm_presets_ice:
     dw cm_ice_lonely_firebar
     dw cm_ice_kholdstare
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "ICE PALACE", #$FF
-  table ../resources/normal.tbl
+    %cm_header("ICE PALACE")
 
 cm_ice_outside_skull:
-    dw !CM_ACTION_PRESET
-    dw #preset_ice_outside_skull
-    db #$24, "Outside Skull", #$FF
+    %cm_preset("Outside Skull", preset_ice_outside_skull)
 
 cm_ice_bridge_warp:
-    dw !CM_ACTION_PRESET
-    dw #preset_ice_bridge_warp
-    db #$24, "Bridge Warp", #$FF
+    %cm_preset("Bridge Warp", preset_ice_bridge_warp)
 
 cm_ice_lottery:
-    dw !CM_ACTION_PRESET
-    dw #preset_ice_lottery
-    db #$24, "Lottery", #$FF
+    %cm_preset("Lottery", preset_ice_lottery)
 
 cm_ice_medallion:
-    dw !CM_ACTION_PRESET
-    dw #preset_ice_medallion
-    db #$24, "Medallion", #$FF
+    %cm_preset("Medallion", preset_ice_medallion)
 
 cm_ice_zoras_domain:
-    dw !CM_ACTION_PRESET
-    dw #preset_ice_zoras_domain
-    db #$24, "Zoras Domain", #$FF
+    %cm_preset("Zoras Domain", preset_ice_zoras_domain)
 
 cm_ice_tiny_warp:
-    dw !CM_ACTION_PRESET
-    dw #preset_ice_tiny_warp
-    db #$24, "Tiny Warp Dik", #$FF
+    %cm_preset("Tiny Warp Dik", preset_ice_tiny_warp)
 
 cm_ice_ice_entrance:
-    dw !CM_ACTION_PRESET
-    dw #preset_ice_ice_entrance
-    db #$24, "Entrance", #$FF
+    %cm_preset("Entrance", preset_ice_ice_entrance)
 
 cm_ice_ice2:
-    dw !CM_ACTION_PRESET
-    dw #preset_ice_ice2
-    db #$24, "Ice 2", #$FF
+    %cm_preset("Ice 2", preset_ice_ice2)
 
 cm_ice_penguin_switch_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_ice_penguin_switch_room
-    db #$24, "Penguin Switch Room", #$FF
+    %cm_preset("Penguin Switch Room", preset_ice_penguin_switch_room)
 
 cm_ice_bombable_floor:
-    dw !CM_ACTION_PRESET
-    dw #preset_ice_bombable_floor
-    db #$24, "Bombable Floor", #$FF
+    %cm_preset("Bombable Floor", preset_ice_bombable_floor)
 
 cm_ice_conveyor_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_ice_conveyor_room
-    db #$24, "Conveyor Room", #$FF
+    %cm_preset("Conveyor Room", preset_ice_conveyor_room)
 
 cm_ice_ipbj:
-    dw !CM_ACTION_PRESET
-    dw #preset_ice_ipbj
-    db #$24, "IPBJ", #$FF
+    %cm_preset("IPBJ", preset_ice_ipbj)
 
 cm_ice_penguin_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_ice_penguin_room
-    db #$24, "Penguin Lineup Room", #$FF
+    %cm_preset("Penguin Lineup Room", preset_ice_penguin_room)
 
 cm_ice_lonely_firebar:
-    dw !CM_ACTION_PRESET
-    dw #preset_ice_lonely_firebar
-    db #$24, "Lonely Firebar", #$FF
+    %cm_preset("Lonely Firebar", preset_ice_lonely_firebar)
 
 cm_ice_kholdstare:
-    dw !CM_ACTION_PRESET
-    dw #preset_ice_kholdstare
-    db #$24, "Kholdstare", #$FF
+    %cm_preset("Kholdstare", preset_ice_kholdstare)
 
 ; Swamp
 
 cm_presets_goto_swamp:
-    dw !CM_ACTION_SUBMENU
-    dw cm_presets_swamp
-    db #$24, "Swamp Palace", #$FF
+    %cm_submenu("Swamp Palace", cm_presets_swamp)
 
 cm_presets_swamp:
     dw cm_swamp_outside_ice
@@ -1363,86 +1042,54 @@ cm_presets_swamp:
     dw cm_swamp_restock
     dw cm_swamp_arrghus
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "SWAMP PALACE", #$FF
-  table ../resources/normal.tbl
+    %cm_header("SWAMP PALACE")
 
 cm_swamp_outside_ice:
-    dw !CM_ACTION_PRESET
-    dw #preset_swamp_outside_ice
-    db #$24, "Outside Ice", #$FF
+    %cm_preset("Outside Ice", preset_swamp_outside_ice)
 
 cm_swamp_links_house:
-    dw !CM_ACTION_PRESET
-    dw #preset_swamp_links_house
-    db #$24, "Link's House", #$FF
+    %cm_preset("Link's House", preset_swamp_links_house)
 
 cm_swamp_swamp_overworld:
-    dw !CM_ACTION_PRESET
-    dw #preset_swamp_swamp_overworld
-    db #$24, "Swamp Overworld", #$FF
+    %cm_preset("Swamp Overworld", preset_swamp_swamp_overworld)
 
 cm_swamp_antifairy_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_swamp_antifairy_room
-    db #$24, "Antifairy Room", #$FF
+    %cm_preset("Antifairy Room", preset_swamp_antifairy_room)
 
 cm_swamp_entrance:
-    dw !CM_ACTION_PRESET
-    dw #preset_swamp_entrance
-    db #$24, "Entrance", #$FF
+    %cm_preset("Entrance", preset_swamp_entrance)
 
 cm_swamp_first_key:
-    dw !CM_ACTION_PRESET
-    dw #preset_swamp_first_key
-    db #$24, "Tiny Hallway Key", #$FF
+    %cm_preset("Tiny Hallway Key", preset_swamp_first_key)
 
 cm_swamp_main_hub:
-    dw !CM_ACTION_PRESET
-    dw #preset_swamp_main_hub
-    db #$24, "Main Hub", #$FF
+    %cm_preset("Main Hub", preset_swamp_main_hub)
 
 cm_swamp_switch_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_swamp_switch_room
-    db #$24, "Switch Room", #$FF
+    %cm_preset("Switch Room", preset_swamp_switch_room)
 
 cm_swamp_sociable_firebar:
-    dw !CM_ACTION_PRESET
-    dw #preset_swamp_sociable_firebar
-    db #$24, "Sociable Firebar", #$FF
+    %cm_preset("Sociable Firebar", preset_swamp_sociable_firebar)
 
 cm_swamp_backtracking:
-    dw !CM_ACTION_PRESET
-    dw #preset_swamp_backtracking
-    db #$24, "Backtracking", #$FF
+    %cm_preset("Backtracking", preset_swamp_backtracking)
 
 cm_swamp_hook_shot:
-    dw !CM_ACTION_PRESET
-    dw #preset_swamp_hook_shot
-    db #$24, "Hookshot", #$FF
+    %cm_preset("Hookshot", preset_swamp_hook_shot)
 
 cm_swamp_hookdash:
-    dw !CM_ACTION_PRESET
-    dw #preset_swamp_hookdash
-    db #$24, "Hookdash", #$FF
+    %cm_preset("Hookdash", preset_swamp_hookdash)
 
 cm_swamp_restock:
-    dw !CM_ACTION_PRESET
-    dw #preset_swamp_restock
-    db #$24, "Restock Room", #$FF
+    %cm_preset("Restock Room", preset_swamp_restock)
 
 cm_swamp_arrghus:
-    dw !CM_ACTION_PRESET
-    dw #preset_swamp_arrghus
-    db #$24, "Arrghus", #$FF
+    %cm_preset("Arrghus", preset_swamp_arrghus)
 
 ; Misery Mire
 
 cm_presets_goto_mire:
-    dw !CM_ACTION_SUBMENU
-    dw cm_presets_mire
-    db #$24, "Misery Mire", #$FF
+    %cm_submenu("Misery Mire", cm_presets_mire)
 
 cm_presets_mire:
     dw cm_mire_outside_swamp
@@ -1450,7 +1097,7 @@ cm_presets_mire:
     dw cm_mire_mire_entrance
     dw cm_mire_mire2
     dw cm_mire_left_dash
-    dw cm_mire_dodongos
+    dw cm_mire_sluggulas
     dw cm_mire_spark_gamble
     dw cm_mire_spike_key
     dw cm_mire_basement
@@ -1458,76 +1105,48 @@ cm_presets_mire:
     dw cm_mire_bombable_wall
     dw cm_mire_vitty
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "MISERY MIRE", #$FF
-  table ../resources/normal.tbl
+    %cm_header("MISERY MIRE")
 
 cm_mire_outside_swamp:
-    dw !CM_ACTION_PRESET
-    dw #preset_mire_outside_swamp
-    db #$24, "Outside Swamp", #$FF
+    %cm_preset("Outside Swamp", preset_mire_outside_swamp)
 
 cm_mire_mire_darkworld_warp:
-    dw !CM_ACTION_PRESET
-    dw #preset_mire_mire_darkworld_warp
-    db #$24, "Mire Overworld Screen", #$FF
+    %cm_preset("Mire Overworld Screen", preset_mire_mire_darkworld_warp)
 
 cm_mire_mire_entrance:
-    dw !CM_ACTION_PRESET
-    dw #preset_mire_mire_entrance
-    db #$24, "Mire Entrance", #$FF
+    %cm_preset("Mire Entrance", preset_mire_mire_entrance)
 
 cm_mire_mire2:
-    dw !CM_ACTION_PRESET
-    dw #preset_mire_mire2
-    db #$24, "Mire 2", #$FF
+    %cm_preset("Mire 2", preset_mire_mire2)
 
 cm_mire_left_dash:
-    dw !CM_ACTION_PRESET
-    dw #preset_mire_left_dash
-    db #$24, "Beat the Fireball", #$FF
+    %cm_preset("Beat the Fireball", preset_mire_left_dash)
 
-cm_mire_dodongos:
-    dw !CM_ACTION_PRESET
-    dw #preset_mire_dodongos
-    db #$24, "Dodongos", #$FF
+cm_mire_sluggulas:
+    %cm_preset("Sluggulas", preset_mire_sluggulas)
 
 cm_mire_spark_gamble:
-    dw !CM_ACTION_PRESET
-    dw #preset_mire_spark_gamble
-    db #$24, "Spark Gamble", #$FF
+    %cm_preset("Spark Gamble", preset_mire_spark_gamble)
 
 cm_mire_spike_key:
-    dw !CM_ACTION_PRESET
-    dw #preset_mire_spike_key
-    db #$24, "Spike Key", #$FF
+    %cm_preset("Spike Key", preset_mire_spike_key)
 
 cm_mire_basement:
-    dw !CM_ACTION_PRESET
-    dw #preset_mire_basement
-    db #$24, "Basement", #$FF
+    %cm_preset("Basement", preset_mire_basement)
 
 cm_mire_cane_dash:
-    dw !CM_ACTION_PRESET
-    dw #preset_mire_cane_dash
-    db #$24, "Cane Dash", #$FF
+    %cm_preset("Cane Dash", preset_mire_cane_dash)
 
 cm_mire_bombable_wall:
-    dw !CM_ACTION_PRESET
-    dw #preset_mire_bombable_wall
-    db #$24, "Bombable Wall", #$FF
+    %cm_preset("Bombable Wall", preset_mire_bombable_wall)
 
 cm_mire_vitty:
-    dw !CM_ACTION_PRESET
-    dw #preset_mire_vitty
-    db #$24, "Vitreous", #$FF
+    %cm_preset("Vitreous", preset_mire_vitty)
 
 ; Turtle Rock
 
 cm_presets_goto_trock:
-    dw !CM_ACTION_SUBMENU
-    dw cm_presets_trock
-    db #$24, "Turtle Rock", #$FF
+    %cm_submenu("Turtle Rock", cm_presets_trock)
 
 cm_presets_trock:
     dw cm_trock_ouside_mire
@@ -1537,88 +1156,58 @@ cm_presets_trock:
     dw cm_trock_lanterns
     dw cm_trock_roller_room
     dw cm_trock_chomps
-    dw cm_trock_pokies_1
-    dw cm_trock_pokies_2
+    dw cm_trock_pokey_1
+    dw cm_trock_pokeys_2
     dw cm_trock_roller_key
     dw cm_trock_lazer_skip
     dw cm_trock_switch_room
     dw cm_trock_trinexx
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "TURTLE ROCK", #$FF
-  table ../resources/normal.tbl
+    %cm_header("TURTLE ROCK")
 
 cm_trock_ouside_mire:
-    dw !CM_ACTION_PRESET
-    dw #preset_trock_ouside_mire
-    db #$24, "Outside Mire", #$FF
+    %cm_preset("Outside Mire", preset_trock_ouside_mire)
 
 cm_trock_icerod_overworld:
-    dw !CM_ACTION_PRESET
-    dw #preset_trock_icerod_overworld
-    db #$24, "Ice Rod Overworld", #$FF
+    %cm_preset("Ice Rod Overworld", preset_trock_icerod_overworld)
 
 cm_trock_peg_puzzle:
-    dw !CM_ACTION_PRESET
-    dw #preset_trock_peg_puzzle
-    db #$24, "Peg Puzzle", #$FF
+    %cm_preset("Peg Puzzle", preset_trock_peg_puzzle)
 
 cm_trock_entrance:
-    dw !CM_ACTION_PRESET
-    dw #preset_trock_entrance
-    db #$24, "Entrance", #$FF
+    %cm_preset("Entrance", preset_trock_entrance)
 
 cm_trock_lanterns:
-    dw !CM_ACTION_PRESET
-    dw #preset_trock_lanterns
-    db #$24, "Torches", #$FF
+    %cm_preset("Torches", preset_trock_lanterns)
 
 cm_trock_roller_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_trock_roller_room
-    db #$24, "Roller Room", #$FF
+    %cm_preset("Roller Room", preset_trock_roller_room)
 
 cm_trock_chomps:
-    dw !CM_ACTION_PRESET
-    dw #preset_trock_chomps
-    db #$24, "Chomps", #$FF
+    %cm_preset("Chomps", preset_trock_chomps)
 
-cm_trock_pokies_1:
-    dw !CM_ACTION_PRESET
-    dw #preset_trock_pokies_1
-    db #$24, "Pokeys 1", #$FF
+cm_trock_pokey_1:
+    %cm_preset("Pokey 1", preset_trock_pokey_1)
 
-cm_trock_pokies_2:
-    dw !CM_ACTION_PRESET
-    dw #preset_trock_pokies_2
-    db #$24, "Pokeys 2", #$FF
+cm_trock_pokeys_2:
+    %cm_preset("Pokeys 2", preset_trock_pokeys_2)
 
 cm_trock_roller_key:
-    dw !CM_ACTION_PRESET
-    dw #preset_trock_roller_key
-    db #$24, "Roller Key", #$FF
+    %cm_preset("Roller Key", preset_trock_roller_key)
 
 cm_trock_lazer_skip:
-    dw !CM_ACTION_PRESET
-    dw #preset_trock_lazer_skip
-    db #$24, "Lazer Skip", #$FF
+    %cm_preset("Lazer Skip", preset_trock_lazer_skip)
 
 cm_trock_switch_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_trock_switch_room
-    db #$24, "Switch Room", #$FF
+    %cm_preset("Switch Room", preset_trock_switch_room)
 
 cm_trock_trinexx:
-    dw !CM_ACTION_PRESET
-    dw #preset_trock_trinexx
-    db #$24, "Trinexx", #$FF
+    %cm_preset("Trinexx", preset_trock_trinexx)
 
 ; Ganon's Tower
 
 cm_presets_goto_gtower:
-    dw !CM_ACTION_SUBMENU
-    dw cm_presets_gtower
-    db #$24, "Ganon's Tower", #$FF
+    %cm_submenu("Ganon's Tower", cm_presets_gtower)
 
 cm_presets_gtower:
     dw cm_gtower_outside_trock
@@ -1640,125 +1229,79 @@ cm_presets_gtower:
     dw cm_gtower_moldorm_2
     dw cm_gtower_agahnim_2
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "GANONS TOWER", #$FF
-  table ../resources/normal.tbl
+    %cm_header("GANONS TOWER")
 
 cm_gtower_outside_trock:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_outside_trock
-    db #$24, "Outside Turtle Rock", #$FF
+    %cm_preset("Outside Turtle Rock", preset_gtower_outside_trock)
 
 cm_gtower_entrance:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_entrance
-    db #$24, "Entrance", #$FF
+    %cm_preset("Entrance", preset_gtower_entrance)
 
 cm_gtower_spike_skip:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_spike_skip
-    db #$24, "Spike Skip", #$FF
+    %cm_preset("Spike Skip", preset_gtower_spike_skip)
 
 cm_gtower_pre_firesnakes_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_pre_firesnakes_room
-    db #$24, "Pre Firesnakes Room", #$FF
+    %cm_preset("Pre Firesnakes Room", preset_gtower_pre_firesnakes_room)
 
 cm_gtower_bombable_floor:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_bombable_floor
-    db #$24, "Bombable Floor", #$FF
+    %cm_preset("Bombable Floor", preset_gtower_bombable_floor)
 
 cm_gtower_ice_armos:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_ice_armos
-    db #$24, "Ice Armos", #$FF
+    %cm_preset("Ice Armos", preset_gtower_ice_armos)
 
 cm_gtower_floor_2:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_floor_2
-    db #$24, "Floor 2", #$FF
+    %cm_preset("Floor 2", preset_gtower_floor_2)
 
 cm_gtower_mimics1:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_mimics1
-    db #$24, "Mimics 1", #$FF
+    %cm_preset("Mimics 1", preset_gtower_mimics1)
 
 cm_gtower_mimics2:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_mimics2
-    db #$24, "Mimics 2", #$FF
+    %cm_preset("Mimics 2", preset_gtower_mimics2)
 
 cm_gtower_spike_room:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_spike_room
-    db #$24, "Spike Room", #$FF
+    %cm_preset("Spike Room", preset_gtower_spike_room)
 
 cm_gtower_gauntlet:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_gauntlet
-    db #$24, "Gauntlet", #$FF
+    %cm_preset("Gauntlet", preset_gtower_gauntlet)
 
 cm_gtower_lanmola2:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_lanmola2
-    db #$24, "Lanmola 2", #$FF
+    %cm_preset("Lanmola 2", preset_gtower_lanmola2)
 
 cm_gtower_wizz2:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_wizz2
-    db #$24, "Wizzrobes 2", #$FF
+    %cm_preset("Wizzrobes 2", preset_gtower_wizz2)
 
 cm_gtower_torches2:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_torches2
-    db #$24, "Torches 2", #$FF
+    %cm_preset("Torches 2", preset_gtower_torches2)
 
 cm_gtower_helma_key:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_helma_key
-    db #$24, "Helma Key", #$FF
+    %cm_preset("Helma Key", preset_gtower_helma_key)
 
 cm_gtower_bombable_wall:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_bombable_wall
-    db #$24, "Bombable Wall", #$FF
+    %cm_preset("Bombable Wall", preset_gtower_bombable_wall)
 
 cm_gtower_moldorm_2:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_moldorm_2
-    db #$24, "Moldorm 2", #$FF
+    %cm_preset("Moldorm 2", preset_gtower_moldorm_2)
 
 cm_gtower_agahnim_2:
-    dw !CM_ACTION_PRESET
-    dw #preset_gtower_agahnim_2
-    db #$24, "Agahnim 2", #$FF
+    %cm_preset("Agahnim 2", preset_gtower_agahnim_2)
 
 ; Ganon
 
 cm_presets_goto_ganon:
-    dw !CM_ACTION_SUBMENU
-    dw cm_presets_ganon
-    db #$24, "Ganon", #$FF
+    %cm_submenu("Ganon", cm_presets_ganon)
 
 cm_presets_ganon:
     dw cm_ganon_pyramid
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "GANON", #$FF
-  table ../resources/normal.tbl
+    %cm_header("GANON")
 
 cm_ganon_pyramid:
-    dw !CM_ACTION_PRESET
-    dw #preset_ganon_pyramid
-    db #$24, "Pyramid", #$FF
+    %cm_preset("Pyramid", preset_ganon_pyramid)
 
 ; BOSS
 
 cm_presets_goto_bosses:
-    dw !CM_ACTION_SUBMENU
-    dw cm_presets_bosses
-    db #$24, "Bosses", #$FF
+    %cm_submenu("Bosses", cm_presets_bosses)
 
 cm_presets_bosses:
     dw cm_east_armos
@@ -1775,17 +1318,13 @@ cm_presets_bosses:
     dw cm_gtower_agahnim_2
     dw cm_ganon_pyramid
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "BOSSES", #$FF
-  table ../resources/normal.tbl
+    %cm_header("BOSSES")
 
 ; }}}
 ; FEATURES {{{
 
 cm_main_goto_features:
-    dw !CM_ACTION_SUBMENU
-    dw cm_submenu_features
-    db #$24, "Features", #$FF
+    %cm_submenu("Features", cm_submenu_features)
 
 cm_submenu_features:
     dw cm_feature_counters
@@ -1798,17 +1337,12 @@ cm_submenu_features:
     dw cm_feature_savestate_controller
     dw cm_feature_lanmola_cycle_count
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "FEATURES", #$FF
-  table ../resources/normal.tbl
+    %cm_header("FEATURES")
 
 cm_feature_counters:
-    dw !CM_ACTION_TOGGLE_JSR
-    dw #.turn_off_counters
-    dl !ram_counters_toggle
-    db #$24, "Counters", #$FF
+    %cm_toggle_jsr("Counters", !ram_counters_toggle)
 
-  .turn_off_counters
+  .toggle
   %a16()
     LDA #$207F : STA $7EC734
 
@@ -1827,12 +1361,9 @@ cm_feature_counters:
     RTS
 
 cm_feature_input_display:
-    dw !CM_ACTION_TOGGLE_JSR
-    dw #.turn_off_input_display
-    dl !ram_input_display_toggle
-    db #$24, "Input Display", #$FF
+    %cm_toggle_jsr("Input Display", !ram_input_display_toggle)
 
-  .turn_off_input_display
+  .toggle
   %a16()
     LDA #$207F
     STA !POS_MEM_INPUT_DISPLAY_TOP+0 : STA !POS_MEM_INPUT_DISPLAY_TOP+2
@@ -1844,24 +1375,18 @@ cm_feature_input_display:
     RTS
 
 cm_feature_enemy_hp:
-    dw !CM_ACTION_TOGGLE_JSR
-    dw #.turn_off_enemy_hp
-    dl !ram_enemy_hp_toggle
-    db #$24, "Enemy HP", #$FF
+    %cm_toggle_jsr("Enemy HP", !ram_enemy_hp_toggle)
 
-  .turn_off_enemy_hp
+  .toggle
   %ai16()
     LDA #$207F : STA !POS_MEM_ENEMY_HEART_GFX
     LDX.w #!POS_ENEMY_HEARTS : STA $7EC700,x : STA $7EC702,x
     RTS
 
 cm_feature_xy:
-    dw !CM_ACTION_TOGGLE_JSR
-    dw #.turn_off_xy
-    dl !ram_xy_toggle
-    db #$24, "Coordinates", #$FF
+    %cm_toggle_jsr("Coordinates", !ram_xy_toggle)
 
-  .turn_off_xy
+  .toggle
   %ai16()
     LDA #$207F : LDX.w #!POS_XY
     STA $7EC700,x : STA $7EC702,x : STA $7EC704,x
@@ -1869,27 +1394,19 @@ cm_feature_xy:
     RTS
 
 cm_feature_qw:
-    dw !CM_ACTION_TOGGLE_JSR
-    dw #.turn_off_qw
-    dl !ram_qw_toggle
-    db #$24, "QW Indicator", #$FF
+    %cm_toggle_jsr("QW Indicator", !ram_qw_toggle)
 
-  .turn_off_qw
+  .toggle
   %a16()
     LDA #$207F : STA $7EC80A
     LDA #$207F : STA $7EC80C
     RTS
 
-
 cm_feature_lit_rooms:
-    dw !CM_ACTION_TOGGLE
-    dl !ram_lit_rooms_toggle
-    db #$24, "Lit Rooms", #$FF
+    %cm_toggle("Lit Rooms", !ram_lit_rooms_toggle)
 
 cm_feature_oob:
-    dw !CM_ACTION_TOGGLE
-    dl !lowram_oob_toggle
-    db #$24, "OoB Mode", #$FF
+    %cm_toggle("OoB Mode", !ram_oob_toggle)
 
 cm_feature_savestate_controller:
     dw !CM_ACTION_CHOICE_JSR
@@ -1920,27 +1437,20 @@ cm_feature_savestate_controller:
         RTS
 
 cm_feature_lanmola_cycle_count:
-    dw !CM_ACTION_TOGGLE_JSR
-    dw #.turn_off_xy
-    dl !ram_toggle_lanmola_cycles
-    db #$24, "Lanmola Cycs", #$FF
+    %cm_toggle_jsr("Lanmola Cycs", !ram_toggle_lanmola_cycles)
 
-  .turn_off_xy
+  .toggle
   %a8()
     LDA #$00 : STA !ram_lanmola_cycles
                STA !ram_lanmola_cycles+1
                STA !ram_lanmola_cycles+2
     RTS
 
-
 ; }}}
 ; GAME STATE {{{
 
-
 cm_main_goto_game_state:
-    dw !CM_ACTION_SUBMENU
-    dw cm_submenu_game_state
-    db #$24, "Game state", #$FF
+    %cm_submenu("Game state", cm_submenu_game_state)
 
 cm_submenu_game_state:
     dw cm_game_state_reset_screen
@@ -1952,15 +1462,10 @@ cm_submenu_game_state:
     dw cm_game_state_armed_eg
     dw cm_game_state_eg_strength
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "GAME STATE", #$FF
-  table ../resources/normal.tbl
+    %cm_header("GAME STATE")
 
 cm_game_state_armed_eg:
-    dw !CM_ACTION_TOGGLE_JSR
-    dw #.toggle
-    dl #!ram_cm_armed_eg
-    db #$24, "Armed EG", #$FF
+    %cm_toggle_jsr("Armed EG", !ram_cm_armed_eg)
 
   .toggle
     LDA !ram_cm_armed_eg : BEQ .not_set
@@ -1973,10 +1478,7 @@ cm_game_state_armed_eg:
     RTS
 
 cm_game_state_eg_strength:
-    dw !CM_ACTION_TOGGLE_JSR
-    dw #.toggle
-    dl #!ram_cm_eg_strength
-    db #$24, "Strong EG", #$FF
+    %cm_toggle_jsr("Strong EG", !ram_cm_eg_strength)
 
   .toggle
     LDA !ram_cm_eg_strength : BEQ .weak
@@ -1989,11 +1491,9 @@ cm_game_state_eg_strength:
     RTS
 
 cm_game_state_reset_screen:
-    dw !CM_ACTION_JSR
-    dw #.reset_screen
-    db #$24, "Reset screen state", #$FF
+    %cm_jsr("Reset screen state")
 
-  .reset_screen
+  .routine
     LDA $1B : BEQ .overworld
 
     STZ $0400 : STZ $0401 : STZ $0402 : STZ $0403 : STZ $0408
@@ -2034,9 +1534,7 @@ cm_game_state_map_indicator:
     db #$FF
 
 cm_game_state_goto_flags_submenu:
-    dw !CM_ACTION_SUBMENU
-    dw cm_submenu_game_state_flags
-    db #$24, "Game flags", #$FF
+    %cm_submenu("Game flags", cm_submenu_game_state_flags)
 
 cm_submenu_game_state_flags:
     dw cm_game_state_flags_uncle
@@ -2048,62 +1546,34 @@ cm_submenu_game_state_flags:
     dw cm_game_state_flags_fortune_teller_cycle
     dw cm_game_state_flags_not_used_2
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "GAME FLAGS", #$FF
-  table ../resources/normal.tbl
+    %cm_header("GAME FLAGS")
 
 cm_game_state_flags_uncle:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_flags
-    db #$01
-    db #$24, "Uncle dead", #$FF
+    %cm_toggle_bit("Uncle dead", !ram_game_flags, #$01)
 
 cm_game_state_flags_sanc_priest:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_flags
-    db #$02
-    db #$24, "Sanc priest", #$FF
+    %cm_toggle_bit("Sanc priest", !ram_game_flags, #$02)
 
 cm_game_state_flags_escaped:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_flags
-    db #$04
-    db #$24, "Escaped", #$FF
+    %cm_toggle_bit("Escaped", !ram_game_flags, #$04)
 
 cm_game_state_flags_not_used:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_flags
-    db #$08
-    db #$24, "Not used", #$FF
+    %cm_toggle_bit("Not used", !ram_game_flags, #$08)
 
 cm_game_state_flags_uncle_left_home:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_flags
-    db #$10
-    db #$24, "Uncle left", #$FF
+    %cm_toggle_bit("Uncle left", !ram_game_flags, #$10)
 
 cm_game_state_flags_talked_to_aginah:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_flags
-    db #$20
-    db #$24, "Aginah", #$FF
+    %cm_toggle_bit("Aginah", !ram_game_flags, #$20)
 
 cm_game_state_flags_fortune_teller_cycle:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_flags
-    db #$40
-    db #$24, "Fortune cycle", #$FF
+    %cm_toggle_bit("Fortune cycle", !ram_game_flags, #$40)
 
 cm_game_state_flags_not_used_2:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_flags
-    db #$80
-    db #$24, "Not used", #$FF
+    %cm_toggle_bit("Not used", !ram_game_flags, #$80)
 
 cm_game_state_goto_bosses_submenu:
-    dw !CM_ACTION_SUBMENU
-    dw cm_game_state_bosses_submenu
-    db #$24, "Bosses defeated", #$FF
+    %cm_submenu("Bosses defeated", cm_game_state_bosses_submenu)
 
 cm_game_state_bosses_submenu:
     dw cm_game_state_bosses_armos
@@ -2119,86 +1589,46 @@ cm_game_state_bosses_submenu:
     dw cm_game_state_bosses_trinexx
     dw cm_game_state_bosses_agahnim_2
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "BOSSES DEFEATED", #$FF
-  table ../resources/normal.tbl
+    %cm_header("BOSSES DEFEATED")
 
 cm_game_state_bosses_armos:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #$7EF191
-    db #$08
-    db #$24, "Armos", #$FF
+    %cm_toggle_bit("Armos", $7EF191, #$08)
 
 cm_game_state_bosses_lanmolas:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #$7EF067
-    db #$08
-    db #$24, "Lanmola", #$FF
+    %cm_toggle_bit("Lanmola", $7EF067, #$08)
 
 cm_game_state_bosses_moldorm:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #$7EF00F
-    db #$08
-    db #$24, "Moldorm", #$FF
+    %cm_toggle_bit("Moldorm", $7EF00F, #$08)
 
 cm_game_state_bosses_agahnim:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #$7EF041
-    db #$08
-    db #$24, "Agahnim", #$FF
+    %cm_toggle_bit("Agahnim", $7EF041, #$08)
 
 cm_game_state_bosses_helma:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #$7EF0B5
-    db #$08
-    db #$24, "Helmasaur", #$FF
+    %cm_toggle_bit("Helmasaur", $7EF0B5, #$08)
 
 cm_game_state_bosses_blind:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #$7EF159
-    db #$08
-    db #$24, "Blind", #$FF
+    %cm_toggle_bit("Blind", $7EF159, #$08)
 
 cm_game_state_bosses_mothula:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #$7EF053
-    db #$08
-    db #$24, "Mothula", #$FF
+    %cm_toggle_bit("Mothula", $7EF053, #$08)
 
 cm_game_state_bosses_kholdstare:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #$7EF1BD
-    db #$08
-    db #$24, "Kholdstare", #$FF
+    %cm_toggle_bit("Kholdstare", $7EF1BD, #$08)
 
 cm_game_state_bosses_arrghus:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #$7EF00D
-    db #$08
-    db #$24, "Arrghus", #$FF
+    %cm_toggle_bit("Arrghus", $7EF00D, #$08)
 
 cm_game_state_bosses_vitty:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #$7EF121
-    db #$08
-    db #$24, "Vitreous", #$FF
+    %cm_toggle_bit("Vitreous", $7EF121, #$08)
 
 cm_game_state_bosses_trinexx:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #$7EF149
-    db #$08
-    db #$24, "Trinexx", #$FF
+    %cm_toggle_bit("Trinexx", $7EF149, #$08)
 
 cm_game_state_bosses_agahnim_2:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #$7EF01B
-    db #$08
-    db #$24, "Agahnim 2", #$FF
+    %cm_toggle_bit("Agahnim 2", $7EF01B, #$08)
 
 cm_game_state_goto_crystals_submenu:
-    dw !CM_ACTION_SUBMENU
-    dw cm_game_state_crystals_submenu
-    db #$24, "Pendants and crystals", #$FF
+    %cm_submenu("Pendants and crystals", cm_game_state_crystals_submenu)
 
 cm_game_state_crystals_submenu:
     dw cm_game_state_pendant_eastern
@@ -2212,103 +1642,62 @@ cm_game_state_crystals_submenu:
     dw cm_game_state_crystal_mire
     dw cm_game_state_crystal_trock
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "PENDANTS AND CRYSTALS", #$FF
-  table ../resources/normal.tbl
+    %cm_header("PENDANTS AND CRYSTALS")
 
 cm_game_state_pendant_eastern:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_pendants
-    db #$04
-    db #$24, "Eastern", #$FF
+    %cm_toggle_bit("Eastern", !ram_game_pendants, #$04)
 
 cm_game_state_pendant_desert:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_pendants
-    db #$02
-    db #$24, "Desert", #$FF
+    %cm_toggle_bit("Desert", !ram_game_pendants, #$02)
 
 cm_game_state_pendant_hera:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_pendants
-    db #$01
-    db #$24, "Hera", #$FF
+    %cm_toggle_bit("Hera", !ram_game_pendants, #$01)
 
 cm_game_state_crystal_pod:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_crystals
-    db #$02
-    db #$24, "Darkness", #$FF
+    %cm_toggle_bit("Darkness", !ram_game_crystals, #$02)
 
 cm_game_state_crystal_theives:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_crystals
-    db #$20
-    db #$24, "Thieves", #$FF
+    %cm_toggle_bit("Thieves", !ram_game_crystals, #$20)
 
 cm_game_state_crystal_skull:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_crystals
-    db #$40
-    db #$24, "Skull", #$FF
+    %cm_toggle_bit("Skull", !ram_game_crystals, #$40)
 
 cm_game_state_crystal_ice:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_crystals
-    db #$04
-    db #$24, "Ice", #$FF
+    %cm_toggle_bit("Ice", !ram_game_crystals, #$04)
 
 cm_game_state_crystal_swamp:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_crystals
-    db #$10
-    db #$24, "Swamp", #$FF
+    %cm_toggle_bit("Swamp", !ram_game_crystals, #$10)
 
 cm_game_state_crystal_mire:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_crystals
-    db #$01
-    db #$24, "Mire", #$FF
+    %cm_toggle_bit("Mire", !ram_game_crystals, #$01)
 
 cm_game_state_crystal_trock:
-    dw !CM_ACTION_TOGGLE_BIT
-    dl #!ram_game_crystals
-    db #$08
-    db #$24, "TRock", #$FF
-
+    %cm_toggle_bit("TRock", !ram_game_crystals, #$08)
 
 ; }}}
 ; MINIGAMES {{{
 
 cm_main_goto_minigames:
-    dw !CM_ACTION_SUBMENU
-    dw cm_submenu_minigames
-    db #$24, "Minigames", #$FF
+    %cm_submenu("Minigames", cm_submenu_minigames)
 
 cm_submenu_minigames:
     dw cm_minigame_react
     dw cm_minigame_mash
     dw #$0000
-  table ../resources/header.tbl
-    db #$2C, "MINIGAMES", #$FF
-  table ../resources/normal.tbl
+    %cm_header("MINIGAMES")
 
 cm_minigame_react:
-    dw !CM_ACTION_JSR
-    dw #.start_react_minigame
-    db #$24, "Reaction", #$FF
+    %cm_jsr("Reaction")
 
-  .start_react_minigame
+  .routine
     LDA #1 : STA $B0
     LDA #0 : STA !ram_minigame_submode
     RTS
 
 cm_minigame_mash:
-    dw !CM_ACTION_JSR
-    dw #.start_mashing_minigame
-    db #$24, "Mashing", #$FF
+    %cm_jsr("Mashing")
 
-  .start_mashing_minigame
+  .routine
     LDA #2 : STA $B0
     LDA #0 : STA !ram_minigame_submode
     RTS
