@@ -4,8 +4,6 @@
 
 - Ingame manual counter (to practice a trick X times and see your success rate).
 
-- Toggle music.
-
 - Lagometer. Toggleable feature that makes the magic go down/up depending on how laggy a frame was.
 
 - Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances

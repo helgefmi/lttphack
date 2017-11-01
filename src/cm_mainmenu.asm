@@ -1330,6 +1330,7 @@ cm_submenu_features:
     dw cm_feature_counters
     dw cm_feature_input_display
     dw cm_feature_enemy_hp
+    dw cm_feature_music
     dw cm_feature_xy
     dw cm_feature_qw
     dw cm_feature_lit_rooms
@@ -1372,6 +1373,17 @@ cm_feature_input_display:
     STA !POS_MEM_INPUT_DISPLAY_BOT+2 : STA !POS_MEM_INPUT_DISPLAY_BOT+4
     STA !POS_MEM_INPUT_DISPLAY_BOT+6 : STA !POS_MEM_INPUT_DISPLAY_BOT+8
 
+    RTS
+
+cm_feature_music:
+    %cm_toggle_jsr("Music", !ram_feature_music)
+
+  .toggle
+    BEQ .mute_music
+    RTS
+
+  .mute_music
+    STZ $012C : STZ $012D
     RTS
 
 cm_feature_enemy_hp:

@@ -20,6 +20,8 @@
 !lowram_draw_tmp2 = $04DE
 !lowram_draw_tmp3 = $04E0
 
+!lowram_last_feature_music = $04E8
+
 !ram_ctrl1_word = $04E4
 !ram_ctrl1_byte2 = $04E5
 !ram_ctrl2_word = $04E6
@@ -68,6 +70,8 @@ endif
 
 !ram_previous_preset_destination = !offset+24
 !ram_previous_preset_type = !offset+26
+
+!ram_feature_music = !offset+28
 
 !ram_savestate_ctrl_to_use = $AB
 !lowram_oob_toggle = $037F

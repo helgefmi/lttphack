@@ -2,6 +2,8 @@
 ;
 ; Code that is run once after the game has been powered on.
 
+!SRAM_VERSION = $0002
+
 org $0CC1FF
     JML init_hook
 
@@ -18,16 +20,17 @@ init_hook:
 init_expand:
     ; enters AI=8
   %a16()
-    LDA !ram_sram_initialized : CMP #$1234 : BEQ .sram_initialized
+    LDA !ram_sram_initialized : CMP #!SRAM_VERSION : BEQ .sram_initialized
 
     LDA.w #!FEATURE_HUD : STA !ram_enemy_hp_toggle : STA !ram_counters_toggle : STA !ram_input_display_toggle : STA !ram_toggle_lanmola_cycles
+    LDA #$0001 : STA !ram_feature_music : STA !lowram_last_feature_music
     LDA #$0000 : STA !ram_xy_toggle : STA !ram_qw_toggle : STA !ram_lit_rooms_toggle : STA !ram_oob_toggle : STA !ram_savestate_controller
 
     LDA #!ram_ctrl1_word : STA !ram_savestate_ctrl_to_use
     LDA !SHORTCUT_LOAD_P1 : STA !ram_savestate_load_shortcut
     LDA !SHORTCUT_SAVE_P1 : STA !ram_savestate_save_shortcut
 
-    LDA #$1234 : STA !ram_sram_initialized
+    LDA #!SRAM_VERSION : STA !ram_sram_initialized
 
   .sram_initialized
     ; Set P1
