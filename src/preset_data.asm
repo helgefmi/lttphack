@@ -3078,7 +3078,7 @@ db $01 ; Door Orientation
 db $00 ; Starting Background
 dw sram_mire_left_dash_after
 
-preset_mire_dodongos:
+preset_mire_sluggulas:
 db $02 ; Dungeon
 dw $00C1 ; Room Index
 dw $1910 ; BG1 Vertical Scroll
@@ -3106,7 +3106,7 @@ db $FF ; Starting Floor
 db $0E ; Palace No
 db $01 ; Door Orientation
 db $00 ; Starting Background
-dw sram_mire_dodongos_after
+dw sram_mire_sluggulas_after
 
 preset_mire_spark_gamble:
 db $02 ; Dungeon
@@ -3442,7 +3442,7 @@ db $01 ; Door Orientation
 db $00 ; Starting Background
 dw sram_trock_chomps_after
 
-preset_trock_pokies_1:
+preset_trock_pokey_1:
 db $02 ; Dungeon
 dw $0014 ; Room Index
 dw $020B ; BG1 Vertical Scroll
@@ -3470,9 +3470,9 @@ db $FF ; Starting Floor
 db $18 ; Palace No
 db $02 ; Door Orientation
 db $00 ; Starting Background
-dw sram_trock_pokies_1_after
+dw sram_trock_pokey_1_after
 
-preset_trock_pokies_2:
+preset_trock_pokeys_2:
 db $02 ; Dungeon
 dw $0014 ; Room Index
 dw $028E ; BG1 Vertical Scroll
@@ -3500,7 +3500,7 @@ db $FF ; Starting Floor
 db $18 ; Palace No
 db $01 ; Door Orientation
 db $00 ; Starting Background
-dw sram_trock_pokies_2_after
+dw sram_trock_pokeys_2_after
 
 preset_trock_roller_key:
 db $02 ; Dungeon
@@ -6359,7 +6359,7 @@ dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7FE124 : db $02 : dw $03EF ; Room $D2 persistent: Misery Mire (Mire02 / Wizzrobes Room)
 .after
 
-sram_mire_dodongos:
+sram_mire_sluggulas:
 dl $7E0542 : db $02 : dw $1430 ; Object tilemap state
 dl $7E0546 : db $02 : dw $1C30 ; Object tilemap state
 dl $7E054A : db $02 : dw $0000 ; Object tilemap state
@@ -6609,7 +6609,7 @@ dl $7E0202 : db $01 : db $11 ; Selected menu item
 dl $7EC78C : db $02 : dw $24ED ; Selected menu gfx, row 2
 .after
 
-sram_trock_pokies_1:
+sram_trock_pokey_1:
 dl $7E0542 : db $02 : dw $0000 ; Object tilemap state
 dl $7EF377 : db $01 : db $11 ; Arrows
 dl $7EF028 : db $02 : dw $000F ; Room $0014: Turtle Rock (Big Key Room) (.............qqq)
@@ -6620,11 +6620,11 @@ dl $7EF36E : db $01 : db $28 ; Magic Power
 dl $7FE0EC : db $02 : dw $0020 ; Room $B6 persistent: Turtle Rock (Chain Chomps Room)
 dl $7FE10C : db $02 : dw $0000 ; Room $C6 persistent: Turtle Rock
 dl $7E0540 : db $02 : dw $0000 ; Object tilemap state
-dl $7EC172 : db $01 : db $01 ; Crystal switch state
+dl $7EC172 : db $01 : db $00 ; Crystal switch state
 dl $7E002F : db $01 : db $04 ; Link's direction
 .after
 
-sram_trock_pokies_2:
+sram_trock_pokeys_2:
 dl $7EF028 : db $02 : dw $401F ; Room $0014: Turtle Rock (Big Key Room) (..d.........qqqq)
 dl $7EF360 : db $02 : dw $0079 ; Rupees (goal)
 dl $7EF026 : db $02 : dw $8405 ; Room $0013: Turtle Rock (Hokku-Bokku Key Room 2) (.d....K.......q.)
@@ -6632,7 +6632,6 @@ dl $7EF362 : db $02 : dw $0079 ; Rupees (actual)
 dl $7EF366 : db $02 : dw $77B8 ; BigKey1
 dl $7EF36E : db $01 : db $78 ; Magic Power
 dl $7FDFA6 : db $02 : dw $0040 ; Room $13 persistent: Turtle Rock (Hokku-Bokku Key Room 2)
-dl $7EC172 : db $01 : db $00 ; Crystal switch state
 dl $7E002F : db $01 : db $02 ; Link's direction
 .after
 
