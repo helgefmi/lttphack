@@ -436,4 +436,13 @@ preset_reset_counters:
     RTS
 
 
+preset_load_last_preset:
+  %a16()
+    LDA !ram_previous_preset_destination : STA !ram_preset_destination
+  %a8()
+    LDA !ram_previous_preset_type : STA !ram_preset_type
+    LDA.b #12 : STA $10
+    LDA.b #05 : STA $11
+    RTL
+
 incsrc preset_data.asm
