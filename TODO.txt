@@ -1,6 +1,6 @@
 - Set RNG for rooms:
-    * Swamp: Arrghus: [random, easy, medium, hard]
     * Mire/GTower: Firesnakes
+    * Swamp: Arrghus: [random, easy, medium, hard]
     * Ganon
         - Num Warps
         - Warp location

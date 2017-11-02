@@ -1293,11 +1293,15 @@ cm_presets_goto_ganon:
 
 cm_presets_ganon:
     dw cm_ganon_pyramid
+    dw cm_ganon_pyramid_magic
     dw #$0000
     %cm_header("GANON")
 
 cm_ganon_pyramid:
     %cm_preset("Pyramid", preset_ganon_pyramid)
+
+cm_ganon_pyramid_magic:
+    %cm_preset("Pyramid (magic)", preset_ganon_pyramid_magic)
 
 ; BOSS
 

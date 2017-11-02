@@ -4150,6 +4150,22 @@ dw $FFF6 ; Unknown 2
 dw $FFF8 ; Unknown 3
 dw sram_ganon_pyramid_after
 
+preset_ganon_pyramid_magic:
+db $01 ; Overworld
+dw $005B ; Screen Index
+dw $07F0 ; Link X
+dw $0668 ; Link Y
+dw $0605 ; BG1 Vertical Scroll
+dw $060A ; BG2 Vertical Scroll
+dw $0778 ; BG1 Horizontal Scroll
+dw $0778 ; BG2 Horizontal Scroll
+dw $07F7 ; Scroll X
+dw $0677 ; Scroll Y
+dw $002E ; Unknown 1
+dw $FFF6 ; Unknown 2
+dw $FFF8 ; Unknown 3
+dw sram_ganon_pyramid_magic_after
+
 
 ; Preset SRAM changes
 
@@ -7016,4 +7032,8 @@ dl $7EF3FD : db $02 : dw $0000 ; Deaths
 dl $7EF01A : db $02 : dw $0802 ; Room $000D: Ganon's Tower (Agahnim2[Boss]) (.....k.........q)
 dl $7FDFFA : db $01 : db $00 ; Overworld $3D persistent: UNKNOWN
 dl $7E002F : db $01 : db $02 ; Link's direction
+.after
+
+sram_ganon_pyramid_magic:
+dl $7EF36E : db $01 : db $80 ; Magic Power
 .after
