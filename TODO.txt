@@ -1,14 +1,14 @@
 - Set RNG for rooms:
-    * Escape: ZGR
-    * ATower: Circle of Pots
     * ATower/GTower: Agahnim BB
-    * PoD: Bad Kiki rng
     * PoD: Helmasaur: [random, fireballs]
     * Swamp: Arrghus: [random, easy, medium, hard]
     * Mire/GTower: Firesnakes
     * Ganon
         - Num Warps
         - Warp location
+
+    * ATower: Circle of Pots
+    * PoD: Bad Kiki rng
 
 - Ingame manual counter (to practice a trick X times and see your success rate).
 

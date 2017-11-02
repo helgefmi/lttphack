@@ -1,5 +1,5 @@
-    ; Pokey rng manip
-    ; ---------------
+; Pokeys
+org $0688E9
     ; 0688e9 jsl $0dba71
     ; 0688ed and #$03
     ; 0688ef tay
@@ -8,11 +8,25 @@
     ; 0688f6 lda $88db,y
     ; 0688f9 sta $0d40,x
     ; 0688fc rts
-org $0688E9
-    JSL pokey_rng_hook
+    JSL rng_pokey_hook
     RTS
 
+; Agahnim
+org $01ED6EF
+    ; 1ed6ef jsl $0dba71
+    ; 1ed6f3 and #$01
+    ; 1ed6f5 bne $d701
+    ; 1ed6f7 lda #$01
+    ; 1ed6f9 sta $0da0,y
+    ; 1ed6fc lda #$20
+    ; 1ed6fe sta $0df0,y
+    ; 1ed701 rts
+    JSL rng_agahnim_hook
+    RTS
+
+
 org $288000
+
 tbl_pokey_speed:
     ; 00
     db -16, -16, -16, -16 ; ul ul
@@ -43,7 +57,7 @@ tbl_real_pokey_x:
 tbl_real_pokey_y:
     db 16,  16, -16, -16
 
-pokey_rng_hook:
+rng_pokey_hook:
     PHB : PHK : PLB
 
     LDA !ram_pokey_rng : BEQ .random
@@ -64,4 +78,22 @@ pokey_rng_hook:
 
   .done
     PLB
+    RTL
+
+
+; == Agahnim ==
+
+rng_agahnim_hook:
+    LDA !ram_agahnim_rng : BEQ .random
+    CMP #$01 : BEQ .done
+	BRA .yellow
+
+  .random
+	JSL !RandomNumGen : AND #$01 : BNE .done
+
+  .yellow
+	LDA #$01 : STA $0DA0, Y
+	LDA #$20 : STA $0DF0, Y
+
+  .done
     RTL

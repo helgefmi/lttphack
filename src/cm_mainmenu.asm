@@ -1695,6 +1695,7 @@ cm_main_goto_rng_control:
 
 cm_submenu_rng_control:
     dw cm_rng_pokey
+    dw cm_rng_agahnim
     dw #$0000
     %cm_header("RNG CONTROL")
 
@@ -1719,6 +1720,15 @@ cm_rng_pokey:
     db #$24, "ur dl", #$FF
     db #$24, "dr dl", #$FF
     db #$24, "dl dl", #$FF
+    db #$FF
+
+cm_rng_agahnim:
+    dw !CM_ACTION_CHOICE
+    dl !ram_agahnim_rng
+    db #$24, "Agahnim", #$FF
+    db #$24, "Random", #$FF
+    db #$24, "Yellow", #$FF
+    db #$24, "Blue", #$FF
     db #$FF
 
 ; }}}
