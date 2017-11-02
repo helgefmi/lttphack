@@ -24,6 +24,21 @@ org $01ED6EF
     JSL rng_agahnim_hook
     RTS
 
+; Helmasaur
+org $01E8262
+	; 1e8262 jsl $0dba71
+	; 1e8266 and #$01
+	; 1e8268 beq $8276
+	; 1e826a lda #$7f
+	; 1e826c sta $0e10,x
+	; 1e826f lda #$2a
+	; 1e8271 jsl $0dbb8a
+	; 1e8275 rts
+	; 1e8276 lda #$a0
+	; 1e8278 sta $0e00,x
+	; 1e827b rts
+	JSL rng_helmasaur_hook
+    RTS
 
 org $288000
 
@@ -96,4 +111,26 @@ rng_agahnim_hook:
 	LDA #$20 : STA $0DF0, Y
 
   .done
+    RTL
+
+
+; == Helmasaur ==
+rng_helmasaur_hook:
+    LDA !ram_helmasaur_rng : BEQ .random
+    CMP #$01 : BEQ .no_fireball
+	BRA .fireball
+
+  .random
+	; 1e8262 jsl $0dba71
+	; 1e8266 and #$01
+	; 1e8268 beq $8276
+	JSL !RandomNumGen : AND #$01 : BEQ .no_fireball
+
+  .fireball
+	LDA #$A0 : STA $0E00,x
+    RTL
+
+  .no_fireball
+	LDA #$7F : STA $0E10,x
+	LDA #$2A : JSL $0DBB8A
     RTL

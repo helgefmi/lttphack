@@ -45,6 +45,7 @@
 !ram_rng_counter = $7F7704
 !ram_pokey_rng = $7F7706
 !ram_agahnim_rng = $7F7708
+!ram_helmasaur_rng = $7F770A
 
 ; If save state feature is enabled, store RAM to toggle prachack features in $77 (extended SRAM)
 ; If not, store it in $7F8 (just some free WRAM)

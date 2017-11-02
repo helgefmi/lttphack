@@ -1,6 +1,4 @@
 - Set RNG for rooms:
-    * ATower/GTower: Agahnim BB
-    * PoD: Helmasaur: [random, fireballs]
     * Swamp: Arrghus: [random, easy, medium, hard]
     * Mire/GTower: Firesnakes
     * Ganon

@@ -1696,13 +1696,14 @@ cm_main_goto_rng_control:
 cm_submenu_rng_control:
     dw cm_rng_pokey
     dw cm_rng_agahnim
+    dw cm_rng_helmasaur
     dw #$0000
     %cm_header("RNG CONTROL")
 
 cm_rng_pokey:
     dw !CM_ACTION_CHOICE
     dl !ram_pokey_rng
-    db #$24, "Pokey RNG", #$FF
+    db #$24, "Pokeys", #$FF
     db #$24, "Random", #$FF
     db #$24, "ul ul", #$FF
     db #$24, "ur ul", #$FF
@@ -1729,6 +1730,15 @@ cm_rng_agahnim:
     db #$24, "Random", #$FF
     db #$24, "Yellow", #$FF
     db #$24, "Blue", #$FF
+    db #$FF
+
+cm_rng_helmasaur:
+    dw !CM_ACTION_CHOICE
+    dl !ram_helmasaur_rng
+    db #$24, "Helmasaur", #$FF
+    db #$24, "Random", #$FF
+    db #$24, "Fireball", #$FF
+    db #$24, "No fireball", #$FF
     db #$FF
 
 ; }}}
