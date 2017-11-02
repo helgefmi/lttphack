@@ -1,4 +1,5 @@
 ; == SRAM ==
+
 if !FEATURE_SS
     org $00FFD8
         db $08 ; 256kb
@@ -6,7 +7,7 @@ endif
 
 
 ; == CTRL 2 ==
-
+;
 ; Enable controller 2 CLR
 ; Overrides the following:
 ; $0083F8: 60  RTS
@@ -36,7 +37,7 @@ org $008044
 
 
 ; == BAGE CHEAT CODE ==
-
+;
 ; Make it so saving on third filename slot gives you
 ; full equipment.
 ;
@@ -55,7 +56,8 @@ org $0CDB7E
     NOP : NOP               ; D0 18         BNE $0CDC49
 
 
-; == Intro mash skip ==
+; == INTRO MASH SKIP ==
+;
 ; 0cc106 lda $f6
 ; 0cc108 and #$c0
 ; 0cc10a ora $f4
