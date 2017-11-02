@@ -56,6 +56,7 @@ cm_mainmenu_indices:
     dw cm_main_goto_items
     dw cm_main_goto_equipment
     dw cm_main_goto_game_state
+    dw cm_main_goto_rng_control
     dw cm_main_goto_features
     ; dw cm_main_goto_minigames
     dw #$0000
@@ -1685,6 +1686,40 @@ cm_game_state_crystal_mire:
 
 cm_game_state_crystal_trock:
     %cm_toggle_bit("TRock", !ram_game_crystals, #$08)
+
+; }}}
+; RNG CONTROL {{{
+
+cm_main_goto_rng_control:
+    %cm_submenu("RNG Control", cm_submenu_rng_control)
+
+cm_submenu_rng_control:
+    dw cm_rng_pokey
+    dw #$0000
+    %cm_header("RNG CONTROL")
+
+cm_rng_pokey:
+    dw !CM_ACTION_CHOICE
+    dl !ram_pokey_rng
+    db #$24, "Pokey RNG", #$FF
+    db #$24, "Random", #$FF
+    db #$24, "ul ul", #$FF
+    db #$24, "ur ul", #$FF
+    db #$24, "dr ul", #$FF
+    db #$24, "dl ul", #$FF
+    db #$24, "ul ur", #$FF
+    db #$24, "ur ur", #$FF
+    db #$24, "dr ur", #$FF
+    db #$24, "dl ur", #$FF
+    db #$24, "ul dr", #$FF
+    db #$24, "ur dr", #$FF
+    db #$24, "dr dr", #$FF
+    db #$24, "dl dr", #$FF
+    db #$24, "ul dl", #$FF
+    db #$24, "ur dl", #$FF
+    db #$24, "dr dl", #$FF
+    db #$24, "dl dl", #$FF
+    db #$FF
 
 ; }}}
 ; MINIGAMES {{{

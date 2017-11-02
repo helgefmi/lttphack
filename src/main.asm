@@ -34,3 +34,6 @@ warnpc $278000
 
 incsrc presets.asm      ; $278000
 warnpc $288000
+
+incsrc rng.asm
+warnpc $298000
