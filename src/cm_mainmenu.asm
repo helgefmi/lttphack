@@ -1701,6 +1701,8 @@ cm_submenu_rng_control:
     dw cm_rng_pokey
     dw cm_rng_agahnim
     dw cm_rng_helmasaur
+    dw cm_rng_ganon_warp
+    dw cm_rng_ganon_warp_location
     dw #$0000
     %cm_header("RNG CONTROL")
 
@@ -1741,8 +1743,28 @@ cm_rng_helmasaur:
     dl !ram_helmasaur_rng
     db #$24, "Helmasaur", #$FF
     db #$24, "Random", #$FF
-    db #$24, "Fireball", #$FF
     db #$24, "No fireball", #$FF
+    db #$24, "Fireball", #$FF
+    db #$FF
+
+cm_rng_ganon_warp:
+    dw !CM_ACTION_CHOICE
+    dl !ram_ganon_warp_rng
+    db #$24, "Ganon warps", #$FF
+    db #$24, "Random", #$FF
+    db #$24, "No warp", #$FF
+    db #$24, "Warp", #$FF
+    db #$FF
+
+cm_rng_ganon_warp_location:
+    dw !CM_ACTION_CHOICE
+    dl !ram_ganon_warp_location_rng
+    db #$24, "Ganon warp to", #$FF
+    db #$24, "Random", #$FF
+    db #$24, "Far left", #$FF
+    db #$24, "Bottom left", #$FF
+    db #$24, "Bottom right", #$FF
+    db #$24, "Far right", #$FF
     db #$FF
 
 ; }}}

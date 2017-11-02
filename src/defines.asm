@@ -46,6 +46,8 @@
 !ram_pokey_rng = $7F7706
 !ram_agahnim_rng = $7F7708
 !ram_helmasaur_rng = $7F770A
+!ram_ganon_warp_location_rng = $7F770C
+!ram_ganon_warp_rng = $7F770E
 
 ; If save state feature is enabled, store RAM to toggle prachack features in $77 (extended SRAM)
 ; If not, store it in $7F8 (just some free WRAM)
