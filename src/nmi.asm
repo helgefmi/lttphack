@@ -26,6 +26,7 @@ nmi_hook:
 org $228000
 nmi_expand:
    ; Enters AI=16
+   PHB : PHK : PLB
 
   %a8()
     LDA !ram_feature_music : CMP !lowram_last_feature_music : BEQ .no_music_change
@@ -47,6 +48,7 @@ nmi_expand:
   .dont_update_counters
   %a8()
     STZ !lowram_last_frame_did_saveload
+  PLB
     RTL
 
 
