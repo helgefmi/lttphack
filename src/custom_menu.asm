@@ -98,6 +98,7 @@ CM_Active:
 
     ; F6 = AXLR | ....
     TYA : AND $F6 : CMP.b #$80 : BEQ .pressed_a
+                    CMP.b #$40 : BEQ .pressed_x
 
     ; Did not press anything
     BRA .done
@@ -126,6 +127,7 @@ CM_Active:
   .pressed_left
   .pressed_right
   .pressed_a
+  .pressed_x
     JSR cm_execute_cursor
     BRA .redraw
 
@@ -822,8 +824,19 @@ cm_execute_ctrl_shortcut:
   %a16()
     LDA ($00) : STA $35 : INC $00 : INC $00
     LDA ($00) : STA $37 : INC $00
+  %a8()
+
+    LDA $F6 : CMP #$40 : BEQ .reset_shortcut
+
     INC $B0
     STZ $0200
+    BRA .end
+
+  .reset_shortcut
+  %a16()
+    LDA #!ram_ctrl_prachack_menu : CMP $35 : BEQ .end
+
+    LDA #$0000 : STA [$35]
 
   .end
   %a16()
