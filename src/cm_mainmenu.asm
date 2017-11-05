@@ -1701,7 +1701,7 @@ cm_ctrl_open_lttphack_menu:
     %cm_ctrl_shortcut("Open menu", !ram_ctrl_prachack_menu)
 
 cm_ctrl_load_last_preset:
-    %cm_ctrl_shortcut("Load preset", !ram_ctrl_load_last_preset)
+    %cm_ctrl_shortcut("Load last preset", !ram_ctrl_load_last_preset)
 
 if !FEATURE_SS
     cm_ctrl_save_state:
