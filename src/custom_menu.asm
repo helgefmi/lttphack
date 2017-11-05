@@ -1082,7 +1082,7 @@ cm_draw_ctrl_shortcut:
 
   %ai16()
     TYA : ASL : ASL : ASL : ASL : ASL
-    CLC : ADC #$0220 : TAX
+    CLC : ADC #$022A : TAX
 
     LDA #$2480 : STA $0E
     LDA [$04]
@@ -1123,7 +1123,7 @@ cm_ctrl_clear_input_display:
     LDA #$24F5
     STA $1000, X : STA $1002, X : STA $1004, X : STA $1006, X
     STA $1008, X : STA $100A, X : STA $100C, X : STA $100E, X
-    STA $1010, X : STA $1012, X : STA $1014, X : STA $1016, X
+    STA $1010, X
   PLA
     RTS
 
@@ -1156,7 +1156,7 @@ cm_do_ctrl_config:
     LDY !lowram_cm_cursor_stack, X
 
     TYA : ASL : ASL : ASL : ASL : ASL
-    CLC : ADC #$0220 : TAX
+    CLC : ADC #$022A : TAX
 
     ; Input display
     LDA !ram_ctrl1

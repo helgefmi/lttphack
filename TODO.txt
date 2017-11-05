@@ -13,7 +13,4 @@
 
 - Mashing and pumping minigame (mps, max frames w/o mash, frames lost total etc).
 
-- Reconfigurable controls (save/load state mostly).
-    - Add back "Reset segment timer" input.
-
 - Game crashes sometimes after killing aga2. Same bug as in v7 I presume.

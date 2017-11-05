@@ -78,6 +78,8 @@ endif
 !ram_ctrl_load_state = !offset+36
 !ram_ctrl_toggle_oob = !offset+38
 !ram_ctrl_skip_text = !offset+40
+!ram_ctrl_disable_sprites = !offset+42
+!ram_ctrl_reset_segment_timer = !offset+44
 
 !lowram_oob_toggle = $037F
 

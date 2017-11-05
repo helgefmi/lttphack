@@ -26,6 +26,8 @@ gamemode_hook:
     JSR gamemode_transition_detection
     JSR gamemode_oob
     JSR gamemode_skip_text
+    JSR gamemode_disable_sprites
+    JSR gamemode_reset_segment_timer
 
   %ai8()
     JSL $0080B5 ; GameModes
@@ -437,6 +439,33 @@ gamemode_skip_text:
 
   %a8()
     LDA #$04 : STA $1CD4
+
+  .done
+    %a8()
+    RTS
+
+
+gamemode_disable_sprites:
+  %a16()
+    LDA !ram_ctrl1 : CMP !ram_ctrl_disable_sprites : BNE .done
+    AND !ram_ctrl1_filtered : BEQ .done
+
+  %a8()
+    JSL !Sprite_DisableAll
+
+  .done
+    %a8()
+    RTS
+
+
+gamemode_reset_segment_timer:
+  %a16()
+    LDA !ram_ctrl1 : CMP !ram_ctrl_reset_segment_timer : BNE .done
+    AND !ram_ctrl1_filtered : BEQ .done
+
+    STZ !lowram_seg_frames
+    STZ !lowram_seg_seconds
+    STZ !lowram_seg_minutes
 
   .done
     %a8()
