@@ -47,6 +47,7 @@ CM_Init:
   %a16()
     LDA #$0000 : STA !lowram_cm_stack_index
     LDA #cm_mainmenu_indices : STA !ram_cm_menu_stack
+    ; Scroll down
     LDA #$FF18 : STA $EA
   %a8()
 
@@ -68,7 +69,7 @@ CM_DrawMenu:
   %ppu_on()
 
     ; play sound effect for opening menu
-    LDA.b #$15 : STA $012F
+    LDA.b #$14 : STA $012E
 
     INC $11
     RTS
@@ -103,7 +104,7 @@ CM_Active:
 
   .pressed_start
     ; play sound effect for closing menu, and go to next mode
-    LDA.b #$16 : STA $012F
+    LDA.b #$15 : STA $012E
 
     INC $11
     BRA .done
