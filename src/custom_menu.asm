@@ -47,18 +47,10 @@ CM_Init:
   %a16()
     LDA #$0000 : STA !lowram_cm_stack_index
     LDA #cm_mainmenu_indices : STA !ram_cm_menu_stack
+    LDA #$FF18 : STA $EA
   %a8()
 
-  %ppu_off()
-    JSR cm_transfer_tileset
-  %ppu_on()
-
-  JSR cm_init_item_variables
-
-  %a16()
-    ; Make sure we don't go infinite loop in the next submodule if normal item menu is down.
-    LDA $EA : BEQ .end
-    LDA.w #$0000 : STA $EA
+    JSR cm_init_item_variables
 
   .end
   %a8()
@@ -70,26 +62,20 @@ CM_DrawMenu:
     ; Save $1000-1680 so we can transfer it back aferwards
     JSR cm_cache_buffer
 
+  %ppu_off()
+    JSR cm_transfer_tileset
     JSR cm_redraw
+  %ppu_on()
 
     ; play sound effect for opening menu
-    LDA.b #$11 : STA $012F
+    LDA.b #$15 : STA $012F
 
     INC $11
     RTS
 
 
 CM_MenuDown:
-    ; Scrolls the menu down first.
-  %a16()
-    LDA $EA : SEC : SBC.w #$0008 : STA $EA
-    CMP.w #$FF18
-  %a8()
-
-    BNE .not_done_scrolling
     INC $11
-
-  .not_done_scrolling
     RTS
 
 
@@ -98,7 +84,6 @@ CM_Active:
     JSR cm_do_minigame
 
     RTS
-
 
   .in_menu
     JSR cm_get_pressed_button : CPX.b #$04 : BEQ .pressed_down
@@ -118,7 +103,7 @@ CM_Active:
 
   .pressed_start
     ; play sound effect for closing menu, and go to next mode
-    LDA.b #$11 : STA $012F
+    LDA.b #$16 : STA $012F
 
     INC $11
     BRA .done
@@ -158,10 +143,9 @@ CM_Active:
 
 CM_MenuUp:
   %a16()
-    LDA $EA : CLC : ADC.w #$0008 : STA $EA
+    LDA #$0000 : STA $EA
   %a8()
 
-    BNE .not_done_scrolling
     INC $11
 
   .not_done_scrolling
