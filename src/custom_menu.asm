@@ -211,8 +211,6 @@ CM_Return:
   %a8()
     RTS
 
-incsrc minigames.asm
-
 ; -----------
 ; Utilities
 ; ----------

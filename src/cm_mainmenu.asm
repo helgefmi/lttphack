@@ -58,7 +58,6 @@ cm_mainmenu_indices:
     dw cm_main_goto_game_state
     dw cm_main_goto_rng_control
     dw cm_main_goto_features
-    ; dw cm_main_goto_minigames
     dw #$0000
     %cm_header("LTTPHACK !VERSION")
 
@@ -1766,33 +1765,5 @@ cm_rng_ganon_warp_location:
     db #$24, "Bottom right", #$FF
     db #$24, "Far right", #$FF
     db #$FF
-
-; }}}
-; MINIGAMES {{{
-
-cm_main_goto_minigames:
-    %cm_submenu("Minigames", cm_submenu_minigames)
-
-cm_submenu_minigames:
-    dw cm_minigame_react
-    dw cm_minigame_mash
-    dw #$0000
-    %cm_header("MINIGAMES")
-
-cm_minigame_react:
-    %cm_jsr("Reaction")
-
-  .routine
-    LDA #1 : STA $B0
-    LDA #0 : STA !ram_minigame_submode
-    RTS
-
-cm_minigame_mash:
-    %cm_jsr("Mashing")
-
-  .routine
-    LDA #2 : STA $B0
-    LDA #0 : STA !ram_minigame_submode
-    RTS
 
 ; }}}
