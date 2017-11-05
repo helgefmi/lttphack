@@ -1534,11 +1534,9 @@ cm_submenu_game_state_flags:
     dw cm_game_state_flags_uncle
     dw cm_game_state_flags_sanc_priest
     dw cm_game_state_flags_escaped
-    dw cm_game_state_flags_not_used
     dw cm_game_state_flags_uncle_left_home
     dw cm_game_state_flags_talked_to_aginah
     dw cm_game_state_flags_fortune_teller_cycle
-    dw cm_game_state_flags_not_used_2
     dw #$0000
     %cm_header("GAME FLAGS")
 

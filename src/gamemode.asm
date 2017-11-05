@@ -24,6 +24,7 @@ gamemode_hook:
     JSR gamemode_custom_menu : BCS .exit
     JSR gamemode_load_previous_preset : BCS .exit
     JSR gamemode_transition_detection
+    JSR gamemode_oob
 
   %ai8()
     JSL $0080B5 ; GameModes
@@ -412,3 +413,17 @@ gamemode_savestate:
   after_save_state:
   %ai8()
     CLC : RTS
+
+
+gamemode_oob:
+  %a16()
+    LDA !ram_ctrl1 : CMP !ram_ctrl_toggle_oob : BNE .dont_toggle
+    AND !ram_ctrl1_filtered : BEQ .dont_toggle
+
+  %a8()
+    LDA !ram_oob_toggle : EOR #$01 : STA !ram_oob_toggle
+
+  .dont_toggle:
+  %a8()
+    LDA !ram_oob_toggle : STA !lowram_oob_toggle
+    RTS
