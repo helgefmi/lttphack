@@ -2,7 +2,7 @@
 ;
 ; Code that is run once after the game has been powered on.
 
-!SRAM_VERSION = $0002
+!SRAM_VERSION = $0004
 
 org $0CC1FF
     JML init_hook
@@ -24,28 +24,22 @@ init_expand:
 
     LDA.w #!FEATURE_HUD : STA !ram_enemy_hp_toggle : STA !ram_counters_toggle : STA !ram_input_display_toggle : STA !ram_toggle_lanmola_cycles
     LDA #$0001 : STA !ram_feature_music : STA !lowram_last_feature_music
-    LDA #$0000 : STA !ram_xy_toggle : STA !ram_qw_toggle : STA !ram_lit_rooms_toggle : STA !ram_oob_toggle : STA !ram_savestate_controller
+    LDA #$0000 : STA !ram_xy_toggle : STA !ram_qw_toggle : STA !ram_lit_rooms_toggle : STA !ram_oob_toggle
 
-    LDA #!ram_ctrl1_word : STA !ram_savestate_ctrl_to_use
-    LDA !SHORTCUT_LOAD_P1 : STA !ram_savestate_load_shortcut
-    LDA !SHORTCUT_SAVE_P1 : STA !ram_savestate_save_shortcut
+    ; Start + R
+    LDA #$1010 : STA !ram_ctrl_prachack_menu
+    ; B + L + Select
+    LDA #$20A0 : STA !ram_ctrl_load_last_preset
+    ; Y + R + Select
+    LDA #$2060 : STA !ram_ctrl_save_state
+    ; Y + L + Select
+    LDA #$1060 : STA !ram_ctrl_load_state
+    ; Unset
+    LDA #$0000 : STA !ram_ctrl_toggle_oob
 
     LDA #!SRAM_VERSION : STA !ram_sram_initialized
 
   .sram_initialized
-    ; Set P1
-    LDA #!ram_ctrl1_word : STA !ram_savestate_ctrl_to_use
-    LDA !SHORTCUT_LOAD_P1 : STA !ram_savestate_load_shortcut
-    LDA !SHORTCUT_SAVE_P1 : STA !ram_savestate_save_shortcut
-
-    ; Check if we need to set P2
-  %a8()
-    LDA !ram_savestate_controller : BEQ .done
-  %a16()
-    LDA #!ram_ctrl2_word : STA !ram_savestate_ctrl_to_use
-    LDA !SHORTCUT_LOAD_P2 : STA !ram_savestate_load_shortcut
-    LDA !SHORTCUT_SAVE_P2 : STA !ram_savestate_save_shortcut
-
     ; Some features probably should be turned off after a reset
   %a8()
     LDA #$00 : STA !ram_oob_toggle : STA !lowram_oob_toggle

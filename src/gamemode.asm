@@ -7,13 +7,10 @@ org $008056
 org $208000
 gamemode_hook:
     ; For convenience, so that we can access the full ctrl1 as 16bit.
-    LDA $F0 : STA !ram_ctrl1_word
-    LDA $F2 : STA !ram_ctrl1_byte2
+    LDA $F0 : STA !ram_ctrl1
+    LDA $F2 : STA !ram_ctrl1+1
     LDA $F4 : STA !ram_ctrl1_filtered
-    LDA $F6 : STA !ram_ctrl1_filtered_byte2
-	
-    LDA $F1 : STA !ram_ctrl2_word
-    LDA $F3 : STA !ram_ctrl2_byte2
+    LDA $F6 : STA !ram_ctrl1_filtered+1
 
     if !FEATURE_SS
         JSR gamemode_savestate : BCS .exit
@@ -245,9 +242,10 @@ gamemode_safe_to_change_mode:
 ; Custom Menu
 gamemode_custom_menu:
   %a16()
-    LDA !ram_ctrl1_word : AND #$1000 : CMP #$1000 : BNE .no_custom_menu
+    LDA !ram_ctrl1 : CMP !ram_ctrl_prachack_menu : BNE .no_custom_menu
+    AND !ram_ctrl1_filtered : BEQ .no_custom_menu
+
   %a8()
-    LDA $F4 : CMP #$10 : BNE .no_custom_menu
     JSR gamemode_safe_to_change_mode : BCC .no_custom_menu
 
     LDA $10 : STA !ram_cm_old_gamemode
@@ -266,7 +264,7 @@ gamemode_custom_menu:
 gamemode_load_previous_preset:
   %a16()
     ; Load last preset shortcut check
-    LDA !ram_ctrl1_word : CMP !SHORTCUT_LOAD_LAST_PRESET : BNE .no_load_preset
+    LDA !ram_ctrl1 : CMP !ram_ctrl_load_last_preset : BNE .no_load_preset
     AND !ram_ctrl1_filtered : BEQ .no_load_preset
 
   %a8()
@@ -285,12 +283,15 @@ gamemode_load_previous_preset:
 
 ; Save state
 gamemode_savestate:
-  %ai16()
-    LDA (!ram_savestate_ctrl_to_use)
-    CMP !ram_savestate_load_shortcut : BEQ .do_save_state
-    JMP .test_load_state
+    LDA $10 : CMP #$0C : BNE .not_setting_new_inputs
+    LDA $B0 : BEQ .not_setting_new_inputs
+    CLC : RTS
 
-  .do_save_state
+  .not_setting_new_inputs
+  %ai16()
+    LDA !ram_ctrl1 : CMP !ram_ctrl_save_state : BNE .test_load_state
+    AND !ram_ctrl1_filtered : BEQ .test_load_state
+
   %a8()
     ; store DMA to SRAM
     LDY #$0000 : LDX #$0000
@@ -312,7 +313,11 @@ gamemode_savestate:
     JMP end
 
   .test_load_state
-    CMP !ram_savestate_save_shortcut : BEQ .do_load_state
+    LDA !ram_ctrl1 : CMP !ram_ctrl_load_state : BNE .no_bueno
+    AND !ram_ctrl1_filtered : BEQ .no_bueno
+    BRA .do_load_state
+
+  .no_bueno
     JMP after_save_state
 
   .do_load_state

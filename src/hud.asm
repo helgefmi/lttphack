@@ -249,7 +249,7 @@ hud_draw_enemy_hp:
 hud_draw_input_display:
     ; Assumes: I=16
 
-    LDA !ram_ctrl1_word : CMP !ram_ctrl1_word_copy : BEQ .end
+    LDA !ram_ctrl1 : CMP !ram_ctrl1_word_copy : BEQ .end
 
     STA !ram_ctrl1_word_copy : TAY
     LDX #$0000

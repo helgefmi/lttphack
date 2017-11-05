@@ -49,6 +49,12 @@ macro cm_jsr(title)
     db #$24, "<title>", #$FF
 endmacro
 
+macro cm_ctrl_shortcut(title, addr)
+    dw !CM_ACTION_CTRL_SHORTCUT
+    dl <addr>
+    db #$24, "<title>", #$FF
+endmacro
+
 ; MAIN MENU
 
 cm_mainmenu_indices:
@@ -57,6 +63,7 @@ cm_mainmenu_indices:
     dw cm_main_goto_equipment
     dw cm_main_goto_game_state
     dw cm_main_goto_rng_control
+    dw cm_main_goto_ctrl
     dw cm_main_goto_features
     dw #$0000
     %cm_header("LTTPHACK !VERSION")
@@ -1339,7 +1346,6 @@ cm_submenu_features:
     dw cm_feature_qw
     dw cm_feature_lit_rooms
     dw cm_feature_oob
-    dw cm_feature_savestate_controller
     dw cm_feature_lanmola_cycle_count
     dw #$0000
     %cm_header("FEATURES")
@@ -1423,34 +1429,6 @@ cm_feature_lit_rooms:
 
 cm_feature_oob:
     %cm_toggle("OoB Mode", !ram_oob_toggle)
-
-cm_feature_savestate_controller:
-    dw !CM_ACTION_CHOICE_JSR
-    dw #.toggle_save_control
-    dl !ram_savestate_controller
-    db #$24, "SState ctrl", #$FF
-    db #$24, "Player 1", #$FF
-    db #$24, "Player 2", #$FF
-    db #$FF
-
-    .toggle_save_control
-        %ai16()
-        AND #$00FF : CMP #$0000 : BEQ .p1
-
-        LDA !SHORTCUT_LOAD_P2 : STA !ram_savestate_load_shortcut
-        LDA !SHORTCUT_SAVE_P2 : STA !ram_savestate_save_shortcut
-        LDA #!ram_ctrl2_word
-        JMP .end
-
-      .p1
-        LDA !SHORTCUT_LOAD_P1 : STA !ram_savestate_load_shortcut
-        LDA !SHORTCUT_SAVE_P1 : STA !ram_savestate_save_shortcut
-        LDA #!ram_ctrl1_word
-
-      .end
-        STA !ram_savestate_ctrl_to_use
-        %ai8()
-        RTS
 
 cm_feature_lanmola_cycle_count:
     %cm_toggle_jsr("Lanmola Cycs", !ram_toggle_lanmola_cycles)
@@ -1689,6 +1667,40 @@ cm_game_state_crystal_mire:
 
 cm_game_state_crystal_trock:
     %cm_toggle_bit("TRock", !ram_game_crystals, #$08)
+
+; }}}
+; RECONFIGURE CONTROLS {{{
+
+cm_main_goto_ctrl:
+    %cm_submenu("Controls", cm_submenu_ctrl)
+
+cm_submenu_ctrl:
+    dw cm_ctrl_open_lttphack_menu
+    dw cm_ctrl_load_last_preset
+    if !FEATURE_SS
+        dw cm_ctrl_save_state
+        dw cm_ctrl_load_state
+    endif
+    dw cm_ctrl_toggle_oob
+    dw #$0000
+    %cm_header("CONTROLS")
+
+cm_ctrl_open_lttphack_menu:
+    %cm_ctrl_shortcut("Open menu", !ram_ctrl_prachack_menu)
+
+cm_ctrl_load_last_preset:
+    %cm_ctrl_shortcut("Load preset", !ram_ctrl_load_last_preset)
+
+if !FEATURE_SS
+    cm_ctrl_save_state:
+        %cm_ctrl_shortcut("Save state", !ram_ctrl_save_state)
+
+    cm_ctrl_load_state:
+        %cm_ctrl_shortcut("Load state", !ram_ctrl_load_state)
+endif
+
+cm_ctrl_toggle_oob:
+    %cm_ctrl_shortcut("Toggle OoB", !ram_ctrl_toggle_oob)
 
 ; }}}
 ; RNG CONTROL {{{

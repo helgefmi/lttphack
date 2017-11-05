@@ -22,18 +22,14 @@
 
 !lowram_last_feature_music = $04E8
 
-!ram_ctrl1_word = $04E4
-!ram_ctrl1_byte2 = $04E5
-!ram_ctrl2_word = $04E6
-!ram_ctrl2_byte2 = $04E7
+; AXLR|....|BYSlSt|udlr
+!ram_ctrl1 = $04E4
+!ram_ctrl1_filtered = $7F7684
+!ram_ctrl1_word_copy = $7F7686
 
 !ram_gamemode_copy = $7F767E
 !ram_submode_copy = $7F7680
 
-!ram_ctrl1_filtered = $7F7684
-!ram_ctrl1_filtered_byte2 = $7F7685
-
-!ram_ctrl1_word_copy = $7F7686
 !ram_received_item_copy = $7F7688
 !ram_hex2dec_tmp = $7F768A
 !ram_hex2dec_first_digit = $7F768C
@@ -48,6 +44,8 @@
 !ram_helmasaur_rng = $7F770A
 !ram_ganon_warp_location_rng = $7F770C
 !ram_ganon_warp_rng = $7F770E
+
+!ram_ctrl_last_input = $7F7710
 
 ; If save state feature is enabled, store RAM to toggle prachack features in $77 (extended SRAM)
 ; If not, store it in $7F8 (just some free WRAM)
@@ -70,16 +68,16 @@ endif
 !ram_oob_toggle = !offset+14
 !ram_toggle_lanmola_cycles = !offset+16
 
-!ram_savestate_controller = !offset+18
-!ram_savestate_load_shortcut = !offset+20
-!ram_savestate_save_shortcut = !offset+22
-
 !ram_previous_preset_destination = !offset+24
 !ram_previous_preset_type = !offset+26
-
 !ram_feature_music = !offset+28
 
-!ram_savestate_ctrl_to_use = $AB
+!ram_ctrl_prachack_menu = !offset+30
+!ram_ctrl_load_last_preset = !offset+32
+!ram_ctrl_save_state = !offset+34
+!ram_ctrl_load_state = !offset+36
+!ram_ctrl_toggle_oob = !offset+38
+
 !lowram_oob_toggle = $037F
 
 !ram_debug = $7F7777
@@ -92,14 +90,6 @@ endif
 !lowram_cm_stack_index = $0658
 !ram_cm_last_frame_input = $7F76C6
 !ram_cm_input_timer = $7F76C8
-
-!SHORTCUT_LOAD_P1 = #$1060
-!SHORTCUT_SAVE_P1 = #$2060
-
-!SHORTCUT_LOAD_P2 = #$4000
-!SHORTCUT_SAVE_P2 = #$0040
-
-!SHORTCUT_LOAD_LAST_PRESET = #$20A0 ; B + Select + L
 
 ;-------------------------
 ; HUD
@@ -136,8 +126,7 @@ endif
 !CM_ACTION_NUMFIELD = #$0E
 !CM_ACTION_PRESET = #$10
 !CM_ACTION_TOGGLE_BIT = #$12
-
-!ram_minigame_submode = $7F76CE
+!CM_ACTION_CTRL_SHORTCUT = #$14
 
 !ram_react_counter = $7F76CA
 !ram_react_frames = $7F76CC

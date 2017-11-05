@@ -81,7 +81,7 @@ CM_MenuDown:
 
 CM_Active:
     LDA $B0 : BEQ .in_menu
-    JSR cm_do_minigame
+    JSR cm_do_ctrl_config
 
     RTS
 
@@ -241,7 +241,7 @@ cm_init_item_variables:
 
 cm_get_pressed_button:
   %ai16()
-    LDA !ram_ctrl1_word : CMP !ram_cm_last_frame_input : BEQ .same_as_last_frame
+    LDA !ram_ctrl1 : CMP !ram_cm_last_frame_input : BEQ .same_as_last_frame
 
     STA !ram_cm_last_frame_input
   PHA
@@ -250,7 +250,7 @@ cm_get_pressed_button:
     
     ; If we're pressing a new button (e.g. holding down v then pressing A), make sure
     ; to not do anything that frame (since dpad has priority over face buttons).
-    LDA !ram_ctrl1_word : CMP !ram_ctrl1_filtered : BEQ .do_it
+    LDA !ram_ctrl1 : CMP !ram_ctrl1_filtered : BEQ .do_it
     LDA.w #$0000
     BRA .end
 
@@ -262,7 +262,7 @@ cm_get_pressed_button:
     LDA.w #4 : STA !ram_cm_input_timer
 
   .do_it
-    LDA !ram_ctrl1_word
+    LDA !ram_ctrl1
     BRA .end
 
   .no_input
@@ -612,6 +612,7 @@ cm_execute_action_table:
     dw cm_execute_numfield
     dw cm_execute_preset
     dw cm_execute_toggle_bit
+    dw cm_execute_ctrl_shortcut
 
 
 cm_execute_toggle:
@@ -788,7 +789,7 @@ cm_execute_preset:
 
   %a16()
     LDA ($00) : STA $02
-    INC : STA !ram_preset_destination  : STA !ram_previous_preset_destination
+    INC : STA !ram_preset_destination : STA !ram_previous_preset_destination
   %a8()
   PHB
     LDA.b #$27 : PHA : PLB
@@ -811,6 +812,22 @@ cm_execute_toggle_bit:
     RTS
 
 
+cm_execute_ctrl_shortcut:
+    ; < and > should do nothing here
+  %a8()
+    LDA $F0 : CMP #$01 : BEQ .end
+              CMP #$02 : BEQ .end
+
+  %a16()
+    LDA ($00) : STA $35 : INC $00 : INC $00
+    LDA ($00) : STA $37 : INC $00
+    INC $B0
+    STZ $0200
+
+  .end
+  %a16()
+    RTS
+
 ; -------------
 ; Draw Action
 ; -------------
@@ -832,6 +849,7 @@ cm_draw_action_table:
     dw cm_draw_numfield
     dw cm_draw_preset
     dw cm_draw_toggle_bit
+    dw cm_draw_ctrl_shortcut
 
 
 macro item_index_to_vram_index()
@@ -1050,6 +1068,114 @@ cm_draw_toggle_bit:
 
   .end
   %a16()
+    RTS
+
+
+cm_draw_ctrl_shortcut:
+    LDA ($02) : STA $04 : INC $02 : INC $02
+    LDA ($02) : STA $06 : INC $02
+
+  PHY
+    %item_index_to_vram_index()
+    JSR cm_draw_text
+  PLY
+
+  %ai16()
+    TYA : ASL : ASL : ASL : ASL : ASL
+    CLC : ADC #$0220 : TAX
+
+    LDA #$2480 : STA $0E
+    LDA [$04]
+    JSR cm_ctrl_input_display
+
+    RTS
+
+
+; -----------
+; Ctrl config
+; -----------
+
+cm_ctrl_input_display:
+    ; X = pointer to tilemap area (STA $1000, X)
+    ; A = Controller word
+    JSR cm_ctrl_clear_input_display
+
+    LDY #$0000
+  .loop
+  PHA
+    AND #$0001 : CMP #$0001 : BNE .no_draw
+
+    TYA : CLC : ADC $0E
+    STA $1000, X : INX : INX
+
+  .no_draw
+  PLA
+    LSR : INY : CPY #$0010 : BEQ .done
+    BRA .loop
+
+  .done
+    RTS
+
+
+cm_ctrl_clear_input_display:
+    ; X = pointer to tilemap area
+  PHA
+    LDA #$24F5
+    STA $1000, X : STA $1002, X : STA $1004, X : STA $1006, X
+    STA $1008, X : STA $100A, X : STA $100C, X : STA $100E, X
+    STA $1010, X : STA $1012, X : STA $1014, X : STA $1016, X
+  PLA
+    RTS
+
+
+cm_do_ctrl_config:
+    ; Enters AI=8
+    ; Leaves AI=8
+    LDA !ram_debug : INC : STA !ram_debug
+
+  %a16()
+    LDA #$2080 : STA $0E
+    LDA !ram_ctrl1 : BEQ .clear_and_draw
+    CMP !ram_ctrl_last_input : BNE .clear_and_draw
+
+    ; Holding an input for more than 1f
+    LDA $0200 : INC : STA $0200 : CMP.w #0060 : BNE .next_frame
+
+    LDA !ram_ctrl1 : STA [$35]
+    BRA .exit
+
+  .clear_and_draw
+    STA !ram_ctrl_last_input
+    STZ $0200
+
+  .draw
+
+  %ai16()
+    ; Put text cursor in X
+    LDX !lowram_cm_stack_index
+    LDY !lowram_cm_cursor_stack, X
+
+    TYA : ASL : ASL : ASL : ASL : ASL
+    CLC : ADC #$0220 : TAX
+
+    ; Input display
+    LDA !ram_ctrl1
+    JSR cm_ctrl_input_display
+
+  %ai8()
+    LDA.b #$01 : STA $17
+    LDA.b #$22 : STA $0116
+
+  .next_frame
+  %ai8()
+    RTS
+
+  .exit
+    LDA #$000 : STA !ram_ctrl_last_input
+  %ai8()
+    STZ $B0
+    STZ $0200
+    JSR cm_redraw
     RTS
 
 ; ------
