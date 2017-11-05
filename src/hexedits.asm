@@ -1,9 +1,14 @@
-; == SRAM ==
+; == SRAM Size ==
 
 if !FEATURE_SS
     org $00FFD8
         db $08 ; 256kb
 endif
+
+
+; == ROM Size ==
+org $00FFD7
+    db #11 ; 2mb
 
 
 ; == CTRL 2 ==
