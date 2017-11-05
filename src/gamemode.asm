@@ -246,7 +246,7 @@ gamemode_safe_to_change_mode:
 ; Custom Menu
 gamemode_custom_menu:
   %a16()
-    LDA !ram_ctrl1 : CMP !ram_ctrl_prachack_menu : BNE .no_custom_menu
+    LDA !ram_ctrl1 : AND !ram_ctrl_prachack_menu : CMP !ram_ctrl_prachack_menu : BNE .no_custom_menu
     AND !ram_ctrl1_filtered : BEQ .no_custom_menu
 
   %a8()
@@ -268,7 +268,7 @@ gamemode_custom_menu:
 gamemode_load_previous_preset:
   %a16()
     ; Load last preset shortcut check
-    LDA !ram_ctrl1 : CMP !ram_ctrl_load_last_preset : BNE .no_load_preset
+    LDA !ram_ctrl1 : AND !ram_ctrl_load_last_preset : CMP !ram_ctrl_load_last_preset : BNE .no_load_preset
     AND !ram_ctrl1_filtered : BEQ .no_load_preset
 
   %a8()
@@ -293,7 +293,7 @@ gamemode_savestate:
 
   .not_setting_new_inputs
   %ai16()
-    LDA !ram_ctrl1 : CMP !ram_ctrl_save_state : BNE .test_load_state
+    LDA !ram_ctrl1 : AND !ram_ctrl_save_state : CMP !ram_ctrl_save_state : BNE .test_load_state
     AND !ram_ctrl1_filtered : BEQ .test_load_state
 
   %a8()
@@ -317,7 +317,7 @@ gamemode_savestate:
     JMP end
 
   .test_load_state
-    LDA !ram_ctrl1 : CMP !ram_ctrl_load_state : BNE .no_bueno
+    LDA !ram_ctrl1 : AND !ram_ctrl_load_state : CMP !ram_ctrl_load_state : BNE .no_bueno
     AND !ram_ctrl1_filtered : BEQ .no_bueno
     BRA .do_load_state
 
@@ -420,7 +420,7 @@ gamemode_savestate:
 
 gamemode_oob:
   %a16()
-    LDA !ram_ctrl1 : CMP !ram_ctrl_toggle_oob : BNE .dont_toggle
+    LDA !ram_ctrl1 : AND !ram_ctrl_toggle_oob : CMP !ram_ctrl_toggle_oob : BNE .dont_toggle
     AND !ram_ctrl1_filtered : BEQ .dont_toggle
 
   %a8()
@@ -434,7 +434,7 @@ gamemode_oob:
 
 gamemode_skip_text:
   %a16()
-    LDA !ram_ctrl1 : CMP !ram_ctrl_skip_text : BNE .done
+    LDA !ram_ctrl1 : AND !ram_ctrl_skip_text : CMP !ram_ctrl_skip_text : BNE .done
     AND !ram_ctrl1_filtered : BEQ .done
 
   %a8()
@@ -447,7 +447,7 @@ gamemode_skip_text:
 
 gamemode_disable_sprites:
   %a16()
-    LDA !ram_ctrl1 : CMP !ram_ctrl_disable_sprites : BNE .done
+    LDA !ram_ctrl1 : AND !ram_ctrl_disable_sprites : CMP !ram_ctrl_disable_sprites : BNE .done
     AND !ram_ctrl1_filtered : BEQ .done
 
   %a8()
@@ -460,7 +460,7 @@ gamemode_disable_sprites:
 
 gamemode_reset_segment_timer:
   %a16()
-    LDA !ram_ctrl1 : CMP !ram_ctrl_reset_segment_timer : BNE .done
+    LDA !ram_ctrl1 : AND !ram_ctrl_reset_segment_timer : CMP !ram_ctrl_reset_segment_timer : BNE .done
     AND !ram_ctrl1_filtered : BEQ .done
 
     STZ !lowram_seg_frames
