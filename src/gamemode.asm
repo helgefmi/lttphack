@@ -25,6 +25,7 @@ gamemode_hook:
     JSR gamemode_load_previous_preset : BCS .exit
     JSR gamemode_transition_detection
     JSR gamemode_oob
+    JSR gamemode_skip_text
 
   %ai8()
     JSL $0080B5 ; GameModes
@@ -426,4 +427,17 @@ gamemode_oob:
   .dont_toggle:
   %a8()
     LDA !ram_oob_toggle : STA !lowram_oob_toggle
+    RTS
+
+
+gamemode_skip_text:
+  %a16()
+    LDA !ram_ctrl1 : CMP !ram_ctrl_skip_text : BNE .done
+    AND !ram_ctrl1_filtered : BEQ .done
+
+  %a8()
+    LDA #$04 : STA $1CD4
+
+  .done
+    %a8()
     RTS

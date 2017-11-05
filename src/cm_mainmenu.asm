@@ -1447,6 +1447,7 @@ cm_main_goto_game_state:
     %cm_submenu("Game state", cm_submenu_game_state)
 
 cm_submenu_game_state:
+    dw cm_game_state_skip_text
     dw cm_game_state_reset_screen
     dw cm_game_state_goto_bosses_submenu
     dw cm_game_state_goto_crystals_submenu
@@ -1660,6 +1661,13 @@ cm_game_state_crystal_mire:
 cm_game_state_crystal_trock:
     %cm_toggle_bit("TRock", !ram_game_crystals, #$08)
 
+cm_game_state_skip_text:
+    %cm_jsr("Skip text")
+
+  .routine
+    LDA #$04 : STA $1CD4
+    RTS
+
 ; }}}
 ; RECONFIGURE CONTROLS {{{
 
@@ -1674,6 +1682,7 @@ cm_submenu_ctrl:
         dw cm_ctrl_load_state
     endif
     dw cm_ctrl_toggle_oob
+    dw cm_ctrl_skip_text
     dw #$0000
     %cm_header("CONTROLS")
 
@@ -1693,6 +1702,9 @@ endif
 
 cm_ctrl_toggle_oob:
     %cm_ctrl_shortcut("Toggle OoB", !ram_ctrl_toggle_oob)
+
+cm_ctrl_skip_text:
+    %cm_ctrl_shortcut("Skip text", !ram_ctrl_skip_text)
 
 ; }}}
 ; RNG CONTROL {{{

@@ -36,6 +36,8 @@ init_expand:
     LDA #$1060 : STA !ram_ctrl_load_state
     ; Unset
     LDA #$0000 : STA !ram_ctrl_toggle_oob
+    ; Unset
+    LDA #$0000 : STA !ram_ctrl_skip_text
 
     LDA #!SRAM_VERSION : STA !ram_sram_initialized
 
