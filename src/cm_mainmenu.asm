@@ -1551,9 +1551,6 @@ cm_game_state_flags_sanc_priest:
 cm_game_state_flags_escaped:
     %cm_toggle_bit("Escaped", !ram_game_flags, #$04)
 
-cm_game_state_flags_not_used:
-    %cm_toggle_bit("Not used", !ram_game_flags, #$08)
-
 cm_game_state_flags_uncle_left_home:
     %cm_toggle_bit("Uncle left", !ram_game_flags, #$10)
 
@@ -1562,9 +1559,6 @@ cm_game_state_flags_talked_to_aginah:
 
 cm_game_state_flags_fortune_teller_cycle:
     %cm_toggle_bit("Fortune cycle", !ram_game_flags, #$40)
-
-cm_game_state_flags_not_used_2:
-    %cm_toggle_bit("Not used", !ram_game_flags, #$80)
 
 cm_game_state_goto_bosses_submenu:
     %cm_submenu("Bosses defeated", cm_game_state_bosses_submenu)
