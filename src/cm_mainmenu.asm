@@ -1698,7 +1698,7 @@ cm_submenu_ctrl:
     %cm_header("CONTROLS")
 
 cm_ctrl_open_lttphack_menu:
-    %cm_ctrl_shortcut("Open menu", !ram_ctrl_prachack_menu)
+    %cm_ctrl_shortcut("LTTPHack menu", !ram_ctrl_prachack_menu)
 
 cm_ctrl_load_last_preset:
     %cm_ctrl_shortcut("Load last preset", !ram_ctrl_load_last_preset)
