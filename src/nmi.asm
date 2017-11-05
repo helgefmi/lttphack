@@ -33,7 +33,7 @@ nmi_expand:
 
     CMP #$00 : BNE .dont_mute_music
     LDA #$F1 : STA $012C
-    LDa #$05 : STA $012D
+    LDA #$05 : STA $012D
 
   .no_music_change
     CMP #$00 : BNE .dont_mute_music

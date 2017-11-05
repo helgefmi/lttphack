@@ -45,6 +45,9 @@ preset_load_next_frame:
     JSR preset_clear_tilemap
   %ai8()
 
+    LDA #$F1 : STA $012C
+    LDA #$05 : STA $012D
+
     LDA !ram_preset_type : CMP #$02 : BEQ .dungeon
 
     ; Jumps to Bird Menu module
