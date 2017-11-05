@@ -20,7 +20,7 @@ init_hook:
 init_expand:
     ; enters AI=8
   %a16()
-    ; If user holds Start+Select+L+R, we reinitialize.
+    ; If user holds Start+Select, we reinitialize.
     LDA !ram_ctrl1 : CMP #$0030 : BEQ .reinitialize
 
     LDA !ram_sram_initialized : CMP #!SRAM_VERSION : BEQ .sram_initialized

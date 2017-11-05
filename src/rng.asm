@@ -18,8 +18,8 @@ org $01ED6EF
 
 ; Helmasaur
 org $01E8262
-	; 1e8262 jsl $0dba71
-	JSL rng_helmasaur_hook
+    ; 1e8262 jsl $0dba71
+    JSL rng_helmasaur_hook
 
 ; Ganon warp location
 org $1D9488
@@ -93,11 +93,11 @@ rng_pokey_hook:
 rng_agahnim_hook:
     LDA !ram_agahnim_rng : BEQ .random
     CMP #$01 : BEQ .done
-	LDA #$00
+    LDA #$00
     RTL
 
   .random
-	JSL !RandomNumGen
+    JSL !RandomNumGen
     RTL
 
   .done
@@ -112,7 +112,7 @@ rng_helmasaur_hook:
     RTL
 
   .random
-	JSL !RandomNumGen
+    JSL !RandomNumGen
     RTL
 
 

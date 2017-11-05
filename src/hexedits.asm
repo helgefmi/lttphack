@@ -22,7 +22,7 @@ org $0083F8
 org $008039
     NOP : NOP
 
-		
+
 ; Overrides the following
 ; $00803B: A5 F6  LDA $F6
 ; $00803D: 29 20  AND #$20
