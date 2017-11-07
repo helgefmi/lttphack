@@ -45,6 +45,7 @@
 !ram_ganon_warp_location_rng = $7F770C
 !ram_ganon_warp_rng = $7F770E
 !ram_eyegore_rng = $7F7712
+!ram_arrghus_rng = $7F7714
 
 !ram_ctrl_last_input = $7F7710
 

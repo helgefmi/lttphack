@@ -1730,6 +1730,7 @@ cm_submenu_rng_control:
     dw cm_rng_ganon_warp
     dw cm_rng_ganon_warp_location
     dw cm_rng_eyegore
+    dw cm_rng_arrghus
     dw #$0000
     %cm_header("RNG CONTROL")
 
@@ -1802,6 +1803,18 @@ cm_rng_eyegore:
     db #$24, "Short", #$FF
     db #$24, "Medium", #$FF
     db #$24, "Long", #$FF
+    db #$FF
+
+cm_rng_arrghus:
+    dw !CM_ACTION_CHOICE
+    dl !ram_arrghus_rng
+    db #$24, "Arrghus walk", #$FF
+    db #$24, "Random", #$FF
+    db #$24, "Shortest", #$FF
+    db #$24, "Short", #$FF
+    db #$24, "Medium", #$FF
+    db #$24, "Long", #$FF
+    db #$24, "Longest", #$FF
     db #$FF
 
 ; }}}

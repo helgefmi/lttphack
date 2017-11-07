@@ -1,6 +1,5 @@
 - Set RNG for rooms:
     * Mire/GTower: Firesnakes
-    * Swamp: Arrghus: [random, easy, medium, hard]
     * ATower: Circle of Pots
     * PoD: Bad Kiki rng
 

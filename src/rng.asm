@@ -36,6 +36,11 @@ org $1EC89C
     ;1ec89c jsl $0dba71
     JSL rng_eyegore
 
+; Arrghus
+org $1EB5F7
+    ;1eb5f7 jsl $0dba71
+    JSL rng_arrghus
+
 org $288000
 
 tbl_pokey_speed:
@@ -144,6 +149,23 @@ rng_ganon_warp:
 rng_eyegore:
     LDA !ram_eyegore_rng : BEQ .random
     DEC
+    RTL
+
+  .random
+    JSL !RandomNumGen
+    RTL
+
+; == Arrghus ==
+
+arrghus_speeds:
+    db $00, $10, $20, $30, $3F
+
+rng_arrghus:
+    LDA.l !ram_arrghus_rng : BEQ .random
+  PHX : PHB : PHK : PLB
+    DEC
+    TAX : LDA arrghus_speeds, X
+  PLB : PLX
     RTL
 
   .random
