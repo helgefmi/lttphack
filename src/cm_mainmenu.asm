@@ -1729,6 +1729,7 @@ cm_submenu_rng_control:
     dw cm_rng_helmasaur
     dw cm_rng_ganon_warp
     dw cm_rng_ganon_warp_location
+    dw cm_rng_eyegore
     dw #$0000
     %cm_header("RNG CONTROL")
 
@@ -1791,6 +1792,16 @@ cm_rng_ganon_warp_location:
     db #$24, "Bottom left", #$FF
     db #$24, "Bottom right", #$FF
     db #$24, "Far right", #$FF
+    db #$FF
+
+cm_rng_eyegore:
+    dw !CM_ACTION_CHOICE
+    dl !ram_eyegore_rng
+    db #$24, "Eyegore walk", #$FF
+    db #$24, "Random", #$FF
+    db #$24, "Short", #$FF
+    db #$24, "Medium", #$FF
+    db #$24, "Long", #$FF
     db #$FF
 
 ; }}}

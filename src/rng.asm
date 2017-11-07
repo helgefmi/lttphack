@@ -31,6 +31,10 @@ org $1D91E3
     ; 1d91e3 jsl $0dba71
     JSL rng_ganon_warp
 
+; Eyegore
+org $1EC89C
+    ;1ec89c jsl $0dba71
+    JSL rng_eyegore
 
 org $288000
 
@@ -87,7 +91,6 @@ rng_pokey_hook:
     PLB
     RTL
 
-
 ; == Agahnim ==
 
 rng_agahnim_hook:
@@ -103,7 +106,6 @@ rng_agahnim_hook:
   .done
     RTL
 
-
 ; == Helmasaur ==
 
 rng_helmasaur_hook:
@@ -114,7 +116,6 @@ rng_helmasaur_hook:
   .random
     JSL !RandomNumGen
     RTL
-
 
 ; == Ganon Warp Location ==
 
@@ -127,11 +128,21 @@ rng_ganon_warp_location:
     JSL !RandomNumGen
     RTL
 
-
 ; == Ganon Warp ==
 
 rng_ganon_warp:
     LDA !ram_ganon_warp_rng : BEQ .random
+    DEC
+    RTL
+
+  .random
+    JSL !RandomNumGen
+    RTL
+
+; == Eyegore ==
+
+rng_eyegore:
+    LDA !ram_eyegore_rng : BEQ .random
     DEC
     RTL
 
