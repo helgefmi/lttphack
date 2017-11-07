@@ -118,9 +118,7 @@ gamemode_transition_detection:
   .show_and_reset_counters
     ; Reset per-room counters
   %a16()
-    LDA !lowram_room_realtime : STA !lowram_room_realtime_copy : STZ !lowram_room_realtime
-    LDA !lowram_room_gametime : STA !lowram_room_gametime_copy : STZ !lowram_room_gametime
-    LDA #$0000 : STA !ram_rng_counter
+    JSR gamemode_reset_counters
 
     JSL draw_counters
     JMP .td_end
@@ -129,6 +127,7 @@ gamemode_transition_detection:
   %a16()
     LDA !lowram_room_realtime : STA !lowram_room_realtime_copy
     LDA !lowram_room_gametime : STA !lowram_room_gametime_copy
+    LDA !lowram_idle_frames : STA !lowram_idle_frames_copy
 
     JSL draw_counters
     JMP .td_end
@@ -469,4 +468,12 @@ gamemode_reset_segment_timer:
 
   .done
     %a8()
+    RTS
+
+
+gamemode_reset_counters:
+    LDA !lowram_room_realtime : STA !lowram_room_realtime_copy : STZ !lowram_room_realtime
+    LDA !lowram_room_gametime : STA !lowram_room_gametime_copy : STZ !lowram_room_gametime
+    LDA !lowram_idle_frames : STA !lowram_idle_frames_copy : STZ !lowram_idle_frames
+    LDA #$0000 : STA !ram_rng_counter
     RTS

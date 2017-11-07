@@ -435,6 +435,7 @@ preset_reset_counters:
     STZ !lowram_seg_frames
     STZ !lowram_seg_seconds
     STZ !lowram_seg_minutes
+    STZ !lowram_idle_frames
   %a8()
     RTS
 

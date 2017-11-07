@@ -1339,6 +1339,7 @@ cm_main_goto_features:
 
 cm_submenu_features:
     dw cm_feature_counters
+    dw cm_feature_secondary_counter_type
     dw cm_feature_input_display
     dw cm_feature_enemy_hp
     dw cm_feature_music
@@ -1370,6 +1371,14 @@ cm_feature_counters:
     STA $7EC70A,x : STA $7EC70C,x
 
     RTS
+
+cm_feature_secondary_counter_type:
+    dw !CM_ACTION_CHOICE
+    dl !ram_secondary_counter_type
+    db #$24, "2nd counter", #$FF
+    db #$24, "Lag", #$FF
+    db #$24, "Idle", #$FF
+    db #$FF
 
 cm_feature_input_display:
     %cm_toggle_jsr("Input Display", !ram_input_display_toggle)

@@ -12,9 +12,17 @@ draw_counters:
     ; Real-time counter
     LDA !lowram_room_realtime_copy : LDX #!POS_RT_ROOM : JSL draw_seconds_and_frames
 
-    ; Lag counter
+    ; Lag counter / Idle counter
+    LDA !ram_secondary_counter_type : BEQ .lag_counter
+
+    LDA !lowram_idle_frames_copy : LDX #!POS_LAG-4 : JSL draw_seconds_and_frames
+    BRA .done
+
+  .lag_counter
     LDA !lowram_room_realtime_copy : SEC : SBC !lowram_room_gametime_copy
     LDX #!POS_LAG : JSL hex_to_dec : JSL draw3_white
+
+  .done
   PLX
 
   .end

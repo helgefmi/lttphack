@@ -21,6 +21,8 @@
 !lowram_draw_tmp3 = $04E0
 
 !lowram_last_feature_music = $04E8
+!lowram_idle_frames = $04EA
+!lowram_idle_frames_copy = $04EC
 
 ; AXLR|....|BYSlSt|udlr
 !ram_ctrl1 = $04E4
@@ -73,6 +75,7 @@ endif
 !ram_previous_preset_destination = !offset+24
 !ram_previous_preset_type = !offset+26
 !ram_feature_music = !offset+28
+!ram_secondary_counter_type = !offset+46
 
 !ram_ctrl_prachack_menu = !offset+30
 !ram_ctrl_load_last_preset = !offset+32
@@ -82,6 +85,7 @@ endif
 !ram_ctrl_skip_text = !offset+40
 !ram_ctrl_disable_sprites = !offset+42
 !ram_ctrl_reset_segment_timer = !offset+44
+
 
 !lowram_oob_toggle = $037F
 

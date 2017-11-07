@@ -2,7 +2,7 @@
 ;
 ; Code that is run once after the game has been powered on.
 
-!SRAM_VERSION = $0009
+!SRAM_VERSION = $000A
 
 org $0CC1FF
     JML init_hook
@@ -30,7 +30,7 @@ init_expand:
     LDA #$0001 : STA !ram_feature_music : STA !lowram_last_feature_music
     LDA #$0000
     STA !ram_xy_toggle : STA !ram_qw_toggle : STA !ram_lit_rooms_toggle : STA !ram_oob_toggle
-    STA !ram_previous_preset_type : STA !ram_previous_preset_destination
+    STA !ram_previous_preset_type : STA !ram_previous_preset_destination : STA !ram_secondary_counter_type
 
     ; Start + R
     LDA #$1010 : STA !ram_ctrl_prachack_menu
