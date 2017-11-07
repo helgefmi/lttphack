@@ -1464,13 +1464,7 @@ cm_game_state_armed_eg:
     %cm_toggle_jsr("Armed EG", !ram_cm_armed_eg)
 
   .toggle
-    LDA !ram_cm_armed_eg : BEQ .not_set
-
-    LDA #$00 : STA $7E047A
-    RTS
-
-  .not_set
-    LDA #$01 : STA $7E047A
+    LDA !ram_cm_armed_eg : STA $7E047A
     RTS
 
 cm_game_state_eg_strength:

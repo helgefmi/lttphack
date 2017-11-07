@@ -3,6 +3,7 @@
     * Swamp: Arrghus: [random, easy, medium, hard]
     * ATower: Circle of Pots
     * PoD: Bad Kiki rng
+    * Eyegore speed
 
 - Ingame manual counter (to practice a trick X times and see your success rate).
 
