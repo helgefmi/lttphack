@@ -1,31 +1,39 @@
 org $238000
 draw_counters:
   %a16()
-    LDA !ram_counters_toggle : BEQ .end
-
   PHX
-    ; Segment counter
-    LDA !lowram_seg_minutes : LDX #!POS_RT_SEG : JSL hex_to_dec : JSL draw3_white
+    LDX #!POS_COUNTERS
+
+    ; Real time
+    LDA !ram_counters_real : BEQ .do_lag
+
+    LDA !lowram_room_realtime_copy : JSL draw_seconds_and_frames
+    TXA : CLC : ADC #$0040 : TAX
+
+  .do_lag
+    LDA !ram_counters_lag : BEQ .do_idle
+
+    INX : INX : INX : INX
+    LDA !lowram_room_realtime_copy : SEC : SBC !lowram_room_gametime_copy
+    JSL hex_to_dec : JSL draw3_white
+    TXA : CLC : ADC #$003C : TAX
+
+  .do_idle
+    LDA !ram_counters_idle : BEQ .do_segment
+
+    LDA !lowram_idle_frames_copy : JSL draw_seconds_and_frames
+    TXA : CLC : ADC #$0040 : TAX
+
+  .do_segment
+    LDA !ram_counters_segment : BEQ .done
+
+    DEX : DEX : DEX : DEX
+    LDA !lowram_seg_minutes : JSL hex_to_dec : JSL draw3_white
     LDA !lowram_seg_seconds : JSL hex_to_dec : JSL draw2_yellow
     LDA !lowram_seg_frames : JSL hex_to_dec : JSL draw2_gray
 
-    ; Real-time counter
-    LDA !lowram_room_realtime_copy : LDX #!POS_RT_ROOM : JSL draw_seconds_and_frames
-
-    ; Lag counter / Idle counter
-    LDA !ram_secondary_counter_type : BEQ .lag_counter
-
-    LDA !lowram_idle_frames_copy : LDX #!POS_LAG-4 : JSL draw_seconds_and_frames
-    BRA .done
-
-  .lag_counter
-    LDA !lowram_room_realtime_copy : SEC : SBC !lowram_room_gametime_copy
-    LDX #!POS_LAG : JSL hex_to_dec : JSL draw3_white
-
   .done
   PLX
-
-  .end
     RTL
 
 draw_seconds_and_frames:

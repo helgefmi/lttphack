@@ -63,7 +63,6 @@ else
 endif
 
 !ram_sram_initialized = !offset+0
-!ram_counters_toggle = !offset+2
 !ram_input_display_toggle = !offset+4
 !ram_enemy_hp_toggle = !offset+6
 !ram_xy_toggle = !offset+8
@@ -86,6 +85,10 @@ endif
 !ram_ctrl_disable_sprites = !offset+42
 !ram_ctrl_reset_segment_timer = !offset+44
 
+!ram_counters_real = !offset+48
+!ram_counters_lag = !offset+50
+!ram_counters_idle = !offset+52
+!ram_counters_segment = !offset+54
 
 !lowram_oob_toggle = $037F
 
@@ -104,9 +107,7 @@ endif
 ; HUD
 ;-------------------------
 
-!POS_RT_ROOM = $36
-!POS_LAG = $7A
-!POS_RT_SEG = $B2
+!POS_COUNTERS = $36
 !POS_XY = $F4
 
 !POS_MEM_HEART_GFX = $7EC790

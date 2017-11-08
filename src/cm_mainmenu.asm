@@ -1342,8 +1342,10 @@ cm_main_goto_features:
     %cm_submenu("Features", cm_submenu_features)
 
 cm_submenu_features:
-    dw cm_feature_counters
-    dw cm_feature_secondary_counter_type
+    dw cm_feature_counter_real
+    dw cm_feature_counter_lag
+    dw cm_feature_counter_idle
+    dw cm_feature_counter_segment
     dw cm_feature_input_display
     dw cm_feature_enemy_hp
     dw cm_feature_music
@@ -1355,34 +1357,17 @@ cm_submenu_features:
     dw #$0000
     %cm_header("FEATURES")
 
-cm_feature_counters:
-    %cm_toggle_jsr("Counters", !ram_counters_toggle)
+cm_feature_counter_real:
+    %cm_toggle("Counter Room", !ram_counters_real)
 
-  .toggle
-  %a16()
-    LDA #$207F : STA $7EC734
+cm_feature_counter_lag:
+    %cm_toggle("Counter Lag", !ram_counters_lag)
 
-    LDX.b #!POS_RT_ROOM
-    STA $7EC700,x : STA $7EC702,x : STA $7EC704,x
-    STA $7EC706,x : STA $7EC708,x
+cm_feature_counter_idle:
+    %cm_toggle("Counter Idle", !ram_counters_idle)
 
-    LDX.b #!POS_LAG
-    STA $7EC700,x : STA $7EC702,x : STA $7EC704,x
-
-    LDX.b #!POS_RT_SEG
-    STA $7EC700,x : STA $7EC702,x : STA $7EC704,x
-    STA $7EC706,x : STA $7EC708,x
-    STA $7EC70A,x : STA $7EC70C,x
-
-    RTS
-
-cm_feature_secondary_counter_type:
-    dw !CM_ACTION_CHOICE
-    dl !ram_secondary_counter_type
-    db #$24, "2nd counter", #$FF
-    db #$24, "Lag", #$FF
-    db #$24, "Idle", #$FF
-    db #$FF
+cm_feature_counter_segment:
+    %cm_toggle("Counter Segm", !ram_counters_segment)
 
 cm_feature_input_display:
     %cm_toggle_jsr("Input Display", !ram_input_display_toggle)
