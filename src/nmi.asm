@@ -29,6 +29,8 @@ nmi_expand:
    PHB : PHK : PLB
 
   %a8()
+    INC !lowram_nmi_counter
+
     LDA !ram_feature_music : CMP !lowram_last_feature_music : BEQ .no_music_change
     STA !lowram_last_feature_music
 

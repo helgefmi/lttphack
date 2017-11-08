@@ -31,6 +31,11 @@ gamemode_hook:
 
   %ai8()
     JSL $0080B5 ; GameModes
+
+    LDA !ram_lag_indicator : BEQ .done
+    JSR gamemode_lag_indicator
+
+  .done
     RTL
 
   .exit
@@ -478,3 +483,53 @@ gamemode_reset_counters:
     LDA !lowram_idle_frames : STA !lowram_idle_frames_copy : STZ !lowram_idle_frames
     LDA #$0000 : STA !ram_rng_counter
     RTS
+
+
+print pc
+gamemode_lag_indicator:
+  %ai16()
+    LDA !lowram_nmi_counter : CMP #$0002 : BCS .lag_frame
+    LDA #$3C00 : STA !lowram_draw_tmp
+
+    LDA $2137 : LDA $213D : AND #$00FF : CMP #$007F : BCS .warning
+    BRA .draw
+
+  .warning
+    PHA : LDA #$2800 : STA !lowram_draw_tmp : PLA
+    BRA .draw
+
+  .lag_frame
+    LDA #$3400 : STA !lowram_draw_tmp
+    LDA #$00FF
+
+  .draw
+    STZ !lowram_nmi_counter
+
+    AND #$00FF : LSR : CLC : ADC #$0007 : AND #$FFF8 : TAX
+
+    LDA.l .mp_tilemap+0, X : ORA !lowram_draw_tmp : STA $7EC742
+    LDA.l .mp_tilemap+2, X : ORA !lowram_draw_tmp : STA $7EC782
+    LDA.l .mp_tilemap+4, X : ORA !lowram_draw_tmp : STA $7EC7C2
+    LDA.l .mp_tilemap+6, X : ORA !lowram_draw_tmp : STA $7EC802
+
+  %ai8()
+    RTS
+
+  .mp_tilemap
+    dw $00F5, $00F5, $00F5, $00F5
+    dw $00F5, $00F5, $00F5, $005F
+    dw $00F5, $00F5, $00F5, $004C
+    dw $00F5, $00F5, $00F5, $004D
+    dw $00F5, $00F5, $00F5, $004E
+    dw $00F5, $00F5, $005F, $005E
+    dw $00F5, $00F5, $004C, $005E
+    dw $00F5, $00F5, $004D, $005E
+    dw $00F5, $00F5, $004E, $005E
+    dw $00F5, $005F, $005E, $005E
+    dw $00F5, $004C, $005E, $005E
+    dw $00F5, $004D, $005E, $005E
+    dw $00F5, $004E, $005E, $005E
+    dw $005F, $005E, $005E, $005E
+    dw $004C, $005E, $005E, $005E
+    dw $004D, $005E, $005E, $005E
+    dw $004E, $005E, $005E, $005E

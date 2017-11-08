@@ -1346,6 +1346,7 @@ cm_submenu_features:
     dw cm_feature_counter_lag
     dw cm_feature_counter_idle
     dw cm_feature_counter_segment
+    dw cm_feature_counter_lag_indicator
     dw cm_feature_input_display
     dw cm_feature_enemy_hp
     dw cm_feature_music
@@ -1368,6 +1369,14 @@ cm_feature_counter_idle:
 
 cm_feature_counter_segment:
     %cm_toggle("Counter Segm", !ram_counters_segment)
+
+cm_feature_counter_lag_indicator:
+    %cm_toggle_jsr("Lagometer", !ram_lag_indicator)
+
+  .toggle
+    %a16()
+      LDA #$207F : STA $7EC742 : STA $7EC782 : STA $7EC7C2 : STA $7EC802
+    RTS
 
 cm_feature_input_display:
     %cm_toggle_jsr("Input Display", !ram_input_display_toggle)

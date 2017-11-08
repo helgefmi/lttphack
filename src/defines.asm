@@ -24,6 +24,8 @@
 !lowram_idle_frames = $04EA
 !lowram_idle_frames_copy = $04EC
 
+!lowram_nmi_counter = $04EE
+
 ; AXLR|....|BYSlSt|udlr
 !ram_ctrl1 = $04E4
 !ram_ctrl1_filtered = $7F7684
@@ -75,6 +77,7 @@ endif
 !ram_previous_preset_type = !offset+26
 !ram_feature_music = !offset+28
 !ram_secondary_counter_type = !offset+46
+!ram_lag_indicator = !offset+56
 
 !ram_ctrl_prachack_menu = !offset+30
 !ram_ctrl_load_last_preset = !offset+32

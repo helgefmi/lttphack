@@ -2,7 +2,7 @@
 ;
 ; Code that is run once after the game has been powered on.
 
-!SRAM_VERSION = $000C
+!SRAM_VERSION = $000D
 
 org $0CC1FF
     JML init_hook
@@ -26,6 +26,17 @@ init_expand:
     LDA !ram_sram_initialized : CMP #!SRAM_VERSION : BEQ .sram_initialized
 
   .reinitialize
+    JSR init_initialize
+
+  .sram_initialized
+    ; Some features probably should be turned off after a reset
+  %a8()
+    LDA #$00 : STA !ram_oob_toggle : STA !lowram_oob_toggle
+
+  .done
+    RTS
+
+init_initialize:
     LDA.w #!FEATURE_HUD
     STA !ram_input_display_toggle : STA !ram_toggle_lanmola_cycles
     STA !ram_counters_real : STA !ram_counters_lag : STA !ram_counters_idle
@@ -36,7 +47,7 @@ init_expand:
     LDA #$0000
     STA !ram_xy_toggle : STA !ram_qw_toggle : STA !ram_lit_rooms_toggle : STA !ram_oob_toggle
     STA !ram_previous_preset_type : STA !ram_previous_preset_destination : STA !ram_secondary_counter_type
-    STA !ram_enemy_hp_toggle : STA !ram_counters_segment
+    STA !ram_enemy_hp_toggle : STA !ram_counters_segment : STA !ram_lag_indicator
 
     ; Start + R
     LDA #$1010 : STA !ram_ctrl_prachack_menu
@@ -54,11 +65,4 @@ init_expand:
     STA !ram_ctrl_reset_segment_timer
 
     LDA #!SRAM_VERSION : STA !ram_sram_initialized
-
-  .sram_initialized
-    ; Some features probably should be turned off after a reset
-  %a8()
-    LDA #$00 : STA !ram_oob_toggle : STA !lowram_oob_toggle
-
-  .done
     RTS
