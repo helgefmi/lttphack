@@ -12,6 +12,4 @@
 - Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances
   the game one frame. Would be good for clip practice. Maybe stop timer during this.
 
-- Mashing and pumping minigame (mps, max frames w/o mash, frames lost total etc).
-
 - Game crashes sometimes after killing aga2. Same bug as in v7 I presume.

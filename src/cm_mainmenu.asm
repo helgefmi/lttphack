@@ -442,6 +442,7 @@ cm_equipment_goto_big_keys_submenu:
     %cm_submenu("Big keys", cm_submenu_big_keys)
 
 cm_submenu_big_keys:
+    dw cm_big_keys_sewers
     dw cm_big_keys_hc
     dw cm_big_keys_eastern
     dw cm_big_keys_desert
@@ -458,6 +459,9 @@ cm_submenu_big_keys:
 
     dw #$0000
     %cm_header("BIG KEYS")
+
+cm_big_keys_sewers:
+    %cm_toggle_bit("Sewers", !ram_game_big_keys_2, #$80)
 
 cm_big_keys_hc:
     %cm_toggle_bit("Hyrule Castle", !ram_game_big_keys_2, #$40)
@@ -493,7 +497,7 @@ cm_big_keys_thieves:
     %cm_toggle_bit("Thieves", !ram_game_big_keys_1, #$10)
 
 cm_big_keys_trock:
-    %cm_toggle_bit("TRock", !ram_game_big_keys_1, #$08)
+    %cm_toggle_bit("Turtle Rock", !ram_game_big_keys_1, #$08)
 
 cm_big_keys_gtower:
     %cm_toggle_bit("GTower", !ram_game_big_keys_1, #$04)
@@ -526,7 +530,7 @@ cm_submenu_presets:
 ; ESCAPE
 
 cm_presets_goto_escape:
-    %cm_submenu("Escape", cm_presets_escape)
+    %cm_submenu("Hyrule Castle", cm_presets_escape)
 
 cm_presets_escape:
     dw cm_esc_bed
@@ -542,7 +546,7 @@ cm_presets_escape:
     dw cm_esc_keyrat
     dw cm_esc_last_two_screens
     dw #$0000
-    %cm_header("ESCAPE")
+    %cm_header("HYRULE CASTLE")
 
 cm_esc_bed:
     %cm_preset("Link's Bed", preset_esc_bed)
@@ -1304,10 +1308,10 @@ cm_presets_ganon:
     %cm_header("GANON")
 
 cm_ganon_pyramid:
-    %cm_preset("Pyramid", preset_ganon_pyramid)
+    %cm_preset("Ganon", preset_ganon_pyramid)
 
 cm_ganon_pyramid_magic:
-    %cm_preset("Pyramid (magic)", preset_ganon_pyramid_magic)
+    %cm_preset("Ganon (magic)", preset_ganon_pyramid_magic)
 
 ; BOSS
 
@@ -1490,7 +1494,7 @@ cm_game_state_eg_strength:
     RTS
 
 cm_game_state_reset_screen:
-    %cm_jsr("Reset screen state")
+    %cm_jsr("Reset current room")
 
   .routine
     LDA $1B : BEQ .overworld
@@ -1564,7 +1568,7 @@ cm_game_state_flags_fortune_teller_cycle:
     %cm_toggle_bit("Fortune cycle", !ram_game_flags, #$40)
 
 cm_game_state_goto_bosses_submenu:
-    %cm_submenu("Bosses defeated", cm_game_state_bosses_submenu)
+    %cm_submenu("Toggle bosses defeated", cm_game_state_bosses_submenu)
 
 cm_game_state_bosses_submenu:
     dw cm_game_state_bosses_armos
@@ -1663,7 +1667,7 @@ cm_game_state_crystal_mire:
     %cm_toggle_bit("Mire", !ram_game_crystals, #$01)
 
 cm_game_state_crystal_trock:
-    %cm_toggle_bit("TRock", !ram_game_crystals, #$08)
+    %cm_toggle_bit("Turtle Rock", !ram_game_crystals, #$08)
 
 cm_game_state_disable_sprites:
     %cm_jsr("Remove sprites")
@@ -1684,7 +1688,7 @@ cm_game_state_skip_text:
 ; RECONFIGURE CONTROLS {{{
 
 cm_main_goto_ctrl:
-    %cm_submenu("Controls", cm_submenu_ctrl)
+    %cm_submenu("Shortcuts", cm_submenu_ctrl)
 
 cm_submenu_ctrl:
     dw cm_ctrl_open_lttphack_menu
@@ -1698,7 +1702,7 @@ cm_submenu_ctrl:
     dw cm_ctrl_skip_text
     dw cm_ctrl_disable_sprites
     dw #$0000
-    %cm_header("CONTROLS")
+    %cm_header("CONTROLLER SHORTCUTS")
 
 cm_ctrl_open_lttphack_menu:
     %cm_ctrl_shortcut("LTTPHack menu", !ram_ctrl_prachack_menu)
@@ -1730,7 +1734,7 @@ cm_ctrl_disable_sprites:
 ; RNG CONTROL {{{
 
 cm_main_goto_rng_control:
-    %cm_submenu("RNG Control", cm_submenu_rng_control)
+    %cm_submenu("RNG control", cm_submenu_rng_control)
 
 cm_submenu_rng_control:
     dw cm_rng_pokey
