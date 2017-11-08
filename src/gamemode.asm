@@ -54,6 +54,7 @@ gamemode_transition_detection:
   .gamemode_changed
     LDA !ram_gamemode_copy
 
+    CMP #$01 : BEQ .show_and_reset_counters
     CMP #$07 : BEQ .gamemode_dungeon
     CMP #$09 : BEQ .gamemode_overworld
     CMP #$0B : BEQ .gamemode_overworld ; "Special" overworld (?)
