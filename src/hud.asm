@@ -120,6 +120,11 @@ update_hearts_hook:
 
   .dont_update_input_display
 
+    LDA !ram_subpixels_toggle : BEQ .done_update_subpixels
+
+    JSR hud_draw_subpixels
+
+  .done_update_subpixels
   %a8()
     LDA !ram_xy_toggle : BEQ .dont_update_xy
   %a16()
@@ -276,12 +281,40 @@ hud_draw_input_display:
 
 hud_draw_xy_display:
     ; Assumes: I=16
+    LDA #$0000
+    CLC : ADC !ram_counters_real : ADC !ram_counters_lag : ADC !ram_counters_idle : ADC !ram_counters_segment
+    TAX : JSR hud_set_counter_position
+
     LDA $22 : TAX
     LDA $20 : TAY
-    LDA.w #!POS_XY : STA !lowram_draw_tmp
     JSL draw_coordinates
     RTS
 
+
+hud_draw_subpixels:
+    ; Assumes: I=16
+    STA !ram_debug
+    LDA #$0000
+    CLC : ADC !ram_counters_real : ADC !ram_counters_lag : ADC !ram_counters_idle : ADC !ram_counters_segment : ADC !ram_xy_toggle
+    TAX : JSR hud_set_counter_position
+
+    LDA $2B : AND #$00FF : TAX
+    LDA $2A : AND #$00FF : TAY
+
+    JSL draw_coordinates
+    RTS
+
+
+hud_set_counter_position:
+    LDA.w #!POS_COUNTERS : DEC : DEC
+
+  .loop
+    CPX #$0000 : BEQ .done
+    CLC : ADC #$0040 : DEX : BRA .loop
+
+  .done
+    STA !lowram_draw_tmp
+    RTS
 
 ; L, u, R, Y, X, SL
 ctrl_top_bit_table:

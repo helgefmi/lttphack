@@ -1351,6 +1351,7 @@ cm_submenu_features:
     dw cm_feature_enemy_hp
     dw cm_feature_music
     dw cm_feature_xy
+    dw cm_feature_subpixels
     dw cm_feature_qw
     dw cm_feature_lit_rooms
     dw cm_feature_oob
@@ -1413,14 +1414,10 @@ cm_feature_enemy_hp:
     RTS
 
 cm_feature_xy:
-    %cm_toggle_jsr("Coordinates", !ram_xy_toggle)
+    %cm_toggle("Coordinates", !ram_xy_toggle)
 
-  .toggle
-  %ai16()
-    LDA #$207F : LDX.w #!POS_XY
-    STA $7EC700,x : STA $7EC702,x : STA $7EC704,x
-    STA $7EC706,x : STA $7EC708,x : STA $7EC70A,x
-    RTS
+cm_feature_subpixels:
+    %cm_toggle("Subpixels", !ram_subpixels_toggle)
 
 cm_feature_qw:
     %cm_toggle_jsr("QW Indicator", !ram_qw_toggle)

@@ -68,6 +68,7 @@ endif
 !ram_input_display_toggle = !offset+4
 !ram_enemy_hp_toggle = !offset+6
 !ram_xy_toggle = !offset+8
+!ram_subpixels_toggle = !offset+58
 !ram_qw_toggle = !offset+10
 !ram_lit_rooms_toggle = !offset+12
 !ram_oob_toggle = !offset+14
@@ -111,7 +112,6 @@ endif
 ;-------------------------
 
 !POS_COUNTERS = $36
-!POS_XY = $F4
 
 !POS_MEM_HEART_GFX = $7EC790
 !POS_HEARTS = $92
