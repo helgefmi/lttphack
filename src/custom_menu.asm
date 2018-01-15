@@ -94,6 +94,7 @@ CM_Active:
 
     ; F4 = BYST | udlr
     TXA : AND $F4 : CMP.b #$10 : BEQ .pressed_start
+                    CMP.b #$20 : BEQ .pressed_select
                     CMP.b #$80 : BEQ .pressed_b
 
     ; F6 = AXLR | ....
@@ -104,6 +105,7 @@ CM_Active:
     BRA .done
 
   .pressed_start
+  .pressed_select
     ; play sound effect for closing menu, and go to next mode
     LDA.b #$15 : STA $012E
 
