@@ -50,6 +50,7 @@
 !ram_ganon_warp_rng = $7F770E
 !ram_eyegore_rng = $7F7712
 !ram_arrghus_rng = $7F7714
+!ram_turtles_rng = $7F7716
 
 !ram_ctrl_last_input = $7F7710
 

@@ -41,6 +41,11 @@ org $1EB5F7
     ;1eb5f7 jsl $0dba71
     JSL rng_arrghus
 
+; Turtles
+org $1EB2A6
+    ;1eb2a6 jsl $0dba71
+    JSL rng_turtles
+
 org $288000
 
 tbl_pokey_speed:
@@ -166,6 +171,17 @@ rng_arrghus:
     DEC
     TAX : LDA arrghus_speeds, X
   PLB : PLX
+    RTL
+
+  .random
+    JSL !RandomNumGen
+    RTL
+
+; == Turtles ==
+
+rng_turtles:
+    LDA !ram_turtles_rng : BEQ .random
+    DEC
     RTL
 
   .random
