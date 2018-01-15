@@ -46,6 +46,16 @@ org $1EB2A6
     ;1eb2a6 jsl $0dba71
     JSL rng_turtles
 
+org $0580D6
+    ;0580d6 txa
+    ;0580d7 asl
+    ;0580d8 asl
+    ;0580d9 clc
+    ;0580da adc $1a
+    ;0580dc and #$1f
+    JSL rng_cannonballs
+    NOP : NOP
+
 org $288000
 
 tbl_pokey_speed:
@@ -186,4 +196,16 @@ rng_turtles:
 
   .random
     JSL !RandomNumGen
+    RTL
+
+; == Cannonballs ==
+
+rng_cannonballs:
+    LDA !ram_cannonballs_rng : BEQ .random
+    TXA : CLC : ADC !ram_cannonballs_rng : DEC
+    CLC : ADC !lowram_room_gametime
+    RTL
+
+  .random
+    TXA : ASL : ASL : CLC : ADC $1A
     RTL
