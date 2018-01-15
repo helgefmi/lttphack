@@ -2,7 +2,7 @@
 ;
 ; Code that is run once after the game has been powered on.
 
-!SRAM_VERSION = $000E
+!SRAM_VERSION = $000F
 
 org $0CC1FF
     JML init_hook
@@ -45,7 +45,7 @@ init_initialize:
     STA !ram_feature_music : STA !lowram_last_feature_music
 
     LDA #$0000
-    STA !ram_xy_toggle : STA !ram_subpixels_toggle : STA !ram_qw_toggle : STA !ram_lit_rooms_toggle : STA !ram_oob_toggle
+    STA !ram_xy_toggle : STA !ram_subpixels_show : STA !ram_qw_toggle : STA !ram_lit_rooms_toggle : STA !ram_oob_toggle
     STA !ram_previous_preset_type : STA !ram_previous_preset_destination : STA !ram_secondary_counter_type
     STA !ram_enemy_hp_toggle : STA !ram_counters_segment : STA !ram_lag_indicator
 

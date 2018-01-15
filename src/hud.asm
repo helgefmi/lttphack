@@ -120,7 +120,7 @@ update_hearts_hook:
 
   .dont_update_input_display
 
-    LDA !ram_subpixels_toggle : BEQ .done_update_subpixels
+    LDA !ram_subpixels_show : BEQ .done_update_subpixels
 
     JSR hud_draw_subpixels
 
@@ -293,14 +293,21 @@ hud_draw_xy_display:
 
 hud_draw_subpixels:
     ; Assumes: I=16
-    STA !ram_debug
     LDA #$0000
     CLC : ADC !ram_counters_real : ADC !ram_counters_lag : ADC !ram_counters_idle : ADC !ram_counters_segment : ADC !ram_xy_toggle
     TAX : JSR hud_set_counter_position
 
+    LDA !ram_subpixels_show : CMP #$0002 : BEQ .speed
+
+  .subpix
     LDA $2B : AND #$00FF : TAX
     LDA $2A : AND #$00FF : TAY
+    JSL draw_coordinates
+    RTS
 
+  .speed
+    LDA $27 : AND #$00FF : TAY
+    LDA $28 : AND #$00FF : TAX
     JSL draw_coordinates
     RTS
 

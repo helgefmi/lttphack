@@ -1417,7 +1417,13 @@ cm_feature_xy:
     %cm_toggle("Coordinates", !ram_xy_toggle)
 
 cm_feature_subpixels:
-    %cm_toggle("Subpixels", !ram_subpixels_toggle)
+    dw !CM_ACTION_CHOICE
+    dl #!ram_subpixels_show
+    db #$24, "Subpixels", #$FF
+    db #$24, "No", #$FF
+    db #$24, "Subpixels", #$FF
+    db #$24, "Speed", #$FF
+    db #$FF
 
 cm_feature_qw:
     %cm_toggle_jsr("QW Indicator", !ram_qw_toggle)
