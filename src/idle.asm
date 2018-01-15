@@ -53,7 +53,7 @@ idle_endmessage:
 
 
 idle_menu:
-    LDA $F4 : ORA $F6 : BNE .pressed_key
+    LDA $F4 : BNE .pressed_key
 
   %a16()
     INC !lowram_idle_frames
