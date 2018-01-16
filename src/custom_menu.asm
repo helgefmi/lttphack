@@ -252,7 +252,7 @@ cm_get_pressed_button:
   PHA
     LDA.w #15 : STA !ram_cm_input_timer
   PLA
-    
+
     ; If we're pressing a new button (e.g. holding down v then pressing A), make sure
     ; to not do anything that frame (since dpad has priority over face buttons).
     LDA !ram_ctrl1 : CMP !ram_ctrl1_filtered : BEQ .do_it
@@ -361,22 +361,22 @@ cm_restore_buffer:
     LDX #$0000
 
   .loop
-    LDA $7ED000, X : STA $1000, X 
-    LDA $7ED080, X : STA $1080, X 
-    LDA $7ED100, X : STA $1100, X 
-    LDA $7ED180, X : STA $1180, X 
-    LDA $7ED200, X : STA $1200, X 
-    LDA $7ED280, X : STA $1280, X 
-    LDA $7ED300, X : STA $1300, X 
-    LDA $7ED380, X : STA $1380, X 
-    LDA $7ED400, X : STA $1400, X 
-    LDA $7ED480, X : STA $1480, X 
-    LDA $7ED500, X : STA $1500, X 
-    LDA $7ED580, X : STA $1580, X 
-    LDA $7ED600, X : STA $1600, X 
-    LDA $7ED680, X : STA $1680, X 
-    LDA $7ED700, X : STA $1700, X 
-    LDA $7ED780, X : STA $1780, X 
+    LDA $7ED000, X : STA $1000, X
+    LDA $7ED080, X : STA $1080, X
+    LDA $7ED100, X : STA $1100, X
+    LDA $7ED180, X : STA $1180, X
+    LDA $7ED200, X : STA $1200, X
+    LDA $7ED280, X : STA $1280, X
+    LDA $7ED300, X : STA $1300, X
+    LDA $7ED380, X : STA $1380, X
+    LDA $7ED400, X : STA $1400, X
+    LDA $7ED480, X : STA $1480, X
+    LDA $7ED500, X : STA $1500, X
+    LDA $7ED580, X : STA $1580, X
+    LDA $7ED600, X : STA $1600, X
+    LDA $7ED680, X : STA $1680, X
+    LDA $7ED700, X : STA $1700, X
+    LDA $7ED780, X : STA $1780, X
     INX : INX : CPX #$080 : BNE .loop
 
   %ai8()
@@ -391,7 +391,7 @@ cm_transfer_tileset:
     LDA #$80 : STA $2115
 
     LDX #$7000 : STX $2116 ; VRAM address (E000 in vram)
-    LDX #cm_hud_table : STX $4302 ; Source offset 
+    LDX #cm_hud_table : STX $4302 ; Source offset
     LDA #$25 : STA $4304 ; Source bank
     LDX #$0900 : STX $4305 ; Size (0x10 = 1 tile)
     LDA #$01 : STA $4300 ; word, normal increment (DMA MODE)
@@ -406,7 +406,7 @@ cm_transfer_tileset:
 ; ---------
 
 cm_redraw:
-    ; Assumes A=8 I=8 
+    ; Assumes A=8 I=8
     JSR cm_clear_buffer
     JSR cm_draw_background_gfx
     JSR cm_draw_active_menu
@@ -491,7 +491,7 @@ cm_draw_active_menu:
 
   .selected
     LDA #$0010
-    
+
   .not_selected
     STA $0E
 
@@ -939,7 +939,7 @@ cm_draw_submenu:
     ; draw text normally
     %item_index_to_vram_index()
     JSR cm_draw_text
-    
+
     RTS
 
 
