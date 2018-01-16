@@ -99,14 +99,18 @@ gamemode_transition_detection:
     ; OW -> OW (special)
     CMP #$0B : BEQ .show_and_reset_counters
 
-    ; Text mode. Don't reset counters.
-    CMP #$0E : BEQ .only_show_counters
-
     ; Overworld -> Dungeon
     CMP #$0F : BEQ .show_and_reset_counters
 
     ; Fall in hole
     CMP #$11 : BEQ .show_and_reset_counters
+
+    ; Text mode. Don't reset counters.
+    CMP #$0E : BNE .td_end
+
+    LDA $11 : CMP #$0A : BEQ .show_and_reset_counters
+
+    BRA .only_show_counters
 
     JMP .td_end
 
