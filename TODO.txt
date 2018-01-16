@@ -1,13 +1,6 @@
-- Set RNG for rooms:
-    * Mire/GTower: Firesnakes
-    * ATower: Circle of Pots
-    * PoD: Bad Kiki rng
-
 - Faster travel speed via shortcut
 
 - Ingame manual counter (to practice a trick X times and see your success rate).
 
 - Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances
   the game one frame. Would be good for clip practice. Maybe stop timer during this.
-
-- Game crashes sometimes after killing aga2. Same bug as in v7 I presume.
