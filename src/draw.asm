@@ -49,18 +49,34 @@ draw_seconds_and_frames:
     LDA !lowram_draw_tmp2 : JSL hex_to_dec : JSL draw2_yellow
     RTL
 
-draw_coordinates:
+draw_coordinates_3:
     ; x coordinate
-    TXA : JSL hex_to_dec : LDX !lowram_draw_tmp
-    LDA !ram_hex2dec_first_digit : ORA #$3C90 : STA $7EC700,x
-    LDA !ram_hex2dec_second_digit : ORA #$3C90 : STA $7EC702,x
-    LDA !ram_hex2dec_third_digit : ORA #$3C90 : STA $7EC704,x
+  PHY
+    TXA : TAY
+    LDX !lowram_draw_tmp
+    AND #$000F : ORA #$3C10 : STA $7EC704,x
+    TYA : LSR #4 : AND #$000F : ORA #$3C10 : STA $7EC702,x
+    TYA : LSR #8 : AND #$000F : ORA #$3C10 : STA $7EC700,x
+  PLY
 
     ; y coordinate
-    TYA : JSL hex_to_dec : LDX !lowram_draw_tmp
-    LDA !ram_hex2dec_first_digit : ORA #$3490 : STA $7EC706,x
-    LDA !ram_hex2dec_second_digit : ORA #$3490 : STA $7EC708,x
-    LDA !ram_hex2dec_third_digit : ORA #$3490 : STA $7EC70A,x
+    TYA : AND #$000F : ORA #$3410 : STA $7EC70A,x
+    TYA : LSR #4 : AND #$000F : ORA #$3410 : STA $7EC708,x
+    TYA : LSR #8 : AND #$000F : ORA #$3410 : STA $7EC706,x
+    RTL
+
+draw_coordinates_2:
+    ; x coordinate
+  PHY
+    TXA : TAY
+    LDX !lowram_draw_tmp
+    AND #$000F : ORA #$3C10 : STA $7EC706,x
+    TYA : LSR #4 : AND #$000F : ORA #$3C10 : STA $7EC704,x
+  PLY
+
+    ; y coordinate
+    TYA : AND #$000F : ORA #$3410 : STA $7EC70A,x
+    TYA : LSR #4 : AND #$000F : ORA #$3410 : STA $7EC708,x
     RTL
 
 draw3_white:

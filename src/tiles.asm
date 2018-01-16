@@ -18,31 +18,17 @@ load_default_tileset:
     ; Note that this one messes with $00-0F a bunch.
     JSL $00E310
 
-    PHB : PHK : PLB
+  %i16()
+    ; word-access, incr by 1
+    LDA #$80 : STA $2115
 
-  %a16()
-    ; dest address. #$7000 = $E000 in VRAM. (multiply by 2)
-    LDA #$7000 : STA $2116
-
-    LDX.b #00
-    LDY.b #14 ; number of tiles
-
-  .loop
-    ; loop
-    LDA hud_table,x : STA $2118 : INX : INX
-    LDA hud_table,x : STA $2118 : INX : INX
-    LDA hud_table,x : STA $2118 : INX : INX
-    LDA hud_table,x : STA $2118 : INX : INX
-    LDA hud_table,x : STA $2118 : INX : INX
-    LDA hud_table,x : STA $2118 : INX : INX
-    LDA hud_table,x : STA $2118 : INX : INX
-    LDA hud_table,x : STA $2118 : INX : INX
-    DEY : BEQ .end
-    JMP .loop
-
-  .end
-    PLB
-
+    LDX #$7000 : STX $2116 ; VRAM address (E000 in vram)
+    LDX #hud_table : STX $4302 ; Source offset
+    LDA #$24 : STA $4304 ; Source bank
+    LDX #$0200 : STX $4305 ; Size (0x10 = 1 tile)
+    LDA #$01 : STA $4300 ; word, normal increment (DMA MODE)
+    LDA #$18 : STA $4301 ; destination (VRAM write)
+    LDA #$01 : STA $420B ; initiate DMA (channel 1)
   %ai8()
     RTL
 

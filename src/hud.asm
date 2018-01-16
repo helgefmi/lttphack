@@ -287,7 +287,7 @@ hud_draw_xy_display:
 
     LDA $22 : TAX
     LDA $20 : TAY
-    JSL draw_coordinates
+    JSL draw_coordinates_3
     RTS
 
 
@@ -302,13 +302,13 @@ hud_draw_subpixels:
   .subpix
     LDA $2B : AND #$00FF : TAX
     LDA $2A : AND #$00FF : TAY
-    JSL draw_coordinates
+    JSL draw_coordinates_2
     RTS
 
   .speed
     LDA $27 : AND #$00FF : TAY
     LDA $28 : AND #$00FF : TAX
-    JSL draw_coordinates
+    JSL draw_coordinates_2
     RTS
 
 
