@@ -70,17 +70,18 @@ endif
 !ram_input_display_toggle = !offset+4
 !ram_enemy_hp_toggle = !offset+6
 !ram_xy_toggle = !offset+8
-!ram_subpixels_show = !offset+58
 !ram_qw_toggle = !offset+10
 !ram_lit_rooms_toggle = !offset+12
 !ram_oob_toggle = !offset+14
 !ram_toggle_lanmola_cycles = !offset+16
+!ram_subpixels_toggle = !offset+58
+!ram_rerandomize_toggle = !offset+60
 
 !ram_previous_preset_destination = !offset+24
 !ram_previous_preset_type = !offset+26
 !ram_feature_music = !offset+28
 !ram_secondary_counter_type = !offset+46
-!ram_lag_indicator = !offset+56
+!ram_lagometer_toggle = !offset+56
 
 !ram_ctrl_prachack_menu = !offset+30
 !ram_ctrl_load_last_preset = !offset+32
@@ -108,6 +109,9 @@ endif
 !lowram_cm_stack_index = $0658
 !ram_cm_last_frame_input = $7F76C6
 !ram_cm_input_timer = $7F76C8
+
+!ram_ss_dma_buffer = $770000
+!ram_ss_rerandomize_buffer = $770100
 
 ;-------------------------
 ; HUD

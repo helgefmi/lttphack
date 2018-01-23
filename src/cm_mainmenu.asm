@@ -1352,6 +1352,9 @@ cm_submenu_features:
     dw cm_feature_music
     dw cm_feature_xy
     dw cm_feature_subpixels
+    if !FEATURE_SS
+        dw cm_feature_rerandomize
+    endif
     dw cm_feature_qw
     dw cm_feature_lit_rooms
     dw cm_feature_oob
@@ -1372,7 +1375,7 @@ cm_feature_counter_segment:
     %cm_toggle("Counter Segm", !ram_counters_segment)
 
 cm_feature_counter_lag_indicator:
-    %cm_toggle_jsr("Lagometer", !ram_lag_indicator)
+    %cm_toggle_jsr("Lagometer", !ram_lagometer_toggle)
 
   .toggle
     %a16()
@@ -1418,12 +1421,15 @@ cm_feature_xy:
 
 cm_feature_subpixels:
     dw !CM_ACTION_CHOICE
-    dl #!ram_subpixels_show
+    dl #!ram_subpixels_toggle
     db #$24, "Subpixels", #$FF
     db #$24, "No", #$FF
     db #$24, "Subpixels", #$FF
     db #$24, "Speed", #$FF
     db #$FF
+
+cm_feature_rerandomize:
+    %cm_toggle("Rerandomize", !ram_rerandomize_toggle)
 
 cm_feature_qw:
     %cm_toggle_jsr("QW Indicator", !ram_qw_toggle)

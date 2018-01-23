@@ -32,8 +32,8 @@ gamemode_hook:
   %ai8()
     JSL $0080B5 ; GameModes
 
-    LDA !ram_lag_indicator : BEQ .done
-    JSR gamemode_lag_indicator
+    LDA !ram_lagometer_toggle : BEQ .done
+    JSR gamemode_lagometer
 
   .done
     RTL
@@ -308,7 +308,7 @@ gamemode_savestate:
   %a8()
     ; store DMA to SRAM
     LDY #$0000 : LDX #$0000
--   LDA $4300, X : STA $770000, X
+-   LDA $4300, X : STA !ram_ss_dma_buffer, X
     INX
     INY : CPY #$000B : BNE -
     CPX #$007B : BEQ +
@@ -335,6 +335,13 @@ gamemode_savestate:
 
   .do_load_state
   %a8()
+    LDA !ram_rerandomize_toggle : BEQ .dont_rerandomize_1
+
+    LDA $1A : STA !ram_ss_rerandomize_buffer
+    LDA $0FA1 : STA !ram_ss_rerandomize_buffer+1
+
+  .dont_rerandomize_1
+
     STZ $420C
     JSR ppuoff
     STZ $4310
@@ -358,6 +365,13 @@ gamemode_savestate:
 
     LDA #$01 : STA $4310
     LDA #$18 : STA $4311
+
+    LDA !ram_rerandomize_toggle : BEQ .dont_rerandomize_2
+
+    LDA !ram_ss_rerandomize_buffer : STA $1A
+    LDA !ram_ss_rerandomize_buffer+1 : STA $0FA1
+
+    .dont_rerandomize_2
 
 + %a8()
     JMP end
@@ -407,7 +421,7 @@ gamemode_savestate:
     ; load DMA from SRAM
     LDY #$0000 : LDX #$0000
   %a8()
-  - LDA $770000, X : STA $4300, X
+  - LDA !ram_ss_dma_buffer, X : STA $4300, X
     INX
     INY : CPY #$000B : BNE -
     CPX #$007B : BEQ +
@@ -490,7 +504,7 @@ gamemode_reset_counters:
 
 
 print pc
-gamemode_lag_indicator:
+gamemode_lagometer:
   %ai16()
     LDA !lowram_nmi_counter : CMP #$0002 : BCS .lag_frame
     LDA #$3C00 : STA !lowram_draw_tmp

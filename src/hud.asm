@@ -120,7 +120,7 @@ update_hearts_hook:
 
   .dont_update_input_display
 
-    LDA !ram_subpixels_show : BEQ .done_update_subpixels
+    LDA !ram_subpixels_toggle : BEQ .done_update_subpixels
 
     JSR hud_draw_subpixels
 
@@ -297,7 +297,7 @@ hud_draw_subpixels:
     CLC : ADC !ram_counters_real : ADC !ram_counters_lag : ADC !ram_counters_idle : ADC !ram_counters_segment : ADC !ram_xy_toggle
     TAX : JSR hud_set_counter_position
 
-    LDA !ram_subpixels_show : CMP #$0002 : BEQ .speed
+    LDA !ram_subpixels_toggle : CMP #$0002 : BEQ .speed
 
   .subpix
     LDA $2B : AND #$00FF : TAX

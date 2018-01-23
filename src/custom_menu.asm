@@ -1147,8 +1147,6 @@ cm_ctrl_clear_input_display:
 cm_do_ctrl_config:
     ; Enters AI=8
     ; Leaves AI=8
-    LDA !ram_debug : INC : STA !ram_debug
-
   %a16()
     LDA #$2080 : STA $0E
     LDA !ram_ctrl1 : BEQ .clear_and_draw
