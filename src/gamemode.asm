@@ -377,7 +377,7 @@ gamemode_savestate:
     JMP end
 
   ppuoff:
-    LDA #$80 : STA $13 : STA $2100
+    LDA #$80 : STA $2100
     STZ $4200
     RTS
 
@@ -431,7 +431,7 @@ gamemode_savestate:
     ; end of DMA from SRAM
 
   + LDA #$A1 : STA $4200
-    LDA #$0F : STA $13 : STA $2100
+    LDA $13 : STA $2100
   %ai8()
     LDA #$01 : STA !lowram_last_frame_did_saveload
     SEC : RTS
