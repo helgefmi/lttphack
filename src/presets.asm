@@ -2,6 +2,8 @@
 org $0AB90D
     JSL preset_load_overworld
 
+org $0AB9A6
+    JSL preset_duck_dropoff_hook
 
 ; Replaces `JSL Sprite_ResetAll` from BirdTravel_LoadTargetAreaData.
 org $02EA33
@@ -134,8 +136,6 @@ preset_load_overworld:
     JML !BirdTravel_LoadTargetAreaData
 
   .preset
-    LDA.b #$00 : STA !ram_preset_type
-
     ; Set link to be in the Overworld
     STZ $1B
 
@@ -448,5 +448,19 @@ preset_load_last_preset:
     LDA.b #12 : STA $10
     LDA.b #05 : STA $11
     RTL
+
+
+preset_duck_dropoff_hook:
+  PHA
+    LDA !ram_preset_type : BNE .custom
+
+  PLA
+    JML $099509
+
+  .custom
+    LDA.b #$00 : STA !ram_preset_type
+  PLA
+    RTL
+
 
 incsrc preset_data.asm
