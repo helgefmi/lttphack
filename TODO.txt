@@ -3,4 +3,37 @@
 - Ingame manual counter (to practice a trick X times and see your success rate).
 
 - Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances
-  the game one frame. Would be good for clip practice. Maybe stop timer during this.
+  the game one frame. Would be good for clip learning. Maybe stop timer during this.
+
+- Reset lanmla cycles upon enter
+
+- Feature toggle/file 3: Persist inventory.
+
+- Shortcut: Fill HP/magic. Or maybe "Get all stuffs".. HP-1 so YBA works?
+
+- Poverty save states
+
+- Fix better transitions:
+  * After beating Agahnim
+  * Check PoD turtle room > helma. Same lag on blunt's theory tas.
+
+- Presets:
+  * Persist wallmaster timer
+  * Figure out why rod charges doesn't have AoE
+  * PoD Mimics preset
+  * More GTower presets? Swamp? Ask Everdrive users.
+  * Fix arc variable for arrghus preset
+
+- Show idle frames as frames instead of s'ff.
+
+- Bug: Ice Palace entrance. Strong EG does not stick.
+
+- Coordinates: Toggle decimal/hex.
+
+- Show invisible sprites (Guard LoS)
+
+- Show sprite info in general? Editable?
+
+- Macro editor? Record/play movie from preset?
+
+- Reset Ancilla sprite data (velocity at $029E at least). See if there's a good reset function somewhere?

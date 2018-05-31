@@ -1749,6 +1749,7 @@ cm_submenu_rng_control:
     dw cm_rng_arrghus
     dw cm_rng_turtles
     dw cm_rng_cannonballs
+    dw cm_rng_soldiers
     dw #$0000
     %cm_header("RNG CONTROL")
 
@@ -1878,6 +1879,45 @@ cm_rng_cannonballs:
     dw !CM_ACTION_CHOICE
     dl !ram_cannonballs_rng
     db #$24, "Cannonballs", #$FF
+    db #$24, "Random", #$FF
+    db #$24, "00", #$FF
+    db #$24, "01", #$FF
+    db #$24, "02", #$FF
+    db #$24, "03", #$FF
+    db #$24, "04", #$FF
+    db #$24, "05", #$FF
+    db #$24, "06", #$FF
+    db #$24, "07", #$FF
+    db #$24, "08", #$FF
+    db #$24, "09", #$FF
+    db #$24, "0A", #$FF
+    db #$24, "0B", #$FF
+    db #$24, "0C", #$FF
+    db #$24, "0D", #$FF
+    db #$24, "0E", #$FF
+    db #$24, "0F", #$FF
+    db #$24, "10", #$FF
+    db #$24, "11", #$FF
+    db #$24, "12", #$FF
+    db #$24, "13", #$FF
+    db #$24, "14", #$FF
+    db #$24, "15", #$FF
+    db #$24, "16", #$FF
+    db #$24, "17", #$FF
+    db #$24, "18", #$FF
+    db #$24, "19", #$FF
+    db #$24, "1A", #$FF
+    db #$24, "1B", #$FF
+    db #$24, "1C", #$FF
+    db #$24, "1D", #$FF
+    db #$24, "1E", #$FF
+    db #$24, "1F", #$FF
+    db #$FF
+
+cm_rng_soldiers:
+    dw !CM_ACTION_CHOICE
+    dl !ram_soldiers_rng
+    db #$24, "Soldiers", #$FF
     db #$24, "Random", #$FF
     db #$24, "00", #$FF
     db #$24, "01", #$FF

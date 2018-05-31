@@ -46,6 +46,7 @@ org $1EB2A6
     ;1eb2a6 jsl $0dba71
     JSL rng_turtles
 
+; Cannonballs
 org $0580D6
     ;0580d6 txa
     ;0580d7 asl
@@ -55,6 +56,16 @@ org $0580D6
     ;0580dc and #$1f
     JSL rng_cannonballs
     NOP : NOP
+
+; Soldiers
+org $05C500
+    ;05c500 txa
+    ;05c501 eor $1a
+    ;05c503 and #$1f
+    ;05c505 bne $c531
+    JSL rng_soldiers
+    NOP
+
 
 org $288000
 
@@ -208,4 +219,18 @@ rng_cannonballs:
 
   .random
     TXA : ASL : ASL : CLC : ADC $1A
+    RTL
+
+; == Soldiers ==
+
+rng_soldiers:
+    STA !ram_debug
+    LDA !ram_soldiers_rng : BEQ .random
+    TXA : CLC : ADC !ram_soldiers_rng : DEC
+    EOR !lowram_room_gametime
+    AND #$1F
+    RTL
+
+  .random
+    TXA : EOR $1A : AND #$1F
     RTL

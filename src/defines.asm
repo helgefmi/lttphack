@@ -52,6 +52,7 @@
 !ram_arrghus_rng = $7F7714
 !ram_turtles_rng = $7F7716
 !ram_cannonballs_rng = $7F7718
+!ram_soldiers_rng = $7F771A
 
 !ram_ctrl_last_input = $7F7710
 
