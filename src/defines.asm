@@ -20,6 +20,8 @@
 !lowram_draw_tmp2 = $04DE
 !lowram_draw_tmp3 = $04E0
 
+!lowram_is_poverty_load = $04E6
+
 !lowram_last_feature_music = $04E8
 !lowram_idle_frames = $04EA
 !lowram_idle_frames_copy = $04EC
@@ -55,15 +57,12 @@
 
 !ram_ctrl_last_input = $7F7710
 
-; If save state feature is enabled, store RAM to toggle prachack features in $77 (extended SRAM)
-; If not, store it in $7F8 (just some free WRAM)
-; This makes sure the "Features" menu persists both through save/load function, and resets, when the
-; save state feature is enabled.
+; Account for different SRAM layouts
 
 if !FEATURE_SS
     !offset = $771000
 else
-    !offset = $7F8000
+    !offset = $701E00
 endif
 
 !ram_sram_initialized = !offset+0
@@ -78,6 +77,8 @@ endif
 
 !ram_previous_preset_destination = !offset+24
 !ram_previous_preset_type = !offset+26
+!ram_preset_category = !offset+60
+!ram_can_load_pss = !offset+62
 !ram_feature_music = !offset+28
 !ram_secondary_counter_type = !offset+46
 !ram_lag_indicator = !offset+56
@@ -108,6 +109,8 @@ endif
 !lowram_cm_stack_index = $0658
 !ram_cm_last_frame_input = $7F76C6
 !ram_cm_input_timer = $7F76C8
+
+!sram_pss_offset = $702000
 
 ;-------------------------
 ; HUD
@@ -142,6 +145,7 @@ endif
 !CM_ACTION_PRESET = #$10
 !CM_ACTION_TOGGLE_BIT = #$12
 !CM_ACTION_CTRL_SHORTCUT = #$14
+!CM_ACTION_SUBMENU_VARIABLE = #$16
 
 !ram_react_counter = $7F76CA
 !ram_react_frames = $7F76CC

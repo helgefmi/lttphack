@@ -618,6 +618,7 @@ cm_execute_action_table:
     dw cm_execute_preset
     dw cm_execute_toggle_bit
     dw cm_execute_ctrl_shortcut
+    dw cm_execute_submenu_variable
 
 
 cm_execute_toggle:
@@ -795,15 +796,22 @@ cm_execute_preset:
   %a16()
     LDA ($00) : STA $02
     INC : STA !ram_preset_destination : STA !ram_previous_preset_destination
-  %a8()
+  %ai8()
   PHB
-    LDA.b #$27 : PHA : PLB
+    LDA !ram_preset_category : TAX
+    LDA.l cm_preset_data_banks,x : PHA : PLB
     LDA ($02) : STA !ram_preset_type : STA !ram_previous_preset_type
+    STZ !lowram_is_poverty_load
   PLB
     INC $11
   .end
-  %a16()
+  %ai16()
     RTS
+    
+cm_preset_data_banks:
+    db #sram_nmg_esc_bed>>16
+    db #sram_hundo_esc_bed>>16
+    db #sram_low_esc_bed>>16
 
 
 cm_execute_toggle_bit:
@@ -844,6 +852,38 @@ cm_execute_ctrl_shortcut:
   %a16()
     RTS
 
+
+cm_execute_submenu_variable:
+    ; dpad should do nothing here
+  %a8()
+    LDA $F0 : BNE .end
+
+    ; Increments stack index and puts the submenu into the stack.
+  %a16()
+    LDA !lowram_cm_stack_index : INC : INC : STA !lowram_cm_stack_index : TAX
+
+    LDA ($00) : STA $02 : INC $00 : INC $00
+    LDA ($00) : STA $04 : INC $00
+
+    ; get max index + 1
+    LDA ($00) : AND #$00FF : STA $05 : INC $00
+
+    LDA [$02] : AND #$00FF
+    CMP $05 : BCC .in_range
+    
+    ; failsafe
+    LDA $05 : DEC
+    
+  .in_range
+    ASL : TAY
+    LDA ($00),y : STA !ram_cm_menu_stack,x
+
+  %a8()
+    LDA $00 : CLC : ADC $05 : STA $00
+
+  .end
+    RTS
+
 ; -------------
 ; Draw Action
 ; -------------
@@ -866,6 +906,7 @@ cm_draw_action_table:
     dw cm_draw_preset
     dw cm_draw_toggle_bit
     dw cm_draw_ctrl_shortcut
+    dw cm_draw_submenu_variable
 
 
 macro item_index_to_vram_index()
@@ -1105,6 +1146,23 @@ cm_draw_ctrl_shortcut:
     JSR cm_ctrl_input_display
 
     RTS
+
+
+cm_draw_submenu_variable:
+    ; skip var address
+    INC $02 : INC $02 : INC $02
+
+    ; get (max index + 1) * 2
+    LDA ($02) : AND #$00FF : ASL : STA $04 : INC $02
+
+    ; skip submenu pointers
+    LDA $02 : CLC : ADC $04 : STA $02
+
+    %item_index_to_vram_index()
+    JSR cm_draw_text
+
+    RTS
+
 
 
 ; -----------

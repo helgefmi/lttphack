@@ -12,7 +12,7 @@ gamemode_hook:
     LDA $F4 : STA !ram_ctrl1_filtered
     LDA $F6 : STA !ram_ctrl1_filtered+1
 
-    if !FEATURE_SS
+    if !FEATURE_SS || !FEATURE_PSS
         JSR gamemode_savestate : BCS .exit
     endif
 
@@ -287,6 +287,8 @@ gamemode_load_previous_preset:
     LDA $10 : CMP #$0E : BEQ .no_load_preset
     LDA !ram_previous_preset_destination : BEQ .no_load_preset
 
+    STZ !lowram_is_poverty_load
+
     JSL preset_load_last_preset
     SEC : RTS
 
@@ -304,6 +306,18 @@ gamemode_savestate:
   %ai16()
     LDA !ram_ctrl1 : AND !ram_ctrl_save_state : CMP !ram_ctrl_save_state : BNE .test_load_state
     AND !ram_ctrl1_filtered : BEQ .test_load_state
+
+if !FEATURE_PSS
+    ; make sure we're not on a screen transition or falling down
+    LDA $0126 : AND #$00FF : ORA $0410 : BNE .test_load_state
+    LDA $5B : AND #$00FF : CMP #$0002 : BCS .test_load_state
+
+  %a8()
+    JSL save_preset_data
+  %ai8()
+    SEC : RTS
+
+else
 
   %a8()
     ; store DMA to SRAM
@@ -324,6 +338,7 @@ gamemode_savestate:
     LDA #$81 : STA $4310
     LDA #$39 : STA $4311
     JMP end
+endif
 
   .test_load_state
     LDA !ram_ctrl1 : AND !ram_ctrl_load_state : CMP !ram_ctrl_load_state : BNE .no_bueno
@@ -334,6 +349,33 @@ gamemode_savestate:
     JMP after_save_state
 
   .do_load_state
+  
+if !FEATURE_PSS
+  %a8()
+    JSR gamemode_safe_to_change_mode : BCC .no_load
+
+    ; Loading during text mode makes the text stay or the item menu to bug
+    LDA $10 : CMP #$0E : BEQ .no_load
+    
+    LDA !ram_can_load_pss : BEQ .no_load
+    
+  %a16()
+    LDA #!sram_pss_offset+1 : STA !ram_preset_destination
+  %a8()
+    LDA !sram_pss_offset : STA !ram_preset_type
+    LDA.b #12 : STA $10
+    LDA.b #05 : STA $11
+    LDA #$01 : STA !lowram_is_poverty_load
+
+  %ai8()
+    SEC : RTS
+    
+  .no_load:
+  %ai8()
+    CLC : RTS
+
+else
+
   %a8()
     STZ $420C
     JSR ppuoff
@@ -361,6 +403,7 @@ gamemode_savestate:
 
 + %a8()
     JMP end
+endif
 
   ppuoff:
     LDA #$80 : STA $13 : STA $2100
