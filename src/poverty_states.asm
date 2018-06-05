@@ -147,6 +147,10 @@ load_poverty_state:
 
   .dont_rerandomize_2
 
+  %ai16()
+    JSL !Sprite_LoadGfxProperties
+
+  %ai8()
     JSL !DecompSwordGfx
     JSL !Palette_Sword
     JSL !DecompShieldGfx
