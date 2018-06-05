@@ -1,6 +1,6 @@
 macro cm_header(title)
     table ../resources/header.tbl
-        db #$2C, "<title>", #$FF
+        db #$24, "<title>", #$FF
     table ../resources/normal.tbl
 endmacro
 
