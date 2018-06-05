@@ -166,18 +166,6 @@ load_poverty_state:
     RTL
 
 
-clear_sram:
-    ; Enteres AI=16
-    LDA.w #$0000
-    LDX.w #$0000
-
-  .loop
-    STA $7EF000, X : STA $7EF100, X : STA $7EF200, X : STA $7EF300, X : STA $7EF400, X
-    INX #2 : CPX.w #$0100 : BNE .loop
-
-    RTL
-
-
 pss_data:
     dl $7EF000 : dw $04FF ; save data
     dl $7FDF80 : dw $027F ; underworld sprite state
