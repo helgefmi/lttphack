@@ -75,7 +75,7 @@ endif
 !ram_oob_toggle = !offset+14
 !ram_toggle_lanmola_cycles = !offset+16
 !ram_subpixels_toggle = !offset+58
-!ram_rerandomize_toggle = !offset+60
+!ram_rerandomize_toggle = !offset+64
 
 !ram_previous_preset_destination = !offset+24
 !ram_previous_preset_type = !offset+26
