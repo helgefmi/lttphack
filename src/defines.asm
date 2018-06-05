@@ -99,6 +99,9 @@ endif
 !ram_counters_idle = !offset+52
 !ram_counters_segment = !offset+54
 
+!ram_rerandomize_framecount = !offset+66
+!ram_rerandomize_accumulator = !offset+68
+
 !lowram_oob_toggle = $037F
 
 !ram_debug = $7F7777
@@ -113,7 +116,6 @@ endif
 !ram_cm_input_timer = $7F76C8
 
 !ram_ss_dma_buffer = $770000
-!ram_ss_rerandomize_buffer = $770100
 !sram_pss_offset = $702000
 
 ;-------------------------

@@ -140,6 +140,13 @@ load_poverty_state:
    PLB
 
   %ai8()
+    LDA !ram_rerandomize_toggle : BEQ .dont_rerandomize_2
+
+    LDA !ram_rerandomize_framecount : STA $1A
+    LDA !ram_rerandomize_accumulator : STA $0FA1
+
+  .dont_rerandomize_2
+
     JSL !DecompSwordGfx
     JSL !Palette_Sword
     JSL !DecompShieldGfx

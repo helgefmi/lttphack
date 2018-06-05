@@ -349,17 +349,18 @@ endif
     JMP after_save_state
 
   .do_load_state
-  
-if !FEATURE_SD2SNES
 
-  %a8()
     LDA !ram_rerandomize_toggle : BEQ .dont_rerandomize_1
 
-    LDA $1A : STA !ram_ss_rerandomize_buffer
-    LDA $0FA1 : STA !ram_ss_rerandomize_buffer+1
+    ; Save the current framecounter & rng accumulator
+    LDA $1A : STA !ram_rerandomize_framecount
+    LDA $0FA1 : STA !ram_rerandomize_accumulator
 
   .dont_rerandomize_1
 
+if !FEATURE_SD2SNES
+
+  %a8()
     STZ $420C
     JSR ppuoff
     STZ $4310
@@ -386,8 +387,8 @@ if !FEATURE_SD2SNES
 
     LDA !ram_rerandomize_toggle : BEQ .dont_rerandomize_2
 
-    LDA !ram_ss_rerandomize_buffer : STA $1A
-    LDA !ram_ss_rerandomize_buffer+1 : STA $0FA1
+    LDA !ram_rerandomize_framecount : STA $1A
+    LDA !ram_rerandomize_accumulator : STA $0FA1
 
     .dont_rerandomize_2
 
