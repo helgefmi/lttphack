@@ -48,7 +48,7 @@ init_initialize:
     STA !ram_xy_toggle : STA !ram_subpixels_show : STA !ram_qw_toggle : STA !ram_lit_rooms_toggle : STA !ram_oob_toggle
     STA !ram_previous_preset_type : STA !ram_previous_preset_destination : STA !ram_secondary_counter_type
     STA !ram_enemy_hp_toggle : STA !ram_counters_segment : STA !ram_lag_indicator
-	STA !ram_preset_category : STA !ram_can_load_pss
+    STA !ram_preset_category : STA !ram_can_load_pss
 
     ; Start + R
     LDA #$1010 : STA !ram_ctrl_prachack_menu

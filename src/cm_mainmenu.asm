@@ -635,13 +635,13 @@ cm_feature_lanmola_cycle_count:
     RTS
 
 cm_feature_preset_category:
-	dw !CM_ACTION_CHOICE
-	dl !ram_preset_category
-	db #$24, "Preset Cat", #$FF
-	db #$24, "NMG", #$FF
-	db #$24, "Hundo", #$FF
-	db #$24, "Low", #$FF
-	db #$FF
+    dw !CM_ACTION_CHOICE
+    dl !ram_preset_category
+    db #$24, "Preset Cat", #$FF
+    db #$24, "NMG", #$FF
+    db #$24, "Hundo", #$FF
+    db #$24, "Low", #$FF
+    db #$FF
 
 ; }}}
 ; GAME STATE {{{
@@ -886,7 +886,7 @@ cm_submenu_ctrl:
     if !FEATURE_SS || !FEATURE_PSS
         dw cm_ctrl_save_state
         dw cm_ctrl_load_state
-	endif
+    endif
     dw cm_ctrl_reset_segment_timer
     dw cm_ctrl_toggle_oob
     dw cm_ctrl_skip_text

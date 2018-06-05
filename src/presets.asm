@@ -349,8 +349,8 @@ preset_sprite_reset_all:
     LDA !ram_preset_end_of_sram_state : BEQ .end
     JSR preset_load_state
     LDA.w #$0000 : STA !ram_preset_end_of_sram_state
-	LDA !lowram_is_poverty_load : AND #$00FF : BEQ .end
-	JSL load_poverty_state
+    LDA !lowram_is_poverty_load : AND #$00FF : BEQ .end
+    JSL load_poverty_state
   .end
   %ai8()
     RTL
@@ -507,6 +507,6 @@ preset_start_ptrs:
     dw sram_low_esc_bed
 
 preset_end_of_base_states:
-	dw sram_nmg_esc_bed_after
+    dw sram_nmg_esc_bed_after
     dw sram_hundo_esc_bed_after
     dw sram_low_esc_bed_after
