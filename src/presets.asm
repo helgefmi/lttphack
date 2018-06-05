@@ -137,8 +137,6 @@ preset_load_overworld:
 
   .preset
   PHB : PHK : PLB
-    LDA.b #$00 : STA !ram_preset_type
-
     ; Set link to be in the Overworld
     STZ $1B
     
