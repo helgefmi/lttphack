@@ -11,8 +11,6 @@
 
 - Shortcut: Fill HP/magic. Or maybe "Get all stuffs".. HP-1 so YBA works?
 
-- Poverty save states
-
 - Fix better transitions:
   * After beating Agahnim
   * Check PoD turtle room > helma. Same lag on blunt's theory tas.
@@ -37,3 +35,5 @@
 - Macro editor? Record/play movie from preset?
 
 - Reset Ancilla sprite data (velocity at $029E at least). See if there's a good reset function somewhere?
+
+- Fix issue where text box is not cleared if you load preset during text.

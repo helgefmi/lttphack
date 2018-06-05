@@ -136,46 +136,63 @@ preset_load_overworld:
     JML !BirdTravel_LoadTargetAreaData
 
   .preset
+  PHB : PHK : PLB
+    LDA.b #$00 : STA !ram_preset_type
+
     ; Set link to be in the Overworld
     STZ $1B
+    
+    ; sram or rom
+    LDA !lowram_is_poverty_load : BEQ .from_rom
+    LDA #$70 : STA $02
+    BRA +
 
-  %a16()
-  PHB : PHK : PLB
+  .from_rom
+    LDA !ram_preset_category : TAX
+    LDA.l cm_preset_data_banks,x : STA $02
+  +
+
+  %ai16()
     LDA !ram_preset_destination : STA $00
+    LDY #$0000
 
     STZ $04AC
 
     ; Screen index
-    LDA ($00) : INC $00 : INC $00 : STA $8A : STA $040A
+    LDA [$00],y : INY : INY : STA $8A : STA $040A
 
     ; Link X/Y
-    LDA ($00) : INC $00 : INC $00 : STA $22
-    LDA ($00) : INC $00 : INC $00 : STA $20
+    LDA [$00],y : INY : INY : STA $22
+    LDA [$00],y : INY : INY : STA $20
 
     ; BG scroll X/Y
-    LDA ($00) : INC $00 : INC $00 : STA $E6 : STA $0124
-    LDA ($00) : INC $00 : INC $00 : STA $E8 : STA $0122
-    LDA ($00) : INC $00 : INC $00 : STA $E0 : STA $0120
-    LDA ($00) : INC $00 : INC $00 : STA $E2 : STA $011E
+    LDA [$00],y : INY : INY : STA $E6 : STA $0124
+    LDA [$00],y : INY : INY : STA $E8 : STA $0122
+    LDA [$00],y : INY : INY : STA $E0 : STA $0120
+    LDA [$00],y : INY : INY : STA $E2 : STA $011E
 
     ; Camera scroll X/Y
-    LDA ($00) : INC $00 : INC $00 : STA $061C : DEC #2 : STA $061E
-    LDA ($00) : INC $00 : INC $00 : STA $0618 : DEC #2 : STA $061A
+    LDA [$00],y : INY : INY : STA $061C : DEC #2 : STA $061E
+    LDA [$00],y : INY : INY : STA $0618 : DEC #2 : STA $061A
 
     ; Unknown
-    LDA ($00) : INC $00 : INC $00 : STA $84 : SEC : SBC #$0400 : AND.w #$0F80 : ASL A : XBA : STA $88
+    LDA [$00],y : INY : INY : STA $84 : SEC : SBC #$0400 : AND.w #$0F80 : ASL A : XBA : STA $88
     LDA $84 : SEC : SBC.w #$0010 : AND.w #$003E : LSR A : STA $86
 
-    LDA ($00) : INC $00 : INC $00 : STA $0624
+    LDA [$00],y : INY : INY : STA $0624
     LDA.w #$0000 : SEC : SBC $0624 : STA $0626
 
-    LDA ($00) : INC $00 : INC $00 : STA $0628
+    LDA [$00],y : INY : INY : STA $0628
     LDA.w #$0000 : SEC : SBC $0628 : STA $062A
 
-    LDA ($00) : STA !ram_preset_end_of_sram_state
-  PLB
+    LDA [$00],y : INY : INY : STA !ram_preset_end_of_sram_state
 
-  %a8()
+    LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
+    LDA !ram_preset_category : AND #$00FF : ASL : TAX
+    LDA.l preset_end_of_base_states,x : STA !ram_preset_end_of_sram_state
+  +
+
+  %ai8()
     ; LW/DW
     LDA $8A : AND #$40 : STA $7EF3CA
 
@@ -184,10 +201,12 @@ preset_load_overworld:
 
     JSR preset_reset_state_after_loading
     JSR preset_reset_counters
-  %a16()
-
-  %i16()
+%ai16()
     JSR preset_load_state
+
+    LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
+    JSL load_poverty_state
+  +
   %i8()
 
     ; Makes it possible to spawn in the middle of a field/not inside doorway?
@@ -196,45 +215,58 @@ preset_load_overworld:
     ; Clears RAM in case it's needed (used for when lifting big rocks?).
     STZ $0698
 
+  PLB
     JML !BirdTravel_LoadTargetAreaData_AfterData
 
 
 preset_load_dungeon:
   ; Can leave with anything.
-  %a16()
-  PHB : PHK : PLB
+  PHB : PHB : PLB
+  
+    ; sram or rom
+    LDA !lowram_is_poverty_load : BEQ .from_rom
+    LDA #$70 : STA $02
+    BRA +
+
+  .from_rom
+    LDA !ram_preset_category : TAX
+    LDA.l cm_preset_data_banks,x : STA $02
+  +
+  
+  %ai16()
     LDA !ram_preset_destination : STA $00
+    LDY #$0000
 
     ; Room index
-    LDA ($00) : INC $00 : INC $00 : STA $A0 : STA $048E
+    LDA [$00],y : INY : INY : STA $A0 : STA $048E
 
     ; BG1/2 vertical and horizontal scroll
-    LDA ($00) : INC $00 : INC $00 : STA $E6 : STA $0124
-    LDA ($00) : INC $00 : INC $00 : STA $E8 : STA $0122
-    LDA ($00) : INC $00 : INC $00 : STA $E0 : STA $0120
-    LDA ($00) : INC $00 : INC $00 : STA $E2 : STA $011E
+    LDA [$00],y : INY : INY : STA $E6 : STA $0124
+    LDA [$00],y : INY : INY : STA $E8 : STA $0122
+    LDA [$00],y : INY : INY : STA $E0 : STA $0120
+    LDA [$00],y : INY : INY : STA $E2 : STA $011E
 
     ; Link X/Y
-    LDA ($00) : INC $00 : INC $00 : STA $22
-    LDA ($00) : INC $00 : INC $00 : STA $20
+    LDA [$00],y : INY : INY : STA $22
+    LDA [$00],y : INY : INY : STA $20
 
     ; Camera scroll X/Y
-    LDA ($00) : INC $00 : INC $00 : STA $061C : INC #2 : STA $061E
-    LDA ($00) : INC $00 : INC $00 : STA $0618 : INC #2 : STA $061A
+    LDA [$00],y : INY : INY : STA $061C : INC #2 : STA $061E
+    LDA [$00],y : INY : INY : STA $0618 : INC #2 : STA $061A
     LDA #$01F8 : STA $EC
 
     ; Door settings
-    LDA ($00) : INC $00 : INC $00 : STA $0696 : STZ $0698
+    LDA [$00],y : INY : INY : STA $0696 : STZ $0698
 
     ; Relative coordinates (scroll edges?)
-    LDA ($00) : INC $00 : INC $00 : STA $0600
-    LDA ($00) : INC $00 : INC $00 : STA $0602
-    LDA ($00) : INC $00 : INC $00 : STA $0604
-    LDA ($00) : INC $00 : INC $00 : STA $0606
-    LDA ($00) : INC $00 : INC $00 : STA $0608
-    LDA ($00) : INC $00 : INC $00 : STA $060A
-    LDA ($00) : INC $00 : INC $00 : STA $060C
-    LDA ($00) : INC $00 : INC $00 : STA $060E
+    LDA [$00],y : INY : INY : STA $0600
+    LDA [$00],y : INY : INY : STA $0602
+    LDA [$00],y : INY : INY : STA $0604
+    LDA [$00],y : INY : INY : STA $0606
+    LDA [$00],y : INY : INY : STA $0608
+    LDA [$00],y : INY : INY : STA $060A
+    LDA [$00],y : INY : INY : STA $060C
+    LDA [$00],y : INY : INY : STA $060E
 
     LDA #$0000 : STA $0610
     LDA #$0110 : STA $0612
@@ -242,8 +274,8 @@ preset_load_dungeon:
     LDA #$0100 : STA $0616
 
     ; Quadrant stuff
-    LDA ($00) : INC $00 : INC $00 : STA $A6
-    LDA ($00) : INC $00 : INC $00 : STA $A9
+    LDA [$00],y : INY : INY : STA $A6
+    LDA [$00],y : INY : INY : STA $A9
 
   %a8()
 
@@ -251,10 +283,10 @@ preset_load_dungeon:
     LDA.b #$01 : STA $1B
 
     ; Main blockset value (main graphics)
-    LDA ($00) : %a16() : INC $00 : %a8() : STA $0AA1
+    LDA [$00],y : %a16() : INY : %a8() : STA $0AA1
 
     ; Music track value. Is it the beginning music?
-    LDA ($00) : %a16() : INC $00 : %a8() : STA $0132 : CMP.b #$03 : BNE .notBeginningMusic
+    LDA [$00],y : %a16() : INY : %a8() : STA $0132 : CMP.b #$03 : BNE .notBeginningMusic
 
     ; Check game status
     ; Is it less than first part?
@@ -270,30 +302,41 @@ preset_load_dungeon:
   .notBeginningMusic
 
     ; Starting floor
-    LDA ($00) : %a16() : INC $00 : %a8() : STA $A4
+    LDA [$00],y : %a16() : INY : %a8() : STA $A4
 
     ; Load the palace number.
-    LDA ($00) : %a16() : INC $00 : %a8() : STA $040C
+    LDA [$00],y : %a16() : INY : %a8() : STA $040C
 
     ; Doorway orientation
-    LDA ($00) : %a16() : INC $00 : %a8() : STA $6C
+    LDA [$00],y : %a16() : INY : %a8() : STA $6C
 
     ; Starting BG
     ; Set the position that Link starts at.
     ; NOTE that original code had a LSR #4 here that I removed, since I serialize this differently.
-    LDA ($00) : STA $EE
+    LDA [$00],y : STA $EE
 
     ; Set Pseudo bg level
-    LDA ($00) : %a16() : INC $00 : %a8() : AND.b #$0F : STA $0476
+    LDA [$00],y : %a16() : INY : %a8() : AND.b #$0F : STA $0476
+    
+  PHY
 
     JSR preset_reset_state_after_loading
     JSR preset_reset_counters
 
   %ai16()
-    LDA ($00) : STA !ram_preset_end_of_sram_state
+  PLY
+    LDA [$00],y : INY : INY : STA !ram_preset_end_of_sram_state
+    LDA !lowram_is_poverty_load : AND #$00FF :  BEQ +
+    LDA !ram_preset_category : AND #$00FF : ASL : TAX
+    LDA.l preset_end_of_base_states,x : STA !ram_preset_end_of_sram_state
+  +
     JSR preset_load_state
-  %ai8()
 
+    LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
+    JSL load_poverty_state
+  +
+
+  %ai8()
   PLB
     RTL
 
@@ -308,6 +351,8 @@ preset_sprite_reset_all:
     LDA !ram_preset_end_of_sram_state : BEQ .end
     JSR preset_load_state
     LDA.w #$0000 : STA !ram_preset_end_of_sram_state
+    LDA !lowram_is_poverty_load : AND #$00FF : BEQ .end
+    JSL load_poverty_state
   .end
   %ai8()
     RTL
@@ -318,9 +363,13 @@ preset_load_state:
 
     JSR preset_clear_sram
 
-  PHB : PHK : PLB
+  %a8()
+  LDA !ram_preset_category : TAX
+  PHB : LDA.l cm_preset_data_banks,x : PHA : PLB
+  %a16()
     LDA !ram_preset_end_of_sram_state : STA $06
-    LDA #sram_esc_bed : STA $00
+    LDA !ram_preset_category : AND #$00FF : ASL : TAX
+    LDA.l preset_start_ptrs,x : STA $00
 
   .next_item
     ; Sets up $02-$04 with the long address we want to manipulate.
@@ -436,6 +485,10 @@ preset_reset_counters:
     STZ !lowram_seg_seconds
     STZ !lowram_seg_minutes
     STZ !lowram_idle_frames
+    LDA #$0000
+    STA !ram_lanmola_cycles
+  %a8()
+    STA !ram_lanmola_cycles+2
   %a8()
     RTS
 
@@ -463,4 +516,12 @@ preset_duck_dropoff_hook:
     RTL
 
 
-incsrc preset_data.asm
+preset_start_ptrs:
+    dw sram_nmg_esc_bed
+    dw sram_hundo_esc_bed
+    dw sram_low_esc_bed
+
+preset_end_of_base_states:
+    dw sram_nmg_esc_bed_after
+    dw sram_hundo_esc_bed_after
+    dw sram_low_esc_bed_after

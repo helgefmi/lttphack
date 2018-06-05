@@ -3,6 +3,9 @@
 if !FEATURE_SS
     org $00FFD8
         db $08 ; 256kb
+elseif !FEATURE_PSS
+    org $00FFD8
+        db $05 ; 64kb
 endif
 
 
