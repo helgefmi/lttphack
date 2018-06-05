@@ -60,7 +60,7 @@
 
 ; Account for different SRAM layouts
 
-if !FEATURE_SS
+if !FEATURE_SD2SNES
     !offset = $771000
 else
     !offset = $701E00

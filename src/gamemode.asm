@@ -12,9 +12,7 @@ gamemode_hook:
     LDA $F4 : STA !ram_ctrl1_filtered
     LDA $F6 : STA !ram_ctrl1_filtered+1
 
-    if !FEATURE_SS || !FEATURE_PSS
-        JSR gamemode_savestate : BCS .exit
-    endif
+    JSR gamemode_savestate : BCS .exit
 
     ; Update Game Time counter
   %a16()
@@ -307,17 +305,7 @@ gamemode_savestate:
     LDA !ram_ctrl1 : AND !ram_ctrl_save_state : CMP !ram_ctrl_save_state : BNE .test_load_state
     AND !ram_ctrl1_filtered : BEQ .test_load_state
 
-if !FEATURE_PSS
-    ; make sure we're not on a screen transition or falling down
-    LDA $0126 : AND #$00FF : ORA $0410 : BNE .test_load_state
-    LDA $5B : AND #$00FF : CMP #$0002 : BCS .test_load_state
-
-  %a8()
-    JSL save_preset_data
-  %ai8()
-    SEC : RTS
-
-else
+if !FEATURE_SD2SNES
 
   %a8()
     ; store DMA to SRAM
@@ -338,6 +326,18 @@ else
     LDA #$81 : STA $4310
     LDA #$39 : STA $4311
     JMP end
+
+else
+
+    ; make sure we're not on a screen transition or falling down
+    LDA $0126 : AND #$00FF : ORA $0410 : BNE .test_load_state
+    LDA $5B : AND #$00FF : CMP #$0002 : BCS .test_load_state
+
+  %a8()
+    JSL save_preset_data
+  %ai8()
+    SEC : RTS
+
 endif
 
   .test_load_state
@@ -350,31 +350,7 @@ endif
 
   .do_load_state
   
-if !FEATURE_PSS
-  %a8()
-    JSR gamemode_safe_to_change_mode : BCC .no_load
-
-    ; Loading during text mode makes the text stay or the item menu to bug
-    LDA $10 : CMP #$0E : BEQ .no_load
-    
-    LDA !ram_can_load_pss : BEQ .no_load
-    
-  %a16()
-    LDA #!sram_pss_offset+1 : STA !ram_preset_destination
-  %a8()
-    LDA !sram_pss_offset : STA !ram_preset_type
-    LDA.b #12 : STA $10
-    LDA.b #05 : STA $11
-    LDA #$01 : STA !lowram_is_poverty_load
-
-  %ai8()
-    SEC : RTS
-    
-  .no_load:
-  %ai8()
-    CLC : RTS
-
-else
+if !FEATURE_SD2SNES
 
   %a8()
     LDA !ram_rerandomize_toggle : BEQ .dont_rerandomize_1
@@ -417,6 +393,32 @@ else
 
 + %a8()
     JMP end
+
+else
+
+  %a8()
+    JSR gamemode_safe_to_change_mode : BCC .no_load
+
+    ; Loading during text mode makes the text stay or the item menu to bug
+    LDA $10 : CMP #$0E : BEQ .no_load
+    
+    LDA !ram_can_load_pss : BEQ .no_load
+    
+  %a16()
+    LDA #!sram_pss_offset+1 : STA !ram_preset_destination
+  %a8()
+    LDA !sram_pss_offset : STA !ram_preset_type
+    LDA.b #12 : STA $10
+    LDA.b #05 : STA $11
+    LDA #$01 : STA !lowram_is_poverty_load
+
+  %ai8()
+    SEC : RTS
+    
+  .no_load:
+  %ai8()
+    CLC : RTS
+
 endif
 
   ppuoff:
@@ -546,7 +548,6 @@ gamemode_reset_counters:
     RTS
 
 
-print pc
 gamemode_lagometer:
   %ai16()
     LDA !lowram_nmi_counter : CMP #$0002 : BCS .lag_frame

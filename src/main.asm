@@ -1,11 +1,8 @@
 lorom
 
 !FEATURE_HUD ?= 1
-!FEATURE_SS ?= 1
-!FEATURE_PSS ?= 0
+!FEATURE_SD2SNES ?= 1
 !VERSION = "10"
-
-; print "HUD: !FEATURE_HUD SS: !FEATURE_SS"
 
 incsrc defines.asm
 incsrc hexedits.asm

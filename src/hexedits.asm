@@ -1,9 +1,9 @@
 ; == SRAM Size ==
 
-if !FEATURE_SS
+if !FEATURE_SD2SNES
     org $00FFD8
         db $08 ; 256kb
-elseif !FEATURE_PSS
+else
     org $00FFD8
         db $05 ; 64kb
 endif

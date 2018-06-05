@@ -535,9 +535,7 @@ cm_submenu_features:
     dw cm_feature_music
     dw cm_feature_xy
     dw cm_feature_subpixels
-    if !FEATURE_SS
-        dw cm_feature_rerandomize
-    endif
+    dw cm_feature_rerandomize
     dw cm_feature_qw
     dw cm_feature_lit_rooms
     dw cm_feature_oob
@@ -889,10 +887,8 @@ cm_main_goto_ctrl:
 cm_submenu_ctrl:
     dw cm_ctrl_open_lttphack_menu
     dw cm_ctrl_load_last_preset
-    if !FEATURE_SS || !FEATURE_PSS
-        dw cm_ctrl_save_state
-        dw cm_ctrl_load_state
-    endif
+    dw cm_ctrl_save_state
+    dw cm_ctrl_load_state
     dw cm_ctrl_reset_segment_timer
     dw cm_ctrl_toggle_oob
     dw cm_ctrl_skip_text
@@ -906,13 +902,13 @@ cm_ctrl_open_lttphack_menu:
 cm_ctrl_load_last_preset:
     %cm_ctrl_shortcut("Load last preset", !ram_ctrl_load_last_preset)
 
-if !FEATURE_SS
+if !FEATURE_SD2SNES
     cm_ctrl_save_state:
         %cm_ctrl_shortcut("Save state", !ram_ctrl_save_state)
 
     cm_ctrl_load_state:
         %cm_ctrl_shortcut("Load state", !ram_ctrl_load_state)
-elseif !FEATURE_PSS
+else
     cm_ctrl_save_state:
         %cm_ctrl_shortcut("Save preset", !ram_ctrl_save_state)
 
