@@ -93,6 +93,7 @@ endif
 !ram_ctrl_skip_text = !offset+40
 !ram_ctrl_disable_sprites = !offset+42
 !ram_ctrl_reset_segment_timer = !offset+44
+!ram_ctrl_fill_everything = !offset+70
 
 !ram_counters_real = !offset+48
 !ram_counters_lag = !offset+50

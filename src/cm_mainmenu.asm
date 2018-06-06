@@ -893,6 +893,7 @@ cm_submenu_ctrl:
     dw cm_ctrl_toggle_oob
     dw cm_ctrl_skip_text
     dw cm_ctrl_disable_sprites
+    dw cm_ctrl_fill_everything
     dw #$0000
     %cm_header("CONTROLLER SHORTCUTS")
 
@@ -927,6 +928,9 @@ cm_ctrl_skip_text:
 
 cm_ctrl_disable_sprites:
     %cm_ctrl_shortcut("Remove sprites", !ram_ctrl_disable_sprites)
+
+cm_ctrl_fill_everything:
+    %cm_ctrl_shortcut("Fill everything", !ram_ctrl_fill_everything)
 
 ; }}}
 ; RNG CONTROL {{{

@@ -25,6 +25,7 @@ gamemode_hook:
     JSR gamemode_oob
     JSR gamemode_skip_text
     JSR gamemode_disable_sprites
+    JSR gamemode_fill_everything
     JSR gamemode_reset_segment_timer
 
   %ai8()
@@ -525,6 +526,91 @@ gamemode_disable_sprites:
   .done
     %a8()
     RTS
+
+
+gamemode_fill_everything:
+  %a16()
+    LDA !ram_ctrl1 : AND !ram_ctrl_fill_everything : CMP !ram_ctrl_fill_everything : BNE .done
+    AND !ram_ctrl1_filtered : BEQ .done
+
+    JMP .fill_inventory
+
+  .done
+    %a8()
+    RTS
+
+  .fill_inventory
+  %a8()
+    LDA #$01
+    STA !ram_item_book
+    STA !ram_item_hook
+    STA !ram_item_fire_rod
+    STA !ram_item_ice_rod
+    STA !ram_item_bombos
+    STA !ram_item_ether
+    STA !ram_item_2quake
+    STA !ram_item_lantern
+    STA !ram_item_hammer
+    STA !ram_item_net
+    STA !ram_item_somaria
+    STA !ram_item_byrna
+    STA !ram_item_cape
+    STA !ram_equipment_boots_menu
+    STA !ram_equipment_flippers_menu
+    STA !ram_equipment_moon_pearl
+    STA !ram_equipment_half_magic
+
+    LDA #$02
+    STA !ram_item_boom
+    STA !ram_item_mirror
+    STA !ram_item_powder
+    STA !ram_equipment_gloves
+    STA !ram_equipment_shield
+    STA !ram_equipment_armor
+
+    LDA #$03
+    STA !ram_item_bow
+    STA !ram_item_bottle_array+0
+    STA !ram_item_flute
+
+    LDA #$04
+    STA !ram_item_bottle_array+1
+    STA !ram_equipment_sword
+
+    LDA #$05
+    STA !ram_item_bottle_array+2
+
+    LDA #$06 : STA !ram_item_bottle_array+3
+
+    LDA #$09 : STA !ram_equipment_keys
+    LDA #20<<3 : STA !ram_equipment_maxhp
+    LDA #19<<3 : STA !ram_equipment_curhp
+
+    ; rupees
+    %a16() : LDA #$03E7 : STA $7EF360 : STA $7EF362 : %a8()
+
+    LDA #$78
+    STA !ram_equipment_magic_meter
+
+    LDA #30
+    STA !ram_item_bombs
+    STA !ram_equipment_arrows_filler
+
+    LDA #$FF
+    STA !ram_capabilities
+
+    JSL !DecompSwordGfx
+    JSL !Palette_Sword
+    JSL !DecompShieldGfx
+    JSL !Palette_Shield
+    JSL !Palette_Armor
+
+    LDA !ram_game_progress : BNE .exit
+    LDA #$01 : STA !ram_game_progress
+
+  .exit
+    RTS
+
 
 
 gamemode_reset_segment_timer:

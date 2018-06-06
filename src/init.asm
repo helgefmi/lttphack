@@ -75,8 +75,9 @@ init_initialize:
     LDA #$0000
     STA !ram_ctrl_toggle_oob
     STA !ram_ctrl_skip_text
-    STA !ram_ctrl_disable_sprites
     STA !ram_ctrl_reset_segment_timer
+    STA !ram_ctrl_disable_sprites
+    STA !ram_ctrl_fill_everything
 
     LDA #!SRAM_VERSION : STA !ram_sram_initialized
     RTS
