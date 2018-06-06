@@ -686,11 +686,11 @@ cm_game_state_eg_strength:
   .toggle
     LDA !ram_cm_eg_strength : BEQ .weak
 
-    LDA #$02 : STA $7E044A
+    LDA #$01 : STA $7E044A
     RTS
 
   .weak
-    LDA #$01 : STA $7E044A
+    LDA #$02 : STA $7E044A
     RTS
 
 cm_game_state_reset_screen:
