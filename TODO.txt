@@ -19,7 +19,7 @@ x "Fill everything" controller shortcut
     - Hook pyramid
     - Add Ganon preset w/magic
 
-- Show idle frames as frames instead of s'ff.
+x Show idle frames as frames instead of s'ff.
 
 - Coordinates: Toggle decimal/hex.
 

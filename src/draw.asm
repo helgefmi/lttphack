@@ -19,10 +19,11 @@ draw_counters:
     TXA : CLC : ADC #$003C : TAX
 
   .do_idle
+    INX : INX : INX : INX
     LDA !ram_counters_idle : BEQ .do_segment
 
-    LDA !lowram_idle_frames_copy : JSL draw_seconds_and_frames
-    TXA : CLC : ADC #$0040 : TAX
+    LDA !lowram_idle_frames_copy : JSL hex_to_dec : JSL draw3_white
+    TXA : CLC : ADC #$003C : TAX
 
   .do_segment
     LDA !ram_counters_segment : BEQ .done
