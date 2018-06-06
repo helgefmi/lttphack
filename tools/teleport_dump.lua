@@ -1126,9 +1126,24 @@ function main()
         memory.registerwrite(addr_with_bank, 0x2, state_changed)
     end)
 
+    -- Overlord timer (for wall master)
+    call_for_each_bank(0x0B30, function (addr_with_bank)
+        memory.registerwrite(addr_with_bank, 0x10, state_changed)
+    end)
+
+    -- Variable used by arrghus initial puff configuration
+    call_for_each_bank(0x0B0C, function (addr_with_bank)
+        memory.registerwrite(addr_with_bank, 0x1, state_changed)
+    end)
+
     -- Arc variable
     call_for_each_bank(0x0B08, function (addr_with_bank)
         memory.registerwrite(addr_with_bank, 0x2, state_changed)
+    end)
+
+    -- Ancilla altitude
+    call_for_each_bank(0x029E, function (addr_with_bank)
+        memory.registerwrite(addr_with_bank, 0xA, state_changed)
     end)
 
     gui.register(draw_ui)

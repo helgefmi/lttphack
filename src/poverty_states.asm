@@ -195,7 +195,9 @@ pss_data:
     dl $7E0468 : dw $0001 ; trap door state
     dl $7E0540 : dw $001F ; object tilemap attributes
     dl $7E010E : dw $0001 ; dungeon entrance index
+    dl $7E0B30 : dw $000F ; overlord timer (wallmaster)
+    dl $7E0B0C : dw $0000 ; variable used by arrghus initial puff configuration
     dl $7E0B08 : dw $0001 ; arc variable
-    dl $7E001A : dw $0000 ; frame counter (may be rerandomized)
+    dl $7E001A : dw $0000 ; frame counter
     dl $7E029E : dw $0009 ; ancillae's altitudes
     db $FF

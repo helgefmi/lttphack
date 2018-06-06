@@ -1,29 +1,29 @@
 For V10
 -------
-- Feature toggle/file 3: Persist inventory.
-  And/or shortcut to "Get all stuffs".. (HP-1 so YBA works)
-  Press shortcut and get all items/equip, 19/20 hp, 120 magic.
+x "Fill everything" controller shortcut
 
 - Fix better transitions:
-  * After beating Agahnim
+  x After beating Agahnim
   * Check PoD turtle room > helma. Same lag on blunt's theory tas.
 
-- Presets:
-  * Persist wallmaster timer
+- Lua script:
+  x Persist ancilla altitude
+  x Persist wallmaster timer
+  x Fix arc variable for arrghus preset
+  * Hundo/Low
   * PoD Mimics preset (can put it in prev room inside door).
-  * More GTower presets? Swamp? Ask Everdrive users.
-  * Fix arc variable for arrghus preset
+  * Automatically add in my manual fixes
+    - Crystal state pokey 2 (1?)
+    - Bombs ice
+    - Ice rod trock
+    - Hook pyramid
+    - Add Ganon preset w/magic
 
 - Show idle frames as frames instead of s'ff.
 
 - Coordinates: Toggle decimal/hex.
 
 - Bug: Ice Palace entrance. Strong EG does not stick.
-
-- Fix lua script and remake presets:
-  * Hundo/Low
-  * Persist ancilla altitude
-  * Automatically add in my manual fixes
 
 - Fix issue where text box is not cleared if you load preset during text.
 
@@ -36,8 +36,6 @@ For V10
   Then pod arrow statue and lanmo torches should too.
 
 - Arbitrary memory watch/poke.
-
-- Toggle for removing text completely, like Rando.
 
 Maybe
 -----
