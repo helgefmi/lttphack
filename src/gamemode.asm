@@ -87,6 +87,9 @@ gamemode_transition_detection:
     ; Caught by Wall Master
     CMP #$11 : BEQ .show_and_reset_counters
 
+    ; Magic mirror (beating Agahnim)
+    CMP #$15 : BEQ .show_and_reset_counters
+
     JMP .td_end
 
   .gamemode_overworld
