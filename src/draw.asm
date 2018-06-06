@@ -161,3 +161,14 @@ hex_to_dec:
     LDA $4216 : STA !ram_hex2dec_first_digit
 
     RTL
+
+hex_to_dec_a:
+    ; Enters A=16
+    ; Leaves A=16
+    JSL hex_to_dec
+    LDA !ram_hex2dec_first_digit : ASL #8
+    ORA !ram_hex2dec_third_digit
+    STA !ram_hex2dec_tmp
+    LDA !ram_hex2dec_second_digit : ASL #4
+    ORA !ram_hex2dec_tmp
+    RTL

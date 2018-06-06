@@ -287,6 +287,14 @@ hud_draw_xy_display:
 
     LDA $22 : TAX
     LDA $20 : TAY
+
+    LDA !ram_xy_toggle : CMP #$0001 : BEQ .hex
+
+  .dec
+    TXA : JSL hex_to_dec_a : TAX
+    TYA : JSL hex_to_dec_a : TAY
+
+  .hex
     JSL draw_coordinates_3
     RTS
 

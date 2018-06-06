@@ -599,7 +599,13 @@ cm_feature_enemy_hp:
     RTS
 
 cm_feature_xy:
-    %cm_toggle("Coordinates", !ram_xy_toggle)
+    dw !CM_ACTION_CHOICE
+    dl #!ram_xy_toggle
+    db #$24, "Coordinates", #$FF
+    db #$24, "No", #$FF
+    db #$24, "Hexadecimal", #$FF
+    db #$24, "Decimal", #$FF
+    db #$FF
 
 cm_feature_subpixels:
     dw !CM_ACTION_CHOICE

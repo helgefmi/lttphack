@@ -21,7 +21,7 @@ x "Fill everything" controller shortcut
 
 x Show idle frames as frames instead of s'ff.
 
-- Coordinates: Toggle decimal/hex.
+x Coordinates: Toggle decimal/hex.
 
 - Bug: Ice Palace entrance. Strong EG does not stick.
 
@@ -36,6 +36,7 @@ x Show idle frames as frames instead of s'ff.
   Then pod arrow statue and lanmo torches should too.
 
 - Arbitrary memory watch/poke.
+  * At the very least, way to see certain things like Ancilla altitude or Arc variable.
 
 Maybe
 -----
