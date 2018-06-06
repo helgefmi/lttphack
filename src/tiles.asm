@@ -15,8 +15,10 @@ load_default_tileset:
   %ai8()
     LDA.b #$02 : STA $2101
 
+  %a16() : LDA $C8 : PHA : %a8()
     ; Note that this one messes with $00-0F a bunch.
     JSL $00E310
+  %a16() : PLA : STA $C8 : %a8()
 
   %i16()
     ; word-access, incr by 1
