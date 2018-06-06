@@ -172,6 +172,15 @@ CM_Return:
     LDA.b #$01 : STA $17
     LDA.b #$22 : STA $0116
 
+    ; This section clears any text boxes, in case we came from one.
+  %a16()
+    LDA $1CD2 : XBA : STA $1002
+    LDA #$2E42 : STA $1004
+    LDA #$387F : STA $1006
+    LDA #$FFFF : STA $1008
+  %a8()
+    LDA #$01 : STA $14
+
     JSL preset_load_next_frame
     RTS
 
@@ -320,7 +329,6 @@ cm_clear_buffer:
 
     INX : INX
     CPX.b #$80 : BNE .loop
-
   %a8()
     RTS
 
@@ -807,7 +815,7 @@ cm_execute_preset:
   .end
   %ai16()
     RTS
-    
+
 cm_preset_data_banks:
     db #sram_nmg_esc_bed>>16
     db #sram_hundo_esc_bed>>16
@@ -870,10 +878,10 @@ cm_execute_submenu_variable:
 
     LDA [$02] : AND #$00FF
     CMP $05 : BCC .in_range
-    
+
     ; failsafe
     LDA $05 : DEC
-    
+
   .in_range
     ASL : TAY
     LDA ($00),y : STA !ram_cm_menu_stack,x

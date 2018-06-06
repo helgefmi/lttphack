@@ -27,7 +27,7 @@ x Bug: Ice Palace entrance. Strong EG does not stick.
 
 x Fix issue with practice hack menu and mirror transition.
 
-- Fix issue where text box is not cleared if you load preset during text.
+x Fix issue where text box is not cleared if you load preset during text.
 
 - Feature: Disable text? Like rando.
 
