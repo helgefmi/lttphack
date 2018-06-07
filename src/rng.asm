@@ -67,7 +67,7 @@ org $05C500
     NOP
 
 
-org $288000
+org !ORG
 
 tbl_pokey_speed:
     ; 00

@@ -39,7 +39,7 @@ load_entrance_local:
 warnpc $02C270
 
 
-org $278000
+org !ORG
 preset_load_next_frame:
   %ai8()
     JSR preset_deinit_current_state

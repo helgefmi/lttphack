@@ -1,4 +1,4 @@
-org $238000
+org !ORG
 draw_counters:
   %a16()
   PHX

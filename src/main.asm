@@ -7,49 +7,65 @@ lorom
 incsrc defines.asm
 incsrc hexedits.asm
 
-incsrc gamemode.asm     ; $208000
-warnpc $218000
+!ORG = $208000
+incsrc gamemode.asm
+warnpc $208FFF
 
 if !FEATURE_HUD
-    incsrc hud.asm          ; $218000
-    warnpc $228000
+    !ORG = $218000
+    incsrc hud.asm
+    warnpc $21BFFF
 endif
 
-incsrc nmi.asm          ; $228000
-warnpc $238000
+!ORG = $21C000
+incsrc nmi.asm
+warnpc $21FFFF
 
-incsrc draw.asm         ; $238000
-warnpc $248000
+!ORG = $228000
+incsrc draw.asm
+warnpc $22BFFF
 
-incsrc tiles.asm        ; $248000
-warnpc $258000
+!ORG = $22C000
+incsrc tiles.asm
+warnpc $22FFFF
 
-incsrc custom_menu.asm  ; $258000
-warnpc $268000
+!ORG = $238000
+incsrc init.asm
+warnpc $23CFFF
 
-incsrc init.asm         ; $268000
-warnpc $278000
-
-incsrc presets.asm      ; $278000
-warnpc $288000
-
+!ORG = $23C000
 incsrc rng.asm
-warnpc $28B000
+warnpc $23DFFF
 
+!ORG = $23E000
 incsrc idle.asm
-warnpc $298000
+warnpc $23FFFF
 
-incsrc preset_data_nmg.asm
-warnpc $2A8000
+!ORG = $248000
+incsrc custom_menu.asm
+warnpc $24FFFF
 
-incsrc preset_data_hundo.asm
-warnpc $2B8000
+!ORG = $258000
+incsrc presets.asm
+warnpc $25FFFF
 
-incsrc preset_data_low.asm
-warnpc $2C8000
-
+!ORG = $268000
 incsrc poverty_states.asm
-warnpc $2D8000
+warnpc $26FFFF
+
+; ---- data ----
+
+!ORG = $308000
+incsrc preset_data_nmg.asm
+warnpc $30FFFF
+
+!ORG = $318000
+incsrc preset_data_hundo.asm
+warnpc $31FFFF
+
+!ORG = $328000
+incsrc preset_data_low.asm
+warnpc $32FFFF
 
 ; pad rom to 2mb
 org $3FFFFF

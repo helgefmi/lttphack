@@ -8,7 +8,7 @@ org $028068
 
 
 ; Load Tiles Hook
-org $248000
+org !ORG
 load_default_tileset:
   ; Enters: AI=8
   ; Leave with: AI=8
@@ -26,7 +26,7 @@ load_default_tileset:
 
     LDX #$7000 : STX $2116 ; VRAM address (E000 in vram)
     LDX #hud_table : STX $4302 ; Source offset
-    LDA #$24 : STA $4304 ; Source bank
+    LDA #!ORG>>16 : STA $4304 ; Source bank
     LDX #$0200 : STX $4305 ; Size (0x10 = 1 tile)
     LDA #$01 : STA $4300 ; word, normal increment (DMA MODE)
     LDA #$18 : STA $4301 ; destination (VRAM write)

@@ -4,7 +4,7 @@ org $008056
 
 
 ; Game Mode Hook
-org $208000
+org !ORG
 gamemode_hook:
     ; For convenience, so that we can access the full ctrl1 as 16bit.
     LDA $F0 : STA !ram_ctrl1

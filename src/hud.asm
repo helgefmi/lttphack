@@ -39,30 +39,6 @@ org $0DFAAE
     JSL hud_template_hook
 
 
-; Hud Template Hook
-org $21F000
-hud_template_hook:
-    ; Makes sure to redraw hearts.
-    STZ !lowram_last_frame_hearts
-
-  %a16()
-    ; Remove some HUD stuff.
-    LDA #$207F
-    STA $7EC72C : STA $7EC72E
-    STA $7EC730 : STA $7EC732
-    STA $7EC734 : STA $7EC736
-
-    JSL draw_counters
-
-    LDA !ram_qw_toggle : BEQ .dont_update_qw
-    JSR hud_draw_qw
-  .dont_update_qw
-
-    SEP #$30
-    INC $16
-    RTL
-
-
 ; -----------------------
 ; UPDATE HEARTS TEMPLATE
 ; -----------------------
@@ -86,7 +62,32 @@ org $0DFDCB
 
 
 ; UpdateHearts Hook
-org $218000
+org !ORG
+
+
+; Hud Template Hook
+hud_template_hook:
+    ; Makes sure to redraw hearts.
+    STZ !lowram_last_frame_hearts
+
+  %a16()
+    ; Remove some HUD stuff.
+    LDA #$207F
+    STA $7EC72C : STA $7EC72E
+    STA $7EC730 : STA $7EC732
+    STA $7EC734 : STA $7EC736
+
+    JSL draw_counters
+
+    LDA !ram_qw_toggle : BEQ .dont_update_qw
+    JSR hud_draw_qw
+  .dont_update_qw
+
+    SEP #$30
+    INC $16
+    RTL
+
+
 update_hearts_hook:
     ; Enters: AI=16
     ; Keep AI=16 throughout (let subroutines change back/forth)

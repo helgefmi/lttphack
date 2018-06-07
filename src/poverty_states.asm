@@ -1,4 +1,4 @@
-org $2C8000
+org !ORG
 
 save_preset_data:
     LDA.b #$80 : STA $2100 : STA $13

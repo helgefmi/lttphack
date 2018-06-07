@@ -6,12 +6,12 @@
 
 
 ; Overrides Game Mode 0x0C.
-org $00806D : db #$00
-org $008089 : db #$80
-org $0080A5 : db #$25
+org $00806D : db #!ORG
+org $008089 : db #!ORG>>8
+org $0080A5 : db #!ORG>>16
 
 
-org $258000
+org !ORG
 CM_Main:
     PHB : PHK : PLB
 
@@ -400,7 +400,7 @@ cm_transfer_tileset:
 
     LDX #$7000 : STX $2116 ; VRAM address (E000 in vram)
     LDX #cm_hud_table : STX $4302 ; Source offset
-    LDA #$25 : STA $4304 ; Source bank
+    LDA #!ORG>>16 : STA $4304 ; Source bank
     LDX #$0900 : STX $4305 ; Size (0x10 = 1 tile)
     LDA #$01 : STA $4300 ; word, normal increment (DMA MODE)
     LDA #$18 : STA $4301 ; destination (VRAM write)

@@ -23,7 +23,7 @@ nmi_hook:
     JMP $80D1
 
 
-org $228000
+org !ORG
 nmi_expand:
    ; Enters AI=16
    PHB : PHK : PLB

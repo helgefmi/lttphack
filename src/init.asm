@@ -8,7 +8,7 @@ org $0CC1FF
     JML init_hook
 
 
-org $268000
+org !ORG
 init_hook:
     ; enters AI=16
     ; need to be at AI=8 before RTL

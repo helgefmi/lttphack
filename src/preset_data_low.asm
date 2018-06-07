@@ -1,4 +1,4 @@
-org $2B8000
+org !ORG
 
 ; Preset locations
 
