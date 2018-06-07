@@ -19,9 +19,9 @@ draw_counters:
     TXA : CLC : ADC #$003C : TAX
 
   .do_idle
-    INX : INX : INX : INX
     LDA !ram_counters_idle : BEQ .do_segment
 
+    INX : INX : INX : INX
     LDA !lowram_idle_frames_copy : JSL hex_to_dec : JSL draw3_white
     TXA : CLC : ADC #$003C : TAX
 
@@ -166,9 +166,7 @@ hex_to_dec_a:
     ; Enters A=16
     ; Leaves A=16
     JSL hex_to_dec
-    LDA !ram_hex2dec_first_digit : ASL #8
-    ORA !ram_hex2dec_third_digit
-    STA !ram_hex2dec_tmp
-    LDA !ram_hex2dec_second_digit : ASL #4
-    ORA !ram_hex2dec_tmp
+    LDA !ram_hex2dec_first_digit : ASL #4
+    ORA !ram_hex2dec_second_digit : ASL #4
+    ORA !ram_hex2dec_first_digit
     RTL
