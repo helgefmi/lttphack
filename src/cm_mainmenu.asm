@@ -541,6 +541,7 @@ cm_submenu_features:
     dw cm_feature_oob
     dw cm_feature_lanmola_cycle_count
     dw cm_feature_preset_category
+    dw cm_feature_disable_text
     dw #$0000
     %cm_header("FEATURES")
 
@@ -652,6 +653,9 @@ cm_feature_preset_category:
     db #$24, "Hundo", #$FF
     db #$24, "Low", #$FF
     db #$FF
+
+cm_feature_disable_text:
+    %cm_toggle("Disable text", !ram_disable_text)
 
 ; }}}
 ; GAME STATE {{{

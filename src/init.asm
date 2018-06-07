@@ -62,6 +62,7 @@ init_initialize:
     STA !ram_secondary_counter_type
     STA !ram_subpixels_toggle
     STA !ram_xy_toggle
+    STA !ram_disable_text
 
     ; Start + R
     LDA #$1010 : STA !ram_ctrl_prachack_menu

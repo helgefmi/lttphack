@@ -84,6 +84,7 @@ endif
 !ram_feature_music = !offset+28
 !ram_secondary_counter_type = !offset+46
 !ram_lagometer_toggle = !offset+56
+!ram_disable_text = !offset+72
 
 !ram_ctrl_prachack_menu = !offset+30
 !ram_ctrl_load_last_preset = !offset+32
