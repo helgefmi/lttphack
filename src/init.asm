@@ -4,16 +4,19 @@
 
 !SRAM_VERSION = $0012
 
-org $0CC1FF
-    JML init_hook
+; Overrides the following:
+; LDA.b #$81 : STA $4200
+org $00802F
+    JSL init_hook
+    NOP
 
 
 org !ORG
 init_hook:
     ; enters AI=16
     ; need to be at AI=8 before RTL
-    STA $CA
-    JSR init_expand
+    LDA #$81 : STA $4200
+    JSL init_expand
   %ai8()
     RTL
 
@@ -34,7 +37,7 @@ init_expand:
     LDA #$00 : STA !ram_oob_toggle : STA !lowram_oob_toggle
 
   .done
-    RTS
+    RTL
 
 init_initialize:
     LDA.w #!FEATURE_HUD
@@ -45,7 +48,6 @@ init_initialize:
     STA !ram_toggle_lanmola_cycles
 
     LDA #$0001
-    STA !lowram_last_feature_music
     STA !ram_feature_music
     STA !ram_rerandomize_toggle
 

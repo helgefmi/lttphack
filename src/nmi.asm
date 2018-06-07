@@ -30,19 +30,6 @@ nmi_expand:
 
   %a8()
     INC !lowram_nmi_counter
-
-    LDA !ram_feature_music : CMP !lowram_last_feature_music : BEQ .no_music_change
-    STA !lowram_last_feature_music
-
-    CMP #$00 : BNE .dont_mute_music
-    LDA #$F1 : STA $012C
-    LDA #$05 : STA $012D
-
-  .no_music_change
-    CMP #$00 : BNE .dont_mute_music
-    STZ $012C : STZ $012D
-
-  .dont_mute_music
     LDA !lowram_last_frame_did_saveload : BNE .dont_update_counters
 
     JSR nmi_do_update_counters

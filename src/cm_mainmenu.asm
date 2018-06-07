@@ -583,12 +583,9 @@ cm_feature_music:
     %cm_toggle_jsr("Music", !ram_feature_music)
 
   .toggle
-    BEQ .mute_music
+    JSL music_load_data
     RTS
 
-  .mute_music
-    STZ $012C : STZ $012D
-    RTS
 
 cm_feature_enemy_hp:
     %cm_toggle_jsr("Enemy HP", !ram_enemy_hp_toggle)

@@ -22,7 +22,6 @@
 
 !lowram_is_poverty_load = $04E6
 
-!lowram_last_feature_music = $04E8
 !lowram_idle_frames = $04EA
 !lowram_idle_frames_copy = $04EC
 
@@ -161,6 +160,14 @@ endif
 !ram_mash_counter = $7F76D0
 !ram_mash_inputs = $7F76D2
 
+
+;-------------------------
+; MUSIC
+;-------------------------
+
+!SPC_DATA_OVERWORLD = $3E8000
+!SPC_DATA_UNDERWORLD = $3EC000
+!SPC_DATA_CREDITS = $3F8000
 
 ;-------------------------
 ; PRESETS

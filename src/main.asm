@@ -53,6 +53,10 @@ warnpc $25FFFF
 incsrc poverty_states.asm
 warnpc $26FFFF
 
+!ORG = $278000
+incsrc music.asm
+warnpc $27FFFF
+
 ; ---- data ----
 
 !ORG = $308000
@@ -66,6 +70,15 @@ warnpc $31FFFF
 !ORG = $328000
 incsrc preset_data_low.asm
 warnpc $32FFFF
+
+org !SPC_DATA_OVERWORLD
+incbin ../resources/spc_overworld.bin
+
+org !SPC_DATA_UNDERWORLD
+incbin ../resources/spc_underworld.bin
+
+org !SPC_DATA_CREDITS
+incbin ../resources/spc_credits.bin
 
 ; pad rom to 2mb
 org $3FFFFF
