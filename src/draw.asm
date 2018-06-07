@@ -168,5 +168,5 @@ hex_to_dec_a:
     JSL hex_to_dec
     LDA !ram_hex2dec_first_digit : ASL #4
     ORA !ram_hex2dec_second_digit : ASL #4
-    ORA !ram_hex2dec_first_digit
+    ORA !ram_hex2dec_third_digit
     RTL

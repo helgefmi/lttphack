@@ -13,8 +13,6 @@ org $00802F
 
 org !ORG
 init_hook:
-    ; enters AI=16
-    ; need to be at AI=8 before RTL
     LDA #$81 : STA $4200
     JSL init_expand
   %ai8()

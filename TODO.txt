@@ -1,23 +1,20 @@
+Ty Lui <3
+---------
+x Save state for non-SD2SNES (lttphack_SD2SNES.sfc is not changed).
+
+x Presets for Low% and 100%. Go to Features to toggle.
+
+x Remember your preferences in the Features menu upon reset also on non-SD2SNES versions.
+
+x Lanmola cycles are reset on preset load.
+
+
+
 For V10
 -------
 x "Fill everything" controller shortcut
 
-- Fix better transitions:
-  x After beating Agahnim
-  * Check PoD turtle room > helma. Same lag on blunt's theory tas.
-
-- Lua script:
-  x Persist ancilla altitude
-  x Persist wallmaster timer
-  x Fix arc variable for arrghus preset
-  * Hundo/Low
-  * PoD Mimics preset (can put it in prev room inside door).
-  * Automatically add in my manual fixes
-    - Crystal state pokey 2 (1?)
-    - Bombs ice
-    - Ice rod trock
-    - Hook pyramid
-    - Add Ganon preset w/magic
+x Fix transition Agahnim->Pyramid
 
 x Show idle frames as frames instead of s'ff.
 
@@ -29,6 +26,9 @@ x Fix issue with practice hack menu and mirror transition.
 
 x Fix issue where text box is not cleared if you load preset during text.
 
+x Mute the music such that crystal cutscenes (and possibly other things) aren't affected by turning off the music.
+  Ty Myramong for doing all the legwork.
+
 - Feature: Disable text? Like rando.
 
 - Relook mothula collision. Happens in pre IPBJ too! conveyor related / overlord?
@@ -37,6 +37,30 @@ x Fix issue where text box is not cleared if you load preset during text.
 
 - Arbitrary memory watch/poke.
   * At the very least, way to see certain things like Ancilla altitude or Arc variable.
+  * Probably: Make a new menu "Counters" where some are hardcoded, but you can add your own.
+    - Size (1-4 bytes)
+    - Format (decimal, hex, s'ff, m's'ff)
+    - Color?
+    - Maybe add the ability to reorder the counters? Basically go all out on counters.
+  * Probably not: Poke.
+
+- Lua script (make presets reproducable automatically):
+  x Persist ancilla altitude
+  x Persist wallmaster timer
+  x Fix arc variable for arrghus preset
+  x Fix issue where Link's sword becomes black sometimes.
+  * Hundo/Low
+  * PoD Mimics preset (can put it in prev room inside door).
+  * Automatically add in my manual fixes
+    - Crystal state pokey 1
+    - Bombs ice
+    - Ice rod trock
+    - Hook pyramid
+    - Add Ganon preset w/magic
+  * Make it automatically recreate the cm_mainmenu.asm entries too.
+
+- Some method of not having to wait for 8 seconds if you die and aren't on SD2SNES.
+  Perhaps an option "Automatically reload preset upon death" if I can't figure out how to load it during the death animation.
 
 Maybe
 -----
@@ -51,4 +75,4 @@ Maybe
 
 - Show sprite info in general? Editable?
 
-- Macro editor? Record/play movie from preset?
+- Macro editor? Record/play movie from preset? Proof of concept is done (load http://helge.monsternett.no/lttp/ anypct.sfc/srm into your SD2SNES & get that WR)
