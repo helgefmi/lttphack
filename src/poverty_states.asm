@@ -200,4 +200,5 @@ pss_data:
     dl $7E0B08 : dw $0001 ; arc variable
     dl $7E001A : dw $0000 ; frame counter
     dl $7E029E : dw $0009 ; ancillae's altitudes
+    dl $7E0ABD : dw $0000 ; palette swap variable
     db $FF

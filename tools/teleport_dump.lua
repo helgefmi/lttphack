@@ -1146,6 +1146,11 @@ function main()
         memory.registerwrite(addr_with_bank, 0xA, state_changed)
     end)
 
+    -- Palette swap variable
+    call_for_each_bank(0x0ABD, function (addr_with_bank)
+        memory.registerwrite(addr_with_bank, 0x1, state_changed)
+    end)
+
     gui.register(draw_ui)
 
     while true do
