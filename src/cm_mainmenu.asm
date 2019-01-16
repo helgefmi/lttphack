@@ -64,6 +64,7 @@ cm_mainmenu_indices:
     dw cm_main_goto_game_state
     dw cm_main_goto_rng_control
     dw cm_main_goto_ctrl
+    dw cm_main_goto_counters
     dw cm_main_goto_features
     dw #$0000
     %cm_header("LTTPHACK !VERSION")
@@ -525,16 +526,10 @@ cm_main_goto_features:
     %cm_submenu("Features", cm_submenu_features)
 
 cm_submenu_features:
-    dw cm_feature_counter_real
-    dw cm_feature_counter_lag
-    dw cm_feature_counter_idle
-    dw cm_feature_counter_segment
-    dw cm_feature_counter_lag_indicator
+    dw cm_feature_lagometer
     dw cm_feature_input_display
     dw cm_feature_enemy_hp
     dw cm_feature_music
-    dw cm_feature_xy
-    dw cm_feature_subpixels
     dw cm_feature_rerandomize
     dw cm_feature_qw
     dw cm_feature_lit_rooms
@@ -545,19 +540,7 @@ cm_submenu_features:
     dw #$0000
     %cm_header("FEATURES")
 
-cm_feature_counter_real:
-    %cm_toggle("Counter Room", !ram_counters_real)
-
-cm_feature_counter_lag:
-    %cm_toggle("Counter Lag", !ram_counters_lag)
-
-cm_feature_counter_idle:
-    %cm_toggle("Counter Idle", !ram_counters_idle)
-
-cm_feature_counter_segment:
-    %cm_toggle("Counter Segm", !ram_counters_segment)
-
-cm_feature_counter_lag_indicator:
+cm_feature_lagometer:
     %cm_toggle_jsr("Lagometer", !ram_lagometer_toggle)
 
   .toggle
@@ -595,24 +578,6 @@ cm_feature_enemy_hp:
     LDA #$207F : STA !POS_MEM_ENEMY_HEART_GFX
     LDX.w #!POS_ENEMY_HEARTS : STA $7EC700,x : STA $7EC702,x
     RTS
-
-cm_feature_xy:
-    dw !CM_ACTION_CHOICE
-    dl #!ram_xy_toggle
-    db #$24, "Coordinates", #$FF
-    db #$24, "No", #$FF
-    db #$24, "Hexadecimal", #$FF
-    db #$24, "Decimal", #$FF
-    db #$FF
-
-cm_feature_subpixels:
-    dw !CM_ACTION_CHOICE
-    dl #!ram_subpixels_toggle
-    db #$24, "Subpixels", #$FF
-    db #$24, "No", #$FF
-    db #$24, "Subpixels", #$FF
-    db #$24, "Speed", #$FF
-    db #$FF
 
 cm_feature_rerandomize:
     %cm_toggle("Rerandomize", !ram_rerandomize_toggle)
@@ -653,6 +618,52 @@ cm_feature_preset_category:
 
 cm_feature_disable_text:
     %cm_toggle("Disable text", !ram_disable_text)
+
+; }}}
+; COUNTERS {{{
+
+cm_main_goto_counters:
+    %cm_submenu("Counters", cm_submenu_counters)
+
+cm_submenu_counters:
+    dw cm_counter_real
+    dw cm_counter_lag
+    dw cm_counter_idle
+    dw cm_counter_segment
+    dw cm_counter_xy
+    dw cm_counter_subpixels
+    dw #$0000
+    %cm_header("COUNTERS")
+
+cm_counter_real:
+    %cm_toggle("Counter Room", !ram_counters_real)
+
+cm_counter_lag:
+    %cm_toggle("Counter Lag", !ram_counters_lag)
+
+cm_counter_idle:
+    %cm_toggle("Counter Idle", !ram_counters_idle)
+
+cm_counter_segment:
+    %cm_toggle("Counter Segm", !ram_counters_segment)
+
+cm_counter_xy:
+    dw !CM_ACTION_CHOICE
+    dl #!ram_xy_toggle
+    db #$24, "Coordinates", #$FF
+    db #$24, "No", #$FF
+    db #$24, "Hexadecimal", #$FF
+    db #$24, "Decimal", #$FF
+    db #$FF
+
+cm_counter_subpixels:
+    dw !CM_ACTION_CHOICE
+    dl #!ram_subpixels_toggle
+    db #$24, "Subpixels", #$FF
+    db #$24, "No", #$FF
+    db #$24, "Subpixels", #$FF
+    db #$24, "Speed", #$FF
+    db #$FF
 
 ; }}}
 ; GAME STATE {{{
