@@ -52,6 +52,10 @@ preset_load_next_frame:
 
     LDA !ram_preset_type : CMP #$02 : BEQ .dungeon
 
+    ; "Moving floor" flag that needs to be reset to prevent overworld bugs
+    ; when loading preset from Mothula, Conveyor rooms etc.
+    STZ $046C
+
     ; Jumps to Bird Menu module
     LDA.b #$0E : STA $10
     LDA.b #$0A : STA $11
