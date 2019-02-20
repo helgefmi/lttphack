@@ -33,9 +33,10 @@ org $008931
 
 
 ; Overwrites:
-; JSL $00893d
-org $028046
-    JSL music_loadfile
+; JSL $00893D
+; org $028046
+;     JSL music_loadfile
+
 
 org !ORG
 music_loadfile:
@@ -75,121 +76,100 @@ music_load_data:
 
 
 ; Taken from MoN's disassembly. It originated from Bank 0, which I can't JSR to from here.
+;
+; Loads SPC with data
 sound_loadsongbank:
-	; Loads SPC with data
+  PHP
+  %ai16()
 
-	PHP
+    LDY #$0000
+    LDA #$BBAA
 
-	REP #$30
+  .loop
+    ; // Wait for the SPC to initialize to #$AABB
+    CMP $2140 : BNE .loop
 
-	LDY.w #$0000
-	LDA.w #$BBAA
+    %a8()
+    LDA.b #$CC
+    BRA .setup_transfer
 
-BRANCH_INIT_WAIT:
+  .begin_transfer
 
-	; // Wait for the SPC to initialize to #$AABB
-	CMP $2140 : BNE BRANCH_INIT_WAIT
+    LDA [$00], Y
+    INY
+    XBA
+    LDA.b #$00
+    BRA .write_zero_byte
 
-	SEP #$20
+  .continue_transfer
+    XBA
+    LDA [$00], Y ; Load the data byte to transmit.
+    INY
 
-	LDA.b #$CC
+    ; Are we at the end of a bank?
+    CPY.w #$8000 : BNE .not_bank_end ; If not, then branch forward.
 
-	BRA BRANCH_SETUP_TRANSFER
+    LDY.w #$0000 ; Otherwise, increment the bank of the address at [$00]
 
-BRANCH_BEGIN_TRANSFER:
+    INC $02
 
-	LDA [$00], Y
+  .not_bank_end
 
-	INY
+    XBA
 
-	XBA
+  .wait_for_zero
+    ; Wait for $2140 to be #$00 (we're in 8bit mode)
+    CMP $2140 : BNE .wait_for_zero
 
-	LDA.b #$00
+    INC A ; Increment the byte count
 
-	BRA BRANCH_WRITE_ZERO_BYTE
+  .write_zero_byte
+    REP #$20
 
-BRANCH_CONTINUE_TRANSFER:
+    ; Ends up storing the byte count to $2140 and the
+    STA $2140
 
-	XBA
+    SEP #$20 ; data byte to $2141. (Data byte represented as **)
 
-	LDA [$00], Y ; Load the data byte to transmit.
+    DEX : BNE .continue_transfer
 
-	INY
+  .synchronize
+    ; We ran out of bytes to transfer.
+    ; But we still need to synchronize.
+    CMP $2140 : BNE .synchronize
 
-	; Are we at the end of a bank?
-	CPY.w #$8000 : BNE BRANCH_NOT_BANK_END ; If not, then branch forward.
+  .no_zero ; At this point $2140 = #$01
+    ; Add four to the byte count
+    ADC.b #$03 : BEQ .no_zero ; (But Don't let A be zero!)
 
-	LDY.w #$0000 ; Otherwise, increment the bank of the address at [$00]
+  .setup_transfer
+  PHA
+    REP #$20
+    LDA [$00], Y : INY #2 : TAX ; Number of bytes to transmit to the SPC.
+    LDA [$00], Y : INY #2 : STA $2142 ; Location in memory to map the data to.
+    SEP #$20
+    CPX.w #$0001 ; If the number of bytes left to transfer > 0...
 
-	INC $02
+    ; Then the carry bit will be set
+    ; And rotated into the accumulator (A = #$01)
+    ; NOTE ANTITRACK'S DOC IS WRONG ABOUT THIS!!!
+    ; He mistook #$0001 to be #$0100.
+    LDA.b #$00 : ROL A : STA $2141 : ADC.b #$7F
 
-BRANCH_NOT_BANK_END:
+    ; Hopefully no one was confused.
+  PLA
+    STA $2140
 
-	XBA
+  .transfer_init_wait
 
-BRANCH_WAIT_FOR_ZERO:
+    ; Initially, a 0xCC byte will be sent to initialize
+    ; The transfer.
+    ; If A was #$01 earlier...
+    CMP $2140 : BNE .transfer_init_wait : BVS .begin_transfer
 
-	; Wait for $2140 to be #$00 (we're in 8bit mode)
-	CMP $2140 : BNE BRANCH_WAIT_FOR_ZERO
-
-	INC A ; Increment the byte count
-
-BRANCH_WRITE_ZERO_BYTE:
-
-	REP #$20
-
-	; Ends up storing the byte count to $2140 and the
-	STA $2140
-
-	SEP #$20 ; data byte to $2141. (Data byte represented as **)
-
-	DEX : BNE BRANCH_CONTINUE_TRANSFER
-
-BRANCH_SYNCHRONIZE: ; We ran out of bytes to transfer.
-
-	; But we still need to synchronize.
-	CMP $2140 : BNE BRANCH_SYNCHRONIZE
-
-BRANCH_NO_ZERO: ; At this point $2140 = #$01
-
-	; Add four to the byte count
-	ADC.b #$03 : BEQ BRANCH_NO_ZERO ; (But Don't let A be zero!)
-
-BRANCH_SETUP_TRANSFER:
-
-	PHA
-
-	REP #$20
-
-	LDA [$00], Y : INY #2 : TAX ; Number of bytes to transmit to the SPC.
-
-	LDA [$00], Y : INY #2 : STA $2142 ; Location in memory to map the data to.
-
-	SEP #$20
-
-	CPX.w #$0001 ; If the number of bytes left to transfer > 0...
-
-	; Then the carry bit will be set
-	; And rotated into the accumulator (A = #$01)
-	; NOTE ANTITRACK'S DOC IS WRONG ABOUT THIS!!!
-	; He mistook #$0001 to be #$0100.
-	LDA.b #$00 : ROL A : STA $2141 : ADC.b #$7F
-
-	; Hopefully no one was confused.
-	PLA : STA $2140
-
-BRANCH_TRANSFER_INIT_WAIT:
-
-	; Initially, a 0xCC byte will be sent to initialize
-	; The transfer.
-	; If A was #$01 earlier...
-	CMP $2140 : BNE BRANCH_TRANSFER_INIT_WAIT : BVS BRANCH_BEGIN_TRANSFER
-
-	STZ $2140 : STZ $2141 : STZ $2142 : STZ $2143
-
-	PLP
-
-	RTS
+    STZ $2140 : STZ $2141 : STZ $2142 : STZ $2143
+  PLP
+    RTS
 
 spc_data:
     dl $1B8000 : db $00 ; overworld
