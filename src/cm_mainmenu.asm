@@ -680,10 +680,36 @@ cm_submenu_game_state:
     dw cm_game_state_goto_flags_submenu
     dw cm_game_state_progress
     dw cm_game_state_map_indicator
+    dw cm_game_state_crystal_switch
     dw cm_game_state_armed_eg
     dw cm_game_state_eg_strength
     dw #$0000
     %cm_header("GAME STATE")
+
+cm_game_state_crystal_switch:
+    dw !CM_ACTION_CHOICE_JSR
+    dw #.update_tilemap
+    dl #$7EC172
+    db #$24, "Switch Color", #$FF
+    db #$24, "Red", #$FF
+    db #$24, "Blue", #$FF
+    db #$FF
+
+  .update_tilemap
+    CMP !ram_cm_old_crystal_switch : BEQ .skip
+
+    LDA !ram_cm_old_gamemode : CMP #$07 : BNE .done
+    LDA !ram_cm_old_submode : BNE .done
+
+    LDA #$16 : STA !ram_cm_old_submode
+
+    RTS
+
+  .skip
+    LDA #$00 : STA !ram_cm_old_submode
+
+  .done
+    RTS
 
 cm_game_state_armed_eg:
     %cm_toggle_jsr("Armed EG", !ram_cm_armed_eg)

@@ -214,6 +214,9 @@ CM_Return:
 ; ----------
 
 cm_init_item_variables:
+    ; Crystal Switch state
+    LDA $7EC172 : STA !ram_cm_old_crystal_switch
+
     ; Bow
     LDA !ram_item_bow : BEQ .store_bow
     CMP #$03 : BCC .normal_bow

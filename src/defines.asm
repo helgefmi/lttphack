@@ -116,6 +116,8 @@ endif
 !ram_cm_last_frame_input = $7F76C6
 !ram_cm_input_timer = $7F76C8
 
+!ram_cm_old_crystal_switch = $7F76CE
+
 !ram_ss_dma_buffer = $770000
 !sram_pss_offset = $702000
 
