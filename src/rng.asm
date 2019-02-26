@@ -66,6 +66,31 @@ org $05C500
     JSL rng_soldiers
     NOP
 
+; Lanmola
+; 05a3f4 jsl $0dba71
+; 05a3f8 and #$07
+; 05a3fa tay
+; 05a3fb lda $a3d6,y
+; 05a3fe sta $0da0,x
+; 05a401 jsl $0dba71
+; 05a405 and #$07
+; 05a407 tay
+; 05a408 lda $a3de,y
+; 05a40b sta $0db0,x
+org $05A3F4
+    JSL rng_lanmola_1
+
+org $05A401
+    JSL rng_lanmola_2
+
+
+; Conveyor belt
+org $09BD5D
+    ; 09bd5d jsl $0dba71
+    ; 09bd61 and #$03
+    ; 09bd63 ldy $0b08,x
+    JSL rng_conveyor_belt
+
 
 org !ORG
 
@@ -224,7 +249,6 @@ rng_cannonballs:
 ; == Soldiers ==
 
 rng_soldiers:
-    STA !ram_debug
     LDA !ram_soldiers_rng : BEQ .random
     TXA : CLC : ADC !ram_soldiers_rng : DEC
     EOR !lowram_room_gametime
@@ -233,4 +257,34 @@ rng_soldiers:
 
   .random
     TXA : EOR $1A : AND #$1F
+    RTL
+
+; == Lanmola ==
+
+rng_lanmola_1:
+    LDA !ram_lanmola_rng : BEQ .random
+    DEC
+    RTL
+
+  .random
+    JSL !RandomNumGen
+    RTL
+
+rng_lanmola_2:
+    LDA !ram_lanmola_rng : BEQ .random
+    DEC : LSR #3
+    RTL
+
+  .random
+    JSL !RandomNumGen
+    RTL
+
+; == Conveyor Belt ==
+rng_conveyor_belt:
+    LDA !ram_conveyor_rng : BEQ .random
+    DEC
+    RTL
+
+  .random
+    JSL !RandomNumGen
     RTL

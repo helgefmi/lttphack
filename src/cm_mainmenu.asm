@@ -993,6 +993,8 @@ cm_submenu_rng_control:
     dw cm_rng_turtles
     dw cm_rng_cannonballs
     dw cm_rng_soldiers
+    dw cm_rng_lanmola
+    dw cm_rng_conveyor
     dw #$0000
     %cm_header("RNG CONTROL")
 
@@ -1195,4 +1197,88 @@ cm_rng_soldiers:
     db #$24, "1E", #$FF
     db #$24, "1F", #$FF
     db #$FF
+
+
+cm_rng_lanmola:
+    dw !CM_ACTION_CHOICE
+    dl !ram_lanmola_rng
+    db #$24, "Lanmola exit", #$FF
+    db #$24, "Random", #$FF
+    db #$24, "0,0", #$FF
+    db #$24, "0,1", #$FF
+    db #$24, "0,2", #$FF
+    db #$24, "0,3", #$FF
+    db #$24, "0,4", #$FF
+    db #$24, "0,5", #$FF
+    db #$24, "0,6", #$FF
+    db #$24, "0,7", #$FF
+    db #$24, "1,0", #$FF
+    db #$24, "1,1", #$FF
+    db #$24, "1,2", #$FF
+    db #$24, "1,3", #$FF
+    db #$24, "1,4", #$FF
+    db #$24, "1,5", #$FF
+    db #$24, "1,6", #$FF
+    db #$24, "1,7", #$FF
+    db #$24, "2,0", #$FF
+    db #$24, "2,1", #$FF
+    db #$24, "2,2", #$FF
+    db #$24, "2,3", #$FF
+    db #$24, "2,4", #$FF
+    db #$24, "2,5", #$FF
+    db #$24, "2,6", #$FF
+    db #$24, "2,7", #$FF
+    db #$24, "3,0", #$FF
+    db #$24, "3,1", #$FF
+    db #$24, "3,2", #$FF
+    db #$24, "3,3", #$FF
+    db #$24, "3,4", #$FF
+    db #$24, "3,5", #$FF
+    db #$24, "3,6", #$FF
+    db #$24, "3,7", #$FF
+    db #$24, "4,0", #$FF
+    db #$24, "4,1", #$FF
+    db #$24, "4,2", #$FF
+    db #$24, "4,3", #$FF
+    db #$24, "4,4", #$FF
+    db #$24, "4,5", #$FF
+    db #$24, "4,6", #$FF
+    db #$24, "4,7", #$FF
+    db #$24, "5,0", #$FF
+    db #$24, "5,1", #$FF
+    db #$24, "5,2", #$FF
+    db #$24, "5,3", #$FF
+    db #$24, "5,4", #$FF
+    db #$24, "5,5", #$FF
+    db #$24, "5,6", #$FF
+    db #$24, "5,7", #$FF
+    db #$24, "6,0", #$FF
+    db #$24, "6,1", #$FF
+    db #$24, "6,2", #$FF
+    db #$24, "6,3", #$FF
+    db #$24, "6,4", #$FF
+    db #$24, "6,5", #$FF
+    db #$24, "6,6", #$FF
+    db #$24, "6,7", #$FF
+    db #$24, "7,0", #$FF
+    db #$24, "7,1", #$FF
+    db #$24, "7,2", #$FF
+    db #$24, "7,3", #$FF
+    db #$24, "7,4", #$FF
+    db #$24, "7,5", #$FF
+    db #$24, "7,6", #$FF
+    db #$24, "7,7", #$FF
+    db #$FF
+
+cm_rng_conveyor:
+    dw !CM_ACTION_CHOICE
+    dl !ram_conveyor_rng
+    db #$24, "Conveyor Belt", #$FF
+    db #$24, "Random", #$FF
+    db #$24, "right", #$FF
+    db #$24, "left", #$FF
+    db #$24, "down", #$FF
+    db #$24, "up", #$FF
+    db #$FF
+
 ; }}}
