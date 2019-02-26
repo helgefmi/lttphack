@@ -186,6 +186,7 @@ endif
 !ram_preset_type = $04E2
 !ram_preset_destination = $7F7900
 !ram_preset_end_of_sram_state = $7F7902
+!ram_preset_spotlight_timer = $7F7720
 
 ;-------------------------
 ; From ROM

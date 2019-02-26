@@ -47,6 +47,27 @@ load_entrance_local:
 warnpc $02C270
 
 
+; Module_Dungeon -> Spotlight_Open
+org $02922F
+    JSL preset_spotlight_open_hook
+    NOP : NOP
+    ;02922f jsl $00f290
+    ;029233 inc $b0
+    ;029235 rts
+
+; Module_CloseSpotlight
+org $02987D
+    ;02987d jsl $068328
+    ;029881 lda $11
+    ;029883 asl a
+    ;029884 tax
+    JSL preset_did_we_load_preset
+    BCC +
+    RTL
+  + NOP
+
+
+
 org !ORG
 preset_load_next_frame:
   %ai8()
@@ -77,6 +98,8 @@ preset_load_next_frame:
     RTL
 
   .dungeon
+    LDA #$08 : STA !ram_preset_spotlight_timer
+
     ; Makes PreDungeon not use a smaller "entrance only" table for data.
     STZ $04AA
     ; We didn't die
@@ -109,7 +132,7 @@ preset_deinit_current_state:
     LDA !ram_cm_old_submode : CMP.b #$02 : BNE .not_message_module
 
     JSR preset_deinit_dialog_mode
-    
+
   .not_message_module
     RTS
 
@@ -151,7 +174,7 @@ preset_load_overworld:
   PHB : PHK : PLB
     ; Set link to be in the Overworld
     STZ $1B
-    
+
     ; sram or rom
     LDA !lowram_is_poverty_load : BEQ .from_rom
     LDA #$70 : STA $02
@@ -221,7 +244,7 @@ preset_load_overworld:
 
     ; Makes it possible to spawn in the middle of a field/not inside doorway?
     STZ $0696
-    
+
     ; Clears RAM in case it's needed (used for when lifting big rocks?).
     STZ $0698
 
@@ -232,7 +255,7 @@ preset_load_overworld:
 preset_load_dungeon:
   ; Can leave with anything.
   PHB : PHB : PLB
-  
+
     ; sram or rom
     LDA !lowram_is_poverty_load : BEQ .from_rom
     LDA #$70 : STA $02
@@ -242,7 +265,7 @@ preset_load_dungeon:
     LDA !ram_preset_category : TAX
     LDA.l cm_preset_data_banks,x : STA $02
   +
-  
+
   %ai16()
     LDA !ram_preset_destination : STA $00
     LDY #$0000
@@ -327,7 +350,7 @@ preset_load_dungeon:
 
     ; Set Pseudo bg level
     LDA [$00],y : %a16() : INY : %a8() : AND.b #$0F : STA $0476
-    
+
   PHY
 
     JSR preset_reset_state_after_loading
@@ -546,6 +569,43 @@ preset_autoload_preset:
     LDA #$01
     STA $11
     RTL
+
+
+preset_did_we_load_preset:
+    LDA !ram_preset_spotlight_timer : BEQ .not_preset
+    DEC : STA !ram_preset_spotlight_timer : BEQ .done
+    STA $2100 : STA $13
+    RTL
+
+  .done
+    LDA $010C : STA $10
+    STZ $11
+    LDA #$80 : STA $2100 : STA $13
+    LDA #$08 : STA !ram_preset_spotlight_timer
+    SEC : RTL
+
+  .not_preset
+    LDA $11 : ASL : TAX
+    CLC : RTL
+
+
+preset_spotlight_open_hook:
+    LDA !ram_preset_spotlight_timer : BEQ .not_preset
+    DEC : STA !ram_preset_spotlight_timer : BEQ .done
+    LDA #$0F : SEC : SBC !ram_preset_spotlight_timer : STA $2100 : STA $13
+    RTL
+
+  .done
+    LDA $010C : STA $10
+    STZ $11
+    LDA #$0F : STA $2100 : STA $13
+    RTL
+
+  .not_preset
+    JSL $00F290
+    INC $B0
+    RTL
+
 
 preset_start_ptrs:
     dw sram_nmg_esc_bed
