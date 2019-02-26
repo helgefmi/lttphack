@@ -91,6 +91,7 @@ endif
 
 !ram_ctrl_prachack_menu = !offset+30
 !ram_ctrl_load_last_preset = !offset+32
+!ram_ctrl_replay_last_movie = !offset+78
 !ram_ctrl_save_state = !offset+34
 !ram_ctrl_load_state = !offset+36
 !ram_ctrl_toggle_oob = !offset+38
@@ -194,6 +195,20 @@ endif
 !ram_preset_destination = $7F7900
 !ram_preset_end_of_sram_state = $7F7902
 !ram_preset_spotlight_timer = $7F7720
+
+;-------------------------
+; MOVIE
+;-------------------------
+!ram_movie_mode = $7F8000
+!ram_movie_index = $7F8002
+!ram_movie_timer = $7F8004
+!ram_prev_ctrl = $7F8006
+!ram_movie_replay_started = $7F8008
+!ram_movie_framecounter = $7F800A
+!ram_movie = $7F8010
+!ram_movie_rng_index = $7FA000
+!ram_movie_rng = $7FA002
+
 
 ;-------------------------
 ; From ROM

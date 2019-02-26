@@ -2,7 +2,7 @@
 ;
 ; Code that is run once after the game has been powered on.
 
-!SRAM_VERSION = $0012
+!SRAM_VERSION = $0016
 
 ; Overrides the following:
 ; LDA.b #$81 : STA $4200
@@ -66,6 +66,10 @@ init_initialize:
     STA !ram_disable_text
     STA !ram_sanctuary_heart
     STA !ram_autoload_preset
+    STA !ram_movie_mode
+    STA !ram_movie_index
+    STA !ram_movie_timer
+    STA !ram_prev_ctrl
 
     ; Start + R
     LDA #$1010 : STA !ram_ctrl_prachack_menu
@@ -75,6 +79,9 @@ init_initialize:
     LDA #$1060 : STA !ram_ctrl_save_state
     ; Y + L + Select
     LDA #$2060 : STA !ram_ctrl_load_state
+    ; R + L + Select
+    LDA #$3020 : STA !ram_ctrl_replay_last_movie
+
     ; Unset
     LDA #$0000
     STA !ram_ctrl_toggle_oob
