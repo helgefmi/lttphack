@@ -578,6 +578,12 @@ preset_did_we_load_preset:
     RTL
 
   .done
+
+    LDA $0132 : CMP.b #$FF : BEQ .muted
+    STA $012C
+
+ .muted
+
     LDA $010C : STA $10
     STZ $11
     LDA #$80 : STA $2100 : STA $13
@@ -596,6 +602,11 @@ preset_spotlight_open_hook:
     RTL
 
   .done
+    LDA $0132 : CMP.b #$FF : BEQ .muted
+    STA $012C
+
+ .muted
+
     LDA $010C : STA $10
     STZ $11
     LDA #$0F : STA $2100 : STA $13
