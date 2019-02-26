@@ -63,7 +63,6 @@ init_initialize:
     STA !ram_secondary_counter_type
     STA !ram_subpixels_toggle
     STA !ram_xy_toggle
-    STA !ram_disable_text
     STA !ram_sanctuary_heart
     STA !ram_autoload_preset
     STA !ram_movie_mode

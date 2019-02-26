@@ -85,7 +85,6 @@ endif
 !ram_feature_music = !offset+28
 !ram_secondary_counter_type = !offset+46
 !ram_lagometer_toggle = !offset+56
-!ram_disable_text = !offset+72
 !ram_sanctuary_heart = !offset+74
 !ram_autoload_preset = !offset+76
 
