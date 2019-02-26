@@ -1,188 +1,714 @@
 local last_save_state = {} -- holds all state that has been changed up untill last save
 local current_state = {} -- state changes since last save (will be emptied for each change)
-local sram_output = ""
-local preset_output = ""
+local sram_output = {
+    ["nmg"] = "",
+    ["low"] = "",
+    ["hundo"] = "",
+}
+local preset_output = {
+    ["nmg"] = "",
+    ["low"] = "",
+    ["hundo"] = "",
+}
 local num_states = 0
 
-local movie_steps = { -- {{{
+-- orderedPairs {{{
+
+function deepcopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[deepcopy(orig_key)] = deepcopy(orig_value)
+        end
+        setmetatable(copy, deepcopy(getmetatable(orig)))
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+
+
+function __genOrderedIndex( t )
+    local orderedIndex = {}
+    for key in pairs(t) do
+        table.insert( orderedIndex, key )
+    end
+    table.sort( orderedIndex )
+    return orderedIndex
+end
+
+function orderedNext(t, state)
+    -- Equivalent of the next function, but returns the keys in the alphabetic
+    -- order. We use a temporary ordered key table that is stored in the
+    -- table being iterated.
+
+    local key = nil
+    --print("orderedNext: state = "..tostring(state) )
+    if state == nil then
+        -- the first time, generate the index
+        t.__orderedIndex = __genOrderedIndex( t )
+        key = t.__orderedIndex[1]
+    else
+        -- fetch the next value
+        for i = 1,table.getn(t.__orderedIndex) do
+            if t.__orderedIndex[i] == state then
+                key = t.__orderedIndex[i+1]
+            end
+        end
+    end
+
+    if key then
+        return key, t[key]
+    end
+
+    -- no more value to return, cleanup
+    t.__orderedIndex = nil
+    return
+end
+
+function orderedPairs(t)
+    -- Equivalent of the pairs() function on tables. Allows to iterate
+    -- in order
+    return orderedNext, t, nil
+end
+-- }}}
+
+local SEGMENTS = { -- {{{
+    { ["name"] = "Hyrule Castle", ["title"] = "HYRULE CASTLE", ["slug"] = "escape", ["steps"] = {} },
+    { ["name"] = "Eastern", ["title"] = "EASTERN", ["slug"] = "eastern", ["steps"] = {} },
+    { ["name"] = "Desert", ["title"] = "DESERT", ["slug"] = "desert", ["steps"] = {} },
+    { ["name"] = "Hera", ["title"] = "HERA", ["slug"] = "hera", ["steps"] = {} },
+    { ["name"] = "Agahnim's Tower", ["title"] = "AGAHNIMS TOWER", ["slug"] = "atower", ["steps"] = {} },
+    { ["name"] = "Palace of Darkness", ["title"] = "PALACE OF DARKNESS", ["slug"] = "pod", ["steps"] = {} },
+    { ["name"] = "Thieves' Town", ["title"] = "THIEVES TOWN", ["slug"] = "thieves", ["steps"] = {} },
+    { ["name"] = "Skull Woods", ["title"] = "SKULL WOODS", ["slug"] = "skull", ["steps"] = {} },
+    { ["name"] = "Ice Palace", ["title"] = "ICE PALACE", ["slug"] = "ice", ["steps"] = {} },
+    { ["name"] = "Swamp Palace", ["title"] = "SWAMP PALACE", ["slug"] = "swamp", ["steps"] = {} },
+    { ["name"] = "Misery Mire", ["title"] = "MISERY MIRE", ["slug"] = "mire", ["steps"] = {} },
+    { ["name"] = "Turtle Rock", ["title"] = "TURTLE ROCK", ["slug"] = "trock", ["steps"] = {} },
+    { ["name"] = "Ganon's Tower", ["title"] = "GANONS TOWER", ["slug"] = "gtower", ["steps"] = {} },
+    { ["name"] = "Ganon", ["title"] = "GANON", ["slug"] = "ganon", ["steps"] = {} },
+    { ["name"] = "Bosses", ["title"] = "BOSSES", ["slug"] = "boss", ["boss"] = true, ["steps"] = {} },
+} -- }}}
+
+local STEPS = { -- {{{
     -- Escape
-    [1900] = "esc_bed",
-    [5770] = "esc_courtyard",
-    [6330] = "esc_entrance",
-    [7646] = "esc_1st_keyguard",
-    [8966] = "esc_big_room",
-    [9756] = "esc_2nd_keyguard",
-    [11092] = "esc_ball_n_chains",
-    [15093] = "esc_keyguard_revisited",
-    [17288] = "esc_secret_passage",
-    [18338] = "esc_snake_avoidance_room",
-    [20284] = "esc_keyrat",
-    [21335] = "esc_last_two_screens",
+    [1900] = { ["segment"] = 1, ["name"] = "Link's Bed", ["slug"] = "esc_bed" },
+    [5770] = { ["segment"] = 1, ["name"] = "Courtyard", ["slug"] = "esc_courtyard" },
+    [6330] = { ["segment"] = 1, ["name"] = "Entrance", ["slug"] = "esc_entrance" },
+    [7646] = { ["segment"] = 1, ["name"] = "1st Key Guard", ["slug"] = "esc_1st_keyguard" },
+    [8966] = { ["segment"] = 1, ["name"] = "Stealth Room", ["slug"] = "esc_stealth_room" },
+    [9756] = { ["segment"] = 1, ["name"] = "2nd Key Guard", ["slug"] = "esc_2nd_keyguard" },
+    [11092] = { ["segment"] = 1, ["name"] = "Ball'n Chains", ["slug"] = "esc_ball_n_chains" },
+    [12974] = { ["segment"] = 1, ["name"] = "Backtracking", ["slug"] = "esc_backtracking" },
+    [15093] = { ["segment"] = 1, ["name"] = "Key Guard Revisited", ["slug"] = "esc_keyguard_revisited" },
+    [17288] = { ["segment"] = 1, ["name"] = "Throne Room", ["slug"] = "esc_throne_room" },
+    [18338] = { ["segment"] = 1, ["name"] = "Snake Avoidance Room", ["slug"] = "esc_snake_avoidance_room" },
+    [19500] = { ["segment"] = 1, ["name"] = "Sewer Rooms", ["slug"] = "esc_water_rooms" },
+    [20284] = { ["segment"] = 1, ["name"] = "Key Rat", ["slug"] = "esc_keyrat" },
+    [21335] = { ["segment"] = 1, ["name"] = "Last Two Screens", ["slug"] = "esc_last_two_screens" },
+
     -- Eastern
-    [22184] = "east_before_cutscene",
-    [23743] = "east_after_cutscene",
-    [25707] = "east_octoroc",
-    [26541] = "east_outside_palace",
-    [28086] = "east_entrance",
-    [29962] = "east_stalfos_room",
-    [32159] = "east_dark_key_room",
-    [33492] = "east_big_key_dmg_boost",
-    [34604] = "east_big_chest_room",
-    [35516] = "east_gwg",
-    [36040] = "east_pot_room",
-    [37133] = "east_zeldagamer_room",
-    [37945] = "east_armos",
+    [22184] = { ["segment"] = 2, ["name"] = "Before Cutscene", ["slug"] = "east_before_cutscene" },
+    [23743] = { ["segment"] = 2, ["name"] = "After Cutscene", ["slug"] = "east_after_cutscene" },
+    [25707] = { ["segment"] = 2, ["name"] = "Octoroc OW", ["slug"] = "east_octoroc" },
+    [26541] = { ["segment"] = 2, ["name"] = "EP Overworld", ["slug"] = "east_outside_palace" },
+    [28086] = { ["segment"] = 2, ["name"] = "Entrance", ["slug"] = "east_entrance" },
+    [29962] = { ["segment"] = 2, ["name"] = "Stalfos Room", ["slug"] = "east_stalfos_room" },
+    [30940] = { ["segment"] = 2, ["name"] = "Big Chest Room 1", ["slug"] = "east_big_chest_room_1" },
+    [32159] = { ["segment"] = 2, ["name"] = "Dark Key Room", ["slug"] = "east_dark_key_room" },
+    [33492] = { ["segment"] = 2, ["name"] = "Big Key DMG Boost", ["slug"] = "east_big_key_dmg_boost" },
+    [34604] = { ["segment"] = 2, ["name"] = "Big Chest Room 2", ["slug"] = "east_big_chest_room_2" },
+    [35516] = { ["segment"] = 2, ["name"] = "Gifted With Greenies", ["slug"] = "east_gwg" },
+    [36040] = { ["segment"] = 2, ["name"] = "Pot Room", ["slug"] = "east_pot_room" },
+    [37133] = { ["segment"] = 2, ["name"] = "Zeldagamer Room", ["slug"] = "east_zeldagamer_room" },
+    [37945] = { ["segment"] = 2, ["name"] = "Armos", ["slug"] = "east_armos", ["boss"] = true },
+
     -- Desert
-    [39993] = "desert_outside_eastern_palace",
-    [41862] = "desert_ep_spinspeed",
-    [44397] = "desert_unholy_spinspeed",
-    [46968] = "desert_water_dash",
-    [49591] = "desert_desert_entrance",
-    [50540] = "desert_keybonk",
-    [51794] = "desert_pre_cannonball_room",
-    [53803] = "desert_pot_room",
-    [55451] = "desert_desert2_spinspeed",
-    [56862] = "desert_popo_genocide_room",
-    [58004] = "desert_torches",
-    [58995] = "desert_lanmolas",
+    [39993] = { ["segment"] = 3, ["name"] = "Outside Eastern Palace", ["slug"] = "desert_outside_eastern_palace" },
+    [41862] = { ["segment"] = 3, ["name"] = "Eastern Palace Spinspeed", ["slug"] = "desert_ep_spinspeed" },
+    [42835] = { ["segment"] = 3, ["name"] = "Bridge Screen", ["slug"] = "desert_bridge_screen" },
+    [44397] = { ["segment"] = 3, ["name"] = "Unholy Spinspeed", ["slug"] = "desert_unholy_spinspeed" },
+    [46968] = { ["segment"] = 3, ["name"] = "Water Dash", ["slug"] = "desert_water_dash" },
+    [48170] = { ["segment"] = 3, ["name"] = "Outside Desert Palace", ["slug"] = "desert_outside_desert_palace" },
+    [49591] = { ["segment"] = 3, ["name"] = "Entrance", ["slug"] = "desert_desert_entrance" },
+    [50540] = { ["segment"] = 3, ["name"] = "Key Bonk", ["slug"] = "desert_keybonk" },
+    [51794] = { ["segment"] = 3, ["name"] = "Pre Cannonball Room", ["slug"] = "desert_pre_cannonball_room" },
+    [53803] = { ["segment"] = 3, ["name"] = "Pot Room", ["slug"] = "desert_pot_room" },
+    [55451] = { ["segment"] = 3, ["name"] = "Desert 2 Spinspeed", ["slug"] = "desert_desert2_spinspeed" },
+    [56862] = { ["segment"] = 3, ["name"] = "Popo Genocide", ["slug"] = "desert_popo_genocide_room" },
+    [58004] = { ["segment"] = 3, ["name"] = "Torches", ["slug"] = "desert_torches" },
+    [58995] = { ["segment"] = 3, ["name"] = "Lanmolas", ["slug"] = "desert_lanmolas", ["boss"] = true },
+
     -- Hera
-    [61408] = "hera_outside_desert_palace",
-    [62918] = "hera_fake_flippers",
-    [66550] = "hera_dm",
-    [67499] = "hera_after_mirror",
-    [69321] = "hera_entrance",
-    [70568] = "hera_tile_room",
-    [73384] = "hera_torches",
-    [74293] = "hera_beetles",
-    [75505] = "hera_petting_zoo",
-    [77291] = "hera_moldorm",
+    [61408] = { ["segment"] = 4, ["name"] = "Outside Desert Palace", ["slug"] = "hera_outside_desert_palace" },
+    [62918] = { ["segment"] = 4, ["name"] = "Fake Flippers", ["slug"] = "hera_fake_flippers" },
+    [66550] = { ["segment"] = 4, ["name"] = "Death Mountain", ["slug"] = "hera_dm" },
+    [67499] = { ["segment"] = 4, ["name"] = "After Mirror", ["slug"] = "hera_after_mirror" },
+    [69089] = { ["segment"] = 4, ["name"] = "Quickhop", ["slug"] = "hera_quickhop" },
+    [69321] = { ["segment"] = 4, ["name"] = "Entrance", ["slug"] = "hera_entrance" },
+    [70568] = { ["segment"] = 4, ["name"] = "Tile room", ["slug"] = "hera_tile_room" },
+    [73384] = { ["segment"] = 4, ["name"] = "Torches", ["slug"] = "hera_torches" },
+    [74293] = { ["segment"] = 4, ["name"] = "Beetles", ["slug"] = "hera_beetles" },
+    [75505] = { ["segment"] = 4, ["name"] = "Petting Zoo", ["slug"] = "hera_petting_zoo" },
+    [77291] = { ["segment"] = 4, ["name"] = "Moldorm", ["slug"] = "hera_moldorm", ["boss"] = true },
+
     -- Agatower
-    [80099] = "aga_outside_hera",
-    [81427] = "aga_first_rupee_tree",
-    [82373] = "aga_lost_woods",
-    [87154] = "aga_after_lost_woods",
-    [89759] = "aga_tower_entrance",
-    [91220] = "aga_dark_room_of_despair",
-    [92847] = "aga_dark_room_of_melancholy",
-    [93632] = "aga_red_spears",
-    [94433] = "aga_circle_of_pot",
-    [97618] = "aga_agahnim",
+    [80099] = { ["segment"] = 5, ["name"] = "Outside Hera", ["slug"] = "aga_outside_hera" },
+    [81427] = { ["segment"] = 5, ["name"] = "First Rupee Tree", ["slug"] = "aga_first_rupee_tree" },
+    [82373] = { ["segment"] = 5, ["name"] = "Lost Woods", ["slug"] = "aga_lost_woods" },
+    [87154] = { ["segment"] = 5, ["name"] = "After Lost Woods", ["slug"] = "aga_after_lost_woods" },
+    [88111] = { ["segment"] = 5, ["name"] = "Castle Screen", ["slug"] = "aga_castle_screen" },
+    [89759] = { ["segment"] = 5, ["name"] = "Entrance", ["slug"] = "aga_entrance" },
+    [90443] = { ["segment"] = 5, ["name"] = "Fairy Skip", ["slug"] = "aga_fairy_skip" },
+    [91220] = { ["segment"] = 5, ["name"] = "Dark Room of Despair", ["slug"] = "aga_dark_room_of_despair" },
+    [92847] = { ["segment"] = 5, ["name"] = "Dark Room of Melancholy", ["slug"] = "aga_dark_room_of_melancholy" },
+    [93632] = { ["segment"] = 5, ["name"] = "Spear Guards", ["slug"] = "aga_spear_guards" },
+    [94433] = { ["segment"] = 5, ["name"] = "Circle of Pots", ["slug"] = "aga_circle_of_pots" },
+    [95445] = { ["segment"] = 5, ["name"] = "Pit Room", ["slug"] = "aga_pit_room" },
+    [97618] = { ["segment"] = 5, ["name"] = "Agahnim", ["slug"] = "aga_agahnim", ["boss"] = true },
+
     -- PoD
-    [102972] = "pod_pyramid",
-    [104154] = "pod_pod_overworld",
-    [106570] = "pod_entrance",
-    [108249] = "pod_main_hub",
-    [112313] = "pod_hammeryump",
-    [114430] = "pod_before_sexy_statue",
-    [118081] = "pod_turtle_room",
-    [119315] = "pod_helma",
-    -- Theieves
-    [124636] = "thieves_outside_pod",
-    [126247] = "thieves_ow_hammerdash",
-    [127638] = "thieves_getting_flute",
-    [130089] = "thieves_usain_bolt",
-    [132234] = "thieves_after_activating_flute",
-    [134031] = "thieves_darkworld",
-    [134858] = "thieves_entrance",
-    [136482] = "thieves_after_big_key",
-    [138006] = "thieves_fire_room",
-    [138334] = "thieves_hellway",
-    [139796] = "thieves_bombable_floor",
-    [142429] = "thieves_prison",
-    [143816] = "thieves_after_gloves",
-    [144376] = "thieves_pot_hammerdash",
-    [145037] = "thieves_blind",
+    [102972] = { ["segment"] = 6, ["name"] = "Pyramid", ["slug"] = "pod_pyramid" },
+    [104154] = { ["segment"] = 6, ["name"] = "Palace Overworld Screen", ["slug"] = "pod_pod_overworld" },
+    [106570] = { ["segment"] = 6, ["name"] = "Entrance", ["slug"] = "pod_entrance" },
+    [108249] = { ["segment"] = 6, ["name"] = "Main Hub (small key)", ["slug"] = "pod_main_hub_small_key" },
+    [109416] = { ["segment"] = 6, ["name"] = "Main Hub (bk)", ["slug"] = "pod_main_hub_bk" },
+    [111320] = { ["segment"] = 6, ["name"] = "Main Hub (hammeryump)", ["slug"] = "pod_main_hub_hammeryump" },
+    [112313] = { ["segment"] = 6, ["name"] = "Hammeryump", ["slug"] = "pod_hammeryump" },
+    [114430] = { ["segment"] = 6, ["name"] = "Pre Sexy Statue", ["slug"] = "pod_before_sexy_statue" },
+    [114826] = { ["segment"] = 6, ["name"] = "Sexy Statue Room", ["slug"] = "pod_sexy_statue_room" },
+    [115640] = { ["segment"] = 6, ["name"] = "Mimics", ["slug"] = "pod_mimics" },
+    [115932] = { ["segment"] = 6, ["name"] = "Statue", ["slug"] = "pod_statue" },
+    [117412] = { ["segment"] = 6, ["name"] = "Basement", ["slug"] = "pod_basement" },
+    [118081] = { ["segment"] = 6, ["name"] = "Turtle Room", ["slug"] = "pod_turtle_room" },
+    [119315] = { ["segment"] = 6, ["name"] = "Helma", ["slug"] = "pod_helma", ["boss"] = true },
+
+    -- Thieves
+    [124636] = { ["segment"] = 7, ["name"] = "Outside PoD", ["slug"] = "thieves_outside_pod" },
+    [126247] = { ["segment"] = 7, ["name"] = "Overworld Hammerdash", ["slug"] = "thieves_ow_hammerdash" },
+    [127638] = { ["segment"] = 7, ["name"] = "Grove", ["slug"] = "thieves_grove" },
+    [130089] = { ["segment"] = 7, ["name"] = "Usain Bolt", ["slug"] = "thieves_usain_bolt" },
+    [132234] = { ["segment"] = 7, ["name"] = "After Activating Flute", ["slug"] = "thieves_after_activating_flute" },
+    [134031] = { ["segment"] = 7, ["name"] = "After Warp", ["slug"] = "thieves_darkworld" },
+    [134858] = { ["segment"] = 7, ["name"] = "Entrance", ["slug"] = "thieves_entrance" },
+    [136482] = { ["segment"] = 7, ["name"] = "After Big Key", ["slug"] = "thieves_after_big_key" },
+    [137321] = { ["segment"] = 7, ["name"] = "Stalfos Hallway", ["slug"] = "thieves_blind_hallway" },
+    [138006] = { ["segment"] = 7, ["name"] = "Conveyor Gibos", ["slug"] = "thieves_conveyor_gibos" },
+    [138334] = { ["segment"] = 7, ["name"] = "Hellway", ["slug"] = "thieves_hellway" },
+    [139796] = { ["segment"] = 7, ["name"] = "Bombable Floor", ["slug"] = "thieves_bombable_floor" },
+    [140607] = { ["segment"] = 7, ["name"] = "Backtracking", ["slug"] = "thieves_backtracking_1" },
+    [141638] = { ["segment"] = 7, ["name"] = "Basement", ["slug"] = "thieves_basement" },
+    [142429] = { ["segment"] = 7, ["name"] = "Prison", ["slug"] = "thieves_prison" },
+    [143816] = { ["segment"] = 7, ["name"] = "Gloves", ["slug"] = "thieves_after_gloves" },
+    [143818] = { ["segment"] = 7, ["name"] = "Backtracking", ["slug"] = "thieves_backtracking_2" },
+    [144376] = { ["segment"] = 7, ["name"] = "Pot Hammerdash", ["slug"] = "thieves_pot_hammerdash" },
+    [145037] = { ["segment"] = 7, ["name"] = "Blind", ["slug"] = "thieves_blind", ["boss"] = true },
+
     -- Skull Woods
-    [149670] = "sw_outside_thieves",
-    [150808] = "sw_cursed_dwarf",
-    [155126] = "sw_got_tempered",
-    [156691] = "sw_dash_to_sw",
-    [157754] = "sw_mummy_room",
-    [159673] = "sw_bomb_jump",
-    [161534] = "sw_key_pot",
-    [162431] = "sw_skull_entrance",
-    [163037] = "sw_mummy_hellway",
-    [163757] = "sw_mummy_key",
-    [164126] = "sw_mothula",
+    [149670] = { ["segment"] = 8, ["name"] = "Outside Thieves", ["slug"] = "sw_outside_thieves" },
+    [150808] = { ["segment"] = 8, ["name"] = "Cursed Dwarf", ["slug"] = "sw_cursed_dwarf" },
+    [151908] = { ["segment"] = 8, ["name"] = "Getting Tempered", ["slug"] = "sw_getting_tempered" },
+    [155429] = { ["segment"] = 8, ["name"] = "Fencedash", ["slug"] = "sw_fence_dash" },
+    [156691] = { ["segment"] = 8, ["name"] = "Dash to Skull Woods", ["slug"] = "sw_dash_to_sw" },
+    [157754] = { ["segment"] = 8, ["name"] = "Mummy Room", ["slug"] = "sw_mummy_room" },
+    [159673] = { ["segment"] = 8, ["name"] = "Bomb Jump", ["slug"] = "sw_bomb_jump" },
+    [161534] = { ["segment"] = 8, ["name"] = "Key Pot", ["slug"] = "sw_key_pot" },
+    [162431] = { ["segment"] = 8, ["name"] = "Skull Entrance", ["slug"] = "sw_skull_entrance" },
+    [163037] = { ["segment"] = 8, ["name"] = "Mummy Hellway", ["slug"] = "sw_mummy_hellway" },
+    [163757] = { ["segment"] = 8, ["name"] = "Mummy Key", ["slug"] = "sw_mummy_key" },
+    [164126] = { ["segment"] = 8, ["name"] = "Mothula", ["slug"] = "sw_mothula", ["boss"] = true },
+
     -- Ice
-    [168480] = "ice_outside_skull",
-    [169346] = "ice_bridge_warp",
-    [170869] = "ice_lottery",
-    [171950] = "ice_medallion",
-    [173468] = "ice_zoras_domain",
-    [177042] = "ice_tiny_warp",
-    [178067] = "ice_ice_entrance",
-    [178435] = "ice_ice2",
-    [179938] = "ice_penguin_switch_room",
-    [180584] = "ice_bombable_floor",
-    [181658] = "ice_conveyor_room",
-    [182094] = "ice_ipbj",
-    [183013] = "ice_penguin_room",
-    [183742] = "ice_lonely_firebar",
-    [185763] = "ice_kholdstare",
+    [168480] = { ["segment"] = 9, ["name"] = "Outside Skull", ["slug"] = "ice_outside_skull" },
+    [169346] = { ["segment"] = 9, ["name"] = "Bridge Warp", ["slug"] = "ice_bridge_warp" },
+    [170869] = { ["segment"] = 9, ["name"] = "Lottery", ["slug"] = "ice_lottery" },
+    [171950] = { ["segment"] = 9, ["name"] = "Medallion", ["slug"] = "ice_medallion" },
+    [173468] = { ["segment"] = 9, ["name"] = "Zoras Domain", ["slug"] = "ice_zoras_domain" },
+    [177042] = { ["segment"] = 9, ["name"] = "Tiny Warp Dik", ["slug"] = "ice_tiny_warp" },
+    [178067] = { ["segment"] = 9, ["name"] = "Entrance", ["slug"] = "ice_ice_entrance" },
+    [178435] = { ["segment"] = 9, ["name"] = "Ice 2", ["slug"] = "ice_ice2" },
+    [179938] = { ["segment"] = 9, ["name"] = "Penguin Switch Room", ["slug"] = "ice_penguin_switch_room" },
+    [180584] = { ["segment"] = 9, ["name"] = "Bombable Floor", ["slug"] = "ice_bombable_floor" },
+    [181658] = { ["segment"] = 9, ["name"] = "Conveyor Room", ["slug"] = "ice_conveyor_room" },
+    [182094] = { ["segment"] = 9, ["name"] = "IPBJ", ["slug"] = "ice_ipbj" },
+    [183013] = { ["segment"] = 9, ["name"] = "Penguin Lineup Room", ["slug"] = "ice_penguin_room" },
+    [183742] = { ["segment"] = 9, ["name"] = "Lonely Firebar", ["slug"] = "ice_lonely_firebar" },
+    [184667] = { ["segment"] = 9, ["name"] = "Last Two Screens", ["slug"] = "ice_last_two_screens" },
+    [185763] = { ["segment"] = 9, ["name"] = "Kholdstare", ["slug"] = "ice_kholdstare", ["boss"] = true },
+
     -- Swamp
-    [190374] = "swamp_outside_ice",
-    [191072] = "swamp_links_house",
-    [192329] = "swamp_swamp_overworld",
-    [192938] = "swamp_antifairy_room",
-    [194319] = "swamp_entrance",
-    [195969] = "swamp_first_key",
-    [197600] = "swamp_main_hub",
-    [199562] = "swamp_switch_room",
-    [202105] = "swamp_sociable_firebar",
-    [203444] = "swamp_backtracking",
-    [204569] = "swamp_hook_shot",
-    [205779] = "swamp_hookdash",
-    [207934] = "swamp_restock",
-    [209302] = "swamp_arrghus",
+    [190374] = { ["segment"] = 10, ["name"] = "Outside Ice", ["slug"] = "swamp_outside_ice" },
+    [191072] = { ["segment"] = 10, ["name"] = "Link's House", ["slug"] = "swamp_links_house" },
+    [192329] = { ["segment"] = 10, ["name"] = "Swamp Overworld", ["slug"] = "swamp_swamp_overworld" },
+    [192938] = { ["segment"] = 10, ["name"] = "Antifairy Room", ["slug"] = "swamp_antifairy_room" },
+    [194319] = { ["segment"] = 10, ["name"] = "Entrance", ["slug"] = "swamp_entrance" },
+    [194942] = { ["segment"] = 10, ["name"] = "First Key Pot", ["slug"] = "swamp_first_key_pot" },
+    [195969] = { ["segment"] = 10, ["name"] = "Tiny Hallway Key", ["slug"] = "swamp_hallway_key_1" },
+    [196498] = { ["segment"] = 10, ["name"] = "Water Lever 1", ["slug"] = "swamp_water_lever_1" },
+    [197600] = { ["segment"] = 10, ["name"] = "Main Hub", ["slug"] = "swamp_main_hub" },
+    [199562] = { ["segment"] = 10, ["name"] = "Water Lever 2", ["slug"] = "swamp_water_lever_2" },
+    [202105] = { ["segment"] = 10, ["name"] = "Sociable Firebar", ["slug"] = "swamp_sociable_firebar" },
+    [203444] = { ["segment"] = 10, ["name"] = "Backtracking", ["slug"] = "swamp_backtracking" },
+    [204569] = { ["segment"] = 10, ["name"] = "Hookshot", ["slug"] = "swamp_hook_shot" },
+    [205779] = { ["segment"] = 10, ["name"] = "Hookdash", ["slug"] = "swamp_hookdash" },
+    [206729] = { ["segment"] = 10, ["name"] = "Water Lever 3", ["slug"] = "swamp_water_lever_3" },
+    [207934] = { ["segment"] = 10, ["name"] = "Restock Room", ["slug"] = "swamp_restock" },
+    [208555] = { ["segment"] = 10, ["name"] = "Phelps Way", ["slug"] = "swamp_phelps_way" },
+    [209302] = { ["segment"] = 10, ["name"] = "Arrghus", ["slug"] = "swamp_arrghus", ["boss"] = true },
+
     -- Mire
-    [214178] = "mire_outside_swamp",
-    [217918] = "mire_mire_darkworld_warp",
-    [219615] = "mire_mire_entrance",
-    [220125] = "mire_mire2",
-    [222017] = "mire_left_dash",
-    [223066] = "mire_sluggulas",
-    [226545] = "mire_spark_gamble",
-    [228244] = "mire_spike_key",
-    [229528] = "mire_basement",
-    [230377] = "mire_cane_dash",
-    [231141] = "mire_bombable_wall",
-    [233031] = "mire_vitty",
+    [214178] = { ["segment"] = 11, ["name"] = "Outside Swamp", ["slug"] = "mire_outside_swamp" },
+    [214998] = { ["segment"] = 11, ["name"] = "Death Mountain", ["slug"] = "mire_dm" },
+    [217455] = { ["segment"] = 11, ["name"] = "Free Flutedash", ["slug"] = "mire_free_flutedash" },
+    [217918] = { ["segment"] = 11, ["name"] = "Mire Overworld Screen", ["slug"] = "mire_darkworld_warp" },
+    [219615] = { ["segment"] = 11, ["name"] = "Mire Entrance", ["slug"] = "mire_entrance" },
+    [220125] = { ["segment"] = 11, ["name"] = "Mire 2", ["slug"] = "mire_mire2" },
+    [220763] = { ["segment"] = 11, ["name"] = "Main Hub", ["slug"] = "mire_main_hub" },
+    [222017] = { ["segment"] = 11, ["name"] = "Beat the Fireball", ["slug"] = "mire_beat_the_fireball" },
+    [222581] = { ["segment"] = 11, ["name"] = "Bari Key", ["slug"] = "mire_bari_key" },
+    [223066] = { ["segment"] = 11, ["name"] = "Sluggulas", ["slug"] = "mire_sluggulas" },
+    [223398] = { ["segment"] = 11, ["name"] = "Torches", ["slug"] = "mire_torches" },
+    [226545] = { ["segment"] = 11, ["name"] = "Spark Gamble", ["slug"] = "mire_spark_gamble" },
+    [227504] = { ["segment"] = 11, ["name"] = "Big Chest Room", ["slug"] = "mire_big_chest_room" },
+    [228244] = { ["segment"] = 11, ["name"] = "Spike Key", ["slug"] = "mire_spike_key" },
+    [228865] = { ["segment"] = 11, ["name"] = "Wizzrobe", ["slug"] = "mire_wizzrobe" },
+    [229528] = { ["segment"] = 11, ["name"] = "Basement", ["slug"] = "mire_basement" },
+    [230377] = { ["segment"] = 11, ["name"] = "Spooky Action 1", ["slug"] = "mire_spooky_action_1" },
+    [231141] = { ["segment"] = 11, ["name"] = "Spooky Action 2", ["slug"] = "mire_spooky_action_2" },
+    [233031] = { ["segment"] = 11, ["name"] = "Vitreous", ["slug"] = "mire_vitty", ["boss"] = true },
+
     --  TRock
-    [237271] = "trock_ouside_mire",
-    [238140] = "trock_icerod_overworld",
-    [242449] = "trock_peg_puzzle",
-    [244468] = "trock_entrance",
-    [245557] = "trock_lanterns",
-    [246430] = "trock_roller_room",
-    [247905] = "trock_chomps",
-    [250460] = "trock_pokey_1",
-    [252864] = "trock_pokeys_2",
-    [253878] = "trock_roller_key",
-    [256484] = "trock_lazer_skip",
-    [257241] = "trock_switch_room",
-    [258382] = "trock_trinexx",
+    [237271] = { ["segment"] = 12, ["name"] = "Outside Mire", ["slug"] = "trock_outside_mire" },
+    [238140] = { ["segment"] = 12, ["name"] = "Ice Rod Overworld", ["slug"] = "trock_icerod_overworld" },
+    [240133] = { ["segment"] = 12, ["name"] = "Death Mountain", ["slug"] = "trock_dm" },
+    [242095] = { ["segment"] = 12, ["name"] = "Squirrels", ["slug"] = "trock_squirrels" },
+    [242449] = { ["segment"] = 12, ["name"] = "Peg Puzzle", ["slug"] = "trock_peg_puzzle" },
+    [244468] = { ["segment"] = 12, ["name"] = "Entrance", ["slug"] = "trock_entrance" },
+    [245557] = { ["segment"] = 12, ["name"] = "Torches", ["slug"] = "trock_torches" },
+    [246430] = { ["segment"] = 12, ["name"] = "Roller Room", ["slug"] = "trock_roller_room" },
+    [247905] = { ["segment"] = 12, ["name"] = "Pokey 0", ["slug"] = "trock_pokey_0" },
+    [248263] = { ["segment"] = 12, ["name"] = "Chomps", ["slug"] = "trock_chomps" },
+    [250460] = { ["segment"] = 12, ["name"] = "Pokey 1", ["slug"] = "trock_pokey_1" },
+    [252864] = { ["segment"] = 12, ["name"] = "Pokeys 2", ["slug"] = "trock_pokeys_2" },
+    [253878] = { ["segment"] = 12, ["name"] = "Crystal Roller", ["slug"] = "trock_crystal_roller" },
+    [254633] = { ["segment"] = 12, ["name"] = "Dark Room", ["slug"] = "trock_dark_room" },
+    [256484] = { ["segment"] = 12, ["name"] = "Laser Skip", ["slug"] = "trock_laser_skip" },
+    [257241] = { ["segment"] = 12, ["name"] = "Switch Room", ["slug"] = "trock_switch_room" },
+    [258382] = { ["segment"] = 12, ["name"] = "Trinexx", ["slug"] = "trock_trinexx", ["boss"] = true },
+
     -- GTower
-    [263886] = "gtower_outside_trock",
-    [265964] = "gtower_entrance",
-    [267262] = "gtower_spike_skip",
-    [268195] = "gtower_pre_firesnakes_room",
-    [270901] = "gtower_bombable_floor",
-    [271498] = "gtower_ice_armos",
-    [273164] = "gtower_floor_2",
-    [273797] = "gtower_mimics1",
-    [274202] = "gtower_mimics2",
-    [274693] = "gtower_spike_room",
-    [275862] = "gtower_gauntlet",
-    [277800] = "gtower_lanmola2",
-    [279593] = "gtower_wizz2",
-    [281370] = "gtower_torches2",
-    [281759] = "gtower_helma_key",
-    [282124] = "gtower_bombable_wall",
-    [282738] = "gtower_moldorm_2",
-    [284440] = "gtower_agahnim_2",
+    [263886] = { ["segment"] = 13, ["name"] = "Outside Turtle Rock", ["slug"] = "gtower_outside_trock" },
+    [265964] = { ["segment"] = 13, ["name"] = "Entrance", ["slug"] = "gtower_entrance" },
+    [267262] = { ["segment"] = 13, ["name"] = "Spike Skip", ["slug"] = "gtower_spike_skip" },
+    [268195] = { ["segment"] = 13, ["name"] = "Pre Firesnakes Room", ["slug"] = "gtower_pre_firesnakes_room" },
+    [270901] = { ["segment"] = 13, ["name"] = "Bombable Floor", ["slug"] = "gtower_bombable_floor" },
+    [271498] = { ["segment"] = 13, ["name"] = "Ice Armos", ["slug"] = "gtower_ice_armos" },
+    [273164] = { ["segment"] = 13, ["name"] = "Floor 2", ["slug"] = "gtower_floor_2" },
+    [273797] = { ["segment"] = 13, ["name"] = "Mimics 1", ["slug"] = "gtower_mimics1" },
+    [274202] = { ["segment"] = 13, ["name"] = "Mimics 2", ["slug"] = "gtower_mimics2" },
+    [274693] = { ["segment"] = 13, ["name"] = "Spike Room", ["slug"] = "gtower_spike_room" },
+    [275862] = { ["segment"] = 13, ["name"] = "Gauntlet 1", ["slug"] = "gtower_gauntlet" },
+    [276676] = { ["segment"] = 13, ["name"] = "Gauntlet 3", ["slug"] = "gtower_gauntlet_3" },
+    [277800] = { ["segment"] = 13, ["name"] = "Lanmola 2", ["slug"] = "gtower_lanmola2" },
+    [278748] = { ["segment"] = 13, ["name"] = "Wizzrobes 1", ["slug"] = "gtower_wizz1" },
+    [279593] = { ["segment"] = 13, ["name"] = "Wizzrobes 2", ["slug"] = "gtower_wizz2" },
+    [280278] = { ["segment"] = 13, ["name"] = "Torches 1", ["slug"] = "gtower_torches1" },
+    [281370] = { ["segment"] = 13, ["name"] = "Torches 2", ["slug"] = "gtower_torches2" },
+    [281759] = { ["segment"] = 13, ["name"] = "Helma Key", ["slug"] = "gtower_helma_key" },
+    [282124] = { ["segment"] = 13, ["name"] = "Bombable Wall", ["slug"] = "gtower_bombable_wall" },
+    [282738] = { ["segment"] = 13, ["name"] = "Moldorm 2", ["slug"] = "gtower_moldorm_2" },
+    [284440] = { ["segment"] = 13, ["name"] = "Agahnim 2", ["slug"] = "gtower_agahnim_2", ["boss"] = true },
+
     -- Ganon
-    [287664] = "ganon_pyramid",
+    [287664] = { ["segment"] = 14, ["name"] = "Ganon", ["slug"] = "ganon_pyramid", ["boss"] = true },
+    [287665] = { ["segment"] = 14, ["name"] = "Ganon (full magic)", ["slug"] = "ganon_pyramid_magic", ["boss"] = true },
+} -- }}}
+
+local CHANGES = { -- {{{
+    -- ALL CATEGORIES
+    ["east_gwg"] =
+        "dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1\n" ..
+        "dl $7EC74A : db $02 : dw $28BA ; Selected menu gfx, row 1\n" ..
+        "dl $7EC78A : db $02 : dw $2849 ; Selected menu gfx, row 2\n" ..
+        "dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2\n" ..
+        "dl $7E0303 : db $01 : db $03 ; Selected menu item\n" ..
+        "dl $7E0202 : db $01 : db $01 ; Selected menu item\n",
+    ["ice_bridge_warp"] =
+        "dl $7E02A2 : db $01 : db $00 ; Altitude\n",
+    ["ice_penguin_switch_room"] =
+        "dl $7EF343 : db $01 : db $02 ; Bombs\n",
+    ["mire_darkworld_warp"] =
+        "dl $7E02A2 : db $01 : db $8B ; Altitude\n" ..
+        "dl $7EF346 : db $01 : db $01 ; Ice Rod\n",
+    ["mire_spooky_action_1"] =
+        "dl $7E02A2 : db $01 : db $8B ; Altitude\n" ..
+        "dl $7E0202 : db $01 : db $06 ; Selected menu item\n" ..
+        "dl $7E0303 : db $01 : db $05 ; Selected menu item\n" ..
+        "dl $7EC74A : db $02 : dw $24B0 ; Selected menu gfx, row 1\n" ..
+        "dl $7EC74C : db $02 : dw $24B1 ; Selected menu gfx, row 1\n" ..
+        "dl $7EC78A : db $02 : dw $24C0 ; Selected menu gfx, row 2\n" ..
+        "dl $7EC78C : db $02 : dw $24C1 ; Selected menu gfx, row 2\n",
+    ["mire_spooky_action_2"] =
+        "dl $7E02A2 : db $01 : db $8B ; Altitude\n" ..
+        "dl $7E0202 : db $01 : db $06 ; Selected menu item\n" ..
+        "dl $7E0303 : db $01 : db $05 ; Selected menu item\n" ..
+        "dl $7EC74A : db $02 : dw $24B0 ; Selected menu gfx, row 1\n" ..
+        "dl $7EC74C : db $02 : dw $24B1 ; Selected menu gfx, row 1\n" ..
+        "dl $7EC78A : db $02 : dw $24C0 ; Selected menu gfx, row 2\n" ..
+        "dl $7EC78C : db $02 : dw $24C1 ; Selected menu gfx, row 2\n",
+    ["trock_pokey_1"] =
+        "dl $7EC172 : db $01 : db $00 ; Crystal switch state\n",
+    ["trock_pokeys_2"] =
+        "dl $7EC172 : db $01 : db $00 ; Crystal switch state\n",
+    ["gtower_agahnim_2"] =
+        "dl $7E0202 : db $01 : db $03 ; Selected menu item\n" ..
+        "dl $7E0303 : db $01 : db $0E ; Selected menu item\n" ..
+        "dl $7EC74A : db $02 : dw $24F5 ; Selected menu gfx, row 1\n" ..
+        "dl $7EC74C : db $02 : dw $24F6 ; Selected menu gfx, row 1\n" ..
+        "dl $7EC78A : db $02 : dw $24C0 ; Selected menu gfx, row 2\n" ..
+        "dl $7EC78C : db $02 : dw $24F5 ; Selected menu gfx, row 2\n",
+    ["ganon_pyramid_magic"] =
+        "dl $7EF36E : db $01 : db $80 ; Magic Power\n",
+
+    -- HUNDO
+    ["hundo_esc_ball_n_chains"] =
+        "dl $7EF341 : db $01 : db $00 ; Boomerang\n" ..
+        "dl $7E0202 : db $01 : db $00 ; Selected menu item\n" ..
+        "dl $7E0303 : db $01 : db $00 ; Selected menu item\n" ..
+        "dl $7EC74A : db $01 : db $7F ; Selected menu gfx, row 1\n" ..
+        "dl $7EC74C : db $01 : db $7F ; Selected menu gfx, row 1\n" ..
+        "dl $7EC78A : db $01 : db $7F ; Selected menu gfx, row 2\n" ..
+        "dl $7EC78C : db $01 : db $7F ; Selected menu gfx, row 2\n",
+    ["hundo_esc_backtracking"] =
+        "dl $7E0202 : db $01 : db $0B ; Selected menu item\n" ..
+        "dl $7E0303 : db $01 : db $09 ; Selected menu item\n" ..
+        "dl $7EC74A : db $02 : dw $24BC ; Selected menu gfx, row 1\n" ..
+        "dl $7EC74C : db $02 : dw $24BD ; Selected menu gfx, row 1\n" ..
+        "dl $7EC78A : db $02 : dw $24CC ; Selected menu gfx, row 2\n" ..
+        "dl $7EC78C : db $02 : dw $24CD ; Selected menu gfx, row 2\n",
+    ["hundo_east_octoroc"] =
+        "dl $7EF36C : db $01 : db $20 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $20 ; Health (actual)\n",
+    ["hundo_east_big_chest_room_2"] =
+        "dl $7EF36D : db $01 : db $14 ; Health (actual)\n",
+    ["hundo_desert_outside_eastern_palace"] =
+        "dl $7EF36C : db $01 : db $28 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $28 ; Health (actual)\n",
+    ["hundo_desert_ep_spinspeed"] =
+        "dl $7EF343 : db $01 : db $03 ; Bombs\n" ..
+        "dl $7EF360 : db $02 : dw $0080 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0080 ; Rupees (actual)\n" ..
+        "dl $7EF375 : db $01 : db $00 ; Bomb filler\n",
+    ["hundo_desert_popo_genocide_room"] =
+        "dl $7EF36B : db $01 : db $01 ; Heart pieces\n",
+    ["hundo_hera_outside_desert_palace"] =
+        "dl $7EF36C : db $01 : db $30 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $30 ; Health (actual)\n",
+    ["hundo_hera_fake_flippers"] =
+        "dl $7EF343 : db $01 : db $02 ; Bombs\n" ..
+        "dl $7EF36B : db $01 : db $02 ; Heart pieces\n",
+    ["hundo_hera_dm"] =
+        "dl $7EF36B : db $01 : db $03 ; Heart pieces\n",
+    ["hundo_hera_entrance"] =
+        "dl $7EF343 : db $01 : db $01 ; Bombs\n" ..
+        "dl $7EF36B : db $01 : db $01 ; Heart pieces\n" ..
+        "dl $7EF36C : db $01 : db $38 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $38 ; Health (actual)\n",
+    ["hundo_hera_tile_room"] =
+        "dl $7E0202 : db $01 : db $14 ; Selected menu item\n" ..
+        "dl $7E0303 : db $01 : db $14 ; Selected menu item\n" ..
+        "dl $7EC74A : db $02 : dw $2C62 ; Selected menu gfx, row 1\n" ..
+        "dl $7EC74C : db $02 : dw $2C63 ; Selected menu gfx, row 1\n" ..
+        "dl $7EC78A : db $02 : dw $2C72 ; Selected menu gfx, row 2\n" ..
+        "dl $7EC78C : db $02 : dw $2C73 ; Selected menu gfx, row 2\n",
+    ["hundo_hera_petting_zoo"] =
+        "dl $7EF343 : db $01 : db $02 ; Bombs\n",
+    ["hundo_hera_moldorm"] =
+        "dl $7EF36D : db $01 : db $30 ; Health (actual)\n",
+    ["hundo_aga_outside_hera"] =
+        "dl $7EF36C : db $01 : db $40 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $40 ; Health (actual)\n",
+    ["hundo_aga_first_rupee_tree"] =
+        "dl $7EF36B : db $01 : db $01 ; Heart pieces\n",
+    ["hundo_aga_lost_woods"] =
+        "dl $7EF360 : db $02 : dw $0080 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0080 ; Rupees (actual)\n",
+    ["hundo_aga_after_lost_woods"] =
+        "dl $7EF360 : db $02 : dw $0080 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0080 ; Rupees (actual)\n" ..
+        "dl $7EF344 : db $01 : db $01 ; Mushroom\n" ..
+        "dl $7EF36B : db $01 : db $02 ; Heart pieces\n",
+    ["hundo_aga_pit_room"] =
+        "dl $7EF360 : db $02 : dw $0080 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0080 ; Rupees (actual)\n" ..
+        "dl $7E0202 : db $01 : db $01 ; Selected menu item\n" ..
+        "dl $7E0303 : db $01 : db $03 ; Selected menu item\n" ..
+        "dl $7EC74A : db $02 : dw $28BA ; Selected menu gfx, row 1\n" ..
+        "dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1\n" ..
+        "dl $7EC78A : db $02 : dw $2849 ; Selected menu gfx, row 2\n" ..
+        "dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2\n",
+    ["hundo_pod_pod_overworld"] =
+        "dl $7EF36B : db $01 : db $03 ; Heart pieces\n",
+    ["hundo_pod_entrance"] =
+        "dl $7EF360 : db $02 : dw $0012 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0012 ; Rupees (actual)\n",
+    ["hundo_pod_before_sexy_statue"] =
+        "dl $7EF36D : db $01 : db $38 ; Health (actual)\n",
+    ["hundo_pod_mimics"] =
+        "dl $7EF36D : db $01 : db $40 ; Health (actual)\n",
+    ["hundo_thieves_outside_pod"] =
+        "dl $7EF36C : db $01 : db $48 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $48 ; Health (actual)\n",
+    ["hundo_thieves_grove"] =
+        "dl $7EF360 : db $02 : dw $013E ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $013E ; Rupees (actual)\n",
+    ["hundo_thieves_usain_bolt"] =
+        "dl $7E1ABF : db $01 : db $1C ; Warp Vortex Coordinate\n" ..
+        "dl $7E1ACF : db $01 : db $08 ; Warp Vortex Coordinate\n" ..
+        "dl $7E1ADF : db $01 : db $38 ; Warp Vortex Coordinate\n" ..
+        "dl $7E1AEF : db $01 : db $01 ; Warp Vortex Coordinate\n" ..
+        "dl $7EF3CA : db $01 : db $40 ; LW/DW\n" ..
+        "dl $7EF36B : db $01 : db $00 ; Heart pieces\n" ..
+        "dl $7EF36C : db $01 : db $50 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $50 ; Health (actual)\n",
+    ["hundo_thieves_after_activating_flute"] =
+        "dl $7EF34D : db $01 : db $01 ; Net\n" ..
+        "dl $7EF34F : db $01 : db $01 ; Bottles\n" ..
+        "dl $7EF35C : db $01 : db $02 ; Bottle 1 (empty)\n" ..
+        "dl $7EF360 : db $02 : dw $01A4 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $01A4 ; Rupees (actual)\n" ..
+        "dl $7EF36B : db $01 : db $02 ; Heart pieces\n" ..
+        "dl $7EF3CA : db $01 : db $00 ; LW/DW\n",
+    ["hundo_thieves_darkworld"] =
+        "dl $7EF344 : db $01 : db $02 ; Magic powder\n" ..
+        "dl $7EF35D : db $01 : db $02 ; Bottle 2 (empty)\n" ..
+        "dl $7EF360 : db $02 : dw $0154 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0154 ; Rupees (actual)\n" ..
+        "dl $7EF36B : db $01 : db $00 ; Heart pieces\n" ..
+        "dl $7EF36C : db $01 : db $58 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $58 ; Health (actual)\n",
+    ["hundo_thieves_entrance"] =
+        "dl $7EF341 : db $01 : db $02 ; Magic boomerang\n" ..
+        "dl $7EF360 : db $02 : dw $0136 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0136 ; Rupees (actual)\n" ..
+        "dl $7EF36B : db $01 : db $01 ; Heart pieces\n",
+    ["hundo_sw_fence_dash"] =
+        "dl $7EF360 : db $02 : dw $0258 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0258 ; Rupees (actual)\n" ..
+        "dl $7EF36B : db $01 : db $02 ; Heart pieces\n" ..
+        "dl $7EF37B : db $01 : db $01 ; 1/2 magic\n",
+    ["hundo_sw_outside_thieves"] =
+        "dl $7EF36C : db $01 : db $60 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $60 ; Health (actual)\n",
+    ["hundo_sw_cursed_dwarf"] =
+        "dl $7EF343 : db $01 : db $05 ; Bombs\n" ..
+        "dl $7EF360 : db $02 : dw $0262 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0262 ; Rupees (actual)\n",
+    ["hundo_sw_dash_to_sw"] =
+        "dl $7EF35E : db $01 : db $02 ; Bottle 3 (empty)\n" ..
+        "dl $7EF360 : db $02 : dw $0258 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0258 ; Rupees (actual)\n",
+    ["hundo_sw_key_pot"] =
+        "dl $7EF36D : db $01 : db $58 ; Health (actual)\n",
+    ["hundo_ice_outside_skull"] =
+        "dl $7EF36C : db $01 : db $68 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $68 ; Health (actual)\n",
+    ["hundo_ice_tiny_warp"] =
+        "dl $7EF36B : db $01 : db $03 ; Heart pieces\n",
+    ["hundo_ice_ice_entrance"] =
+        "dl $7EF343 : db $01 : db $05 ; Bombs\n",
+    ["hundo_ice_conveyor_room"] =
+        "dl $7EF343 : db $01 : db $05 ; Bombs\n",
+    ["hundo_ice_ipbj"] =
+        "dl $7EF36D : db $01 : db $60 ; Health (actual)\n",
+    ["hundo_ice_penguin_room"] =
+        "dl $7EF343 : db $01 : db $02 ; Bombs\n",
+    ["hundo_ice_lonely_firebar"] =
+        "dl $7EF36D : db $01 : db $58 ; Health (actual)\n",
+    ["hundo_mire_outside_swamp"] =
+        "dl $7EF36C : db $01 : db $70 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $70 ; Health (actual)\n",
+    ["hundo_mire_darkworld_warp"] =
+        "dl $7EF346 : db $01 : db $00 ; Ice Rod\n" ..
+        "dl $7EF351 : db $01 : db $01 ; Cane of Byrna\n",
+    ["hundo_mire_entrance"] =
+        "dl $7EF36B : db $01 : db $00 ; Heart pieces\n" ..
+        "dl $7EF36C : db $01 : db $78 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $78 ; Health (actual)\n",
+    ["hundo_mire_big_chest_room"] =
+        "dl $7EF36D : db $01 : db $70 ; Health (actual)\n",
+    ["hundo_mire_basement"] =
+        "dl $7EF36D : db $01 : db $58 ; Health (actual)\n",
+    ["hundo_swamp_outside_ice"] =
+        "dl $7EF36C : db $01 : db $80 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $80 ; Health (actual)\n" ..
+        "dl $7EF37A : db $01 : db $67 ; Crystals\n",
+    ["hundo_swamp_links_house"] =
+        "dl $7EF36B : db $01 : db $01 ; Heart pieces\n",
+    ["hundo_swamp_antifairy_room"] =
+        "dl $7EF347 : db $01 : db $01 ; Bombos Medallion\n",
+    ["hundo_swamp_entrance"] =
+        "dl $7EF36B : db $01 : db $02 ; Heart pieces\n",
+    ["hundo_trock_outside_mire"] =
+        "dl $7EF36E : db $01 : db $80 ; Magic Power\n" ..
+        "dl $7EF36C : db $01 : db $88 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $88 ; Health (actual)\n" ..
+        "dl $7EF37A : db $01 : db $77 ; Crystals\n",
+    ["hundo_trock_icerod_overworld"] =
+        "dl $7EF340 : db $01 : db $03 ; Silver Arrows\n" ..
+        "dl $7EF352 : db $01 : db $01 ; Magic Cape\n" ..
+        "dl $7EF359 : db $01 : db $04 ; Golden Sword\n" ..
+        "dl $7EF35F : db $01 : db $01 ; Bottle 4 (empty)\n" ..
+        "dl $7EF360 : db $02 : dw $001D ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $001D ; Rupees (actual)\n" ..
+        "dl $7EF36B : db $01 : db $02 ; Heart pieces\n" ..
+        "dl $7EF36C : db $01 : db $90 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $90 ; Health (actual)\n",
+    ["hundo_trock_dm"] =
+        "dl $7EF346 : db $01 : db $01 ; Ice Rod\n",
+    ["hundo_trock_roller_room"] =
+        "dl $7EF36D : db $01 : db $88 ; Health (actual)\n",
+    ["hundo_trock_pokey_0"] =
+        "dl $7EF36D : db $01 : db $70 ; Health (actual)\n",
+    ["hundo_trock_chomps"] =
+        "dl $7EF36D : db $01 : db $90 ; Health (actual)\n",
+    ["hundo_trock_laser_skip"] =
+        "dl $7EF36D : db $01 : db $88 ; Health (actual)\n",
+    ["hundo_trock_crystal_roller"] =
+        "dl $7EF36B : db $01 : db $03 ; Heart pieces\n" ..
+        "dl $7EF35A : db $01 : db $03 ; Mirror Shield\n",
+    ["hundo_gtower_outside_trock"] =
+        "dl $7EF36C : db $01 : db $98 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $98 ; Health (actual)\n",
+    ["hundo_gtower_entrance"] =
+        "dl $7EF36B : db $01 : db $00 ; Heart pieces\n" ..
+        "dl $7EF36C : db $01 : db $A0 ; Health (goal)\n" ..
+        "dl $7EF36D : db $01 : db $A0 ; Health (actual)\n",
+    ["hundo_gtower_bombable_floor"] =
+        "dl $7EF36D : db $01 : db $A0 ; Health (actual)\n",
+    ["hundo_gtower_floor_2"] =
+        "dl $7EF35B : db $01 : db $02 ; Red Mail\n",
+    ["hundo_gtower_mimics1"] =
+        "dl $7EF36D : db $01 : db $88 ; Health (actual)\n",
+    ["hundo_gtower_lanmola2"] =
+        "dl $7EF36D : db $01 : db $88 ; Health (actual)\n",
+    ["hundo_gtower_wizz1"] =
+        "dl $7EF36D : db $01 : db $90 ; Health (actual)\n",
+    ["hundo_gtower_bombable_wall"] =
+        "dl $7EF36D : db $01 : db $88 ; Health (actual)\n",
+    ["hundo_gtower_moldorm_2"] =
+        "dl $7EF36D : db $01 : db $80 ; Health (actual)\n",
+
+    -- LOW
+    ["low_esc_ball_n_chains"] =
+        "dl $7EF341 : db $01 : db $00 ; Boomerang\n" ..
+        "dl $7E0202 : db $01 : db $00 ; Selected menu item\n" ..
+        "dl $7E0303 : db $01 : db $00 ; Selected menu item\n" ..
+        "dl $7EC74A : db $01 : db $7F ; Selected menu gfx, row 1\n" ..
+        "dl $7EC74C : db $01 : db $7F ; Selected menu gfx, row 1\n" ..
+        "dl $7EC78A : db $01 : db $7F ; Selected menu gfx, row 2\n" ..
+        "dl $7EC78C : db $01 : db $7F ; Selected menu gfx, row 2\n",
+    ["low_esc_backtracking"] =
+        "dl $7E0202 : db $01 : db $0B ; Selected menu item\n" ..
+        "dl $7E0303 : db $01 : db $09 ; Selected menu item\n" ..
+        "dl $7EC74A : db $02 : dw $24BC ; Selected menu gfx, row 1\n" ..
+        "dl $7EC74C : db $02 : dw $24BD ; Selected menu gfx, row 1\n" ..
+        "dl $7EC78A : db $02 : dw $24CC ; Selected menu gfx, row 2\n" ..
+        "dl $7EC78C : db $02 : dw $24CD ; Selected menu gfx, row 2\n",
+    ["low_east_octoroc"] =
+        "dl $7EF360 : db $02 : dw $00D3 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $00D3 ; Rupees (actual)\n",
+    ["low_east_big_key_dmg_boost"] =
+        "dl $7EF360 : db $02 : dw $00E7 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $00E7 ; Rupees (actual)\n",
+    ["low_east_pot_room"] =
+        "dl $7EF360 : db $02 : dw $00ED ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $00ED ; Rupees (actual)\n",
+    ["low_east_armos"] =
+        "dl $7EF360 : db $02 : dw $00EE ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $00EE ; Rupees (actual)\n",
+    ["low_hera_tile_room"] =
+        "dl $7E0202 : db $01 : db $14 ; Selected menu item\n" ..
+        "dl $7E0303 : db $01 : db $14 ; Selected menu item\n" ..
+        "dl $7EC74A : db $02 : dw $2C62 ; Selected menu gfx, row 1\n" ..
+        "dl $7EC74C : db $02 : dw $2C63 ; Selected menu gfx, row 1\n" ..
+        "dl $7EC78A : db $02 : dw $2C72 ; Selected menu gfx, row 2\n" ..
+        "dl $7EC78C : db $02 : dw $2C73 ; Selected menu gfx, row 2\n",
+    ["low_aga_lost_woods"] =
+        "dl $7EF360 : db $02 : dw $00F8 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $00F8 ; Rupees (actual)\n",
+    ["low_aga_after_lost_woods"] =
+        "dl $7EF360 : db $02 : dw $0148 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0148 ; Rupees (actual)\n",
+    ["low_aga_pit_room"] =
+        "dl $7EF360 : db $02 : dw $0149 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0149 ; Rupees (actual)\n" ..
+        "dl $7E0202 : db $01 : db $01 ; Selected menu item\n" ..
+        "dl $7E0303 : db $01 : db $03 ; Selected menu item\n" ..
+        "dl $7EC74A : db $02 : dw $28BA ; Selected menu gfx, row 1\n" ..
+        "dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1\n" ..
+        "dl $7EC78A : db $02 : dw $2849 ; Selected menu gfx, row 2\n" ..
+        "dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2\n",
+    ["low_pod_entrance"] =
+        "dl $7EF360 : db $02 : dw $00DB ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $00DB ; Rupees (actual)\n",
+    ["low_thieves_entrance"] =
+        "dl $7EF360 : db $02 : dw $00DC ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $00DC ; Rupees (actual)\n",
+    ["low_thieves_backtracking_1"] =
+        "dl $7EF343 : db $01 : db $05 ; Bombs\n",
+    ["low_thieves_basement"] =
+        "dl $7EF343 : db $01 : db $06 ; Bombs\n",
+    ["low_sw_cursed_dwarf"] =
+        "dl $7EF360 : db $02 : dw $0208 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0208 ; Rupees (actual)\n" ..
+        "dl $7EF343 : db $01 : db $06 ; Bombs\n",
+    ["low_sw_fence_dash"] =
+        "dl $7EF359 : db $01 : db $02 ; Sword\n" ..
+        "dl $7EF360 : db $02 : dw $0208 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0208 ; Rupees (actual)\n",
+    ["low_sw_dash_to_sw"] =
+        "dl $7EF360 : db $02 : dw $0208 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0208 ; Rupees (actual)\n",
+    ["low_sw_key_pot"] =
+        "dl $7EF343 : db $01 : db $05 ; Bombs\n",
+    ["low_ice_tiny_warp"] =
+        "dl $7EF360 : db $02 : dw $0014 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0014 ; Rupees (actual)\n",
+    ["low_ice_conveyor_room"] =
+        "dl $7EF343 : db $01 : db $04 ; Bombs\n",
+    ["low_ice_penguin_room"] =
+        "dl $7EF343 : db $01 : db $03 ; Bombs\n" ..
+        "dl $7E0202 : db $01 : db $04 ; Selected menu item\n" ..
+        "dl $7E0303 : db $01 : db $01 ; Selected menu item\n" ..
+        "dl $7EC74A : db $02 : dw $2CB2 ; Selected menu gfx, row 1\n" ..
+        "dl $7EC74C : db $02 : dw $2CB3 ; Selected menu gfx, row 1\n" ..
+        "dl $7EC78A : db $02 : dw $2CC2 ; Selected menu gfx, row 2\n" ..
+        "dl $7EC78C : db $02 : dw $6CC2 ; Selected menu gfx, row 2\n",
+    ["low_ice_lonely_firebar"] =
+        "dl $7EC74A : db $02 : dw $20B6 ; Selected menu gfx, row 1\n" ..
+        "dl $7EC74C : db $02 : dw $20B7 ; Selected menu gfx, row 1\n" ..
+        "dl $7EC78A : db $02 : dw $20C6 ; Selected menu gfx, row 2\n" ..
+        "dl $7EC78C : db $02 : dw $20C7 ; Selected menu gfx, row 2\n" ..
+        "dl $7E0202 : db $01 : db $0C ; Selected menu item\n" ..
+        "dl $7E0303 : db $01 : db $04 ; Selected menu item\n",
+    ["low_mire_basement"] =
+        "dl $7EF360 : db $02 : dw $0015 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0015 ; Rupees (actual)\n" ..
+        "dl $7EF36D : db $01 : db $40 ; Health (actual)\n",
+    ["low_trock_pokeys_2"] =
+        "dl $7EF360 : db $02 : dw $0029 ; Rupees (goal)\n" ..
+        "dl $7EF362 : db $02 : dw $0029 ; Rupees (actual)\n",
+    ["low_gtower_pre_firesnakes_room"] =
+        "dl $7EC74A : db $02 : dw $24DC ; Selected menu gfx, row 1\n" ..
+        "dl $7EC78A : db $02 : dw $24EC ; Selected menu gfx, row 2\n" ..
+        "dl $7E0303 : db $01 : db $12 ; Selected menu item\n" ..
+        "dl $7EC74C : db $02 : dw $24DD ; Selected menu gfx, row 1\n" ..
+        "dl $7E0202 : db $01 : db $11 ; Selected menu item\n" ..
+        "dl $7EC78C : db $02 : dw $24ED ; Selected menu gfx, row 2\n",
 } -- }}}
 
 
@@ -699,8 +1225,12 @@ local function annotate_overworld_value(val)
 end
 
 local function annotate_address(addr, val)
-    if addr >= 0x7E0B08 and addr <= 0x7E0BFF then
+    if addr >= 0x7E0B08 and addr <= 0x7E0BFF or addr >= 0x7E029E and addr <= 0x7E02A8 then
         return "Arc variable"
+    end
+
+    if addr == 0x7E0ABD then
+        return "Palette swap"
     end
 
     if addr >= 0x7E010E and addr < 0x7E010F then
@@ -824,25 +1354,28 @@ function draw_overworld()
     })
 end
 
-function save_overworld(slug)
+function save_overworld(preset_slug)
     local T = fetch_ow_table()
-    preset_output = preset_output .. "\n" .. table.concat({
-        "preset_" .. slug .. ":",
-        db(1, "Overworld"),
-        dw(T.screen_idx, "Screen Index"),
-        dw(T.link_x, "Link X"),
-        dw(T.link_y, "Link Y"),
-        dw(T.bg1_vscroll, "BG1 Vertical Scroll"),
-        dw(T.bg2_vscroll, "BG2 Vertical Scroll"),
-        dw(T.bg1_hscroll, "BG1 Horizontal Scroll"),
-        dw(T.bg2_hscroll, "BG2 Horizontal Scroll"),
-        dw(T.scroll_x, "Scroll X"),
-        dw(T.scroll_y, "Scroll Y"),
-        dw(T.unk1, "Unknown 1"),
-        dw(T.unk2, "Unknown 2"),
-        dw(T.unk3, "Unknown 3"),
-        "dw sram_" .. slug .. "_after",
-    }, "\n") .. "\n"
+    for _, category_slug in pairs({"nmg", "low", "hundo"}) do
+        local slug = category_slug .. "_" .. preset_slug
+        preset_output[category_slug] = preset_output[category_slug] .. "\n" .. table.concat({
+            "preset_" .. slug .. ":",
+            db(1, "Overworld"),
+            dw(T.screen_idx, "Screen Index"),
+            dw(T.link_x, "Link X"),
+            dw(T.link_y, "Link Y"),
+            dw(T.bg1_vscroll, "BG1 Vertical Scroll"),
+            dw(T.bg2_vscroll, "BG2 Vertical Scroll"),
+            dw(T.bg1_hscroll, "BG1 Horizontal Scroll"),
+            dw(T.bg2_hscroll, "BG2 Horizontal Scroll"),
+            dw(T.scroll_x, "Scroll X"),
+            dw(T.scroll_y, "Scroll Y"),
+            dw(T.unk1, "Unknown 1"),
+            dw(T.unk2, "Unknown 2"),
+            dw(T.unk3, "Unknown 3"),
+            "dw sram_" .. slug .. "_after",
+        }, "\n") .. "\n"
+    end
 end
 
 
@@ -876,40 +1409,43 @@ local function fetch_dng_table()
     }
 end
 
-function save_dungeon(slug)
+function save_dungeon(preset_slug)
     local T = fetch_dng_table()
-    preset_output = preset_output .. "\n" .. table.concat({
-        "preset_" .. slug .. ":",
-        db(2, "Dungeon"),
-        dw(T.room, "Room Index"),
-        dw(T.bg1_vscroll, "BG1 Vertical Scroll"),
-        dw(T.bg2_vscroll, "BG2 Vertical Scroll"),
-        dw(T.bg1_hscroll, "BG1 Horizontal Scroll"),
-        dw(T.bg2_hscroll, "BG2 Horizontal Scroll"),
-        dw(T.link_x, "Link X"),
-        dw(T.link_y, "Link Y"),
-        dw(T.camera_x, "Camera X"),
-        dw(T.camera_y, "Camera Y"),
-        dw(T.door_settings, "Door Settings"),
-        dw(T.relative_coords[1], "Relative Coords HU"),
-        dw(T.relative_coords[2], "Relative Coords FU"),
-        dw(T.relative_coords[3], "Relative Coords HD"),
-        dw(T.relative_coords[4], "Relative Coords FD"),
-        dw(T.relative_coords[5], "Relative Coords HL"),
-        dw(T.relative_coords[6], "Relative Coords FL"),
-        dw(T.relative_coords[7], "Relative Coords HR"),
-        dw(T.relative_coords[8], "Relative Coords FR"),
-        dw(T.quadrant_1, "Quadrant 1"),
-        dw(T.quadrant_2, "Quadrant 2"),
+    for _, category_slug in pairs({"nmg", "low", "hundo"}) do
+        local slug = category_slug .. "_" .. preset_slug
+        preset_output[category_slug] = preset_output[category_slug] .. "\n" .. table.concat({
+            "preset_" .. slug .. ":",
+            db(2, "Dungeon"),
+            dw(T.room, "Room Index"),
+            dw(T.bg1_vscroll, "BG1 Vertical Scroll"),
+            dw(T.bg2_vscroll, "BG2 Vertical Scroll"),
+            dw(T.bg1_hscroll, "BG1 Horizontal Scroll"),
+            dw(T.bg2_hscroll, "BG2 Horizontal Scroll"),
+            dw(T.link_x, "Link X"),
+            dw(T.link_y, "Link Y"),
+            dw(T.camera_x, "Camera X"),
+            dw(T.camera_y, "Camera Y"),
+            dw(T.door_settings, "Door Settings"),
+            dw(T.relative_coords[1], "Relative Coords HU"),
+            dw(T.relative_coords[2], "Relative Coords FU"),
+            dw(T.relative_coords[3], "Relative Coords HD"),
+            dw(T.relative_coords[4], "Relative Coords FD"),
+            dw(T.relative_coords[5], "Relative Coords HL"),
+            dw(T.relative_coords[6], "Relative Coords FL"),
+            dw(T.relative_coords[7], "Relative Coords HR"),
+            dw(T.relative_coords[8], "Relative Coords FR"),
+            dw(T.quadrant_1, "Quadrant 1"),
+            dw(T.quadrant_2, "Quadrant 2"),
 
-        db(T.main_graphics, "Main Graphics"),
-        db(T.music_track, "Music Track"),
-        db(T.starting_floor, "Starting Floor"),
-        db(T.palace_no, "Palace No"),
-        db(T.door_orientation, "Door Orientation"),
-        db(T.starting_bg, "Starting Background"),
-        "dw sram_" .. slug .. "_after",
-    }, "\n") .. "\n"
+            db(T.main_graphics, "Main Graphics"),
+            db(T.music_track, "Music Track"),
+            db(T.starting_floor, "Starting Floor"),
+            db(T.palace_no, "Palace No"),
+            db(T.door_orientation, "Door Orientation"),
+            db(T.starting_bg, "Starting Background"),
+            "dw sram_" .. slug .. "_after",
+        }, "\n") .. "\n"
+    end
 end
 
 function draw_dungeon()
@@ -973,14 +1509,18 @@ local function put_quadrant_info_in_state_table()
 end
 
 
-function save_sram_delta(slug)
+function save_sram_delta(preset_slug)
     if in_underworld() then
         put_quadrant_info_in_state_table()
     end
 
     local room_idx = memory.readword(0x7E00A0)
 
-    sram_output = sram_output .. "\nsram_" .. slug .. ":\n"
+    for _, category_slug in pairs({"nmg", "low", "hundo"}) do
+        local slug = category_slug .. "_" .. preset_slug
+        sram_output[category_slug] = sram_output[category_slug] .. "\nsram_" .. slug .. ":\n"
+    end
+
     for addr, size_and_val in pairs(current_state) do
         local size = size_and_val[1]
         local val = size_and_val[2]
@@ -991,35 +1531,95 @@ function save_sram_delta(slug)
 
             -- Don't store 0 writes to the first state, since we'll clear SRAM before loading these.
             if num_states > 1 or val > 0 then
-                sram_output = sram_output ..  "dl " ..  tohex(addr, 6) .. " : "
-                sram_output = sram_output ..  "db " ..  tohex(size, 2) .. " : "
-                sram_output = sram_output .. (size == 1 and "db " or "dw ") ..  tohex(val, size == 1 and 2 or 4)
-                sram_output = sram_output .. " ; " .. annotate_address(addr, val) .. "\n"
+                for _, category_slug in pairs({"nmg", "low", "hundo"}) do
+                    local slug = category_slug .. "_" .. preset_slug
+                    sram_output[category_slug] = sram_output[category_slug] ..  "dl " ..  tohex(addr, 6) .. " : "
+                    sram_output[category_slug] = sram_output[category_slug] ..  "db " ..  tohex(size, 2) .. " : "
+                    sram_output[category_slug] = sram_output[category_slug] .. (size == 1 and "db " or "dw ") ..  tohex(val, size == 1 and 2 or 4)
+                    sram_output[category_slug] = sram_output[category_slug] .. " ; " .. annotate_address(addr, val) .. "\n"
+                end
             end
         end
     end
-    sram_output = sram_output .. ".after\n"
+
+    for _, category_slug in pairs({"nmg", "low", "hundo"}) do
+        local slug = category_slug .. "_" .. preset_slug
+        if CHANGES[preset_slug] then
+            sram_output[category_slug] = sram_output[category_slug] .. "; Manual changes:\n" .. CHANGES[preset_slug]
+        end
+
+        if CHANGES[slug] then
+            sram_output[category_slug] = sram_output[category_slug] .. "; Manual changes:\n" .. CHANGES[slug]
+        end
+        sram_output[category_slug] = sram_output[category_slug] .. ".after\n"
+    end
 end
 
 
 -- Main functionality
 
-function make_preset_save(slug)
+function make_preset_save(preset_slug)
     num_states = num_states + 1
-    save_sram_delta(slug)
+    save_sram_delta(preset_slug)
 
     if in_overworld() then
-        save_overworld(slug)
+        save_overworld(preset_slug)
     else
-        save_dungeon(slug)
+        save_dungeon(preset_slug)
     end
 
-    print("Saved", slug)
-    debug("Saved", slug)
-    local file = io.open("data.txt", "w")
-    file:write("; Preset locations\n" .. preset_output .. "\n\n")
-    file:write("; Preset SRAM changes\n" .. sram_output .. "\n\n")
-    file:close()
+    print("Saved", preset_slug)
+    debug("Saved", preset_slug)
+    for _, category_slug in pairs({"nmg", "low", "hundo"}) do
+        -- We do Mire before Swamp in hundo
+        local cat_segments = deepcopy(SEGMENTS)
+        if category_slug == 'hundo' then
+            local mire = table.remove(cat_segments, 11)
+            table.insert(cat_segments, 10, mire)
+        end
+
+        -- preset_data asm
+        local file = io.open("preset_data_" .. category_slug .. ".asm", "w")
+        file:write("org !ORG\n")
+        file:write("\n")
+        file:write("; Preset locations\n" .. preset_output[category_slug] .. "\n\n")
+        file:write("; Preset SRAM changes\n" .. sram_output[category_slug] .. "\n\n")
+        file:close()
+
+        -- cm_presets asm
+        local file = io.open("cm_presets_" .. category_slug .. ".asm", "w")
+        file:write("cm_" .. category_slug .. "_submenu_presets:\n")
+        for _, segment in pairs(cat_segments) do
+            file:write("    dw cm_" .. category_slug .. "_presets_goto_" .. segment['slug'] .. "\n")
+        end
+        file:write("    dw #$0000\n")
+        file:write("    %cm_header(\"PRESETS\")\n")
+        file:write("\n")
+
+        for _, segment in pairs(cat_segments) do
+            file:write("; " .. segment['title'] .. "\n")
+            file:write("\n")
+            file:write("cm_" .. category_slug .. "_presets_goto_" .. segment['slug'] .. ":\n")
+            file:write("    %cm_submenu(\"" .. segment['name'] .. "\", cm_" .. category_slug .. "_presets_" .. segment['slug'] .. ")\n")
+            file:write("\n")
+            file:write("cm_" .. category_slug .. "_presets_" .. segment['slug'] .. ":\n")
+
+            for _, step in pairs(segment['steps']) do
+                file:write("    dw cm_" .. category_slug .. "_" .. step['slug'] .. "\n")
+            end
+            file:write("    dw #$0000\n")
+            file:write("    %cm_header(\"" .. segment['title'] .. "\")\n")
+            if not segment['boss'] then
+                file:write("\n")
+
+                for _, step in pairs(segment['steps']) do
+                    file:write("cm_" .. category_slug .. "_" .. step['slug'] .. ":\n")
+                    file:write("    %cm_preset(\"" .. step['name'] .. "\", preset_" .. category_slug .. "_" .. step['slug'] .. ")\n")
+                    file:write("\n")
+                end
+            end
+        end
+    end
 end
 
 
@@ -1039,9 +1639,9 @@ end
 function tick_movie()
     local frame = emu.framecount()
 
-    slug = movie_steps[frame]
-    if slug then
-        make_preset_save(slug)
+    local step = STEPS[frame]
+    if step then
+        make_preset_save(step['slug'])
     end
 end
 
@@ -1151,7 +1751,14 @@ function main()
         memory.registerwrite(addr_with_bank, 0x1, state_changed)
     end)
 
-    gui.register(draw_ui)
+    -- gui.register(draw_ui)
+
+    for _, step in orderedPairs(STEPS) do
+        table.insert(SEGMENTS[step['segment']]['steps'], step)
+        if step['boss'] then
+            table.insert(SEGMENTS[15]['steps'], step)
+        end
+    end
 
     while true do
         tick_state()

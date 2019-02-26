@@ -5,3 +5,5 @@
 std*.txt
 *.srm
 target/
+tools/preset_data_*.asm
+tools/cm_presets_*.asm
