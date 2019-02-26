@@ -39,6 +39,7 @@ CM_Local:
 
 
 CM_Init:
+    LDA #$01 : STA !ram_cm_opened_menu_maunally
     ; Start with new state when opening the menu.
     JSR cm_clear_stack
     STZ $B0
@@ -158,9 +159,13 @@ CM_MenuUp:
 
 
 CM_Return:
+    LDA !ram_cm_opened_menu_maunally : BEQ .tileset_is_ok
   %ppu_off()
     JSL load_default_tileset
   %ppu_on()
+
+  .tileset_is_ok
+    LDA #$00 : STA !ram_cm_opened_menu_maunally
 
   %ai8()
     LDA !ram_preset_type : BEQ .no_preset
