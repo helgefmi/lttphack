@@ -19,6 +19,14 @@ org $028252
 org $028154
     JSR load_entrance_local
 
+; When Link dies
+org $0780E1
+    ; 0780e6 lda #$12
+    ; 0780e8 sta $10
+    ; 0780ea lda #$01
+    ; 0780ec sta $11
+    JSL preset_autoload_preset
+    NOP : NOP : NOP : NOP
 
 org $02C240
 load_entrance_local:
@@ -418,8 +426,15 @@ preset_load_state:
 
   .in_overworld
     ; Check if we currently have a tagalong
-    LDA $7EF3CC : BEQ .done
+    LDA $7EF3CC : BEQ .no_tagalong
     JSL !Tagalong_LoadGfx
+
+  .no_tagalong
+    LDA !ram_game_progress : CMP #$02 : BMI .done
+
+    LDA !ram_sanctuary_heart : BEQ .done
+    LDA !ram_equipment_maxhp : CLC : ADC #$08 : STA !ram_equipment_maxhp
+    LDA !ram_equipment_curhp : CLC : ADC #$08 : STA !ram_equipment_curhp
 
   .done
   %ai16()
@@ -517,6 +532,20 @@ preset_duck_dropoff_hook:
   PLA
     RTL
 
+
+preset_autoload_preset:
+    LDA !ram_autoload_preset : BEQ .die
+
+    STZ !lowram_is_poverty_load
+    JSL preset_load_last_preset
+    RTL
+
+  .die
+    LDA #$12
+    STA $10
+    LDA #$01
+    STA $11
+    RTL
 
 preset_start_ptrs:
     dw sram_nmg_esc_bed

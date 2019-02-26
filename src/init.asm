@@ -64,6 +64,8 @@ init_initialize:
     STA !ram_subpixels_toggle
     STA !ram_xy_toggle
     STA !ram_disable_text
+    STA !ram_sanctuary_heart
+    STA !ram_autoload_preset
 
     ; Start + R
     LDA #$1010 : STA !ram_ctrl_prachack_menu
