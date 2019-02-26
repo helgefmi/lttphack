@@ -12,15 +12,16 @@ gamemode_hook:
     LDA $F4 : STA !ram_ctrl1_filtered
     LDA $F6 : STA !ram_ctrl1_filtered+1
 
-    JSR gamemode_savestate : BCS .exit
+  PHB : PHK : PLB
+    JSR gamemode_savestate : BCS .skip_gamemode
 
     ; Update Game Time counter
   %a16()
     INC !lowram_room_gametime
   %a8()
 
-    JSR gamemode_custom_menu : BCS .exit
-    JSR gamemode_load_previous_preset : BCS .exit
+    JSR gamemode_custom_menu : BCS .skip_gamemode
+    JSR gamemode_load_previous_preset : BCS .skip_gamemode
     JSR gamemode_transition_detection
     JSR gamemode_oob
     JSR gamemode_skip_text
@@ -29,6 +30,7 @@ gamemode_hook:
     JSR gamemode_reset_segment_timer
 
   %ai8()
+  PLB
     JSL $0080B5 ; GameModes
 
     LDA !ram_lagometer_toggle : BEQ .done
@@ -37,14 +39,16 @@ gamemode_hook:
   .done
     RTL
 
-  .exit
+  .skip_gamemode
   %ai8()
+  PLB
     RTL
 
 
 ; Transition detection
+
 gamemode_transition_detection:
-  %a8()
+  %ai8()
     LDA $10 : CMP !ram_gamemode_copy : BNE .gamemode_changed
     LDA $11 : CMP !ram_submode_copy : BNE .submode_changed
     LDA $02D8 : CMP !ram_received_item_copy : BNE .new_item_received
@@ -53,156 +57,167 @@ gamemode_transition_detection:
 
   .new_item_received
     LDA $02D8 : STA !ram_received_item_copy
-    JMP .only_show_counters
+    JSR .show_counters
+    BRA .done
 
   .gamemode_changed
-    LDA !ram_gamemode_copy
+    LDX #$FA
 
-    CMP #$01 : BEQ .show_and_reset_counters
-    CMP #$07 : BEQ .gamemode_dungeon
-    CMP #$09 : BEQ .gamemode_overworld
-    CMP #$0B : BEQ .gamemode_overworld ; "Special" overworld (?)
-    CMP #$13 : BEQ .gamemode_victory ; LW?
-    CMP #$16 : BEQ .gamemode_victory ; DW?
+  - INX #6
+    LDA .gamemode_table, X
+    CMP #$FF : BEQ .done
+    CMP !ram_gamemode_copy : BNE -
+    LDA $10 : AND .gamemode_table+1, X : CMP .gamemode_table+2, X : BNE -
+    LDA $11 : AND .gamemode_table+3, X : CMP .gamemode_table+4, X : BNE -
 
-    JMP .td_end
-
-  .gamemode_victory
-    LDA $10
-
-    ; Just killed a boss. Loading overworld.
-    CMP #$08 : BEQ .show_and_reset_counters
-
-    JMP .td_end
-
-  .gamemode_dungeon
-    LDA $10
-
-    ; Text mode. Don't reset counters.
-    CMP #$0E : BEQ .only_show_counters
-
-    ; Dungeon -> Overworld
-    CMP #$0F : BEQ .show_and_reset_counters
-
-    ; Caught by Wall Master
-    CMP #$11 : BEQ .show_and_reset_counters
-
-    ; Magic mirror (beating Agahnim)
-    CMP #$15 : BEQ .show_and_reset_counters
-
-    JMP .td_end
-
-  .gamemode_overworld
-    LDA $10
-
-    ; OW (special) -> OW
-    CMP #$09 : BEQ .show_and_reset_counters
-
-    ; OW -> OW (special)
-    CMP #$0B : BEQ .show_and_reset_counters
-
-    ; Overworld -> Dungeon
-    CMP #$0F : BEQ .show_and_reset_counters
-
-    ; Fall in hole
-    CMP #$11 : BEQ .show_and_reset_counters
-
-    ; Text mode. Don't reset counters.
-    CMP #$0E : BNE .td_end
-
-    LDA $11 : CMP #$0A : BEQ .show_and_reset_counters
-
-    BRA .only_show_counters
-
-    JMP .td_end
+    LDA .gamemode_table+5, X
+    BRA .transition_detected
 
   .submode_changed
-    LDA $10
+    LDX #$FD
 
-    ; Dungeon
-    CMP #$07 : BEQ .submode_dungeon
+  - INX #3
+    LDA .submode_table, X
+    CMP #$FF : BEQ .done
+    CMP !ram_gamemode_copy : BNE -
+    LDA .submode_table+1, X : CMP $11 : BNE -
 
-    ; Overworld
-    CMP #$09 : BEQ .submode_overworld
+    LDA .gamemode_table+2, X
 
-    JMP .td_end
+  .transition_detected
+    CMP #!TD_RESET : BEQ .reset
+    JSR .show_counters
+    BRA .done
 
-  .show_and_reset_counters
-    ; Reset per-room counters
-  %a16()
-    JSR gamemode_reset_counters
+  .reset
+    JSR .reset_counters
 
-    JSL draw_counters
-    JMP .td_end
+  .done
+    ; Persist new game mode/submode.
+    LDA $10 : STA !ram_gamemode_copy
+    LDA $11 : STA !ram_submode_copy
+    RTS
 
-  .only_show_counters
+  .gamemode_table:
+    ; Format:
+    ; 1. Previous $10
+    ; 2. AND operand for $10
+    ; 3. CMP operand for $10
+    ; 4-5. Same but for $11
+    ; 6. Action to take
+
+    ; Game start
+    db $01, $00, $00, $00, $00 : db #!TD_RESET
+    ; Dungeon -> Text mode
+    db $07, $FF, $0E, $00, $00 : db #!TD_SHOW
+    ; Dungeon -> Overworld
+    db $07, $FF, $0F, $00, $00 : db #!TD_RESET
+    ; Dungeon -> Wall Master (Fall into Hole too?)
+    db $07, $FF, $11, $00, $00 : db #!TD_RESET
+    ; Dungeon -> Magic Mirror
+    db $07, $FF, $15, $00, $00 : db #!TD_RESET
+    ; Overworld (normal) -> Overworld (special)
+    db $09, $FF, $0B, $00, $00 : db #!TD_RESET
+    ; Overworld (special) -> Overworld (normal)
+    db $0B, $FF, $09, $00, $00 : db #!TD_RESET
+    ; Overworld -> Dungeon
+    db $09, $FF, $0F, $00, $00 : db #!TD_RESET
+    db $0B, $FF, $0F, $00, $00 : db #!TD_RESET
+    ; Overworld -> Fall in Hole
+    db $09, $FF, $11, $00, $00 : db #!TD_RESET
+    db $0B, $FF, $11, $00, $00 : db #!TD_RESET
+    ; Overworld -> Text mode
+    db $09, $FF, $0E, $FF, $0A : db #!TD_RESET
+    db $0B, $FF, $0E, $FF, $0A : db #!TD_RESET
+    ; Overworld -> Flute menu
+    db $09, $FF, $0E, $00, $00 : db #!TD_SHOW
+    db $0B, $FF, $0E, $00, $00 : db #!TD_SHOW
+    ; Victory screen (LW?) -> Overworld
+    db $13, $FF, $08, $00, $00 : db #!TD_RESET
+    ; Victory screen (DW?) -> Overworld
+    db $16, $FF, $08, $00, $00 : db #!TD_RESET
+
+    db $FF
+
+
+  .submode_table:
+    ; Format:
+    ; 1. Current $10
+    ; 2. CMP operand for $11
+    ; 3. Action to take
+    ; Dungeon: Subtile transition
+    db $07, $01, #!TD_RESET
+    ; Dungeon: Supertile transition
+    db $07, $02, #!TD_RESET
+    ; Dungeon: Upwards transition
+    db $07, $06, #!TD_RESET
+    ; Dungeon: Downwards transition
+    db $07, $07, #!TD_RESET
+    ; Dungeon: Subtile staircase (up)
+    db $07, $12, #!TD_RESET
+    ; Dungeon: Subtile staircase (down)
+    db $07, $13, #!TD_RESET
+    ; Dungeon: Spiral staircase
+    db $07, $0E, #!TD_RESET
+    ; Dungeon: Warping to another room
+    db $07, $15, #!TD_RESET
+    ; Dungeon: Magic Mirror
+    db $07, $19, #!TD_RESET
+    ; Overworld: Normal transition
+    db $09, $01, #!TD_RESET
+    ; Overworld: Transition into Dark Woods
+    db $09, $0D, #!TD_RESET
+    ; Overworld: Magic Mirror
+    db $09, $23, #!TD_RESET
+    ; Overworld: Whirlpool
+    db $09, $2E, #!TD_RESET
+
+    db $FF
+
+  .show_counters
   %a16()
     LDA !lowram_room_realtime : STA !lowram_room_realtime_copy
     LDA !lowram_room_gametime : STA !lowram_room_gametime_copy
     LDA !lowram_idle_frames : STA !lowram_idle_frames_copy
-
     JSL draw_counters
-    JMP .td_end
-
-  .submode_overworld
-    LDA $11
-
-    ; Normal transition
-    CMP #$01 : BEQ .show_and_reset_counters
-
-    ; Transition into Dark Woods
-    CMP #$0D : BEQ .show_and_reset_counters
-
-    ; Mirror
-    CMP #$23 : BEQ .show_and_reset_counters
-
-    ; Whirlpool
-    CMP #$2E : BEQ .show_and_reset_counters
-
-    JMP .td_end
-
-  .submode_dungeon
-    LDA $11
-
-    ; Normal transition intra-room
-    CMP #$01 : BEQ .show_and_reset_counters
-
-    ; Normal transition inter-room
-    CMP #$02 : BEQ .show_and_reset_counters
-
-    ; Transition upwards
-    CMP #$06 : BEQ .show_and_reset_counters
-
-    ; Transition upwards
-    CMP #$07 : BEQ .show_and_reset_counters
-
-    ; Walking up straight inter-room staircase
-    CMP #$12 : BEQ .show_and_reset_counters
-
-    ; Walking down straight inter-room staircase
-    CMP #$13 : BEQ .show_and_reset_counters
-
-    ; Transition inter-room staircase
-    CMP #$0E : BEQ .show_and_reset_counters
-
-    ; Warping to another room
-    CMP #$15 : BEQ .show_and_reset_counters
-
-    ; Magic mirror
-    CMP #$19 : BEQ .show_and_reset_counters
-
-    JMP .td_end
-
-  .td_end
   %a8()
-    ; Persist new game mode/submode.
-    LDA $10 : STA !ram_gamemode_copy
-    LDA $11 : STA !ram_submode_copy
+
+    RTS
+
+  .reset_counters
+  %a16()
+    LDA !lowram_room_realtime : STA !lowram_room_realtime_copy : STZ !lowram_room_realtime
+    LDA !lowram_room_gametime : STA !lowram_room_gametime_copy : STZ !lowram_room_gametime
+    LDA !lowram_idle_frames : STA !lowram_idle_frames_copy : STZ !lowram_idle_frames
+    LDA #$0000 : STA !ram_rng_counter
+    JSL draw_counters
+  %a8()
 
     RTS
 
 
-gamemode_unsafe_modes:
+gamemode_safe_to_change_mode:
+  %ai8()
+    PHB : PHK : PLB
+    LDX $10 : LDA .unsafe_modes, X : BNE .not_safe
+    CPX #$07 : BNE .not_dungeon
+
+    LDA $11 : CMP #$06 : BEQ .not_safe ; Upwards floor transition
+              CMP #$07 : BEQ .not_safe ; Downward floor transition
+              CMP #$0F : BEQ .not_safe ; Enter underworld spotlight effect
+
+  .not_dungeon
+    ; Don't allow custom menu during mosaic effects
+    LDA $7EC011 : BNE .not_safe
+
+    PLB
+    SEC : RTS
+
+  .not_safe
+    PLB
+    CLC : RTS
+
+  .unsafe_modes
     db #$01 ; 0x00 - Triforce / Zelda startup screens
     db #$01 ; 0x01 - File Select screen
     db #$01 ; 0x02 - Copy Player Mode
@@ -231,27 +246,6 @@ gamemode_unsafe_modes:
     db #$01 ; 0x19 - Triforce Room scene
     db #$01 ; 0x1A - End sequence
     db #$01 ; 0x1B - Screen to select where to start from (House, sanctuary, etc.)
-
-gamemode_safe_to_change_mode:
-  %ai8()
-    PHB : PHK : PLB
-    LDX $10 : LDA gamemode_unsafe_modes, X : BNE .not_safe
-    CPX #$07 : BNE .not_dungeon
-
-    LDA $11 : CMP #$06 : BEQ .not_safe ; Upwards floor transition
-              CMP #$07 : BEQ .not_safe ; Downward floor transition
-              CMP #$0F : BEQ .not_safe ; Enter underworld spotlight effect
-
-  .not_dungeon
-    ; Don't allow custom menu during mosaic effects
-    LDA $7EC011 : BNE .not_safe
-
-    PLB
-    SEC : RTS
-
-  .not_safe
-    PLB
-    CLC : RTS
 
 
 ; Custom Menu
@@ -627,14 +621,6 @@ gamemode_reset_segment_timer:
 
   .done
     %a8()
-    RTS
-
-
-gamemode_reset_counters:
-    LDA !lowram_room_realtime : STA !lowram_room_realtime_copy : STZ !lowram_room_realtime
-    LDA !lowram_room_gametime : STA !lowram_room_gametime_copy : STZ !lowram_room_gametime
-    LDA !lowram_idle_frames : STA !lowram_idle_frames_copy : STZ !lowram_idle_frames
-    LDA #$0000 : STA !ram_rng_counter
     RTS
 
 
