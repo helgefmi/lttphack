@@ -315,7 +315,7 @@ macro ppu_off()
     STZ $420C : LDA $9B : PHA : STZ $9B
     STZ $4200
 endmacro
-  
+
 macro ppu_on()
     LDA #$A1 : STA $4200
     LDA #$0F : STA $13 : STA $2100

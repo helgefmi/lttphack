@@ -260,7 +260,7 @@ gamemode_custom_menu:
     LDA $10 : STA !ram_cm_old_gamemode
     LDA $11 : STA !ram_cm_old_submode
 
-    LDA.b #$0C : STA $10
+    LDA #$0C : STA $10
     STZ $11
 
     SEC : RTS
@@ -400,20 +400,20 @@ else
 
     ; Loading during text mode makes the text stay or the item menu to bug
     LDA $10 : CMP #$0E : BEQ .no_load
-    
+
     LDA !ram_can_load_pss : BEQ .no_load
-    
+
   %a16()
     LDA #!sram_pss_offset+1 : STA !ram_preset_destination
   %a8()
     LDA !sram_pss_offset : STA !ram_preset_type
-    LDA.b #12 : STA $10
-    LDA.b #05 : STA $11
+    LDA #12 : STA $10
+    LDA #05 : STA $11
     LDA #$01 : STA !lowram_is_poverty_load
 
   %ai8()
     SEC : RTS
-    
+
   .no_load:
   %ai8()
     CLC : RTS
