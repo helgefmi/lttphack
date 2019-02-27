@@ -39,7 +39,7 @@ load_entrance_local:
     RTS
 
   .custom
-    LDA.b #$00 : STA !ram_preset_type
+    LDA #$00 : STA !ram_preset_type
     JSR !Dungeon_LoadEntrance
     JSL preset_load_dungeon
   %ai8()
@@ -86,14 +86,14 @@ preset_load_next_frame:
     STZ $046C
 
     ; Jumps to Bird Menu module
-    LDA.b #$0E : STA $10
-    LDA.b #$0A : STA $11
+    LDA #$0E : STA $10
+    LDA #$0A : STA $11
 
     ; Make sure we're back into light word after the Messaging module is done.
-    LDA.b #$09 : STA $010C
+    LDA #$09 : STA $010C
 
     ; Skip the opening of overworld map and such. We want instaport.
-    LDA.b #$06 : STA $0200
+    LDA #$06 : STA $0200
 
     RTL
 
@@ -106,11 +106,11 @@ preset_load_next_frame:
     STZ $010A
 
     ; Put us in Spotlight_close Module.
-    LDA.b #$0F : STA $10
+    LDA #$0F : STA $10
     STZ $11
 
     ; Puts us in PreDungeon after Spotlight_close is done.
-    LDA.b #$06 : STA $010C
+    LDA #$06 : STA $010C
 
     RTL
 
@@ -128,8 +128,8 @@ preset_deinit_current_state:
     STZ $1ADF
     STZ $1AEF
 
-    LDA !ram_cm_old_gamemode : CMP.b #$0E : BNE .not_message_module
-    LDA !ram_cm_old_submode : CMP.b #$02 : BNE .not_message_module
+    LDA !ram_cm_old_gamemode : CMP #$0E : BNE .not_message_module
+    LDA !ram_cm_old_submode : CMP #$02 : BNE .not_message_module
 
     JSR preset_deinit_dialog_mode
 
@@ -152,7 +152,7 @@ preset_deinit_dialog_mode:
     LDA.w #$FFFF : STA $1008
 
   %ai8()
-    LDA.b #$01 : STA $14
+    LDA #$01 : STA $14
 
     STZ $1CD8
 
@@ -163,7 +163,7 @@ preset_deinit_dialog_mode:
 ; ------------
 
 preset_load_overworld:
-  ; Enters: AI=8
+    ; Enters: AI=8
     LDA !ram_preset_type : BNE .preset
 
     ; This means we got here from the actual Bird menu (how boring),
@@ -313,20 +313,20 @@ preset_load_dungeon:
   %a8()
 
     ; Set link to be in the Overworld
-    LDA.b #$01 : STA $1B
+    LDA #$01 : STA $1B
 
     ; Main blockset value (main graphics)
     LDA [$00],y : %a16() : INY : %a8() : STA $0AA1
 
     ; Music track value. Is it the beginning music?
-    LDA [$00],y : %a16() : INY : %a8() : STA $0132 : CMP.b #$03 : BNE .notBeginningMusic
+    LDA [$00],y : %a16() : INY : %a8() : STA $0132 : CMP #$03 : BNE .notBeginningMusic
 
     ; Check game status
     ; Is it less than first part?
-    LDA $7EF3C5 : CMP.b #$02 : BCC .haventSavedZelda
+    LDA $7EF3C5 : CMP #$02 : BCC .haventSavedZelda
 
     ; Play the cave music if it's first or second part.
-    LDA.b #$12
+    LDA #$12
 
   .haventSavedZelda
 
@@ -349,7 +349,7 @@ preset_load_dungeon:
     LDA [$00],y : STA $EE
 
     ; Set Pseudo bg level
-    LDA [$00],y : %a16() : INY : %a8() : AND.b #$0F : STA $0476
+    LDA [$00],y : %a16() : INY : %a8() : AND #$0F : STA $0476
 
   PHY
 
@@ -443,7 +443,7 @@ preset_load_state:
     JSL !UpdateBarrierTileChr
 
   LDA $11 : PHA
-    LDA.b #$07 : STA $0690
+    LDA #$07 : STA $0690
     JSL !Dungeon_AnimateTrapDoors
   PLA : STA $11
 
@@ -538,8 +538,8 @@ preset_load_last_preset:
     LDA !ram_previous_preset_destination : STA !ram_preset_destination
   %a8()
     LDA !ram_previous_preset_type : STA !ram_preset_type
-    LDA.b #12 : STA $10
-    LDA.b #05 : STA $11
+    LDA #12 : STA $10
+    LDA #05 : STA $11
     RTL
 
 
@@ -551,7 +551,7 @@ preset_duck_dropoff_hook:
     JML $099509
 
   .custom
-    LDA.b #$00 : STA !ram_preset_type
+    LDA #$00 : STA !ram_preset_type
   PLA
     RTL
 
@@ -579,7 +579,7 @@ preset_did_we_load_preset:
 
   .done
 
-    LDA $0132 : CMP.b #$FF : BEQ .muted
+    LDA $0132 : CMP #$FF : BEQ .muted
     STA $012C
 
  .muted
@@ -602,7 +602,7 @@ preset_spotlight_open_hook:
     RTL
 
   .done
-    LDA $0132 : CMP.b #$FF : BEQ .muted
+    LDA $0132 : CMP #$FF : BEQ .muted
     STA $012C
 
  .muted

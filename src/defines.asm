@@ -325,7 +325,7 @@ endmacro
 
 
 macro ppu_off()
-    LDA.b #$80 : STA $2100 : STA $13
+    LDA #$80 : STA $2100 : STA $13
     STZ $420C : LDA $9B : PHA : STZ $9B
     STZ $4200
 endmacro

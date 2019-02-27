@@ -90,7 +90,7 @@ sound_loadsongbank:
     CMP $2140 : BNE .loop
 
     %a8()
-    LDA.b #$CC
+    LDA #$CC
     BRA .setup_transfer
 
   .begin_transfer
@@ -98,7 +98,7 @@ sound_loadsongbank:
     LDA [$00], Y
     INY
     XBA
-    LDA.b #$00
+    LDA #$00
     BRA .write_zero_byte
 
   .continue_transfer
@@ -140,7 +140,7 @@ sound_loadsongbank:
 
   .no_zero ; At this point $2140 = #$01
     ; Add four to the byte count
-    ADC.b #$03 : BEQ .no_zero ; (But Don't let A be zero!)
+    ADC #$03 : BEQ .no_zero ; (But Don't let A be zero!)
 
   .setup_transfer
   PHA
@@ -154,7 +154,7 @@ sound_loadsongbank:
     ; And rotated into the accumulator (A = #$01)
     ; NOTE ANTITRACK'S DOC IS WRONG ABOUT THIS!!!
     ; He mistook #$0001 to be #$0100.
-    LDA.b #$00 : ROL A : STA $2141 : ADC.b #$7F
+    LDA #$00 : ROL A : STA $2141 : ADC #$7F
 
     ; Hopefully no one was confused.
   PLA
