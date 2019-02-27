@@ -205,36 +205,45 @@ gamemode_transition_detection:
 
 
 gamemode_safe_to_change_mode:
+    ; Used to decide if we can use the Custom Menu or Poverty Save/Load State.
   %ai8()
     PHB : PHK : PLB
-    LDX $10 : LDA .unsafe_modes, X : BNE .not_safe
+    LDX $10 : LDA .unsafe_gamemodes, X : BNE .not_safe
     CPX #$07 : BNE .not_dungeon
 
     LDA $11 : CMP #$06 : BEQ .not_safe ; Upwards floor transition
               CMP #$07 : BEQ .not_safe ; Downward floor transition
+              CMP #$12 : BEQ .not_safe ; Subtile staircase (up)
+              CMP #$13 : BEQ .not_safe ; Subtile staircase (down)
+              CMP #$0E : BEQ .not_safe ; Spiral staircase
               CMP #$0F : BEQ .not_safe ; Enter underworld spotlight effect
 
   .not_dungeon
+    CPX #$09 : BNE .not_overworld
+    LDA $11 : BEQ .not_overworld
+    CMP #$08 : BCC .not_safe
+
+  .not_overworld
     ; Don't allow custom menu during mosaic effects
     LDA $7EC011 : BNE .not_safe
 
-    PLB
+  PLB
     SEC : RTS
 
   .not_safe
-    PLB
+  PLB
     CLC : RTS
 
-  .unsafe_modes
+  .unsafe_gamemodes
     db #$01 ; 0x00 - Triforce / Zelda startup screens
     db #$01 ; 0x01 - File Select screen
     db #$01 ; 0x02 - Copy Player Mode
     db #$01 ; 0x03 - Erase Player Mode
     db #$01 ; 0x04 - Name Player Mode
     db #$01 ; 0x05 - Loading Game Mode
-    db #$00 ; 0x06 - Pre Dungeon Mode
+    db #$01 ; 0x06 - Pre Dungeon Mode
     db #$00 ; 0x07 - Dungeon Mode
-    db #$00 ; 0x08 - Pre Overworld Mode
+    db #$01 ; 0x08 - Pre Overworld Mode
     db #$00 ; 0x09 - Overworld Mode
     db #$00 ; 0x0A - Pre Overworld Mode (special overworld)
     db #$00 ; 0x0B - Overworld Mode (special overworld)
@@ -370,6 +379,8 @@ else
     ; make sure we're not on a screen transition or falling down
     LDA $0126 : AND #$00FF : ORA $0410 : BNE .test_load_state
     LDA $5B : AND #$00FF : CMP #$0002 : BCS .test_load_state
+
+    JSR gamemode_safe_to_change_mode : BCC .test_load_state
 
   %a8()
     JSL save_preset_data
