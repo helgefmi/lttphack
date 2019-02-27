@@ -6,6 +6,7 @@ org $008056
 ; Game Mode Hook
 org !ORG
 gamemode_hook:
+  PHB : PHK : PLB
 
   if !FEATURE_MOVIE == 0
     ; For convenience, so that we can access the full ctrl1 as 16bit.
@@ -15,7 +16,6 @@ gamemode_hook:
     LDA $F6 : STA !ram_ctrl1_filtered+1
   endif
 
-  PHB : PHK : PLB
     JSR gamemode_savestate : BCS .skip_gamemode
 
     ; Update Game Time counter
@@ -25,9 +25,11 @@ gamemode_hook:
 
     JSR gamemode_custom_menu : BCS .skip_gamemode
     JSR gamemode_load_previous_preset : BCS .skip_gamemode
+
     if !FEATURE_MOVIE
         JSR gamemode_replay_last_movie : BCS .skip_gamemode
     endif
+
     JSR gamemode_transition_detection
     JSR gamemode_oob
     JSR gamemode_skip_text
@@ -88,7 +90,7 @@ gamemode_transition_detection:
     CMP !ram_gamemode_copy : BNE -
     LDA .submode_table+1, X : CMP $11 : BNE -
 
-    LDA .gamemode_table+2, X
+    LDA .submode_table+2, X
 
   .transition_detected
     CMP #!TD_RESET : BEQ .reset
