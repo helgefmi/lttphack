@@ -567,7 +567,7 @@ cm_feature_music:
     %cm_toggle_jsr("Music", !ram_feature_music)
 
   .toggle
-    JSL music_load_data
+    JSL music_reload
     RTS
 
 

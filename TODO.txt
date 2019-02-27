@@ -63,6 +63,8 @@ x Lanmola & Mothula RNG Control
 x Some method of not having to wait for 8 seconds if you die and aren't on SD2SNES.
   Perhaps an option "Automatically reload preset upon death" if I can't figure out how to load it during the death animation.
 
+x Fix some problems with music when using presets
+
 - Ganon bagpipie noises if you make save state after entering pyramid hole & load it during the Ganon fight (phase 3)
 
 - Show counter for Agahnim 2

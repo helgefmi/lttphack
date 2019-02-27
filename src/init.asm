@@ -35,7 +35,7 @@ init_expand:
     LDA #$00 : STA !ram_oob_toggle : STA !lowram_oob_toggle
 
   .done
-    JSL music_loadfile
+    JSL music_init
     RTL
 
 init_initialize:

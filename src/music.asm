@@ -32,14 +32,10 @@ org $008931
   NOP : NOP
 
 
-; Overwrites:
-; JSL $00893D
-; org $028046
-;     JSL music_loadfile
-
-
 org !ORG
-music_loadfile:
+; Used when turning on the console, so sound is correctly unmuted after selecting a file.
+; This removes file screen music, but oh well.
+music_init:
     LDX #$00 : JSL music_setup_bank
     LDA #$FF : STA $2140
  %ppu_off()
@@ -48,6 +44,10 @@ music_loadfile:
     JSL $00893d
     RTL
 
+
+; Sets up $00-03 with the address of the songbank to be loaded.
+; Both $008888 (Sound_LoadSongBank) and sound_loadsongbank below can be used for this.
+; Enter with X=0 for Overworld music, X=1 for Underworld and X=2 for Credits.
 music_setup_bank:
   PHB : PHK : PLB
     LDA !ram_feature_music : ASL #4 : STA $00
@@ -60,17 +60,30 @@ music_setup_bank:
     RTL
 
 
-music_load_data:
+music_reload:
   %ai8()
-    LDA $1B : TAX
-    JSL music_setup_bank
-    LDA #$FF : STA $2140
-  %ppu_off()
-    JSR sound_loadsongbank
-  %ppu_on()
+    LDA $1B : TAX : JSL music_setup_bank
 
-    LDA $0133 : STA $012C
-    STZ $0133
+    SEI
+
+    STZ $4200
+    STZ $420C
+
+    LDA #$FF : STA $2140
+
+    JSR sound_loadsongbank
+
+    CLI
+
+    LDA $1B : STA $0136
+
+    LDA #$81 : STA $4200
+
+    LDA $0130 : CMP #$FF : BEQ .muted
+
+    STA $012C : STZ $0133
+
+  .muted
 
     RTL
 

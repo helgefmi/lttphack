@@ -248,6 +248,14 @@ preset_load_overworld:
     ; Clears RAM in case it's needed (used for when lifting big rocks?).
     STZ $0698
 
+    LDA $0136 : BEQ .dontNeedNewMusicBank
+
+    JSL music_reload
+
+  %a16()
+
+  .dontNeedNewMusicBank
+
   PLB
     JML !BirdTravel_LoadTargetAreaData_AfterData
 
