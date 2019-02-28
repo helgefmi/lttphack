@@ -94,7 +94,7 @@ preset_load_next_frame:
     JSR preset_clear_tilemap
   %ai8()
 
-    LDA #$F1 : STA $012C
+    LDA #$F0 : STA $012C
     LDA #$05 : STA $012D
 
     LDA !ram_preset_type : CMP #$02 : BEQ .dungeon
@@ -359,6 +359,9 @@ preset_load_dungeon:
     STA $0132
 
   .notBeginningMusic
+
+  .loop
+    LDA $2140 : BNE .loop
 
     ; Starting floor
     LDA [$00],y : %a16() : INY : %a8() : STA $A4

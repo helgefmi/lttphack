@@ -288,10 +288,13 @@ music_overworld_track:
     LDX.b #$04
 
   .setSong
+  .loop
+    LDA $2140 : BNE .loop
 
-    ; The value written here will take effect during NMI
     STX $012C
+
     RTL
+
 
 spc_data:
     dl $1B8000 : db $00 ; overworld
