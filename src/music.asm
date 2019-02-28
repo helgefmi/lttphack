@@ -180,7 +180,18 @@ sound_loadsongbank:
 
 
 music_overworld_track:
-    ; not sure what theme this is. might be the beginning song
+    LDA !ram_preset_type : BNE .loadedPreset
+
+    ; Let duck music logic run
+    LDA #$10
+    STA $012F
+    LDA $8A
+    CLC
+    RTL
+
+  .loadedPreset
+    ; Run our own logic for deciding music track
+
     LDX.b #$02
 
     LDA $8A
@@ -288,11 +299,10 @@ music_overworld_track:
     LDX.b #$04
 
   .setSong
-  .loop
-    LDA $2140 : BNE .loop
-
     STX $012C
 
+  .done
+    SEC
     RTL
 
 

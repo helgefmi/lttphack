@@ -40,7 +40,9 @@ org $0780E1
 ; 0ab968 stx $012c
 org $0AB944
     JSL music_overworld_track
+    BCC .runLogic
     RTL
+  .runLogic
 
 
 org $02C240

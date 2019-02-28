@@ -63,15 +63,18 @@ x Lanmola & Mothula RNG Control
 x Some method of not having to wait for 8 seconds if you die and aren't on SD2SNES.
   Perhaps an option "Automatically reload preset upon death" if I can't figure out how to load it during the death animation.
 
-x Fix some problems with music when using presets
+x Fix a bunch of problems with music and ambient sounds.
+  x Overworld presets loads correct music.
+  x Don't play torch/flute sound infinitly in some cases.
+  x Fix most issues where music will suddenly disappear, both on SD2SNES and normal.
 
-- Ganon bagpipie noises if you make save state after entering pyramid hole & load it during the Ganon fight (phase 3)
+
+Next versions?
+-----
+- Move replay
 
 - Show counter for Agahnim 2
 
-
-Maybe
------
 - Arbitrary memory watch/poke.
 
 - Always lucky
@@ -88,8 +91,6 @@ Maybe
 - Show invisible sprites (Guard LoS)
 
 - Show sprite info in general? Editable?
-
-- Macro editor? Record/play movie from preset? Proof of concept is done (load http://helge.monsternett.no/lttp/ anypct.sfc/srm into your SD2SNES & get that WR)
 
 
 ======== COUNTERS SPEC ========
