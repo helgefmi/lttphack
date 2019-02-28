@@ -47,15 +47,8 @@ load_entrance_local:
 warnpc $02C270
 
 
-; Module_Dungeon -> Spotlight_Open
-org $02922F
-    JSL preset_spotlight_open_hook
-    NOP : NOP
-    ;02922f jsl $00f290
-    ;029233 inc $b0
-    ;029235 rts
-
 ; Module_CloseSpotlight
+; This is called first
 org $02987D
     ;02987d jsl $068328
     ;029881 lda $11
@@ -65,6 +58,16 @@ org $02987D
     BCC +
     RTL
   + NOP
+
+
+; Module_Dungeon -> Spotlight_Open
+; This is called last
+org $02922F
+    JSL preset_spotlight_open_hook
+    NOP : NOP
+    ;02922f jsl $00f290
+    ;029233 inc $b0
+    ;029235 rts
 
 
 
@@ -586,9 +589,6 @@ preset_did_we_load_preset:
     RTL
 
   .done
-
-    LDA $0132 : CMP #$FF : BEQ .muted
-    STA $012C
 
  .muted
 

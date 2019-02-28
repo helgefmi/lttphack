@@ -39,7 +39,7 @@ music_init:
     LDX #$00 : JSL music_setup_bank
     LDA #$FF : STA $2140
  %ppu_off()
-    JSR sound_loadsongbank
+    JSL sound_loadsongbank
  %ppu_on()
     JSL $00893d
     RTL
@@ -71,19 +71,13 @@ music_reload:
 
     LDA #$FF : STA $2140
 
-    JSR sound_loadsongbank
+    JSL sound_loadsongbank
 
     CLI
 
     LDA $1B : STA $0136
 
     LDA #$81 : STA $4200
-
-    LDA $0130 : CMP #$FF : BEQ .muted
-
-    STA $012C : STZ $0133
-
-  .muted
 
     RTL
 
@@ -182,7 +176,7 @@ sound_loadsongbank:
 
     STZ $2140 : STZ $2141 : STZ $2142 : STZ $2143
   PLP
-    RTS
+    RTL
 
 spc_data:
     dl $1B8000 : db $00 ; overworld

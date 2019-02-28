@@ -568,6 +568,13 @@ cm_feature_music:
 
   .toggle
     JSL music_reload
+
+    LDA $0130 : CMP #$FF : BEQ .muted
+
+    STA $012C : STZ $0133
+
+  .muted
+
     RTS
 
 
