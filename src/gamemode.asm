@@ -410,6 +410,9 @@ endif
 if !FEATURE_SD2SNES
 
   %a8()
+    ; Mute the music (makes SPC ready for music track changes)
+    LDA #$F0 : STA $2140
+
     STZ $420C
     JSR ppuoff
     STZ $4310
