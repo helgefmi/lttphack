@@ -410,8 +410,10 @@ endif
 if !FEATURE_SD2SNES
 
   %a8()
-    ; Mute the music (makes SPC ready for music track changes)
+    ; Mute music
     LDA #$F0 : STA $2140
+    ; Mute ambient sounds
+    LDA #$05 : STA $2141
 
     STZ $420C
     JSR ppuoff
@@ -425,8 +427,13 @@ if !FEATURE_SD2SNES
     LDX $99 : STX $2130
 
     INC $15
-    LDA $0133 : STA $012C
+    LDA $0130 : STA $012C
     STZ $0133
+
+    LDA $0131 : CMP #$17 : BEQ .annoyingSounds ; Bird music
+    STA $012D : STZ $0131
+
+  .annoyingSounds
     LDA $0638 : STA $211F
     LDA $0639 : STA $211F
     LDA $063A : STA $2120
