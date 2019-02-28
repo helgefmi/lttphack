@@ -28,6 +28,21 @@ org $0780E1
     JSL preset_autoload_preset
     NOP : NOP : NOP : NOP
 
+; 0ab944 lda #$10
+; 0ab946 sta $012f
+; 0ab949 lda $8a
+; 0ab94b and #$bf
+; 0ab94d ldx #$02
+; 0ab94f cmp #$18
+; 0ab951 bne $b95d
+; 0ab95d cpx $0130
+; 0ab960 bne $b968
+; 0ab968 stx $012c
+org $0AB944
+    JSL music_overworld_track
+    RTL
+
+
 org $02C240
 load_entrance_local:
     ; Enters AI=8
