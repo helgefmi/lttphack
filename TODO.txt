@@ -70,7 +70,7 @@ x Fix a bunch of problems with music and ambient sounds.
 
 x Fix Crystal Switch toggle
 
-- Ganon bagpipes when muted music
+x Ganon bagpipes when muted music
 
 
 Ideas

@@ -307,8 +307,8 @@ music_overworld_track:
 
 
 spc_data:
-    dl $1B8000 : db $00 ; overworld
-    dl $1A9EF5 : db $00 ; underworld
+    dl $1A9EF5 : db $00 ; overworld
+    dl $1B8000 : db $00 ; underworld
     dl $1AD380 : db $00 ; credits
     dl $000000 : db $00 ; unused
 
