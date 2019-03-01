@@ -427,10 +427,10 @@ preset_sprite_reset_all:
     RTL
 
 
-preset_really_reset_sprites:
+preset_clear_sprites:
     LDX #$0F
-  .loop
-    STZ $0B58, X : STZ $0B6B, X : STZ $0B89, X : STZ $0BE0, X
+
+  - STZ $0B58, X : STZ $0B6B, X : STZ $0B89, X : STZ $0BE0, X
     STZ $0CAA, X : STZ $0CBA, X : STZ $0CD2, X : STZ $0CE2, X
     STZ $0D40, X : STZ $0D50, X : STZ $0D90, X : STZ $0DA0, X
     STZ $0DB0, X : STZ $0DC0, X : STZ $0DD0, X : STZ $0DE0, X
@@ -441,8 +441,17 @@ preset_really_reset_sprites:
     STZ $0F20, X : STZ $0F30, X : STZ $0F40, X : STZ $0F50, X
     STZ $0F60, X : STZ $0F70, X : STZ $0F80, X : STZ $0F90, X
     LDA #$00 : STA $7FF9C2, X
+    DEX : BMI .clearOverlords
+    JMP -
+
+  .clearOverlords
+
+    LDX #$07
+  - STZ $0B00, X : STZ $0B08, X : STZ $0B10, X : STZ $0B18, X
+    STZ $0B20, X : STZ $0B28, X : STZ $0B30, X : STZ $0B38, X
+    STZ $0B40, X
     DEX : BMI .done
-    JMP .loop
+    JMP -
 
   .done
     RTS
@@ -450,7 +459,7 @@ preset_really_reset_sprites:
 preset_load_state:
     ; Enters AI=16
 
-    JSR preset_clear_sram
+    JSR preset_clear_for_initial_preset
 
   %a8()
     LDA !ram_preset_category : TAX
@@ -521,14 +530,24 @@ preset_load_state:
     RTS
 
 
-preset_clear_sram:
-    ; Enteres AI=16
-    LDA.w #$0000
-    LDX.w #$0000
+preset_clear_for_initial_preset:
+    ; Enters AI=16
+    LDA #$0000
+    LDX #$0000
 
-  .loop
-    STA $7EF000, X : STA $7EF100, X : STA $7EF200, X : STA $7EF300, X : STA $7EF400, X
-    INX #2 : CPX.w #$0100 : BNE .loop
+  - STA $7EF000, X : STA $7EF100, X : STA $7EF200, X : STA $7EF300, X : STA $7EF400, X
+    INX #2 : CPX.w #$0100 : BNE -
+
+    LDX #$0000
+  - STZ $0FC7, X
+    INX #2 : CPX #$0010 : BNE -
+
+    LDX #$0000
+  - STZ $029E, X
+    INX #2 : CPX #$000A : BNE -
+
+    STZ $0ABD
+    STZ $0B09
 
     RTS
 
@@ -553,7 +572,7 @@ preset_reset_state_after_loading:
     ; Reset a bunch of Link state (sleeping, falling in hole etc).
     JSL !Player_ResetState
 
-    JSR preset_really_reset_sprites
+    JSR preset_clear_sprites
 
     ; Resets "Link Immovable" flag
     STZ $02E4
