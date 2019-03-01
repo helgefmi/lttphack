@@ -76,7 +76,7 @@ x Ganon bagpipes when muted music
 Ideas
 -----
 
-- Move replay
+- Movie replay
 
 - Show counter for Agahnim 2
 

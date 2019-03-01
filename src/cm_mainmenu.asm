@@ -943,9 +943,7 @@ cm_main_goto_ctrl:
 cm_submenu_ctrl:
     dw cm_ctrl_open_lttphack_menu
     dw cm_ctrl_load_last_preset
-  if !FEATURE_MOVIE
     dw cm_ctrl_replay_last_movie
-  endif
     dw cm_ctrl_save_state
     dw cm_ctrl_load_state
     dw cm_ctrl_reset_segment_timer

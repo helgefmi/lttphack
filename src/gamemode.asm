@@ -7,28 +7,16 @@ org $008056
 org !ORG
 gamemode_hook:
   PHB : PHK : PLB
-
-  if !FEATURE_MOVIE == 0
-    ; For convenience, so that we can access the full ctrl1 as 16bit.
-    LDA $F0 : STA !ram_ctrl1
-    LDA $F2 : STA !ram_ctrl1+1
-    LDA $F4 : STA !ram_ctrl1_filtered
-    LDA $F6 : STA !ram_ctrl1_filtered+1
-  endif
-
     JSR gamemode_savestate : BCS .skip_gamemode
 
-    ; Update Game Time counter
   %a16()
+    ; Update Game Time counter
     INC !lowram_room_gametime
-  %a8()
 
+  %a8()
     JSR gamemode_custom_menu : BCS .skip_gamemode
     JSR gamemode_load_previous_preset : BCS .skip_gamemode
-
-    if !FEATURE_MOVIE
-        JSR gamemode_replay_last_movie : BCS .skip_gamemode
-    endif
+    JSR gamemode_replay_last_movie : BCS .skip_gamemode
 
     JSR gamemode_transition_detection
     JSR gamemode_oob
@@ -311,34 +299,21 @@ gamemode_load_previous_preset:
     CLC : RTS
 
 
-if !FEATURE_MOVIE
-
 ; Replay last movie
 gamemode_replay_last_movie:
-    LDA !ram_movie_mode : CMP #$02 : BEQ .no_replay
-
   %a16()
     ; Load last preset shortcut check
     LDA !ram_ctrl1 : AND !ram_ctrl_replay_last_movie : CMP !ram_ctrl_replay_last_movie : BNE .no_replay
     AND !ram_ctrl1_filtered : BEQ .no_replay
 
-  %ai16()
-    LDA !ram_movie_index : PHA
   %ai8()
-    JSR gamemode_load_previous_preset_permissive
-  %ai16()
-    PLA : STA !ram_movie_index
-  %ai8()
-    BCC .no_replay
-
-    JSL movie_start_replay
+    JSR gamemode_load_previous_preset_permissive : BCC .no_replay
+    LDA #$02 : STA !ram_movie_next_mode
 
     SEC : RTS
 
   .no_replay
     CLC : RTS
-
-endif
 
 
 ; Save state

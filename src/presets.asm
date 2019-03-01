@@ -90,10 +90,17 @@ org $02922F
 
 org !ORG
 preset_load_next_frame:
+    ; This subroutine is used for any preset loading (load last, replay movie, from menu, autopreset)
   %ai8()
     JSR preset_deinit_current_state
   %ai16()
     JSR preset_clear_tilemap
+
+    LDA !ram_movie_next_mode : BNE .nextMovieModeAlreadySet
+    ; Set to recording
+    LDA #$0001 : STA !ram_movie_next_mode
+
+  .nextMovieModeAlreadySet
   %ai8()
 
     LDA #$F0 : STA $012C
@@ -255,10 +262,9 @@ preset_load_overworld:
     JSR preset_reset_state_after_loading
     JSR preset_reset_counters
 %ai16()
-    JSR preset_load_state
-
-    LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
-    JSL load_poverty_state
+    ; JSR preset_load_state
+    ; LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
+    ; JSL load_poverty_state
   +
   %i8()
 
@@ -394,10 +400,9 @@ preset_load_dungeon:
     LDA !ram_preset_category : AND #$00FF : ASL : TAX
     LDA.l preset_end_of_base_states,x : STA !ram_preset_end_of_sram_state
   +
-    JSR preset_load_state
-
-    LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
-    JSL load_poverty_state
+    ; JSR preset_load_state
+    ; LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
+    ; JSL load_poverty_state
   +
 
   %ai8()
@@ -428,7 +433,7 @@ preset_load_state:
     JSR preset_clear_sram
 
   %a8()
-  LDA !ram_preset_category : TAX
+    LDA !ram_preset_category : TAX
   PHB : LDA.l cm_preset_data_banks,x : PHA : PLB
   %a16()
     LDA !ram_preset_end_of_sram_state : STA $06
@@ -458,6 +463,7 @@ preset_load_state:
     PLB
 
   %ai16()
+    JSL movie_preset_loaded
     JSL !Sprite_LoadGfxProperties
 
   %ai8()

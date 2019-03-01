@@ -2,7 +2,6 @@ lorom
 
 !FEATURE_HUD ?= 1
 !FEATURE_SD2SNES ?= 1
-!FEATURE_MOVIE ?= 0
 !VERSION = "10 BETA 4"
 
 incsrc defines.asm
@@ -58,11 +57,9 @@ warnpc $26FFFF
 incsrc music.asm
 warnpc $27FFFF
 
-if !FEATURE_MOVIE
-    !ORG = $288000
-    incsrc movie.asm
-    warnpc $28FFFF
-endif
+!ORG = $288000
+incsrc movie.asm
+warnpc $28FFFF
 
 ; ---- data ----
 

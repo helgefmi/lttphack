@@ -202,11 +202,11 @@ endif
 !ram_movie_index = $7F8002
 !ram_movie_timer = $7F8004
 !ram_prev_ctrl = $7F8006
-!ram_movie_replay_started = $7F8008
 !ram_movie_framecounter = $7F800A
+!ram_movie_next_mode = $7F800C
 !ram_movie = $7F8010
 !ram_movie_rng_index = $7FA000
-!ram_movie_rng = $7FA002
+!ram_movie_rng = $7FA010
 
 
 ;-------------------------
