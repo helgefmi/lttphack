@@ -68,9 +68,14 @@ x Fix a bunch of problems with music and ambient sounds.
   x Don't play torch/flute sound infinitly in some cases.
   x Fix most issues where music will suddenly disappear, both on SD2SNES and normal.
 
+x Fix Crystal Switch toggle
 
-Next versions?
+- Ganon bagpipes when muted music
+
+
+Ideas
 -----
+
 - Move replay
 
 - Show counter for Agahnim 2

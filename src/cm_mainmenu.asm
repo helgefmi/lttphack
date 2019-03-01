@@ -700,13 +700,14 @@ cm_submenu_game_state:
 cm_game_state_crystal_switch:
     dw !CM_ACTION_CHOICE_JSR
     dw #.update_tilemap
-    dl #$7EC172
+    dl #!ram_cm_crystal_switch
     db #$24, "Switch Color", #$FF
     db #$24, "Red", #$FF
     db #$24, "Blue", #$FF
     db #$FF
 
   .update_tilemap
+    STA $7EC172
     CMP !ram_cm_old_crystal_switch : BEQ .skip
 
     LDA !ram_cm_old_gamemode : CMP #$07 : BNE .done
