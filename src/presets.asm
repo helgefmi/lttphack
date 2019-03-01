@@ -427,6 +427,26 @@ preset_sprite_reset_all:
     RTL
 
 
+preset_really_reset_sprites:
+    LDX #$0F
+  .loop
+    STZ $0B58, X : STZ $0B6B, X : STZ $0B89, X : STZ $0BE0, X
+    STZ $0CAA, X : STZ $0CBA, X : STZ $0CD2, X : STZ $0CE2, X
+    STZ $0D40, X : STZ $0D50, X : STZ $0D90, X : STZ $0DA0, X
+    STZ $0DB0, X : STZ $0DC0, X : STZ $0DD0, X : STZ $0DE0, X
+    STZ $0DF0, X : STZ $0E00, X : STZ $0E10, X : STZ $0E20, X
+    STZ $0E30, X : STZ $0E40, X : STZ $0E50, X : STZ $0E60, X
+    STZ $0EA0, X : STZ $0EB0, X : STZ $0EC0, X : STZ $0ED0, X
+    STZ $0EE0, X : STZ $0EF0, X : STZ $0F00, X : STZ $0F10, X
+    STZ $0F20, X : STZ $0F30, X : STZ $0F40, X : STZ $0F50, X
+    STZ $0F60, X : STZ $0F70, X : STZ $0F80, X : STZ $0F90, X
+    LDA #$00 : STA $7FF9C2, X
+    DEX : BMI .done
+    JMP .loop
+
+  .done
+    RTS
+
 preset_load_state:
     ; Enters AI=16
 
@@ -532,6 +552,8 @@ preset_reset_state_after_loading:
 
     ; Reset a bunch of Link state (sleeping, falling in hole etc).
     JSL !Player_ResetState
+
+    JSR preset_really_reset_sprites
 
     ; Resets "Link Immovable" flag
     STZ $02E4

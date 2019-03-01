@@ -3682,7 +3682,6 @@ db $01 ; Door Orientation
 db $00 ; Starting Background
 dw sram_hundo_mire_vitty_after
 
-
 preset_hundo_swamp_outside_ice:
 db $01 ; Overworld
 dw $0070 ; Screen Index
@@ -5323,6 +5322,7 @@ dl $7E0540 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 dl $7FE062 : db $02 : dw $0001 ; Room $71 persistent: Hyrule Castle (Boomerang Chest Room)
 dl $7E002F : db $01 : db $06 ; Link's direction
+dl $7E0FC7 : db $01 : db $01 ; Prize pack index
 .after
 
 sram_hundo_esc_ball_n_chains:
@@ -5448,6 +5448,7 @@ dl $7E0B31 : db $01 : db $00 ; Arc variable
 dl $7E0B35 : db $01 : db $00 ; Arc variable
 dl $7E0B39 : db $01 : db $00 ; Arc variable
 dl $7E0B3D : db $01 : db $00 ; Arc variable
+dl $7E0FC8 : db $01 : db $02 ; Prize pack index
 dl $7EF004 : db $02 : dw $000F ; Room $0002: Hyrule Castle (Switch Room) (.............qqq)
 dl $7FDF84 : db $02 : dw $000A ; Room $2 persistent: Hyrule Castle (Switch Room)
 dl $7E0468 : db $02 : dw $0000 ; Trap door state
@@ -5506,6 +5507,7 @@ dl $7E002F : db $01 : db $00 ; Link's direction
 .after
 
 sram_hundo_east_entrance:
+dl $7E0FC8 : db $01 : db $03 ; Prize pack index
 dl $7FE103 : db $01 : db $52 ; Overworld $C1 persistent: UNKNOWN
 dl $7FE167 : db $01 : db $00 ; Overworld $F3 persistent: UNKNOWN
 dl $7FE04E : db $01 : db $00 ; Overworld $67 persistent: UNKNOWN
@@ -5533,6 +5535,7 @@ dl $7E010E : db $01 : db $08 ; Dungeon entrance index
 
 sram_hundo_east_big_chest_room_1:
 dl $7EF373 : db $01 : db $00 ; Magic filler
+dl $7E0FCC : db $01 : db $01 ; Prize pack index
 dl $7EF150 : db $02 : dw $000F ; Room $00A8: Eastern Palace (Stalfos Spawn Room) (.............qqq)
 dl $7EF36E : db $01 : db $10 ; Magic Power
 dl $7E002F : db $01 : db $06 ; Link's direction
@@ -5557,6 +5560,7 @@ dl $7E0542 : db $02 : dw $1260 ; Object tilemap state
 dl $7E0546 : db $02 : dw $126C ; Object tilemap state
 dl $7E054A : db $02 : dw $0000 ; Object tilemap state
 dl $7E054E : db $02 : dw $0000 ; Object tilemap state
+dl $7E0FC8 : db $01 : db $05 ; Prize pack index
 dl $7EF174 : db $02 : dw $840C ; Room $00BA: Eastern Palace (Dark Antifairy / Key Pot Room) (.d....K......qq.)
 dl $7EF360 : db $02 : dw $0015 ; Rupees (goal)
 dl $7EF172 : db $02 : dw $800F ; Room $00B9: Eastern Palace (Lobby Cannonballs Room) (.d...........qqq)
@@ -5618,6 +5622,7 @@ dl $7E0542 : db $02 : dw $1454 ; Object tilemap state
 dl $7E0546 : db $02 : dw $1CAA ; Object tilemap state
 dl $7E054A : db $02 : dw $0000 ; Object tilemap state
 dl $7E054E : db $02 : dw $0000 ; Object tilemap state
+dl $7E0FC8 : db $01 : db $00 ; Prize pack index
 dl $7EF360 : db $02 : dw $001B ; Rupees (goal)
 dl $7EF132 : db $02 : dw $C403 ; Room $0099: Eastern Palace (Eyegore Key Room) (.dd...K........q)
 dl $7EF362 : db $02 : dw $001B ; Rupees (actual)
@@ -5651,6 +5656,7 @@ dl $7EC74A : db $02 : dw $28BA ; Selected menu gfx, row 1
 dl $7EF34F : db $01 : db $00 ; Bottles
 dl $7EF377 : db $01 : db $12 ; Arrows
 dl $7EC78A : db $02 : dw $2849 ; Selected menu gfx, row 2
+dl $7E0FC8 : db $01 : db $02 ; Prize pack index
 dl $7EF1B0 : db $02 : dw $0005 ; Room $00D8: Eastern Palace (Zeldagamer Room / Pre-Armos Knights Room) (..............q.)
 dl $7EF360 : db $02 : dw $001C ; Rupees (goal)
 dl $7EF362 : db $02 : dw $001C ; Rupees (actual)
@@ -5863,6 +5869,7 @@ dl $7E054E : db $02 : dw $1A24 ; Object tilemap state
 dl $7E0552 : db $02 : dw $1724 ; Object tilemap state
 dl $7E0556 : db $02 : dw $0CB2 ; Object tilemap state
 dl $7EF377 : db $01 : db $0A ; Arrows
+dl $7E0FC8 : db $01 : db $03 ; Prize pack index
 dl $7EF0EA : db $02 : dw $0017 ; Room $0075: Desert Palace (Big Key Chest Room) (............q.qq)
 dl $7EF10A : db $02 : dw $400E ; Room $0085: Desert Palace (East Entrance Room) (..d..........qqq)
 dl $7EF366 : db $02 : dw $7000 ; BigKey1
@@ -5925,6 +5932,7 @@ dl $7E0552 : db $02 : dw $03B6 ; Object tilemap state
 dl $7E0556 : db $02 : dw $09B6 ; Object tilemap state
 dl $7EC74A : db $02 : dw $24BC ; Selected menu gfx, row 1
 dl $7EC78A : db $02 : dw $24CC ; Selected menu gfx, row 2
+dl $7E0FC8 : db $01 : db $04 ; Prize pack index
 dl $7EF086 : db $02 : dw $6401 ; Room $0043: Desert Palace (Torch Puzzle / Moving Wall Room) (..dd..K.........)
 dl $7EF0A6 : db $02 : dw $240F ; Room $0053: Desert Palace (Popos 2 / Beamos Hellway Room) (...d..K......qqq)
 dl $7E0303 : db $01 : db $09 ; Selected menu item
@@ -6010,6 +6018,7 @@ dl $7FE048 : db $01 : db $00 ; Room $64 persistent: Thieves Town (West Attic Roo
 dl $7FE174 : db $01 : db $00 ; Room $FA persistent: Cave
 dl $7E0468 : db $02 : dw $0001 ; Trap door state
 dl $7E0540 : db $02 : dw $0540 ; Object tilemap state
+dl $7E0FC9 : db $01 : db $01 ; Prize pack index
 dl $7FE07E : db $01 : db $00 ; Room $7F persistent: Ice Palace ( Big Spike Traps Room)
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
 dl $7E002F : db $01 : db $02 ; Link's direction
@@ -6122,6 +6131,7 @@ dl $7E002F : db $01 : db $00 ; Link's direction
 sram_hundo_hera_petting_zoo:
 dl $7E0542 : db $02 : dw $1C60 ; Object tilemap state
 dl $7EF343 : db $01 : db $01 ; Bombs
+dl $7E0FCC : db $01 : db $02 ; Prize pack index
 dl $7EF375 : db $01 : db $00 ; Bomb filler
 dl $7EF062 : db $02 : dw $800F ; Room $0031: Tower of Hera (Hardhat Beetles Room) (.d...........qqq)
 dl $7E0540 : db $02 : dw $1C5C ; Object tilemap state
@@ -6141,6 +6151,7 @@ dl $7E0556 : db $02 : dw $1268 ; Object tilemap state
 dl $7EC74A : db $02 : dw $28BA ; Selected menu gfx, row 1
 dl $7EF357 : db $01 : db $01 ; Moon Pearl
 dl $7EC78A : db $02 : dw $2849 ; Selected menu gfx, row 2
+dl $7E0FC8 : db $01 : db $05 ; Prize pack index
 dl $7EF36D : db $01 : db $20 ; Health (actual)
 dl $7EF02E : db $02 : dw $000F ; Room $0017: Tower of Hera (Moldorm Fall Room) (.............qqq)
 dl $7EF04E : db $02 : dw $001F ; Room $0027: Tower of Hera (Big Chest) (............qqqq)
@@ -6261,6 +6272,7 @@ sram_hundo_aga_fairy_skip:
 dl $7E0542 : db $02 : dw $0000 ; Object tilemap state
 dl $7EF36F : db $01 : db $00 ; Keys
 dl $7EF377 : db $01 : db $08 ; Arrows
+dl $7E0FC8 : db $01 : db $07 ; Prize pack index
 dl $7EF1C0 : db $02 : dw $000A ; Room $00E0: Agahnim's Tower (Entrance Room) (.............q.q)
 dl $7FE0EF : db $01 : db $00 ; Room $B7 persistent: Turtle Rock (Map Chest / Key Chest / Roller Room)
 dl $7E0468 : db $02 : dw $0000 ; Trap door state
@@ -6332,6 +6344,7 @@ dl $7E0550 : db $02 : dw $1B14 ; Object tilemap state
 dl $7E0554 : db $02 : dw $1B20 ; Object tilemap state
 dl $7E0558 : db $02 : dw $192C ; Object tilemap state
 dl $7E002F : db $01 : db $02 ; Link's direction
+dl $7E0FC7 : db $01 : db $02 ; Prize pack index
 .after
 
 sram_hundo_aga_pit_room:
@@ -6499,6 +6512,7 @@ dl $7E0544 : db $02 : dw $0C1C ; Object tilemap state
 dl $7E0548 : db $02 : dw $4E64 ; Object tilemap state
 dl $7E0B37 : db $01 : db $01 ; Arc variable
 dl $7E0B3F : db $01 : db $01 ; Arc variable
+dl $7E0FCD : db $01 : db $01 ; Prize pack index
 ; Manual changes:
 dl $7EF36D : db $01 : db $38 ; Health (actual)
 .after
@@ -6562,6 +6576,7 @@ dl $7E0550 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0554 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0558 : db $02 : dw $0000 ; Object tilemap state
 dl $7FDFB6 : db $02 : dw $0038 ; Room $1B persistent: Palace of Darkness (Mimics / Moving Wall Room)
+dl $7E0FCB : db $01 : db $02 ; Prize pack index
 .after
 
 sram_hundo_pod_basement:
@@ -6607,6 +6622,7 @@ dl $7E054E : db $02 : dw $0000 ; Object tilemap state
 dl $7E0552 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0556 : db $02 : dw $0000 ; Object tilemap state
 dl $7E055A : db $02 : dw $0000 ; Object tilemap state
+dl $7E0FC8 : db $01 : db $01 ; Prize pack index
 dl $7EF0D4 : db $02 : dw $8005 ; Room $006A: Palace of Darkness (Rupee Room) (.d............q.)
 dl $7EF016 : db $02 : dw $200F ; Room $000B: Palace of Darkness (Turtle Room) (...d.........qqq)
 dl $7FE054 : db $02 : dw $0010 ; Room $6A persistent: Palace of Darkness (Rupee Room)
@@ -7120,6 +7136,7 @@ dl $7E0546 : db $02 : dw $161E ; Object tilemap state
 dl $7E054A : db $02 : dw $1B4C ; Object tilemap state
 dl $7E054E : db $02 : dw $175C ; Object tilemap state
 dl $7EF377 : db $01 : db $10 ; Arrows
+dl $7E0FCC : db $01 : db $04 ; Prize pack index
 dl $7EF0AE : db $02 : dw $001A ; Room $0057: Skull Woods (Big Key Room) (............qq.q)
 dl $7EF366 : db $02 : dw $72B0 ; BigKey1
 dl $7E0540 : db $02 : dw $075C ; Object tilemap state
@@ -7297,10 +7314,11 @@ dl $7FE0FA : db $01 : db $00 ; Overworld $BD persistent: UNKNOWN
 dl $7E02A2 : db $01 : db $D0 ; Arc variable
 dl $7E002F : db $01 : db $00 ; Link's direction
 ; Manual changes:
-dl $7E02A2 : db $01 : db $00 ; Arc variable
+dl $7E02A2 : db $01 : db $00 ; Altitude
 .after
 
 sram_hundo_ice_lottery:
+dl $7E0FC8 : db $01 : db $02 ; Prize pack index
 dl $7EF3CA : db $01 : db $40 ; LW/DW
 dl $7FE17B : db $01 : db $DB ; Overworld $FD persistent: UNKNOWN
 dl $7FE168 : db $01 : db $D4 ; Overworld $F4 persistent: UNKNOWN
@@ -7391,6 +7409,7 @@ sram_hundo_ice_penguin_switch_room:
 dl $7E0542 : db $02 : dw $0760 ; Object tilemap state
 dl $7E0546 : db $02 : dw $0860 ; Object tilemap state
 dl $7E054A : db $02 : dw $575E ; Object tilemap state
+dl $7E0FCC : db $01 : db $05 ; Prize pack index
 dl $7EF01C : db $02 : dw $8403 ; Room $000E: Ice Palace (Entrance Room) (.d....K........q)
 dl $7EF03C : db $02 : dw $0003 ; Room $001E: Ice Palace (Bomb Floor / Bari Room) (...............q)
 dl $7EF05C : db $02 : dw $0004 ; Room $002E: Ice Palace (Compass Room) (..............q.)
@@ -7407,6 +7426,7 @@ dl $7EF343 : db $01 : db $02 ; Bombs
 sram_hundo_ice_bombable_floor:
 dl $7E054A : db $02 : dw $585A ; Object tilemap state
 dl $7EF03E : db $02 : dw $0002 ; Room $001F: Ice Palace (Pengator / Big Key Room) (...............q)
+dl $7E0FC9 : db $01 : db $02 ; Prize pack index
 dl $7FDFBE : db $02 : dw $0071 ; Room $1F persistent: Ice Palace (Pengator / Big Key Room)
 dl $7E002F : db $01 : db $00 ; Link's direction
 .after
@@ -7420,6 +7440,7 @@ dl $7EC74A : db $02 : dw $2CB2 ; Selected menu gfx, row 1
 dl $7EC78A : db $02 : dw $2CC2 ; Selected menu gfx, row 2
 dl $7EF03C : db $02 : dw $0007 ; Room $001E: Ice Palace (Bomb Floor / Bari Room) (..............qq)
 dl $7EF07C : db $02 : dw $0004 ; Room $003E: Ice Palace (Stalfos Knights / Conveyor Hellway) (..............q.)
+dl $7E0FCA : db $01 : db $02 ; Prize pack index
 dl $7E0303 : db $01 : db $01 ; Selected menu item
 dl $7FDF9C : db $02 : dw $0000 ; Room $E persistent: Ice Palace (Entrance Room)
 dl $7FDFFC : db $02 : dw $0006 ; Room $3E persistent: Ice Palace (Stalfos Knights / Conveyor Hellway)
@@ -7477,6 +7498,7 @@ dl $7E0540 : db $02 : dw $045C ; Object tilemap state
 dl $7E0544 : db $02 : dw $084C ; Object tilemap state
 dl $7E0548 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0B37 : db $01 : db $A0 ; Arc variable
+dl $7E0FC9 : db $01 : db $06 ; Prize pack index
 dl $7FDFBE : db $02 : dw $0000 ; Room $1F persistent: Ice Palace (Pengator / Big Key Room)
 dl $7E002F : db $01 : db $04 ; Link's direction
 ; Manual changes:
@@ -7606,7 +7628,7 @@ dl $7EC78C : db $02 : dw $2CE5 ; Selected menu gfx, row 2
 dl $7FDFCB : db $01 : db $00 ; Overworld $25 persistent: Octorok Area
 dl $7E02A2 : db $01 : db $F7 ; Arc variable
 ; Manual changes:
-dl $7E02A2 : db $01 : db $8B ; Arc variable
+dl $7E02A2 : db $01 : db $8B ; Altitude
 dl $7EF346 : db $01 : db $01 ; Ice Rod
 ; Manual changes:
 dl $7EF346 : db $01 : db $00 ; Ice Rod
@@ -7644,6 +7666,7 @@ dl $7E010E : db $01 : db $27 ; Dungeon entrance index
 .after
 
 sram_hundo_mire_main_hub:
+dl $7E0FC8 : db $01 : db $04 ; Prize pack index
 dl $7EF1A4 : db $02 : dw $000F ; Room $00D2: Misery Mire (Mire02 / Wizzrobes Room) (.............qqq)
 dl $7EF36E : db $01 : db $50 ; Magic Power
 dl $7E0468 : db $02 : dw $0000 ; Trap door state
@@ -7697,6 +7720,7 @@ dl $7E0542 : db $02 : dw $0430 ; Object tilemap state
 dl $7E0546 : db $02 : dw $0C70 ; Object tilemap state
 dl $7E054A : db $02 : dw $0470 ; Object tilemap state
 dl $7EF373 : db $01 : db $6F ; Magic filler
+dl $7E0FCA : db $01 : db $03 ; Prize pack index
 dl $7EF1A2 : db $02 : dw $0008 ; Room $00D1: Misery Mire (Conveyor Slug / Big Key Room) (.............q..)
 dl $7EF36E : db $01 : db $51 ; Magic Power
 dl $7E0540 : db $02 : dw $07A8 ; Object tilemap state
@@ -7793,7 +7817,7 @@ dl $7EC78C : db $02 : dw $24ED ; Selected menu gfx, row 2
 dl $7E02A2 : db $01 : db $00 ; Arc variable
 dl $7E002F : db $01 : db $04 ; Link's direction
 ; Manual changes:
-dl $7E02A2 : db $01 : db $8B ; Arc variable
+dl $7E02A2 : db $01 : db $8B ; Altitude
 dl $7E0202 : db $01 : db $06 ; Selected menu item
 dl $7E0303 : db $01 : db $05 ; Selected menu item
 dl $7EC74A : db $02 : dw $24B0 ; Selected menu gfx, row 1
@@ -7821,7 +7845,7 @@ dl $7EC74C : db $02 : dw $2CB3 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $6CC2 ; Selected menu gfx, row 2
 dl $7EC172 : db $01 : db $00 ; Crystal switch state
 ; Manual changes:
-dl $7E02A2 : db $01 : db $8B ; Arc variable
+dl $7E02A2 : db $01 : db $8B ; Altitude
 dl $7E0202 : db $01 : db $06 ; Selected menu item
 dl $7E0303 : db $01 : db $05 ; Selected menu item
 dl $7EC74A : db $02 : dw $24B0 ; Selected menu gfx, row 1
@@ -8059,6 +8083,7 @@ dl $7E002F : db $01 : db $04 ; Link's direction
 .after
 
 sram_hundo_swamp_hook_shot:
+dl $7E0FC8 : db $01 : db $03 ; Prize pack index
 dl $7FDFE8 : db $02 : dw $0001 ; Room $34 persistent: Swamp Palace (Push Block Puzzle / Pre-Big Key Room)
 dl $7E002F : db $01 : db $06 ; Link's direction
 .after
@@ -8311,6 +8336,7 @@ sram_hundo_trock_torches:
 dl $7E0542 : db $02 : dw $190C ; Object tilemap state
 dl $7EF343 : db $01 : db $01 ; Bombs
 dl $7EF36F : db $01 : db $00 ; Keys
+dl $7E0FCC : db $01 : db $06 ; Prize pack index
 dl $7EF18C : db $02 : dw $000F ; Room $00C6: Turtle Rock (.............qqq)
 dl $7EF1AC : db $02 : dw $8005 ; Room $00D6: Turtle Rock (Entrance Room) (.d............q.)
 dl $7EF36E : db $01 : db $70 ; Magic Power
@@ -8377,6 +8403,7 @@ dl $7EF372 : db $01 : db $30 ; Hearts filler
 dl $7FE0EC : db $02 : dw $0020 ; Room $B6 persistent: Turtle Rock (Chain Chomps Room)
 dl $7E0540 : db $02 : dw $095E ; Object tilemap state
 dl $7E0544 : db $02 : dw $0AA6 ; Object tilemap state
+dl $7E0FCD : db $01 : db $02 ; Prize pack index
 ; Manual changes:
 dl $7EF36D : db $01 : db $90 ; Health (actual)
 .after
@@ -8406,6 +8433,7 @@ dl $7EF026 : db $02 : dw $8405 ; Room $0013: Turtle Rock (Hokku-Bokku Key Room 2
 dl $7EF362 : db $02 : dw $0079 ; Rupees (actual)
 dl $7EF366 : db $02 : dw $77B8 ; BigKey1
 dl $7EF36E : db $01 : db $78 ; Magic Power
+dl $7E0FCD : db $01 : db $04 ; Prize pack index
 dl $7FDFA6 : db $02 : dw $0040 ; Room $13 persistent: Turtle Rock (Hokku-Bokku Key Room 2)
 dl $7EC172 : db $01 : db $00 ; Crystal switch state
 dl $7E002F : db $01 : db $02 ; Link's direction
@@ -8418,6 +8446,7 @@ dl $7EF028 : db $02 : dw $C01F ; Room $0014: Turtle Rock (Big Key Room) (.dd....
 dl $7EF048 : db $02 : dw $800C ; Room $0024: Turtle Rock (Double Hokku-Bokku / Big chest Room) (.d...........qq.)
 dl $7FDFC8 : db $02 : dw $0028 ; Room $24 persistent: Turtle Rock (Double Hokku-Bokku / Big chest Room)
 dl $7FE0EC : db $02 : dw $0000 ; Room $B6 persistent: Turtle Rock (Chain Chomps Room)
+dl $7E0FCD : db $01 : db $06 ; Prize pack index
 dl $7E002F : db $01 : db $00 ; Link's direction
 ; Manual changes:
 dl $7EF36B : db $01 : db $03 ; Heart pieces
@@ -8670,6 +8699,7 @@ dl $7EF0D6 : db $02 : dw $000E ; Room $006B: Ganon's Tower (Mimics Rooms) (.....
 dl $7FE056 : db $02 : dw $0240 ; Room $6B persistent: Ganon's Tower (Mimics Rooms)
 dl $7E0641 : db $01 : db $00 ; Room puzzle state (?)
 dl $7E002F : db $01 : db $06 ; Link's direction
+dl $7E0FCB : db $01 : db $04 ; Prize pack index
 .after
 
 sram_hundo_gtower_spike_room:
@@ -8678,6 +8708,7 @@ dl $7EF0D6 : db $02 : dw $800F ; Room $006B: Ganon's Tower (Mimics Rooms) (.d...
 dl $7E0468 : db $01 : db $01 ; Trap door state
 dl $7FE056 : db $02 : dw $2640 ; Room $6B persistent: Ganon's Tower (Mimics Rooms)
 dl $7E002F : db $01 : db $00 ; Link's direction
+dl $7E0FCB : db $01 : db $05 ; Prize pack index
 .after
 
 sram_hundo_gtower_gauntlet:
@@ -8701,6 +8732,7 @@ dl $7E0546 : db $02 : dw $0B2C ; Object tilemap state
 dl $7E054A : db $02 : dw $1430 ; Object tilemap state
 dl $7E054E : db $02 : dw $1C30 ; Object tilemap state
 dl $7EF377 : db $01 : db $08 ; Arrows
+dl $7E0FCC : db $01 : db $02 ; Prize pack index
 dl $7EF0BA : db $02 : dw $000C ; Room $005D: Ganon's Tower (Gauntlet 1/2/3) (.............qq.)
 dl $7E0468 : db $02 : dw $0000 ; Trap door state
 dl $7E0540 : db $02 : dw $0510 ; Object tilemap state
@@ -8718,6 +8750,7 @@ dl $7E054A : db $02 : dw $0000 ; Object tilemap state
 dl $7E054E : db $02 : dw $0000 ; Object tilemap state
 dl $7EC74A : db $02 : dw $24B0 ; Selected menu gfx, row 1
 dl $7EC78A : db $02 : dw $24C0 ; Selected menu gfx, row 2
+dl $7E0FCC : db $01 : db $04 ; Prize pack index
 dl $7EF0D8 : db $02 : dw $0001 ; Room $006C: Ganon's Tower (Lanmolas Room) (................)
 dl $7EF36D : db $01 : db $40 ; Health (actual)
 dl $7EF0BA : db $02 : dw $000E ; Room $005D: Ganon's Tower (Gauntlet 1/2/3) (.............qqq)
@@ -8763,6 +8796,7 @@ dl $7E0202 : db $01 : db $11 ; Selected menu item
 dl $7EC74C : db $02 : dw $24DD ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $24ED ; Selected menu gfx, row 2
 dl $7FE0CA : db $02 : dw $008C ; Room $A5 persistent: Ganon's Tower (Wizzrobes Rooms)
+dl $7E0FC7 : db $01 : db $04 ; Prize pack index
 .after
 
 sram_hundo_gtower_torches1:
@@ -8780,6 +8814,7 @@ dl $7EC78C : db $02 : dw $24CD ; Selected menu gfx, row 2
 dl $7FE03A : db $02 : dw $0000 ; Room $5D persistent: Ganon's Tower (Gauntlet 1/2/3)
 dl $7FE0CA : db $02 : dw $00EF ; Room $A5 persistent: Ganon's Tower (Wizzrobes Rooms)
 dl $7E002F : db $01 : db $06 ; Link's direction
+dl $7E0FC7 : db $01 : db $06 ; Prize pack index
 .after
 
 sram_hundo_gtower_torches2:

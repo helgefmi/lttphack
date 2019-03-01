@@ -1229,6 +1229,10 @@ local function annotate_address(addr, val)
         return "Arc variable"
     end
 
+    if addr >= 0x7E0FC7 and addr < 0x7E0FD7 then
+        return "Prize pack index"
+    end
+
     if addr == 0x7E0ABD then
         return "Palette swap"
     end
@@ -1749,6 +1753,11 @@ function main()
     -- Palette swap variable
     call_for_each_bank(0x0ABD, function (addr_with_bank)
         memory.registerwrite(addr_with_bank, 0x1, state_changed)
+    end)
+
+    -- Prize pack index
+    call_for_each_bank(0x0FC7, function (addr_with_bank)
+        memory.registerwrite(addr_with_bank, 0x10, state_changed)
     end)
 
     -- gui.register(draw_ui)

@@ -201,4 +201,5 @@ pss_data:
     dl $7E001A : dw $0000 ; frame counter
     dl $7E029E : dw $0009 ; ancillae's altitudes
     dl $7E0ABD : dw $0000 ; palette swap variable
+    dl $7E0FC7 : dw $000F ; prize pack index
     db $FF
