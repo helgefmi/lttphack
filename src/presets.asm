@@ -262,9 +262,9 @@ preset_load_overworld:
     JSR preset_reset_state_after_loading
     JSR preset_reset_counters
 %ai16()
-    ; JSR preset_load_state
-    ; LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
-    ; JSL load_poverty_state
+    JSR preset_load_state
+    LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
+    JSL load_poverty_state
   +
   %i8()
 
@@ -390,6 +390,7 @@ preset_load_dungeon:
 
   PHY
 
+  %ai8()
     JSR preset_reset_state_after_loading
     JSR preset_reset_counters
 
@@ -400,9 +401,9 @@ preset_load_dungeon:
     LDA !ram_preset_category : AND #$00FF : ASL : TAX
     LDA.l preset_end_of_base_states,x : STA !ram_preset_end_of_sram_state
   +
-    ; JSR preset_load_state
-    ; LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
-    ; JSL load_poverty_state
+    JSR preset_load_state
+    LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
+    JSL load_poverty_state
   +
 
   %ai8()
