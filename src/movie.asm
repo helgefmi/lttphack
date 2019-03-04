@@ -25,6 +25,32 @@ movie_readjoypads:
     LDA $4218 : STA $00
     LDA $4219 : STA $01
 
+    LDA !ram_movie_next_mode : BNE .done
+
+    LDA !ram_movie_mode
+    CMP #$01 : BEQ .recording
+    CMP #$02 : BEQ .playback
+
+    JSR .populate_FX_from_00
+    JSR .populate_ram_ctrl
+    BRA .done
+
+  .recording
+    JSR .populate_FX_from_00
+    JSR .populate_ram_ctrl
+    JSR movie_record
+    BRA .done
+
+  .playback
+    JSR movie_playback
+    JSR .populate_FX_from_00
+    JSR .populate_ram_ctrl
+
+  .done
+  %ai8()
+    RTL
+
+  .populate_FX_from_00
     LDA $00 : STA $F2 : TAY
 
     EOR $FA : AND $F2 : STA $F6 : STY $FA
@@ -32,30 +58,19 @@ movie_readjoypads:
     LDA $01 : STA $F0 : TAY
     EOR $F8 : AND $F0 : STA $F4 : STY $F8
 
-    ; For convenience, so that we can access the full ctrl1 as 16bit.
+    RTS
+
+  .populate_ram_ctrl
     LDA $F0 : STA !ram_ctrl1
     LDA $F2 : STA !ram_ctrl1+1
     LDA $F4 : STA !ram_ctrl1_filtered
     LDA $F6 : STA !ram_ctrl1_filtered+1
-
-    ; Choose nothing, record or playback, based on !ram_movie_mode.
-    LDA !ram_movie_mode : BEQ .done
-    CMP #$01 : BEQ .record
-
-    JSR movie_playback
-    BRA .done
-
-  .record
-    JSR movie_record
-
-  .done
-  %ai8()
-    RTL
+    RTS
 
 
 movie_record:
   %ai16()
-    LDA !ram_movie_index : CMP #$1F00 : BCS .too_big
+    LDA !ram_movie_index : CMP #$7000 : BCS .too_big
 
     LDA !ram_ctrl1 : CMP !ram_prev_ctrl : BEQ .inc
 
@@ -66,6 +81,7 @@ movie_record:
     LDA !ram_movie_timer : INC : STA !ram_movie_timer
 
   .done
+  %ai8()
     RTS
 
   .too_big
@@ -73,6 +89,7 @@ movie_record:
     LDA !ram_movie_index : TAX
     LDA #$FFFF : STA !ram_movie, X
     LDA #$0000 : STA !ram_movie_mode
+  %ai8()
     RTS
 
   .save_input
@@ -90,6 +107,8 @@ movie_record:
 
 movie_playback:
   %ai16()
+    STZ $00
+
     LDA !ram_movie_index : TAX
     LDA !ram_movie, X : CMP #$FFFF : BEQ .stop_playback
 
@@ -103,17 +122,11 @@ movie_playback:
 
   .done
   %ai8()
-    LDA $00 : STA $F2 : TAY
-
-    EOR $FA : AND $F2 : STA $F6 : STY $FA
-
-    LDA $01 : STA $F0 : TAY
-    EOR $F8 : AND $F0 : STA $F4 : STY $F8
-
     RTS
 
   .stop_playback
     LDA #$0000 : STA !ram_movie_mode
+  %ai8()
     RTS
 
 
@@ -123,20 +136,20 @@ movie_rng:
 
   %ai16()
     LDA !ram_movie_rng_index : TAX
-    INC : STA !ram_movie_rng_index
+    DEC : STA !ram_movie_rng_index
 
   %a8()
-    LDA !ram_movie_rng, X
+    LDA !ram_movie, X
     RTL
 
   .recording
   %ai16()
     LDA !ram_movie_rng_index : TAX
-    INC : STA !ram_movie_rng_index
+    DEC : STA !ram_movie_rng_index
 
   %a8()
     JSR .RandomNum
-    STA !ram_movie_rng, X
+    STA !ram_movie, X
     RTL
 
   .vanillaRng
@@ -160,10 +173,8 @@ movie_preset_loaded:
 
   .notRecording
 
-    LDA #$0000
-    STA !ram_movie_index
-    STA !ram_movie_rng_index
-    STA !ram_prev_ctrl
+    LDA #$0000 : STA !ram_movie_index : STA !ram_prev_ctrl
+    LDa #$5D00 : STA !ram_movie_rng_index
     LDA #$FFFF : STA !ram_movie_timer
 
     LDA !ram_movie_next_mode : STA !ram_movie_mode

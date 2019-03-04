@@ -301,6 +301,9 @@ gamemode_load_previous_preset:
 
 ; Replay last movie
 gamemode_replay_last_movie:
+  %a8()
+    LDA !ram_movie_mode : CMP #$02 : BEQ .no_replay
+
   %a16()
     ; Load last preset shortcut check
     LDA !ram_ctrl1 : AND !ram_ctrl_replay_last_movie : CMP !ram_ctrl_replay_last_movie : BNE .no_replay
@@ -313,6 +316,7 @@ gamemode_replay_last_movie:
     SEC : RTS
 
   .no_replay
+  %a8()
     CLC : RTS
 
 
