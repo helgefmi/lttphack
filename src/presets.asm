@@ -422,11 +422,12 @@ preset_sprite_reset_all:
 
     JSR preset_load_state
     LDA #$0000 : STA !ram_preset_end_of_sram_state
-    LDA !lowram_is_poverty_load : AND #$00FF : BEQ .end
+    LDA !lowram_is_poverty_load : AND #$00FF : BEQ .notPoverty
     JSL load_poverty_state
 
-  .end
+  .notPoverty
     JSL movie_preset_loaded
+  .end
   %ai8()
     RTL
 
