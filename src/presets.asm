@@ -419,11 +419,14 @@ preset_sprite_reset_all:
     ; Check if we want to load our own state.
   %ai16()
     LDA !ram_preset_end_of_sram_state : BEQ .end
+
     JSR preset_load_state
     LDA #$0000 : STA !ram_preset_end_of_sram_state
     LDA !lowram_is_poverty_load : AND #$00FF : BEQ .end
     JSL load_poverty_state
+
   .end
+    JSL movie_preset_loaded
   %ai8()
     RTL
 
@@ -464,7 +467,6 @@ preset_load_state:
     PLB
 
   %ai16()
-    JSL movie_preset_loaded
     JSL !Sprite_LoadGfxProperties
 
   %ai8()
