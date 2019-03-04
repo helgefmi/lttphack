@@ -336,10 +336,14 @@ local CHANGES = { -- {{{
         "dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2\n" ..
         "dl $7E0303 : db $01 : db $03 ; Selected menu item\n" ..
         "dl $7E0202 : db $01 : db $01 ; Selected menu item\n",
+    ["sw_key_pot"] =
+        "dl $7EF343 : db $01 : db $04 ; Bombs\n",
     ["ice_bridge_warp"] =
         "dl $7E02A2 : db $01 : db $00 ; Altitude\n",
-    ["ice_penguin_switch_room"] =
+    ["ice_conveyor_room"] =
         "dl $7EF343 : db $01 : db $02 ; Bombs\n",
+    ["ice_penguin_room"] =
+        "dl $7EF343 : db $01 : db $01 ; Bombs\n",
     ["mire_darkworld_warp"] =
         "dl $7E02A2 : db $01 : db $8B ; Altitude\n" ..
         "dl $7EF346 : db $01 : db $01 ; Ice Rod\n",
@@ -521,7 +525,7 @@ local CHANGES = { -- {{{
     ["hundo_ice_ice_entrance"] =
         "dl $7EF343 : db $01 : db $05 ; Bombs\n",
     ["hundo_ice_conveyor_room"] =
-        "dl $7EF343 : db $01 : db $05 ; Bombs\n",
+        "dl $7EF343 : db $01 : db $03 ; Bombs\n",
     ["hundo_ice_ipbj"] =
         "dl $7EF36D : db $01 : db $60 ; Health (actual)\n",
     ["hundo_ice_penguin_room"] =

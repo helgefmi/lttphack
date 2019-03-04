@@ -7047,6 +7047,8 @@ dl $7EC74C : db $02 : dw $2CB3 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $6CC2 ; Selected menu gfx, row 2
 dl $7FE0FA : db $01 : db $00 ; Room $BD persistent: Empty Clone Room
 dl $7E002F : db $01 : db $04 ; Link's direction
+; Manual changes:
+dl $7EF343 : db $01 : db $04 ; Bombs
 .after
 
 sram_nmg_sw_skull_entrance:
@@ -7273,8 +7275,6 @@ dl $7E0540 : db $02 : dw $075C ; Object tilemap state
 dl $7E0544 : db $02 : dw $085C ; Object tilemap state
 dl $7E0548 : db $02 : dw $0954 ; Object tilemap state
 dl $7E002F : db $01 : db $06 ; Link's direction
-; Manual changes:
-dl $7EF343 : db $01 : db $02 ; Bombs
 .after
 
 sram_nmg_ice_bombable_floor:
@@ -7307,6 +7307,8 @@ dl $7EC74C : db $02 : dw $2CB3 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $6CC2 ; Selected menu gfx, row 2
 dl $7EC172 : db $01 : db $01 ; Crystal switch state
 dl $7E002F : db $01 : db $02 ; Link's direction
+; Manual changes:
+dl $7EF343 : db $01 : db $02 ; Bombs
 .after
 
 sram_nmg_ice_ipbj:
@@ -7333,6 +7335,8 @@ dl $7E0202 : db $01 : db $0C ; Selected menu item
 dl $7EC74C : db $02 : dw $20B7 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $20C7 ; Selected menu gfx, row 2
 dl $7E002F : db $01 : db $00 ; Link's direction
+; Manual changes:
+dl $7EF343 : db $01 : db $01 ; Bombs
 .after
 
 sram_nmg_ice_lonely_firebar:
