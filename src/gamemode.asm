@@ -6,27 +6,15 @@ org $008056
 ; Game Mode Hook
 org !ORG
 gamemode_hook:
-  PHB : PHK : PLB
-    JSR gamemode_savestate : BCS .skip_gamemode
+  PHB : PHK : PLB : PHP
+    JSR gamemode_shortcuts : BCS .skip_gamemode
 
-  %a16()
-    ; Update Game Time counter
-    INC !lowram_room_gametime
-
-  %a8()
-    JSR gamemode_custom_menu : BCS .skip_gamemode
-    JSR gamemode_load_previous_preset : BCS .skip_gamemode
-    JSR gamemode_replay_last_movie : BCS .skip_gamemode
+    %a16() : INC !lowram_room_gametime : %a8()
 
     JSR gamemode_transition_detection
-    JSR gamemode_oob
-    JSR gamemode_skip_text
-    JSR gamemode_disable_sprites
-    JSR gamemode_fill_everything
-    JSR gamemode_reset_segment_timer
 
   %ai8()
-  PLB
+  PLP : PLB
     JSL $0080B5 ; GameModes
 
     LDA !ram_lagometer_toggle : BEQ .done
@@ -37,8 +25,63 @@ gamemode_hook:
 
   .skip_gamemode
   %ai8()
-  PLB
+  PLP : PLB
     RTL
+
+
+gamemode_shortcuts:
+    LDA $10 : CMP #$0C : BNE .not_setting_new_inputs
+    LDA $B0 : BEQ .not_setting_new_inputs
+    CLC : RTS
+
+  .not_setting_new_inputs
+  %a16()
+    LDA !ram_ctrl1_filtered : BNE +
+
+  %a8()
+    CLC : RTS
+
+  + LDA !ram_ctrl1 : AND !ram_ctrl_save_state : CMP !ram_ctrl_save_state : BNE +
+    AND !ram_ctrl1_filtered : BEQ +
+    JSR gamemode_savestate_save : RTS
+
+  + LDA !ram_ctrl1 : AND !ram_ctrl_load_state : CMP !ram_ctrl_load_state : BNE +
+    AND !ram_ctrl1_filtered : BEQ +
+    JSR gamemode_savestate_load : RTS
+
+  + LDA !ram_ctrl1 : AND !ram_ctrl_prachack_menu : CMP !ram_ctrl_prachack_menu : BNE +
+    AND !ram_ctrl1_filtered : BEQ +
+    JSR gamemode_custom_menu : RTS
+
+  + LDA !ram_ctrl1 : AND !ram_ctrl_load_last_preset : CMP !ram_ctrl_load_last_preset : BNE +
+    AND !ram_ctrl1_filtered : BEQ +
+    JSR gamemode_load_previous_preset : RTS
+
+  + LDA !ram_ctrl1 : AND !ram_ctrl_replay_last_movie : CMP !ram_ctrl_replay_last_movie : BNE +
+    AND !ram_ctrl1_filtered : BEQ +
+    JSR gamemode_replay_last_movie : RTS
+
+  + LDA !ram_ctrl1 : AND !ram_ctrl_toggle_oob : CMP !ram_ctrl_toggle_oob : BNE +
+    AND !ram_ctrl1_filtered : BEQ +
+    JSR gamemode_oob : CLC : RTS
+
+  + LDA !ram_ctrl1 : AND !ram_ctrl_skip_text : CMP !ram_ctrl_skip_text : BNE +
+    AND !ram_ctrl1_filtered : BEQ +
+    JSR gamemode_skip_text : CLC : RTS
+
+  + LDA !ram_ctrl1 : AND !ram_ctrl_disable_sprites : CMP !ram_ctrl_disable_sprites : BNE +
+    AND !ram_ctrl1_filtered : BEQ +
+    JSR gamemode_disable_sprites : CLC : RTS
+
+  + LDA !ram_ctrl1 : AND !ram_ctrl_fill_everything : CMP !ram_ctrl_fill_everything : BNE +
+    AND !ram_ctrl1_filtered : BEQ +
+    JSR gamemode_fill_everything : CLC : RTS
+
+  + LDA !ram_ctrl1 : AND !ram_ctrl_reset_segment_timer : CMP !ram_ctrl_reset_segment_timer : BNE +
+    AND !ram_ctrl1_filtered : BEQ +
+    JSR gamemode_reset_segment_timer : CLC : RTS
+
+  + CLC : RTS
 
 
 ; Transition detection
@@ -255,10 +298,6 @@ gamemode_safe_to_change_mode:
 
 ; Custom Menu
 gamemode_custom_menu:
-  %a16()
-    LDA !ram_ctrl1 : AND !ram_ctrl_prachack_menu : CMP !ram_ctrl_prachack_menu : BNE .no_custom_menu
-    AND !ram_ctrl1_filtered : BEQ .no_custom_menu
-
   %a8()
     JSR gamemode_safe_to_change_mode : BCC .no_custom_menu
 
@@ -276,12 +315,6 @@ gamemode_custom_menu:
 
 ; Load previous preset
 gamemode_load_previous_preset:
-  %a16()
-    ; Load last preset shortcut check
-    LDA !ram_ctrl1 : AND !ram_ctrl_load_last_preset : CMP !ram_ctrl_load_last_preset : BNE .no_load_preset
-    AND !ram_ctrl1_filtered : BEQ .no_load_preset
-
-  .permissive
   %a8()
     JSR gamemode_safe_to_change_mode : BCC .no_load_preset
 
@@ -304,13 +337,8 @@ gamemode_replay_last_movie:
   %a8()
     LDA !ram_movie_mode : CMP #$02 : BEQ .no_replay
 
-  %a16()
-    ; Load last preset shortcut check
-    LDA !ram_ctrl1 : AND !ram_ctrl_replay_last_movie : CMP !ram_ctrl_replay_last_movie : BNE .no_replay
-    AND !ram_ctrl1_filtered : BEQ .no_replay
-
   %ai8()
-    JSR gamemode_load_previous_preset_permissive : BCC .no_replay
+    JSR gamemode_load_previous_preset : BCC .no_replay
     LDA #$02 : STA !ram_movie_next_mode
 
     SEC : RTS
@@ -322,16 +350,8 @@ gamemode_replay_last_movie:
 
 ; Save state
 gamemode_savestate:
-    LDA $10 : CMP #$0C : BNE .not_setting_new_inputs
-    LDA $B0 : BEQ .not_setting_new_inputs
-    CLC : RTS
-
-  .not_setting_new_inputs
-  %ai16()
-    LDA !ram_ctrl1 : AND !ram_ctrl_save_state : CMP !ram_ctrl_save_state : BNE .test_load_state
-    AND !ram_ctrl1_filtered : BEQ .test_load_state
-
-if !FEATURE_SD2SNES
+  .save
+  if !FEATURE_SD2SNES
 
   %a8()
     ; store DMA to SRAM
@@ -353,31 +373,27 @@ if !FEATURE_SD2SNES
     LDA #$39 : STA $4311
     JMP end
 
-else
+  else
 
     ; make sure we're not on a screen transition or falling down
-    LDA $0126 : AND #$00FF : ORA $0410 : BNE .test_load_state
-    LDA $5B : AND #$00FF : CMP #$0002 : BCS .test_load_state
+    LDA $0126 : AND #$00FF : ORA $0410 : BNE .skip
+    LDA $5B : AND #$00FF : CMP #$0002 : BCS .skip
+    JSR gamemode_safe_to_change_mode : BCC .skip
+    BRA .continue
 
-    JSR gamemode_safe_to_change_mode : BCC .test_load_state
+  .skip
+  %ai8()
+    CLC : RTS
 
+  .continue
   %a8()
     JSL save_preset_data
   %ai8()
     SEC : RTS
 
-endif
+  endif
 
-  .test_load_state
-    LDA !ram_ctrl1 : AND !ram_ctrl_load_state : CMP !ram_ctrl_load_state : BNE .no_bueno
-    AND !ram_ctrl1_filtered : BEQ .no_bueno
-    BRA .do_load_state
-
-  .no_bueno
-    JMP after_save_state
-
-  .do_load_state
-
+  .load
     LDA !ram_rerandomize_toggle : BEQ .dont_rerandomize_1
 
     ; Save the current framecounter & rng accumulator
@@ -386,7 +402,7 @@ endif
 
   .dont_rerandomize_1
 
-if !FEATURE_SD2SNES
+  if !FEATURE_SD2SNES
 
   %a8()
     ; Mute music
@@ -433,7 +449,7 @@ if !FEATURE_SD2SNES
 + %a8()
     JMP end
 
-else
+  else
 
   %a8()
     JSR gamemode_safe_to_change_mode : BCC .no_load
@@ -458,7 +474,7 @@ else
   %ai8()
     CLC : RTS
 
-endif
+  endif
 
   ppuoff:
     LDA #$80 : STA $2100
@@ -526,10 +542,6 @@ endif
 
 
 gamemode_oob:
-  %a16()
-    LDA !ram_ctrl1 : AND !ram_ctrl_toggle_oob : CMP !ram_ctrl_toggle_oob : BNE .dont_toggle
-    AND !ram_ctrl1_filtered : BEQ .dont_toggle
-
   %a8()
     LDA !ram_oob_toggle : EOR #$01 : STA !ram_oob_toggle
 
@@ -540,10 +552,6 @@ gamemode_oob:
 
 
 gamemode_skip_text:
-  %a16()
-    LDA !ram_ctrl1 : AND !ram_ctrl_skip_text : CMP !ram_ctrl_skip_text : BNE .done
-    AND !ram_ctrl1_filtered : BEQ .done
-
   %a8()
     LDA #$04 : STA $1CD4
 
@@ -553,10 +561,6 @@ gamemode_skip_text:
 
 
 gamemode_disable_sprites:
-  %a16()
-    LDA !ram_ctrl1 : AND !ram_ctrl_disable_sprites : CMP !ram_ctrl_disable_sprites : BNE .done
-    AND !ram_ctrl1_filtered : BEQ .done
-
   %a8()
     JSL !Sprite_DisableAll
 
@@ -566,17 +570,6 @@ gamemode_disable_sprites:
 
 
 gamemode_fill_everything:
-  %a16()
-    LDA !ram_ctrl1 : AND !ram_ctrl_fill_everything : CMP !ram_ctrl_fill_everything : BNE .done
-    AND !ram_ctrl1_filtered : BEQ .done
-
-    JMP .fill_inventory
-
-  .done
-    %a8()
-    RTS
-
-  .fill_inventory
   %a8()
     LDA #$01
     STA !ram_item_book
@@ -652,9 +645,6 @@ gamemode_fill_everything:
 
 gamemode_reset_segment_timer:
   %a16()
-    LDA !ram_ctrl1 : AND !ram_ctrl_reset_segment_timer : CMP !ram_ctrl_reset_segment_timer : BNE .done
-    AND !ram_ctrl1_filtered : BEQ .done
-
     STZ !lowram_seg_frames
     STZ !lowram_seg_seconds
     STZ !lowram_seg_minutes

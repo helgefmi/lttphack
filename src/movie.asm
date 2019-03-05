@@ -1,6 +1,3 @@
-; This is just for testing/fun. It's not used in the hack.
-; Remember: Comment out NOP to enable controller 2
-
 ; compact movieformat
 ; BYST udlr | AXLR Pnnn | NNNN NNNN
 
@@ -31,26 +28,22 @@ movie_readjoypads:
     CMP #$01 : BEQ .recording
     CMP #$02 : BEQ .playback
 
-    JSR .populate_FX_from_00
-    JSR .populate_ram_ctrl
+    JSR .set_controller
     BRA .done
 
   .recording
-    JSR .populate_FX_from_00
-    JSR .populate_ram_ctrl
+    JSR .set_controller
     JSR movie_record
-    BRA .done
+    RTL
 
   .playback
     JSR movie_playback
-    JSR .populate_FX_from_00
-    JSR .populate_ram_ctrl
+    JSR .set_controller
 
   .done
-  %ai8()
     RTL
 
-  .populate_FX_from_00
+  .set_controller
     LDA $00 : STA $F2 : TAY
 
     EOR $FA : AND $F2 : STA $F6 : STY $FA
@@ -58,108 +51,87 @@ movie_readjoypads:
     LDA $01 : STA $F0 : TAY
     EOR $F8 : AND $F0 : STA $F4 : STY $F8
 
-    RTS
-
-  .populate_ram_ctrl
     LDA $F0 : STA !ram_ctrl1
     LDA $F2 : STA !ram_ctrl1+1
     LDA $F4 : STA !ram_ctrl1_filtered
     LDA $F6 : STA !ram_ctrl1_filtered+1
+
     RTS
 
 
 movie_record:
   %ai16()
-    LDA !ram_movie_index : CMP #$7000 : BCS .too_big
+    LDX !ram_movie_index : CPX !ram_movie_rng_index : BCS .too_big
 
-    LDA !ram_ctrl1 : CMP !ram_prev_ctrl : BEQ .inc
+    LDA !ram_ctrl1 : CMP !ram_prev_ctrl : BNE .save_input
 
-    JSR .save_input
-    BRA .done
-
-  .inc
-    LDA !ram_movie_timer : INC : STA !ram_movie_timer
-
-  .done
+    INC !ram_movie_timer
   %ai8()
     RTS
 
   .too_big
-    JSR .save_input
-    LDA !ram_movie_index : TAX
-    LDA #$FFFF : STA !ram_movie, X
+    STX !ram_movie_length
     LDA #$0000 : STA !ram_movie_mode
   %ai8()
     RTS
 
   .save_input
-    LDA !ram_movie_index : TAX
-
     LDA !ram_movie_timer : STA !ram_movie, X
     LDA !ram_prev_ctrl : STA !ram_movie+2, X
 
-    TXA : INC #4 : STA !ram_movie_index
+    INX #4 : STX !ram_movie_index
     LDA !ram_ctrl1 : STA !ram_prev_ctrl
-    LDA #$0000 : STA !ram_movie_timer
+    STZ !ram_movie_timer
 
+  %ai8()
     RTS
 
 
 movie_playback:
   %ai16()
-    STZ $00
-
-    LDA !ram_movie_index : TAX
-    LDA !ram_movie, X : CMP #$FFFF : BEQ .stop_playback
+    LDX !ram_movie_index : CPX !ram_movie_length : BCS .stop_playback
 
     LDA !ram_movie+2, X : XBA : STA $00
-
-    LDA !ram_movie, X : DEC : STA !ram_movie, X : BMI .nextInput
-    BRA .done
+    DEC !ram_movie_timer : BMI .nextInput
+  %ai8()
+    RTS
 
   .nextInput
-    TXA : INC #4 : STA !ram_movie_index
-
-  .done
+    INX #4 : STX !ram_movie_index
+    LDA !ram_movie, X : STA !ram_movie_timer
   %ai8()
     RTS
 
   .stop_playback
     LDA #$0000 : STA !ram_movie_mode
+    STZ $00
   %ai8()
     RTS
 
 
 movie_rng:
-    LDA !ram_movie_mode : BEQ .vanillaRng
+    LDA !ram_movie_mode : BEQ .RandomNum
     CMP #$01 : BEQ .recording
 
   %ai16()
-    LDA !ram_movie_rng_index : TAX
-    DEC : STA !ram_movie_rng_index
-
-  %a8()
+    LDX !ram_movie_rng_index
+    DEC !ram_movie_rng_index
     LDA !ram_movie, X
     RTL
 
   .recording
   %ai16()
-    LDA !ram_movie_rng_index : TAX
-    DEC : STA !ram_movie_rng_index
+    LDX !ram_movie_rng_index
+    DEC !ram_movie_rng_index
 
   %a8()
-    JSR .RandomNum
-    STA !ram_movie, X
-    RTL
-
-  .vanillaRng
-    JSR .RandomNum
+    JSL .RandomNum : STA !ram_movie, X
     RTL
 
   .RandomNum
     LDA $2137
     LDA $213C : ADC $1A : ADC $0FA1 : STA $0FA1
-    RTS
+    RTL
 
 
 movie_preset_loaded:
@@ -168,32 +140,29 @@ movie_preset_loaded:
   PHP
     LDA !ram_movie_mode : CMP #$0001 : BNE .notRecording
 
-    LDA !ram_movie_index : TAX
-    LDA #$FFFF : STA !ram_movie, X
+    LDA !ram_movie_index : STA !ram_movie_length
 
   .notRecording
 
     LDA #$0000 : STA !ram_movie_index : STA !ram_prev_ctrl
-    LDa #$5D00 : STA !ram_movie_rng_index
+    LDA #$5D00 : STA !ram_movie_rng_index
     LDA #$FFFF : STA !ram_movie_timer
 
     LDA !ram_movie_next_mode : STA !ram_movie_mode
     LDA #$0000 : STA !ram_movie_next_mode
 
-    LDA !ram_movie_mode : CMP #$0001 : BEQ .recording
-    BRA .playback
+    LDA !ram_movie_mode : CMP #$0002 : BEQ .startPlayback
 
-  .recording
     %a8() : LDA $1A : STA !ram_movie_framecounter : %a16()
-    BRA .done
+  PLP : RTL
 
-  .playback
+  .startPlayback
     %a8() : LDA !ram_movie_framecounter : STA $1A : %a16()
 
+    LDX #$0000
     LDA !ram_movie : CMP #$FFFF : BNE .done
-    LDA #$0004 : STA !ram_movie_index
-    BRA .done
+    LDX #$0004 : STX !ram_movie_index
 
   .done
-  PLP
-    RTL
+    LDA !ram_movie, X : STA !ram_movie_timer
+  PLP : RTL

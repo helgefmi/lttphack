@@ -61,9 +61,7 @@ org $0DFDCB
     RTS
 
 
-; UpdateHearts Hook
 org !ORG
-
 
 ; Hud Template Hook
 hud_template_hook:
@@ -128,17 +126,16 @@ update_hearts_hook:
   .done_update_subpixels
   %a8()
     LDA !ram_xy_toggle : BEQ .dont_update_xy
-  %a16()
 
+  %a16()
     JSR hud_draw_xy_display
+  %a8()
 
   .dont_update_xy
-  %a8()
     LDA !ram_lit_rooms_toggle : BEQ .dont_update_lit_rooms
-    LDA.b #$03 : STA $045A
+    LDA #$03 : STA $045A
 
   .dont_update_lit_rooms
-
     LDA !ram_toggle_lanmola_cycles : BEQ .end
 
     ; Make sure we're indoors and in the boss fight room
@@ -252,6 +249,7 @@ hud_draw_enemy_hp:
   .end
     RTS
 
+
 hud_draw_input_display:
     ; Assumes: I=16
 
@@ -331,6 +329,7 @@ hud_set_counter_position:
   .done
     STA !lowram_draw_tmp
     RTS
+
 
 ; L, u, R, Y, X, SL
 ctrl_top_bit_table:

@@ -26,18 +26,15 @@ nmi_hook:
 org !ORG
 nmi_expand:
    ; Enters AI=16
-   PHB : PHK : PLB
-
   %a8()
     INC !lowram_nmi_counter
     LDA !lowram_last_frame_did_saveload : BNE .dont_update_counters
 
     JSR nmi_do_update_counters
+    RTL
 
   .dont_update_counters
-  %a8()
     STZ !lowram_last_frame_did_saveload
-  PLB
     RTL
 
 
@@ -59,4 +56,5 @@ nmi_do_update_counters:
     STZ !lowram_seg_seconds : INC !lowram_seg_minutes
 
   .end
+  %a8()
     RTS

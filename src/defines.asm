@@ -1,5 +1,6 @@
 ; ==== RAM usage ====
 ;
+; 7C[0x08] (84)
 ; 04CB[0x25] (04F0)
 ; $7F7667[0x6719] (7FDD80)
 ; $7EC900[0x1F00] (7EE800)
@@ -200,13 +201,14 @@ endif
 ;-------------------------
 
 !ram_movie_mode = $7F8000
-!ram_movie_index = $7F8002
-!ram_movie_timer = $7F8004
+!ram_movie_index = $7C
+!ram_movie_timer = $7E
+!ram_movie_length = $80
+!ram_movie_rng_index = $82
 !ram_prev_ctrl = $7F8006
 !ram_movie_framecounter = $7F8008
 !ram_movie_next_mode = $7F800A
-!ram_movie_rng_index = $7F800C
-!ram_movie = $7F8010
+!ram_movie = $7F8020
 
 
 ;-------------------------

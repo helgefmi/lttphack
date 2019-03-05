@@ -77,10 +77,25 @@ Ideas
 -----
 
 - Movie replay
+  * Show HUD
+    - "⏺️ [00F2 / 38F4]"
+    - "▶️ [0140 / 0F20]"
+  * Manage movies
+    - Movies menu
+      * Save current movie [ABC bytes]
+        - Name selector
+      * List of movies to load (delete with X)
+      * "Space left: 0123 bytes"
 
-- Show counter for Agahnim 2
+- Counters (spec below)
 
-- Arbitrary memory watch/poke.
+- Drop rate control: Always, never, random
+
+- Preset for double reddies
+
+- Show kill counter for Agahnim 2
+
+- Mashing & Pumping mini-game
 
 - Always lucky
 
@@ -88,14 +103,13 @@ Ideas
 
 - Faster travel speed via shortcut
 
-- Ingame manual counter (to practice a trick X times and see your success rate).
-
 - Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances
   the game one frame. Would be good for clip learning. Maybe stop timer during this.
 
 - Show invisible sprites (Guard LoS)
+  - Show sprite hitboxes in general?
 
-- Show sprite info in general? Editable?
+- Show intermediate room time in more places (bonk, walk up stairs)
 
 
 ======== COUNTERS SPEC ========

@@ -37,6 +37,7 @@ draw_counters:
   PLX
     RTL
 
+
 draw_seconds_and_frames:
     STA $4204
 
@@ -49,6 +50,7 @@ draw_seconds_and_frames:
     LDA !lowram_draw_tmp : JSL hex_to_dec : JSL draw3_white
     LDA !lowram_draw_tmp2 : JSL hex_to_dec : JSL draw2_yellow
     RTL
+
 
 draw_coordinates_3:
     ; x coordinate
@@ -66,6 +68,7 @@ draw_coordinates_3:
     TYA : LSR #8 : AND #$000F : ORA #$3410 : STA $7EC706,x
     RTL
 
+
 draw_coordinates_2:
     ; x coordinate
   PHY
@@ -79,6 +82,7 @@ draw_coordinates_2:
     TYA : AND #$000F : ORA #$3410 : STA $7EC70A,x
     TYA : LSR #4 : AND #$000F : ORA #$3410 : STA $7EC708,x
     RTL
+
 
 draw3_white:
     ; Clear leading 0's
@@ -98,6 +102,7 @@ draw3_white:
     LDA !ram_hex2dec_third_digit : ORA #$3C90 : STA $7EC704,x
     RTL
 
+
 draw3_white_aligned_left:
     ; Clear "leading" 0's
     LDA #$207F : STA $7EC702,x
@@ -115,20 +120,24 @@ draw3_white_aligned_left:
     LDA !ram_hex2dec_third_digit : ORA #$3C90 : STA $7EC700,x
     RTL
 
+
 draw2_white:
     LDA !ram_hex2dec_second_digit : ORA #$3C90 : STA $7EC700,x
     LDA !ram_hex2dec_third_digit : ORA #$3C90 : STA $7EC702,x
     RTL
+
 
 draw2_yellow:
     LDA !ram_hex2dec_second_digit : ORA #$3490 : STA $7EC706,x
     LDA !ram_hex2dec_third_digit : ORA #$3490 : STA $7EC708,x
     RTL
 
+
 draw2_gray:
     LDA !ram_hex2dec_second_digit : ORA #$2090 : STA $7EC70A,x
     LDA !ram_hex2dec_third_digit : ORA #$2090 : STA $7EC70C,x
     RTL
+
 
 hex_to_dec:
     ; Enters A=16
@@ -161,6 +170,7 @@ hex_to_dec:
     LDA $4216 : STA !ram_hex2dec_first_digit
 
     RTL
+
 
 hex_to_dec_a:
     ; Enters A=16
