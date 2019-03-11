@@ -2,7 +2,7 @@
 ;
 ; Expands the NMI (code run at the end of each frame)
 
-; Hook 1
+; NMI hook
 org $0080CC
     ; 0080cc pha
     ; 0080cd phx
@@ -12,6 +12,13 @@ org $0080CC
     ; 0080d1 lda #$0000 <-- we'll jump back here
     JMP nmi_hook
 
+
+; HUD update hook
+org $008B6B
+    ; 008b6b ldx $0219
+    ; 008b6e stx $2116
+    JSL nmi_hud_update
+    NOP : NOP
 
 ; NMI HOOK
 org $0089C2
@@ -58,3 +65,21 @@ nmi_do_update_counters:
   .end
   %a8()
     RTS
+
+
+nmi_hud_update:
+    LDX #$6360 : STX $2116
+
+    ; $7EC700 is the WRAM buffer for this data
+    LDX.w #!ram_movie_hud : STX $4302
+    LDA.b #!ram_movie_hud>>16 : STA $4304
+
+    ; number of bytes to transfer is 330
+    LDX #$0040 : STX $4305
+
+    ; refresh BG3 tilemap data with this transfer on channel 0
+    LDA #$01 : STA $420B
+
+    LDX #$6040
+    STX $2116
+    RTL

@@ -1,6 +1,7 @@
 ; ==== RAM usage ====
 ;
 ; 7C[0x08] (84)
+; 8E[0x02] (90)
 ; 04CB[0x25] (04F0)
 ; $7F7667[0x6719] (7FDD80)
 ; $7EC900[0x1F00] (7EE800)
@@ -63,7 +64,7 @@
 ; Account for different SRAM layouts
 
 if !FEATURE_SD2SNES
-    !offset = $771000
+    !offset = $770100
 else
     !offset = $701E00
 endif
@@ -124,7 +125,7 @@ endif
 
 !ram_cm_old_crystal_switch = $7F76CE
 
-!ram_ss_dma_buffer = $770000
+!sram_ss_dma_buffer = $770000
 !sram_pss_offset = $702000
 
 ;-------------------------
@@ -168,6 +169,7 @@ endif
 !CM_ACTION_TOGGLE_BIT = #$12
 !CM_ACTION_CTRL_SHORTCUT = #$14
 !CM_ACTION_SUBMENU_VARIABLE = #$16
+!CM_ACTION_MOVIE = #$18
 
 !ram_react_counter = $7F76CA
 !ram_react_frames = $7F76CC
@@ -205,11 +207,32 @@ endif
 !ram_movie_timer = $7E
 !ram_movie_length = $80
 !ram_movie_rng_index = $82
+!ram_movie_rng_length = $8E
 !ram_prev_ctrl = $7F8006
-!ram_movie_framecounter = $7F8008
-!ram_movie_next_mode = $7F800A
+!ram_movie_framecounter = $7F8002
+!ram_movie_next_mode = $7F8004
 !ram_movie = $7F8020
+!ram_movie_hud = $7F7904 ; [0x40]
 
+if !FEATURE_SD2SNES
+    !sram_movies = $771000
+    !sram_movie_data = $771100
+    !sram_movie_data_size = $6F00
+else
+    !sram_movies = $703000
+    !sram_movie_data = $703200
+    !sram_movie_data_size = $4E00
+endif
+
+!sram_movies_length = !sram_movies+0
+!sram_movies_input_length = !sram_movies+2
+!sram_movies_rng_length = !sram_movies+4
+!sram_movies_offset = !sram_movies+6
+!sram_movies_prev_slot = !sram_movies+8
+!sram_movies_next_slot = !sram_movies+10
+!sram_movies_frame_counter = !sram_movies+12
+!sram_movies_preset_type = !sram_movies+13
+!sram_movies_preset_destination = !sram_movies+14
 
 ;-------------------------
 ; From ROM

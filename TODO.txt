@@ -31,11 +31,9 @@ x Mute the music such that crystal cutscenes (and possibly other things) aren't 
 
 x Much smoother preset fadein/out.
 
-x Relook mothula collision. Happens in pre IPBJ too! conveyor related / overlord?
-  The moth thing also happens when you load a preset from mire torches iirc.
-  Then pod arrow statue and lanmo torches should too.
+x Fix issue where collisions were messed up by loading a new preset from a room with conveyors
 
-x Any chance that you could add a crystal switch feature, so that we could toggle blue/red?
+x Fix Crystal Switch toggle
 
 x Lua script (make presets reproducable automatically):
   x Persist ancilla altitude
@@ -68,13 +66,14 @@ x Fix a bunch of problems with music and ambient sounds.
   x Don't play torch/flute sound infinitly in some cases.
   x Fix most issues where music will suddenly disappear, both on SD2SNES and normal.
 
-x Fix Crystal Switch toggle
-
 x Ganon bagpipes when muted music
 
+- Aga2 muted music fix (or just fix the muted music..)
 
 Ideas
 -----
+
+* Toggle beams
 
 - Movie replay
   * Show HUD
@@ -111,6 +110,19 @@ Ideas
 
 - Show intermediate room time in more places (bonk, walk up stairs)
 
+- See if I can make the menu prettier (let users change color?)
+
+- Colorblind options?
+
+- Frame counter for actions, like swinging your sword, throwing boomerang, enemy movement startup times. Startup/active/recovery.
+
+- Room frame counts that show frame-pixel movement tallies. Would basically be to contrast how many nudge/slowdown/movement frames were lost that is pulled away from room overall time count and lag frames.
+
+- Active movement speed counter. Like the above kinda but shows real time how fast you're going. Would help for things like understanding swim speeds or hidden bastard/rail type deals.
+
+- A way to change/preset your antennae value for spoopy inputs presently lengthy. To easily engage in mirerod entanglements.
+
+- An NPC in GT that greets you saying "Welcome to Walmart. I love you".
 
 ======== COUNTERS SPEC ========
 

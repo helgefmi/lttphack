@@ -6,7 +6,7 @@ org $008056
 ; Game Mode Hook
 org !ORG
 gamemode_hook:
-  PHB : PHK : PLB : PHP
+  PHB : PHK : PLB
     JSR gamemode_shortcuts : BCS .skip_gamemode
 
     %a16() : INC !lowram_room_gametime : %a8()
@@ -14,7 +14,7 @@ gamemode_hook:
     JSR gamemode_transition_detection
 
   %ai8()
-  PLP : PLB
+  PLB
     JSL $0080B5 ; GameModes
 
     LDA !ram_lagometer_toggle : BEQ .done
@@ -25,7 +25,7 @@ gamemode_hook:
 
   .skip_gamemode
   %ai8()
-  PLP : PLB
+  PLB
     RTL
 
 
@@ -177,7 +177,6 @@ gamemode_transition_detection:
     db $16, $FF, $08, $00, $00 : db #!TD_RESET
 
     db $FF
-
 
   .submode_table:
     ; Format:
@@ -354,9 +353,10 @@ gamemode_savestate:
   if !FEATURE_SD2SNES
 
   %a8()
+  %i16()
     ; store DMA to SRAM
     LDY #$0000 : LDX #$0000
--   LDA $4300, X : STA !ram_ss_dma_buffer, X
+-   LDA $4300, X : STA !sram_ss_dma_buffer, X
     INX
     INY : CPY #$000B : BNE -
     CPX #$007B : BEQ +
@@ -394,6 +394,8 @@ gamemode_savestate:
   endif
 
   .load
+    %a8()
+    %i16()
     LDA !ram_rerandomize_toggle : BEQ .dont_rerandomize_1
 
     ; Save the current framecounter & rng accumulator
@@ -521,7 +523,8 @@ gamemode_savestate:
     ; load DMA from SRAM
     LDY #$0000 : LDX #$0000
   %a8()
-  - LDA !ram_ss_dma_buffer, X : STA $4300, X
+  %i16()
+  - LDA !sram_ss_dma_buffer, X : STA $4300, X
     INX
     INY : CPY #$000B : BNE -
     CPX #$007B : BEQ +
