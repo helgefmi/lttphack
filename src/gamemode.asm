@@ -193,7 +193,7 @@ gamemode_transition_detection:
 
 
 gamemode_safe_to_change_mode:
-    ; Used to decide if we can use the Custom Menu or Poverty Save/Load State.
+    ; Used to decide if we can use the Custom Menu, Poverty Save/Load or Load last preset.
   %ai8()
     PHB : PHK : PLB
     LDX $10 : LDA .unsafe_gamemodes, X : BNE .not_safe
@@ -208,8 +208,7 @@ gamemode_safe_to_change_mode:
 
   .not_dungeon
     CPX #$09 : BNE .not_overworld
-    LDA $11 : BEQ .not_overworld
-    CMP #$08 : BCC .not_safe
+    LDA $11 : CMP #$23 : BEQ .not_safe ; Mirror transition
 
   .not_overworld
     ; Don't allow custom menu during mosaic effects
