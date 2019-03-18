@@ -231,6 +231,7 @@ endif
 !DecompShieldGfx = $00D348
 !Palette_Shield = $1BED29
 !Palette_Armor = $1BEDF9
+!LoadGearPalettes_bunny = $02FD8A
 
 ; ITEM MENU
 

@@ -74,9 +74,9 @@ x Ganon bagpipes when muted music
 
 x Be allowed to use prachack menu during transitions
 
-- Infinite dark room: https://cdn.discordapp.com/attachments/138378732376162304/555526124571197442/lttphack_10_beta6_SD2SNES.srm
+x Bunny state is not saved with poverty states
 
-- Bunny state is not saved with poverty states
+- Infinite dark room: https://cdn.discordapp.com/attachments/138378732376162304/555526124571197442/lttphack_10_beta6_SD2SNES.srm
 
 - SD2SNES save state in uw, transition to ow, load to uw again and music is gone
 

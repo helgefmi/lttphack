@@ -491,7 +491,6 @@ preset_load_state:
     PLB
 
   %ai16()
-    JSL movie_preset_loaded
     JSL !Sprite_LoadGfxProperties
 
   %ai8()
@@ -629,6 +628,13 @@ preset_duck_dropoff_hook:
 
   .custom
     LDA #$00 : STA !ram_preset_type
+
+    LDA $02E0 : ORA $56 : BEQ .notBunny
+
+    ; Fixes bunny graphics after Palette_ArmorAndGloves messes it up
+    JSL !LoadGearPalettes_bunny
+
+  .notBunny
   PLA
     RTL
 
@@ -680,7 +686,12 @@ preset_spotlight_open_hook:
     STA $012C
 
  .muted
+    LDA $02E0 : ORA $56 : BEQ .notBunny
 
+    ; Fixes bunny graphics after Palette_ArmorAndGloves messes it up
+    JSL !LoadGearPalettes_bunny
+
+  .notBunny
     LDA $010C : STA $10
     STZ $11
     LDA #$0F : STA $2100 : STA $13
