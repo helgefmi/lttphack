@@ -123,7 +123,8 @@ endif
 
 !ram_cm_old_crystal_switch = $7F76CE
 
-!ram_ss_dma_buffer = $770000
+!sram_ss_dma_buffer = $770000
+!sram_old_music_bank = $770080
 !sram_pss_offset = $702000
 
 ;-------------------------

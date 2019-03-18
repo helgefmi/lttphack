@@ -76,17 +76,18 @@ x Be allowed to use prachack menu during transitions
 
 x Bunny state is not saved with poverty states
 
-- Infinite dark room: https://cdn.discordapp.com/attachments/138378732376162304/555526124571197442/lttphack_10_beta6_SD2SNES.srm
-
-- SD2SNES save state in uw, transition to ow, load to uw again and music is gone
+x SD2SNES save state in uw, transition to ow, load to uw again and music is gone
 
 - (Perhaps as a double safety, see why Aga 2 transitions stops when we music is muted: https://cdn.discordapp.com/attachments/453482467886891028/552256602779025408/lttphack_10_beta6_SD2SNES.srm)
+
+- Fix issue where ambient sound is set erroneously
 
 - ATower Barrier skip has strange problems not present in v9, https://cdn.discordapp.com/attachments/555218590836588564/555218890032939048/barrier-hack10-6.mp4
 
 - Figure out why it crashes on snes classic
 
-- I think OoB mode doesn't work anymore
+? Infinite dark room
+  https://cdn.discordapp.com/attachments/138378732376162304/555526124571197442/lttphack_10_beta6_SD2SNES.srm
 
 
 Ideas

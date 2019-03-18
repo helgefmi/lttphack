@@ -322,6 +322,10 @@ gamemode_savestate:
     CLC : RTS
 
   .not_setting_new_inputs
+    ; Remember which song bank was loaded before load stating
+    ; I put it her since `end` code runs both on save and load state (todo: refactor)..
+    LDA $0136 : STA !sram_old_music_bank
+
   %ai16()
     LDA !ram_ctrl1 : AND !ram_ctrl_save_state : CMP !ram_ctrl_save_state : BNE .test_load_state
     AND !ram_ctrl1_filtered : BEQ .test_load_state
@@ -331,7 +335,7 @@ if !FEATURE_SD2SNES
   %a8()
     ; store DMA to SRAM
     LDY #$0000 : LDX #$0000
--   LDA $4300, X : STA !ram_ss_dma_buffer, X
+-   LDA $4300, X : STA !sram_ss_dma_buffer, X
     INX
     INY : CPY #$000B : BNE -
     CPX #$007B : BEQ +
@@ -386,6 +390,7 @@ if !FEATURE_SD2SNES
   %a8()
     ; Mute music
     LDA #$F0 : STA $2140
+
     ; Mute ambient sounds
     LDA #$05 : STA $2141
 
@@ -500,7 +505,7 @@ endif
     ; load DMA from SRAM
     LDY #$0000 : LDX #$0000
   %a8()
-  - LDA !ram_ss_dma_buffer, X : STA $4300, X
+  - LDA !sram_ss_dma_buffer, X : STA $4300, X
     INX
     INY : CPY #$000B : BNE -
     CPX #$007B : BEQ +
@@ -509,7 +514,13 @@ endif
     JMP -
     ; end of DMA from SRAM
 
-  + LDA #$A1 : STA $4200
+  +
+    LDA !sram_old_music_bank : CMP $0136 : BEQ .songBankNotChanged
+    JSL music_reload
+
+  .songBankNotChanged
+
+    LDA #$A1 : STA $4200
     LDA $13 : STA $2100
   %ai8()
     LDA #$01 : STA !lowram_last_frame_did_saveload
