@@ -78,11 +78,9 @@ x Bunny state is not saved with poverty states
 
 x SD2SNES save state in uw, transition to ow, load to uw again and music is gone
 
-- (Perhaps as a double safety, see why Aga 2 transitions stops when we music is muted: https://cdn.discordapp.com/attachments/453482467886891028/552256602779025408/lttphack_10_beta6_SD2SNES.srm)
+x ATower Barrier skip has strange problems not present in v9
 
-- Fix issue where ambient sound is set erroneously
-
-- ATower Barrier skip has strange problems not present in v9, https://cdn.discordapp.com/attachments/555218590836588564/555218890032939048/barrier-hack10-6.mp4
+- (Perhaps as a double safety, see why Aga 2 transitions stops when we music is muted
 
 - Figure out why it crashes on snes classic
 
