@@ -21,12 +21,22 @@ org $028154
 
 ; When Link dies
 org $0780E1
+    ; 0780e1 lda $10
+    ; 0780e3 sta $010c
     ; 0780e6 lda #$12
     ; 0780e8 sta $10
     ; 0780ea lda #$01
     ; 0780ec sta $11
+
+    ; 0780ee lda #$00
+    ; 0780f0 sta $031f
+    ; 0780f3 sta $7ef372
     JSL preset_autoload_preset
-    NOP : NOP : NOP : NOP
+    NOP             ; STA $010C
+    NOP : NOP       ; LDA #$12
+    NOP : NOP       ; STA $10
+    NOP : NOP       ; LDA #$01
+    NOP : NOP       ; STA $11
 
 ; 0ab944 lda #$10
 ; 0ab946 sta $012f
@@ -607,6 +617,13 @@ preset_duck_dropoff_hook:
 
   .custom
     LDA #$00 : STA !ram_preset_type
+
+    LDA $02E0 : ORA $56 : BEQ .notBunny
+
+    ; Fixes bunny graphics after Palette_ArmorAndGloves messes it up
+    JSL !LoadGearPalettes_bunny
+
+  .notBunny
   PLA
     RTL
 
@@ -619,10 +636,9 @@ preset_autoload_preset:
     RTL
 
   .die
-    LDA #$12
-    STA $10
-    LDA #$01
-    STA $11
+    LDA $10 : STA $010C
+    LDA #$12 : STA $10
+    LDA #$01 : STA $11
     RTL
 
 
@@ -658,7 +674,12 @@ preset_spotlight_open_hook:
     STA $012C
 
  .muted
+    LDA $02E0 : ORA $56 : BEQ .notBunny
 
+    ; Fixes bunny graphics after Palette_ArmorAndGloves messes it up
+    JSL !LoadGearPalettes_bunny
+
+  .notBunny
     LDA $010C : STA $10
     STZ $11
     LDA #$0F : STA $2100 : STA $13

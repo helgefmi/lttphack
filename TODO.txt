@@ -1,92 +1,17 @@
-Ty Lui <3
----------
-x Save state for non-SD2SNES (lttphack_SD2SNES.sfc works like before).
-
-x Presets for Low% and 100%. Go to Features to toggle.
-
-x Remember your preferences in the Features menu upon reset also on non-SD2SNES versions.
-
-x Lanmola cycles are reset on preset load.
-
-
-
-For V10
+For V11
 -------
-x "Fill everything" controller shortcut
 
-x Fix transition Agahnim->Pyramid
+Big stuff
+- Movies
 
-x Show idle frames as frames instead of s'ff.
-
-x Coordinates: Toggle decimal/hex.
-
-x Bug: Ice Palace entrance. Strong EG does not stick.
-
-x Fix issue with practice hack menu and mirror transition.
-
-x Fix issue where text box is not cleared if you load preset during text.
-
-x Mute the music such that crystal cutscenes (and possibly other things) aren't affected by turning off the music.
-  Ty Myramong for doing all the legwork.
-
-x Much smoother preset fadein/out.
-
-x Fix issue where collisions were messed up by loading a new preset from a room with conveyors
-
-x Fix Crystal Switch toggle
-
-x Lua script (make presets reproducable automatically):
-  x Persist ancilla altitude
-  x Persist wallmaster timer
-  x Fix arc variable for arrghus preset
-  x Fix issue where Link's sword becomes black sometimes.
-  x Hundo/Low
-  x PoD Mimics preset (can put it in prev room inside door).
-  x Automatically add in my manual fixes
-    x Crystal state pokey 1
-    x Bombs ice
-    x Ice rod trock
-    x Hook pyramid
-    x Add Ganon preset w/magic
-  x Make it automatically recreate the cm_mainmenu.asm entries too.
-
-x Figure out how to practice PoD Mimics with v10 everdrive.
-
-x Rewrite transition detection code into sane code
-
-x "Sanctuary heart" option for presets
-
-x Lanmola & Mothula RNG Control
-
-x Some method of not having to wait for 8 seconds if you die and aren't on SD2SNES.
-  Perhaps an option "Automatically reload preset upon death" if I can't figure out how to load it during the death animation.
-
-x Fix a bunch of problems with music and ambient sounds.
-  x Overworld presets loads correct music.
-  x Don't play torch/flute sound infinitly in some cases.
-  x Fix most issues where music will suddenly disappear, both on SD2SNES and normal.
-
-x Ganon bagpipes when muted music
-
-- Aga2 muted music fix (or just fix the muted music..)
-
-Ideas
------
-
-* Toggle beams
-
-- Movie replay
-  * Show HUD
-    - "⏺️ [00F2 / 38F4]"
-    - "▶️ [0140 / 0F20]"
-  * Manage movies
-    - Movies menu
-      * Save current movie [ABC bytes]
-        - Name selector
-      * List of movies to load (delete with X)
-      * "Space left: 0123 bytes"
+- Ghost Link
 
 - Counters (spec below)
+
+- Rewrite sd2snes save/load state
+
+Other stuff
+- Toggle beams
 
 - Drop rate control: Always, never, random
 
@@ -95,8 +20,6 @@ Ideas
 - Show kill counter for Agahnim 2
 
 - Mashing & Pumping mini-game
-
-- Always lucky
 
 - Feature: Disable text? Like rando.
 
@@ -122,7 +45,10 @@ Ideas
 
 - A way to change/preset your antennae value for spoopy inputs presently lengthy. To easily engage in mirerod entanglements.
 
-- An NPC in GT that greets you saying "Welcome to Walmart. I love you".
+
+======== MOVIES SPEC ========
+
+Movies
 
 ======== COUNTERS SPEC ========
 

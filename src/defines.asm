@@ -126,6 +126,7 @@ endif
 !ram_cm_old_crystal_switch = $7F76CE
 
 !sram_ss_dma_buffer = $770000
+!sram_old_music_bank = $770080
 !sram_pss_offset = $702000
 
 ;-------------------------
@@ -256,6 +257,7 @@ endif
 !DecompShieldGfx = $00D348
 !Palette_Shield = $1BED29
 !Palette_Armor = $1BEDF9
+!LoadGearPalettes_bunny = $02FD8A
 
 ; ITEM MENU
 

@@ -202,4 +202,7 @@ pss_data:
     dl $7E029E : dw $0009 ; ancillae's altitudes
     dl $7E0ABD : dw $0000 ; palette swap variable
     dl $7E0FC7 : dw $000F ; prize pack index
+    dl $7E005D : dw $0000 ; Link state
+    dl $7E02E0 : dw $0000 ; Bunny graphics
+    dl $7E0056 : dw $0000 ; Link palette (to fix bunny)
     db $FF

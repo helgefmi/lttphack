@@ -235,7 +235,7 @@ gamemode_transition_detection:
 
 
 gamemode_safe_to_change_mode:
-    ; Used to decide if we can use the Custom Menu or Poverty Save/Load State.
+    ; Used to decide if we can use the Custom Menu, Poverty Save/Load or Load last preset.
   %ai8()
     PHB : PHK : PLB
     LDX $10 : LDA .unsafe_gamemodes, X : BNE .not_safe
@@ -250,8 +250,7 @@ gamemode_safe_to_change_mode:
 
   .not_dungeon
     CPX #$09 : BNE .not_overworld
-    LDA $11 : BEQ .not_overworld
-    CMP #$08 : BCC .not_safe
+    LDA $11 : CMP #$23 : BEQ .not_safe ; Mirror transition
 
   .not_overworld
     ; Don't allow custom menu during mosaic effects
@@ -351,9 +350,12 @@ gamemode_replay_last_movie:
 gamemode_savestate:
   .save
   if !FEATURE_SD2SNES
-
   %a8()
   %i16()
+    ; Remember which song bank was loaded before load stating
+    ; I put it here too, since `end` code runs both on save and load state..
+    LDA $0136 : STA !sram_old_music_bank
+
     ; store DMA to SRAM
     LDY #$0000 : LDX #$0000
 -   LDA $4300, X : STA !sram_ss_dma_buffer, X
@@ -396,6 +398,9 @@ gamemode_savestate:
   .load
     %a8()
     %i16()
+    ; Remember which song bank was loaded before load stating (so we can change if needed)
+    LDA $0136 : STA !sram_old_music_bank
+
     LDA !ram_rerandomize_toggle : BEQ .dont_rerandomize_1
 
     ; Save the current framecounter & rng accumulator
@@ -409,6 +414,7 @@ gamemode_savestate:
   %a8()
     ; Mute music
     LDA #$F0 : STA $2140
+
     ; Mute ambient sounds
     LDA #$05 : STA $2141
 
@@ -533,7 +539,13 @@ gamemode_savestate:
     JMP -
     ; end of DMA from SRAM
 
-  + LDA #$A1 : STA $4200
+  +
+    LDA !sram_old_music_bank : CMP $0136 : BEQ .songBankNotChanged
+    JSL music_reload
+
+  .songBankNotChanged
+
+    LDA #$A1 : STA $4200
     LDA $13 : STA $2100
   %ai8()
     LDA #$01 : STA !lowram_last_frame_did_saveload
