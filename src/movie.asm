@@ -38,18 +38,6 @@ movie_readjoypads:
     LDA $F4 : STA !ram_ctrl1_filtered
     LDA $F6 : STA !ram_ctrl1_filtered+1
 
-    ; Choose nothing, record or playback, based on !ram_movie_mode.
-    LDA !ram_movie_mode : BEQ .done
-    CMP #$01 : BEQ .record
-
-    JSR movie_playback
-    BRA .done
-
-  .record
-    JSR movie_record
-
-  .done
-  %ai8()
     RTL
 
 

@@ -943,7 +943,6 @@ cm_main_goto_ctrl:
 cm_submenu_ctrl:
     dw cm_ctrl_open_lttphack_menu
     dw cm_ctrl_load_last_preset
-    dw cm_ctrl_replay_last_movie
     dw cm_ctrl_save_state
     dw cm_ctrl_load_state
     dw cm_ctrl_reset_segment_timer
@@ -959,9 +958,6 @@ cm_ctrl_open_lttphack_menu:
 
 cm_ctrl_load_last_preset:
     %cm_ctrl_shortcut("Load last preset", !ram_ctrl_load_last_preset)
-
-cm_ctrl_replay_last_movie:
-    %cm_ctrl_shortcut("Replay last movie", !ram_ctrl_replay_last_movie)
 
 if !FEATURE_SD2SNES
     cm_ctrl_save_state:

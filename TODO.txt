@@ -80,9 +80,9 @@ x SD2SNES save state in uw, transition to ow, load to uw again and music is gone
 
 x ATower Barrier skip has strange problems not present in v9
 
-- (Perhaps as a double safety, see why Aga 2 transitions stops when we music is muted
+x (Perhaps as a double safety, see why Aga 2 transitions stops when we music is muted
 
-- Figure out why it crashes on snes classic
+x Figure out why it crashes on snes classic
 
 ? Infinite dark room
   https://cdn.discordapp.com/attachments/138378732376162304/555526124571197442/lttphack_10_beta6_SD2SNES.srm

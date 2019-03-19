@@ -2,7 +2,7 @@ lorom
 
 !FEATURE_HUD ?= 1
 !FEATURE_SD2SNES ?= 1
-!VERSION = "10 BETA 4"
+!VERSION = "10 BETA 7"
 
 incsrc defines.asm
 incsrc hexedits.asm

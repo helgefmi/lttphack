@@ -16,7 +16,6 @@ gamemode_hook:
   %a8()
     JSR gamemode_custom_menu : BCS .skip_gamemode
     JSR gamemode_load_previous_preset : BCS .skip_gamemode
-    JSR gamemode_replay_last_movie : BCS .skip_gamemode
 
     JSR gamemode_transition_detection
     JSR gamemode_oob
@@ -295,23 +294,6 @@ gamemode_load_previous_preset:
 
   .no_load_preset
   %a8()
-    CLC : RTS
-
-
-; Replay last movie
-gamemode_replay_last_movie:
-  %a16()
-    ; Load last preset shortcut check
-    LDA !ram_ctrl1 : AND !ram_ctrl_replay_last_movie : CMP !ram_ctrl_replay_last_movie : BNE .no_replay
-    AND !ram_ctrl1_filtered : BEQ .no_replay
-
-  %ai8()
-    JSR gamemode_load_previous_preset_permissive : BCC .no_replay
-    LDA #$02 : STA !ram_movie_next_mode
-
-    SEC : RTS
-
-  .no_replay
     CLC : RTS
 
 
