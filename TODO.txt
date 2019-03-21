@@ -1,25 +1,30 @@
 For V11
--------
+=======
 
 Big stuff
+---------
+
 - Movies
 
 - Ghost Link
 
 - Counters (spec below)
 
-- Rewrite sd2snes save/load state
+- Rewrite sd2snes save/load state code
+
+- Mashing & Pumping mini-game
+
 
 Other stuff
+-----------
+
 - Toggle beams
 
-- Drop rate control: Always, never, random
+- Drop rate control: Always, Never, Random
 
 - Preset for double reddies
 
 - Show kill counter for Agahnim 2
-
-- Mashing & Pumping mini-game
 
 - Feature: Disable text? Like rando.
 
@@ -45,10 +50,109 @@ Other stuff
 
 - A way to change/preset your antennae value for spoopy inputs presently lengthy. To easily engage in mirerod entanglements.
 
+- "Reset room" -> "Reset rooms" submenu with "Reset current room", "Reset current dungeon" (fmp lua has list) and "Reset all rooms". 
 
-======== MOVIES SPEC ========
 
-Movies
+======== MINIGAMES TODO ========
+
+- Mini games (menu)
+
+    Duration: [2s, 5s, 10s]
+
+    [Start Mashing mini game]
+
+    Direction: [up, left]
+
+    [Start Pumping mini game]
+
+- Mashing:
+    * Countdown 3s
+    * Count number of frames where $F0/$F2 is set vs not set
+    * Results:
+        - frames with new input
+        - frames with no new input
+        - hz
+        - average time loss per text box
+        - average time loss per nmg run
+
+- Pumping:
+    * Countdown 3s
+    * Count number of frames where cardinal is held and diagonal is held
+    * Track number of dpad changes
+    * Results:
+        - # of pumps
+        - frames where cardinal is held
+        - frames where diagonal is held
+        - # of pixel boost chances per second on average
+            * for air and for wall, according to my hypothesis
+
+
+======== MOVIES TODO ========
+
+- Movies (menu)
+
+    [ Options ]
+        Record: [Disabled, Movies, Ghost Link, Both]
+        HUD: [No, Record, Play, Both]
+
+    [ Save current movie ]
+        - Should be put at the top, pushing everything down.
+
+    ( List of movies )
+        - A to play movie
+        - Y to play ghost link
+        - X to delete
+        - Could use preset names
+        - Infinite scroll
+
+- Stop movie before saving movie from menu
+
+- Disable SD2SNES save/load state 
+
+- Disable movie record on Poverty states
+
+- During playback:
+    * L = Pause playback when held
+    * L + tap R = Frame advance once.
+    * L + hold R = Slow motion (after 30f of holding)
+    * X = Stop movie (gives control back to player)
+    * A = Replay movie from start
+
+
+======== GHOST LINK SPEC ========
+
+- Record type
+    * 1 = movie only
+    * 2 = ghost only
+    * 3 = both
+    Needs to be stored in Movies meta.
+
+- Depending on record type, we populate !ram_movie differently
+    * Ghost format:
+        ttffffff ffffffff yyyyyyyy yyyyyyyy xxxxxxxx xxxxxxxx ddaaaaaa
+        - t = 0
+        - f = frames
+        - y = y coord
+        - x = x coord
+        - d = direction
+        - a = animation data (dashing, picking up pot, holding wall, shooting bow, idk.. probably need more bytes if we want it to actually look good too)
+
+    * Movie format:
+        ttffffff ffffffff BYSTudlr AXLR0000
+        - t = 1
+        - f = frames of inputs held
+        - rest = which keys are held
+
+    * RNG format:
+        tt000000 nnnnnnnn
+        - t = 2
+        - n = rng value
+
+- When replaying, we need to either select Movie or Ghost.
+    * Look for highest two bits to find out if it's a Ghost entry, Movie entry or RNG entry.
+      Jump over stuff we should jump over.
+      Track RNG index separately and call `LDA #!ENTRY_RNG : LDX !ram_rng_index : JSR find_next_entry`.
+
 
 ======== COUNTERS SPEC ========
 
