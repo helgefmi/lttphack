@@ -562,7 +562,7 @@ local CHANGES = { -- {{{
         "dl $7EF36D : db $01 : db $88 ; Health (actual)\n" ..
         "dl $7EF37A : db $01 : db $77 ; Crystals\n",
     ["hundo_trock_icerod_overworld"] =
-        "dl $7EF340 : db $01 : db $03 ; Silver Arrows\n" ..
+        "dl $7EF340 : db $01 : db $04 ; Silver Arrows\n" ..
         "dl $7EF352 : db $01 : db $01 ; Magic Cape\n" ..
         "dl $7EF359 : db $01 : db $04 ; Golden Sword\n" ..
         "dl $7EF35F : db $01 : db $01 ; Bottle 4 (empty)\n" ..

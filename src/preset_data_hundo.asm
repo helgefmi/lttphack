@@ -8263,7 +8263,7 @@ dl $7E02A2 : db $01 : db $38 ; Arc variable
 dl $7FE047 : db $01 : db $BB ; Overworld $63 persistent: UNKNOWN
 dl $7E002F : db $01 : db $00 ; Link's direction
 ; Manual changes:
-dl $7EF340 : db $01 : db $03 ; Silver Arrows
+dl $7EF340 : db $01 : db $04 ; Silver Arrows
 dl $7EF352 : db $01 : db $01 ; Magic Cape
 dl $7EF359 : db $01 : db $04 ; Golden Sword
 dl $7EF35F : db $01 : db $01 ; Bottle 4 (empty)
