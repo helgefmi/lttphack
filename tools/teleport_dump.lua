@@ -1237,6 +1237,10 @@ local function annotate_address(addr, val)
         return "Prize pack index"
     end
 
+    if addr >= 0x7E0CBA and addr < 0x7E0CCA then
+        return "Sprite drop"
+    end
+
     if addr == 0x7E0ABD then
         return "Palette swap"
     end
@@ -1761,6 +1765,11 @@ function main()
 
     -- Prize pack index
     call_for_each_bank(0x0FC7, function (addr_with_bank)
+        memory.registerwrite(addr_with_bank, 0x10, state_changed)
+    end)
+
+    -- Sprite drops
+    call_for_each_bank(0x0CBA, function (addr_with_bank)
         memory.registerwrite(addr_with_bank, 0x10, state_changed)
     end)
 
