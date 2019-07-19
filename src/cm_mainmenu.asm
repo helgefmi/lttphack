@@ -999,7 +999,7 @@ cm_ctrl_fix_vram:
 ; RNG CONTROL {{{
 
 cm_main_goto_rng_control:
-    %cm_submenu("RNG control", !ram_ctrl_fix_vram)
+    %cm_submenu("RNG control", cm_submenu_rng_control)
 
 cm_submenu_rng_control:
     dw cm_rng_pokey
