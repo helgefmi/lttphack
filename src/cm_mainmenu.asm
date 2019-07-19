@@ -531,6 +531,7 @@ cm_submenu_features:
     dw cm_feature_enemy_hp
     dw cm_feature_music
     dw cm_feature_rerandomize
+    dw cm_feature_skip_triforce
     dw cm_feature_qw
     dw cm_feature_lit_rooms
     dw cm_feature_oob
@@ -589,6 +590,9 @@ cm_feature_enemy_hp:
 
 cm_feature_rerandomize:
     %cm_toggle("Rerandomize", !ram_rerandomize_toggle)
+
+cm_feature_skip_triforce:
+    %cm_toggle("Skip Triforce", !ram_skip_triforce_toggle)
 
 cm_feature_qw:
     %cm_toggle_jsr("QW Indicator", !ram_qw_toggle)
@@ -950,6 +954,7 @@ cm_submenu_ctrl:
     dw cm_ctrl_skip_text
     dw cm_ctrl_disable_sprites
     dw cm_ctrl_fill_everything
+    dw cm_ctrl_fix_vram
     dw #$0000
     %cm_header("CONTROLLER SHORTCUTS")
 
@@ -988,11 +993,13 @@ cm_ctrl_disable_sprites:
 cm_ctrl_fill_everything:
     %cm_ctrl_shortcut("Fill everything", !ram_ctrl_fill_everything)
 
+cm_ctrl_fix_vram:
+    %cm_ctrl_shortcut("VRAM repair", !ram_ctrl_fix_vram)
 ; }}}
 ; RNG CONTROL {{{
 
 cm_main_goto_rng_control:
-    %cm_submenu("RNG control", cm_submenu_rng_control)
+    %cm_submenu("RNG control", !ram_ctrl_fix_vram)
 
 cm_submenu_rng_control:
     dw cm_rng_pokey

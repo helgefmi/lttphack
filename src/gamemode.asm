@@ -23,6 +23,7 @@ gamemode_hook:
     JSR gamemode_disable_sprites
     JSR gamemode_fill_everything
     JSR gamemode_reset_segment_timer
+    JSR gamemode_fix_vram
 
   %ai8()
   PLB
@@ -651,6 +652,20 @@ gamemode_reset_segment_timer:
     %a8()
     RTS
 
+gamemode_fix_vram:
+  %a16()
+    LDA !ram_ctrl1 : AND !ram_ctrl_fix_vram : CMP !ram_ctrl_fix_vram : BNE .done
+    AND !ram_ctrl1_filtered : BEQ .done
+
+    LDA #$0280 : STA $2100
+    LDA #$0313 : STA $2107
+    LDA #$0063 : STA $2109 ; zeros out unused bg4
+    LDA #$0722 : STA $210B
+    STZ $2133 ; mode 7 hit, but who cares
+
+  .done
+    %a8()
+    RTS
 
 gamemode_lagometer:
   %ai16()

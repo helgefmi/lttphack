@@ -77,6 +77,7 @@ endif
 !ram_toggle_lanmola_cycles = !offset+16
 !ram_subpixels_toggle = !offset+58
 !ram_rerandomize_toggle = !offset+64
+!ram_skip_triforce_toggle = !offset+80
 
 !ram_previous_preset_destination = !offset+24
 !ram_previous_preset_type = !offset+26
@@ -88,6 +89,7 @@ endif
 !ram_sanctuary_heart = !offset+74
 !ram_autoload_preset = !offset+76
 
+
 !ram_ctrl_prachack_menu = !offset+30
 !ram_ctrl_load_last_preset = !offset+32
 !ram_ctrl_replay_last_movie = !offset+78
@@ -98,6 +100,7 @@ endif
 !ram_ctrl_disable_sprites = !offset+42
 !ram_ctrl_reset_segment_timer = !offset+44
 !ram_ctrl_fill_everything = !offset+70
+!ram_ctrl_fix_vram = !offset+72
 
 !ram_counters_real = !offset+48
 !ram_counters_lag = !offset+50

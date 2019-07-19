@@ -25,6 +25,12 @@ org $0AFDB0
     SEP #$30
     RTL
 
+; I Have no idea where else to put this
+; -----------------
+; Ganon Transition
+; -----------------
+org $02B793
+    JML triforce_transition
 
 ; -------------
 ; HUD TEMPLATE
@@ -343,3 +349,11 @@ ctrl_bot_bit_table:
     dw #$0002, #$0004, #$0001, #$0080, #$8000, #$0010
 ctrl_bot_gfx_table:
     dw #$2409, #$2407, #$2408, #$2401, #$2400, #$240B
+
+triforce_transition:
+    LDA !ram_skip_triforce_toggle : BNE .skip_triforce
+    JSL $02A0BE ; Dungeon_SaveRoomData_justKeys
+    JML $02B797
+
+  .skip_triforce
+    JML $02B7A1
