@@ -5,6 +5,7 @@ import re
 
 from loc_conv import from_physical
 
+
 def main(filename):
     with open(filename, 'rb') as f:
         cts = f.read()
@@ -15,7 +16,7 @@ def main(filename):
     for i, m in enumerate(sorted_matches):
         phys_addr = m.start()
         num_empty_bytes = len(m.group())
-        print from_physical(phys_addr), num_empty_bytes
+        print(from_physical(phys_addr), num_empty_bytes)
         if i >= 10:
             break
 
