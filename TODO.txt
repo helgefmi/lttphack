@@ -1,116 +1,157 @@
-Ty Lui <3
+For V11
+=======
+
+Big stuff
 ---------
-x Save state for non-SD2SNES (lttphack_SD2SNES.sfc works like before).
 
-x Presets for Low% and 100%. Go to Features to toggle.
+- Movies
 
-x Remember your preferences in the Features menu upon reset also on non-SD2SNES versions.
+- Ghost Link
 
-x Lanmola cycles are reset on preset load.
+- Counters (spec below)
 
+- Rewrite sd2snes save/load state code
 
-
-For V10
--------
-x "Fill everything" controller shortcut
-
-x Fix transition Agahnim->Pyramid
-
-x Show idle frames as frames instead of s'ff.
-
-x Coordinates: Toggle decimal/hex.
-
-x Bug: Ice Palace entrance. Strong EG does not stick.
-
-x Fix issue with practice hack menu and mirror transition.
-
-x Fix issue where text box is not cleared if you load preset during text.
-
-x Mute the music such that crystal cutscenes (and possibly other things) aren't affected by turning off the music.
-  Ty Myramong for doing all the legwork.
-
-x Much smoother preset fadein/out.
-
-x Relook mothula collision. Happens in pre IPBJ too! conveyor related / overlord?
-  The moth thing also happens when you load a preset from mire torches iirc.
-  Then pod arrow statue and lanmo torches should too.
-
-x Any chance that you could add a crystal switch feature, so that we could toggle blue/red?
-
-x Lua script (make presets reproducable automatically):
-  x Persist ancilla altitude
-  x Persist wallmaster timer
-  x Fix arc variable for arrghus preset
-  x Fix issue where Link's sword becomes black sometimes.
-  x Hundo/Low
-  x PoD Mimics preset (can put it in prev room inside door).
-  x Automatically add in my manual fixes
-    x Crystal state pokey 1
-    x Bombs ice
-    x Ice rod trock
-    x Hook pyramid
-    x Add Ganon preset w/magic
-  x Make it automatically recreate the cm_mainmenu.asm entries too.
-
-x Figure out how to practice PoD Mimics with v10 everdrive.
-
-x Rewrite transition detection code into sane code
-
-x "Sanctuary heart" option for presets
-
-x Lanmola & Mothula RNG Control
-
-x Some method of not having to wait for 8 seconds if you die and aren't on SD2SNES.
-  Perhaps an option "Automatically reload preset upon death" if I can't figure out how to load it during the death animation.
-
-x Fix a bunch of problems with music and ambient sounds.
-  x Overworld presets loads correct music.
-  x Don't play torch/flute sound infinitly in some cases.
-  x Fix most issues where music will suddenly disappear, both on SD2SNES and normal.
-
-x Fix Crystal Switch toggle
-
-x Ganon bagpipes when muted music
-
-x Be allowed to use prachack menu during transitions
-
-x Bunny state is not saved with poverty states
-
-x SD2SNES save state in uw, transition to ow, load to uw again and music is gone
-
-x ATower Barrier skip has strange problems not present in v9
-
-x (Perhaps as a double safety, see why Aga 2 transitions stops when we music is muted
-
-x Figure out why it crashes on snes classic
-
-? Infinite dark room
-  https://cdn.discordapp.com/attachments/138378732376162304/555526124571197442/lttphack_10_beta6_SD2SNES.srm
+- Mashing & Pumping mini-game
 
 
-Ideas
------
+Other stuff
+-----------
 
-- Movie replay
+x Toggle beams
 
-- Show counter for Agahnim 2
+x Drop rate control: Always, Never, Random
 
-- Arbitrary memory watch/poke.
+- Preset for double reddies
 
-- Always lucky
+- Show kill counter for Agahnim 2
 
 - Feature: Disable text? Like rando.
 
 - Faster travel speed via shortcut
 
-- Ingame manual counter (to practice a trick X times and see your success rate).
-
 - Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances
   the game one frame. Would be good for clip learning. Maybe stop timer during this.
 
 - Show invisible sprites (Guard LoS)
+  - Show sprite hitboxes in general?
 
-- Show sprite info in general? Editable?
+- Show intermediate room time in more places (bonk, walk up stairs)
+
+- See if I can make the menu prettier (let users change color?)
+
+- Colorblind options?
+
+- Frame counter for actions, like swinging your sword, throwing boomerang, enemy movement startup times. Startup/active/recovery.
+
+- Room frame counts that show frame-pixel movement tallies. Would basically be to contrast how many nudge/slowdown/movement frames were lost that is pulled away from room overall time count and lag frames.
+
+- Active movement speed counter. Like the above kinda but shows real time how fast you're going. Would help for things like understanding swim speeds or hidden bastard/rail type deals.
+
+- A way to change/preset your antennae value for spoopy inputs presently lengthy. To easily engage in mirerod entanglements.
+
+- "Reset room" -> "Reset rooms" submenu with "Reset current room", "Reset current dungeon" (fmp lua has list) and "Reset all rooms". 
+
+
+======== MINIGAMES TODO ========
+
+- Mini games (menu)
+
+    Duration: [2s, 5s, 10s]
+
+    [Start Mashing mini game]
+
+    Direction: [up, left]
+
+    [Start Pumping mini game]
+
+- Mashing:
+    * Countdown 3s
+    * Count number of frames where $F0/$F2 is set vs not set
+    * Results:
+        - frames with new input
+        - frames with no new input
+        - hz
+        - average time loss per text box
+        - average time loss per nmg run
+
+- Pumping:
+    * Countdown 3s
+    * Count number of frames where cardinal is held and diagonal is held
+    * Track number of dpad changes
+    * Results:
+        - # of pumps
+        - frames where cardinal is held
+        - frames where diagonal is held
+        - # of pixel boost chances per second on average
+            * for air and for wall, according to my hypothesis
+
+
+======== MOVIES TODO ========
+
+- Movies (menu)
+
+    [ Options ]
+        Record: [Disabled, Movies, Ghost Link, Both]
+        HUD: [No, Record, Play, Both]
+
+    [ Save current movie ]
+        - Should be put at the top, pushing everything down.
+
+    ( List of movies )
+        - A to play movie
+        - Y to play ghost link
+        - X to delete
+        - Could use preset names
+        - Infinite scroll
+
+- Stop movie before saving movie from menu
+
+- Disable SD2SNES save/load state 
+
+- Disable movie record on Poverty states
+
+- During playback:
+    * L = Pause playback when held
+    * L + tap R = Frame advance once.
+    * L + hold R = Slow motion (after 30f of holding)
+    * X = Stop movie (gives control back to player)
+    * A = Replay movie from start
+
+
+======== GHOST LINK SPEC ========
+
+- Record type
+    * 1 = movie only
+    * 2 = ghost only
+    * 3 = both
+    Needs to be stored in Movies meta.
+
+- Depending on record type, we populate !ram_movie differently
+    * Ghost format:
+        ttffffff ffffffff yyyyyyyy yyyyyyyy xxxxxxxx xxxxxxxx ddaaaaaa
+        - t = 0
+        - f = frames
+        - y = y coord
+        - x = x coord
+        - d = direction
+        - a = animation data (dashing, picking up pot, holding wall, shooting bow, idk.. probably need more bytes if we want it to actually look good too)
+
+    * Movie format:
+        ttffffff ffffffff BYSTudlr AXLR0000
+        - t = 1
+        - f = frames of inputs held
+        - rest = which keys are held
+
+    * RNG format:
+        tt000000 nnnnnnnn
+        - t = 2
+        - n = rng value
+
+- When replaying, we need to either select Movie or Ghost.
+    * Look for highest two bits to find out if it's a Ghost entry, Movie entry or RNG entry.
+      Jump over stuff we should jump over.
+      Track RNG index separately and call `LDA #!ENTRY_RNG : LDX !ram_rng_index : JSR find_next_entry`.
 
 
 ======== COUNTERS SPEC ========
