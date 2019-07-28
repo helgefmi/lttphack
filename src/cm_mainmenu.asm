@@ -864,6 +864,7 @@ cm_game_state_reset_screen:
     LDA #$00 : STA $7EF280, X
 
   .end
+    LDA #$09 : STA $012F
     RTS
 
 !EX = $01
@@ -890,6 +891,7 @@ macro reset_dungeon(dungeon, id)
     db #$24, "<dungeon>", #$FF
 
   ?routine:
+    LDA #$09 : STA $012F
     LDA #<id>
     JMP reset_dungeon
 endmacro
