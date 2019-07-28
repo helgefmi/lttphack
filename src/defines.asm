@@ -142,7 +142,7 @@ endif
 ; Layers
 ;-------------------------
 !disabled_layers = $35
-!disabled_layers_temp = $FE
+!disabled_layers_temp = $AB ; 2 bytes
 
 ;-------------------------
 ; HUD
