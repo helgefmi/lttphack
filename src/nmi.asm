@@ -12,6 +12,8 @@ org $0080CC
     ; 0080d1 lda #$0000 <-- we'll jump back here
     JMP nmi_hook
 
+org $008174
+LDA $1C : STA $FE : NOP
 
 ; NMI HOOK
 org $0089C2
@@ -32,6 +34,8 @@ nmi_expand:
     INC !lowram_nmi_counter
     LDA !lowram_last_frame_did_saveload : BNE .dont_update_counters
 
+    LDA !disabled_layers : TRB $FE ; this happens second, so TRB disabling here
+    LDA $FE : STA $212C
     JSR nmi_do_update_counters
 
   .dont_update_counters

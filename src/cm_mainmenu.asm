@@ -539,6 +539,8 @@ cm_submenu_features:
     dw cm_feature_autoload_preset
     dw cm_feature_preset_category
     dw cm_feature_sanctuary
+    dw cm_feature_shutoffbg1
+    dw cm_feature_shutoffbg2
     dw #$0000
     %cm_header("FEATURES")
 
@@ -634,6 +636,11 @@ cm_feature_preset_category:
 cm_feature_sanctuary:
     %cm_toggle("Sanc Heart", !ram_sanctuary_heart)
 
+cm_feature_shutoffbg1:
+    %cm_toggle_bit("BG1 Off", !disabled_layers, #$01)
+
+cm_feature_shutoffbg2:
+    %cm_toggle_bit("BG2 Off", !disabled_layers, #$02)
 ; }}}
 ; COUNTERS {{{
 
