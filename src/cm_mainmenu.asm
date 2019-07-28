@@ -790,6 +790,7 @@ cm_submenu_game_state:
     dw cm_game_state_skip_text
     dw cm_game_state_disable_sprites
     dw cm_game_state_reset_screen
+    dw cm_game_state_goto_reset_dungeons_submenu
     dw cm_game_state_goto_bosses_submenu
     dw cm_game_state_goto_crystals_submenu
     dw cm_game_state_goto_flags_submenu
@@ -864,6 +865,132 @@ cm_game_state_reset_screen:
 
   .end
     RTS
+
+!EX = $01
+!EP = $02
+!DP = $03
+!TH = $04
+
+!AT = $0A
+
+!PD = $11
+!SP = $12
+!SW = $13
+!TT = $14
+!IP = $15
+!MM = $16
+!TR = $17
+!GT = $18
+
+!CV = $FF
+
+macro reset_dungeon(dungeon, id)
+    dw !CM_ACTION_JSR
+    dw ?routine
+    db #$24, "<dungeon>", #$FF
+
+  ?routine:
+    LDA #<id>
+    JMP reset_dungeon
+endmacro
+
+cm_game_state_goto_reset_dungeons_submenu:
+    %cm_submenu("Reset dungeons", cm_game_reset_dungeons_submenu)
+
+cm_game_reset_dungeons_submenu:
+    dw cm_game_state_dungeons_escape
+    dw cm_game_state_dungeons_eastern_palace
+    dw cm_game_state_dungeons_desert_palace
+    dw cm_game_state_dungeons_tower_of_hera
+    dw cm_game_state_dungeons_aga_tower
+    dw cm_game_state_dungeons_palace_of_darkness
+    dw cm_game_state_dungeons_swamp_palace
+    dw cm_game_state_dungeons_skull_woods
+    dw cm_game_state_dungeons_thieves_town
+    dw cm_game_state_dungeons_ice_palace
+    dw cm_game_state_dungeons_misery_mire
+    dw cm_game_state_dungeons_turtle_rock
+    dw cm_game_state_dungeons_ganons_tower
+    dw cm_game_state_dungeons_caves
+    dw #$0000
+    %cm_header("RESET DUNGEONS")
+
+
+cm_game_state_dungeons_escape:
+    %reset_dungeon("Escape", !EX)
+
+cm_game_state_dungeons_eastern_palace:
+    %reset_dungeon("Eastern Palace", !EP)
+
+cm_game_state_dungeons_desert_palace:
+    %reset_dungeon("Desert Palace", !DP)
+
+cm_game_state_dungeons_tower_of_hera:
+    %reset_dungeon("Tower of Hera", !TH)
+
+cm_game_state_dungeons_aga_tower:
+    %reset_dungeon("Agahnim's Tower", !AT)
+
+cm_game_state_dungeons_palace_of_darkness:
+    %reset_dungeon("Palace of Darkness", !PD)
+
+cm_game_state_dungeons_swamp_palace:
+    %reset_dungeon("Swamp Palace", !SP)
+
+cm_game_state_dungeons_skull_woods:
+    %reset_dungeon("Skull Woods", !SW)
+
+cm_game_state_dungeons_thieves_town:
+    %reset_dungeon("Thieves' Town", !TT)
+
+cm_game_state_dungeons_ice_palace:
+    %reset_dungeon("Ice Palace", !IP)
+
+cm_game_state_dungeons_misery_mire:
+    %reset_dungeon("Misery Mire", !MM)
+
+cm_game_state_dungeons_turtle_rock:
+    %reset_dungeon("Turtle Rock", !TR)
+
+cm_game_state_dungeons_ganons_tower:
+    %reset_dungeon("Ganon's Tower", !GT)
+
+cm_game_state_dungeons_caves:
+    %reset_dungeon("Other", !CV)
+
+supertile_dungeons:
+  dw !CV, !EX, !EX, !CV, !TR, !CV, !SP, !TH, !CV, !PD, !PD, !PD, !GT, !GT, !IP, !CV
+  dw !GT, !EX, !EX, !TR, !TR, !TR, !SP, !TH, !CV, !PD, !PD, !PD, !GT, !GT, !IP, !IP
+  dw !AT, !EX, !EX, !TR, !TR, !CV, !SP, !TH, !SP, !SW, !PD, !PD, !CV, !IP, !IP, !CV
+  dw !AT, !TH, !EX, !DP, !SP, !SP, !SP, !SP, !SP, !SW, !PD, !PD, !CV, !GT, !IP, !IP
+  dw !AT, !EX, !EX, !DP, !TT, !TT, !SP, !CV, !CV, !SW, !PD, !PD, !GT, !GT, !IP, !IP
+  dw !EX, !EX, !EX, !DP, !SP, !EX, !SW, !SW, !SW, !SW, !PD, !GT, !GT, !GT, !IP, !IP
+  dw !EX, !EX, !EX, !DP, !TT, !TT, !SP, !SW, !SW, !CV, !PD, !GT, !GT, !GT, !IP, !CV
+  dw !EX, !EX, !EX, !DP, !DP, !DP, !SP, !TH, !CV, !CV, !CV, !GT, !GT, !GT, !IP, !IP
+  dw !EX, !EX, !EX, !DP, !DP, !DP, !CV, !TH, !CV, !EP, !CV, !GT, !GT, !GT, !IP, !CV
+  dw !MM, !MM, !MM, !MM, !CV, !GT, !GT, !MM, !MM, !EP, !CV, !GT, !GT, !GT, !IP, !IP
+  dw !MM, !MM, !MM, !MM, !TR, !GT, !GT, !TH, !EP, !EP, !EP, !TT, !TT, !IP, !IP, !IP
+  dw !AT, !MM, !MM, !MM, !TR, !TR, !TR, !TR, !EP, !EP, !EP, !TT, !TT, !IP, !IP, !IP
+  dw !AT, !MM, !MM, !MM, !TR, !TR, !TR, !TR, !EP, !EP, !CV, !TT, !TT, !IP, !IP, !CV
+  dw !AT, !MM, !MM, !CV, !CV, !TR, !TR, !CV, !EP, !EP, !EP, !TT, !TT, !IP, !IP, !CV
+  dw !AT, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV
+  dw !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV
+
+reset_dungeon:
+    PHB : PHK : PLB
+  %ai16()
+    AND #$00FF
+    STA $00
+    LDA #$0000
+
+    LDX #$01FE
+
+--  LDY supertile_dungeons, X
+    CPY $00 : BNE ++
+    STA $7EF000, X
+++  DEX : DEX : BPL --
+
+    PLB : RTS
 
 cm_game_state_progress:
     dw !CM_ACTION_CHOICE
