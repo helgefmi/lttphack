@@ -106,11 +106,6 @@ preset_load_next_frame:
   %ai16()
     JSR preset_clear_tilemap
 
-    LDA !ram_movie_next_mode : BNE .nextMovieModeAlreadySet
-    ; Set to recording
-    LDA #$0001 : STA !ram_movie_next_mode
-
-  .nextMovieModeAlreadySet
   %ai8()
 
     LDA #$F0 : STA $012C

@@ -18,9 +18,9 @@ Big stuff
 Other stuff
 -----------
 
-- Toggle beams
+x Toggle beams
 
-- Drop rate control: Always, Never, Random
+x Drop rate control: Always, Never, Random
 
 - Preset for double reddies
 

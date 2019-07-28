@@ -59,6 +59,7 @@ init_initialize:
     STA !ram_preset_category
     STA !ram_previous_preset_destination
     STA !ram_previous_preset_type
+    STA !ram_skip_triforce_toggle
     STA !ram_qw_toggle
     STA !ram_secondary_counter_type
     STA !ram_subpixels_toggle
@@ -80,6 +81,8 @@ init_initialize:
     LDA #$2060 : STA !ram_ctrl_load_state
     ; R + L + Select
     LDA #$3020 : STA !ram_ctrl_replay_last_movie
+    ; Select + R
+    LDA #$1020 : STA !ram_ctrl_fix_vram
 
     ; Unset
     LDA #$0000

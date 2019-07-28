@@ -58,6 +58,7 @@
 !ram_soldiers_rng = $7F771A
 !ram_lanmola_rng = $7F771C
 !ram_conveyor_rng = $7F771E
+!ram_drop_rng = $7F7720
 
 !ram_ctrl_last_input = $7F7710
 
@@ -79,6 +80,7 @@ endif
 !ram_toggle_lanmola_cycles = !offset+16
 !ram_subpixels_toggle = !offset+58
 !ram_rerandomize_toggle = !offset+64
+!ram_skip_triforce_toggle = !offset+80
 
 !ram_previous_preset_destination = !offset+24
 !ram_previous_preset_type = !offset+26
@@ -100,6 +102,7 @@ endif
 !ram_ctrl_disable_sprites = !offset+42
 !ram_ctrl_reset_segment_timer = !offset+44
 !ram_ctrl_fill_everything = !offset+70
+!ram_ctrl_fix_vram = !offset+72
 
 !ram_counters_real = !offset+48
 !ram_counters_lag = !offset+50
@@ -135,6 +138,17 @@ endif
 
 !TD_RESET = $00
 !TD_SHOW = $01
+
+;-------------------------
+; Layers
+;-------------------------
+!disabled_layers = $35
+!disabled_layers_temp = $AB ; 2 bytes
+
+;-------------------------
+; Sword beams
+;-------------------------
+!disable_beams = $7A
 
 ;-------------------------
 ; HUD

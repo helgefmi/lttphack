@@ -562,7 +562,7 @@ local CHANGES = { -- {{{
         "dl $7EF36D : db $01 : db $88 ; Health (actual)\n" ..
         "dl $7EF37A : db $01 : db $77 ; Crystals\n",
     ["hundo_trock_icerod_overworld"] =
-        "dl $7EF340 : db $01 : db $03 ; Silver Arrows\n" ..
+        "dl $7EF340 : db $01 : db $04 ; Silver Arrows\n" ..
         "dl $7EF352 : db $01 : db $01 ; Magic Cape\n" ..
         "dl $7EF359 : db $01 : db $04 ; Golden Sword\n" ..
         "dl $7EF35F : db $01 : db $01 ; Bottle 4 (empty)\n" ..
@@ -1237,6 +1237,10 @@ local function annotate_address(addr, val)
         return "Prize pack index"
     end
 
+    if addr >= 0x7E0CBA and addr < 0x7E0CCA then
+        return "Sprite drop"
+    end
+
     if addr == 0x7E0ABD then
         return "Palette swap"
     end
@@ -1761,6 +1765,11 @@ function main()
 
     -- Prize pack index
     call_for_each_bank(0x0FC7, function (addr_with_bank)
+        memory.registerwrite(addr_with_bank, 0x10, state_changed)
+    end)
+
+    -- Sprite drops
+    call_for_each_bank(0x0CBA, function (addr_with_bank)
         memory.registerwrite(addr_with_bank, 0x10, state_changed)
     end)
 

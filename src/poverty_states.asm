@@ -205,4 +205,5 @@ pss_data:
     dl $7E005D : dw $0000 ; Link state
     dl $7E02E0 : dw $0000 ; Bunny graphics
     dl $7E0056 : dw $0000 ; Link palette (to fix bunny)
+    dl $7E0CBA : dw $000F ; Sprite drop
     db $FF

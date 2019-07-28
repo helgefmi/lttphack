@@ -25,7 +25,6 @@ org $0AFDB0
     SEP #$30
     RTL
 
-
 ; -------------
 ; HUD TEMPLATE
 ; -------------
