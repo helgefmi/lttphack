@@ -181,7 +181,7 @@ preset_deinit_dialog_mode:
     LDA #$2E42 : STA $1004
     LDA #$387F : STA $1006
 
-    LDA.w #$FFFF : STA $1008
+    LDA #$FFFF : STA $1008
 
   %ai8()
     LDA #$01 : STA $14
@@ -241,14 +241,14 @@ preset_load_overworld:
     LDA [$00],y : INY : INY : STA $0618 : DEC #2 : STA $061A
 
     ; Unknown
-    LDA [$00],y : INY : INY : STA $84 : SEC : SBC #$0400 : AND.w #$0F80 : ASL A : XBA : STA $88
-    LDA $84 : SEC : SBC.w #$0010 : AND.w #$003E : LSR A : STA $86
+    LDA [$00],y : INY : INY : STA $84 : SEC : SBC #$0400 : AND #$0F80 : ASL A : XBA : STA $88
+    LDA $84 : SEC : SBC #$0010 : AND #$003E : LSR A : STA $86
 
     LDA [$00],y : INY : INY : STA $0624
-    LDA.w #$0000 : SEC : SBC $0624 : STA $0626
+    LDA #$0000 : SEC : SBC $0624 : STA $0626
 
     LDA [$00],y : INY : INY : STA $0628
-    LDA.w #$0000 : SEC : SBC $0628 : STA $062A
+    LDA #$0000 : SEC : SBC $0628 : STA $062A
 
     LDA [$00],y : INY : INY : STA !ram_preset_end_of_sram_state
 
@@ -424,41 +424,18 @@ preset_sprite_reset_all:
     ; Check if we want to load our own state.
   %ai16()
     LDA !ram_preset_end_of_sram_state : BEQ .end
+
     JSR preset_load_state
-    LDA.w #$0000 : STA !ram_preset_end_of_sram_state
-    LDA !lowram_is_poverty_load : AND #$00FF : BEQ .end
+    LDA #$0000 : STA !ram_preset_end_of_sram_state
+    LDA !lowram_is_poverty_load : AND #$00FF : BEQ .notPoverty
     JSL load_poverty_state
+
+  .notPoverty
+    JSL movie_preset_loaded
   .end
   %ai8()
     RTL
 
-
-preset_clear_sprites:
-    LDX #$0F
-
-  - STZ $0B58, X : STZ $0B6B, X : STZ $0B89, X : STZ $0BE0, X
-    STZ $0CAA, X : STZ $0CBA, X : STZ $0CD2, X : STZ $0CE2, X
-    STZ $0D40, X : STZ $0D50, X : STZ $0D90, X : STZ $0DA0, X
-    STZ $0DB0, X : STZ $0DC0, X : STZ $0DD0, X : STZ $0DE0, X
-    STZ $0DF0, X : STZ $0E00, X : STZ $0E10, X : STZ $0E20, X
-    STZ $0E30, X : STZ $0E40, X : STZ $0E50, X : STZ $0E60, X
-    STZ $0EA0, X : STZ $0EB0, X : STZ $0EC0, X : STZ $0ED0, X
-    STZ $0EE0, X : STZ $0EF0, X : STZ $0F00, X : STZ $0F10, X
-    STZ $0F20, X : STZ $0F30, X : STZ $0F40, X : STZ $0F50, X
-    STZ $0F60, X : STZ $0F70, X : STZ $0F80, X : STZ $0F90, X
-    LDA #$00 : STA $7FF9C2, X
-    DEX : BMI .clearOverlords
-    JMP -
-
-  .clearOverlords
-    LDX #$07
-  - STZ $0B00, X : STZ $0B08, X : STZ $0B10, X : STZ $0B18, X
-    STZ $0B20, X : STZ $0B28, X : STZ $0B30, X : STZ $0B38, X
-    STZ $0B40, X
-    DEX : BPL -
-
-  .done
-    RTS
 
 preset_load_state:
     ; Enters AI=16
@@ -480,7 +457,7 @@ preset_load_state:
     LDA ($00) : INC $00 : INC $00 : STA $04
 
     ; High byte of A = How many bytes to copy over.
-    XBA : AND.w #$00FF : CMP #$0001 : BEQ .one_byte
+    XBA : AND #$00FF : CMP #$0001 : BEQ .one_byte
 
     LDA ($00) : INC $00 : INC $00 : STA [$02]
     BRA .next_item
@@ -539,7 +516,8 @@ preset_clear_for_initial_preset:
     LDX #$0000
 
   - STA $7EF000, X : STA $7EF100, X : STA $7EF200, X : STA $7EF300, X : STA $7EF400, X
-    INX #2 : CPX.w #$0100 : BNE -
+    STZ $0B00, X : STZ $0C00, X : STZ $0D00, X : STZ $0E00, X : STZ $0F00, X
+    INX #2 : CPX #$0100 : BNE -
 
     LDX #$0000
   - STZ $0FC7, X
@@ -556,15 +534,15 @@ preset_clear_for_initial_preset:
 
 preset_clear_tilemap:
     ; Enteres AI=16
-    LDA.w #$0000
-    LDX.w #$0000
+    LDA #$0000
+    LDX #$0000
 
   .loop
     STA $7F2000, X : STA $7F2200, X : STA $7F2400, X : STA $7F2600, X
     STA $7F2800, X : STA $7F2A00, X : STA $7F2C00, X : STA $7F2E00, X
     STA $7F3000, X : STA $7F3200, X : STA $7F3400, X : STA $7F3600, X
     STA $7F3800, X : STA $7F3A00, X : STA $7F3C00, X : STA $7F3E00, X
-    INX #2 : CPX.w #$0200 : BNE .loop
+    INX #2 : CPX #$0200 : BNE .loop
 
     RTS
 
@@ -574,8 +552,6 @@ preset_reset_state_after_loading:
 
     ; Reset a bunch of Link state (sleeping, falling in hole etc).
     JSL !Player_ResetState
-
-    JSR preset_clear_sprites
 
     ; Resets "Link Immovable" flag
     STZ $02E4
@@ -594,6 +570,9 @@ preset_reset_state_after_loading:
 
     ; I think maybe this resets being on a conveyorbelt? At least the first one ..
     STZ $03F3 : STZ $0322
+
+    ; Remove stair lag
+    STZ $57
 
     RTS
 

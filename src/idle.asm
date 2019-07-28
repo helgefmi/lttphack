@@ -27,6 +27,7 @@ org $0DE0E2
     ; 0de0e4 and #$10
     JSL idle_menu
 
+
 org !ORG
 
 idle_waitkey:
@@ -39,6 +40,7 @@ idle_waitkey:
   .pressed_key
     AND #$C0
     RTL
+
 
 idle_endmessage:
     LDA $00F4 : ORA $00F6 : BNE .pressed_key

@@ -2,7 +2,7 @@
 ;
 ; Code that is run once after the game has been powered on.
 
-!SRAM_VERSION = $0016
+!SRAM_VERSION = $001E
 
 ; Overrides the following:
 ; LDA.b #$81 : STA $4200
@@ -93,4 +93,13 @@ init_initialize:
     STA !ram_ctrl_fill_everything
 
     LDA #!SRAM_VERSION : STA !ram_sram_initialized
+
+  %i16()
+    LDA #$0000
+    LDX #$00FE
+  .loop
+    STA !sram_movies, X
+    DEX #2 : BPL .loop
+  %i8()
+
     RTS

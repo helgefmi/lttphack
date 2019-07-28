@@ -469,7 +469,7 @@ cm_draw_background_gfx:
 
     LDX.w #$0000
     LDY.w #$001B
-    LDA.w #$24F5
+    LDA.w #$20F5
 
   .drawBoxInterior
 
@@ -637,6 +637,7 @@ cm_execute_action_table:
     dw cm_execute_toggle_bit
     dw cm_execute_ctrl_shortcut
     dw cm_execute_submenu_variable
+    dw cm_execute_movie
 
 
 cm_execute_toggle:
@@ -902,6 +903,45 @@ cm_execute_submenu_variable:
   .end
     RTS
 
+
+cm_execute_movie:
+    LDA #$0000
+    LDX #$0000
+  %a8()
+    ; dpad should do nothing here
+    LDA $F0 : BNE .end
+
+    ; Grab slot
+    LDA ($00) : ASL #4 : TAX
+
+    LDA $F6 : CMP #$40 : BEQ .delete_movie
+    LDA !sram_movies, X : BEQ .save
+
+  .load
+  %a16()
+    JSR cm_movie_load
+    BRA .end
+
+  .save
+  %a16()
+    LDA !ram_movie_length : BEQ .error
+    JSR cm_movie_save
+    BRA .end
+
+  .delete_movie
+  %a16()
+    LDA !sram_movies, X : BEQ .error
+    JSR cm_movie_delete
+    BRA .end
+
+  .error
+  %a8()
+    LDA #$3C : STA $012E
+
+  .end
+  %ai16()
+    RTS
+
 ; -------------
 ; Draw Action
 ; -------------
@@ -925,6 +965,7 @@ cm_draw_action_table:
     dw cm_draw_toggle_bit
     dw cm_draw_ctrl_shortcut
     dw cm_draw_submenu_variable
+    dw cm_draw_movie
 
 
 macro item_index_to_vram_index()
@@ -932,7 +973,7 @@ macro item_index_to_vram_index()
     ; Messes with A, X
     ;
     ; Find screen position from Y (item number)
-    TYA : ASL : ASL : ASL : ASL : ASL
+    TYA : ASL #5
     CLC : ADC #$0206 : TAX
 endmacro
 
@@ -1182,6 +1223,84 @@ cm_draw_submenu_variable:
     RTS
 
 
+cm_draw_movie:
+  PHY
+    LDA ($02) : INC $02 : AND #$00FF : ASL #4 : TAX
+    LDA !sram_movies, X : PHA
+
+    BNE .normalColor
+    LDA $0E : BNE .normalColor
+    LDA #$0020 : STA $0E
+    BRA .drawItem
+
+  .normalColor
+    LDA #$0024 : ORA $0E : STA $0E
+
+  .drawItem
+    %item_index_to_vram_index()
+    JSR cm_draw_text
+  PLY
+
+    CPY #$0000 : BEQ .emptyFile
+
+    DEX #22
+
+    LDA $0E : ASL #8 : STA $06
+    TYA : LSR #12 : AND #$000F : ORA #$0020 : ORA $06 : STA $1000, X : INX #2
+    TYA : LSR #8 : AND #$000F : ORA #$0020 : ORA $06 : STA $1000, X : INX #2
+    TYA : LSR #4 : AND #$000F : ORA #$0020 : ORA $06 : STA $1000, X : INX #2
+    TYA : AND #$000F : ORA #$0020 : ORA $06 : STA $1000, X : INX #2
+    BRA .end
+
+  .emptyFile
+    DEX #22
+    LDA #.emptyFileText : STA $02
+    JSR cm_draw_text
+
+  .end
+  PLY
+    CPY #$0000 : BEQ .drawInstructions
+    RTS
+
+  .drawInstructions
+    STZ $0E
+
+    LDX #$0646
+    LDA #.instruction1 : STA $02
+    JSR cm_draw_text
+
+    LDX #$0686
+    LDA #.instruction2 : STA $02
+    JSR cm_draw_text
+
+    LDX #$0198
+    LDA #.bytesLeftText : STA $02
+    JSR cm_draw_text
+
+    DEX #8
+
+  PHX
+    JSR cm_movie_get_bytes_left : TAY
+  PLX
+
+    TYA : LSR #12 : AND #$000F : ORA #$2420 : STA $1000, X : INX #2
+    TYA : LSR #8 : AND #$000F : ORA #$2420 : STA $1000, X : INX #2
+    TYA : LSR #4 : AND #$000F : ORA #$2420 : STA $1000, X : INX #2
+    TYA : AND #$000F : ORA #$2420 : STA $1000, X : INX #2
+
+    RTS
+
+  table ../resources/normal.tbl
+  .emptyFileText
+    db #$20, "empty)      ", #$FF
+  .bytesLeftText
+    db #$24, "Space left 0000", #$FF
+  .instruction1
+    db #$24, "A  Load or Save", #$FF
+  .instruction2
+    db #$24, "X  Delete", #$FF
+
+
 
 ; -----------
 ; Ctrl config
@@ -1267,6 +1386,200 @@ cm_do_ctrl_config:
     STZ $0200
     JSR cm_redraw
     RTS
+
+
+; ------
+; Movie
+; ------
+
+cm_movie_get_bytes_left:
+    LDA #!sram_movie_data_size
+    LDX #$00F0
+
+  .loop
+    SEC : SBC !sram_movies_length, X
+    DEX #$10 : BPL .loop
+
+    RTS
+
+
+cm_movie_get_next_offset:
+    ; Enter: AI=16
+    ; Leave: AI=16
+    ; X & Y = new slot
+  PHX
+    TXY
+
+    LDA #$0000 : STA $06 : STA $08 : STA $0A
+
+    LDX #$0100
+  .loop
+    TXA : SEC : SBC #$0010 : TAX : BMI .done
+    LDA !sram_movies_length, X : BEQ .loop
+    INC $0A
+    LDA !sram_movies_offset, X
+    CMP $06 : BCC .loop
+    STA $06 : STX $08
+    BRA .loop
+
+  .done
+    LDA $0A : BEQ .firstMovie
+
+    LDA $08 : TYX : STA !sram_movies_prev_slot, X
+    LDX $08
+    TYA : STA !sram_movies_next_slot, X
+    LDA $06 : CLC : ADC !sram_movies_length, X
+  PLX
+
+    RTS
+
+  .firstMovie
+  PLX
+    LDA #$FFFF : STA !sram_movies_prev_slot, X : STA !sram_movies_next_slot, X
+    LDA #$0000
+    RTS
+
+
+cm_movie_save:
+    ; Enter: AI=16
+    ; X = movie slot
+    JSR cm_movie_get_next_offset
+
+  PHA
+
+    LDA !ram_movie_length : STA !sram_movies_input_length, X
+    CLC : ADC !ram_movie_rng_length : STA !sram_movies_length, X
+    LDA !ram_movie_rng_length : STA !sram_movies_rng_length, X
+    LDA #$FFFF : STA !sram_movies_next_slot, X
+
+    %a8() : LDA !ram_previous_preset_type : STA !sram_movies_preset_type, X : %a16()
+    LDA !ram_previous_preset_destination : STA !sram_movies_preset_destination, X
+
+  PLA : STA !sram_movies_offset, X
+
+    %a8() : LDA !ram_movie_framecounter : STA !sram_movies_frame_counter, X : %a16()
+
+    LDA.w #!ram_movie : STA $06
+    LDA.w #!ram_movie>>16 : STA $08
+
+    LDA.w #!sram_movie_data : CLC : ADC !sram_movies_offset, X : STA $09
+    LDA.w #!sram_movie_data>>16 : STA $0B
+
+    LDX !ram_movie_length : DEX
+  .movieLoop
+    LDA [$06] : STA [$09]
+    INC $06 : INC $06
+    INC $09 : INC $09
+    DEX : DEX : BPL .movieLoop
+
+    LDA #$DD00 : SEC : SBC !ram_movie_rng_length : STA $06
+
+    LDX !ram_movie_rng_length : DEX
+  .rngLoop
+    LDA [$06] : STA [$09]
+    INC $06 : INC $06
+    INC $09 : INC $09
+    DEX : DEX : BPL .rngLoop
+
+    RTS
+
+
+cm_movie_delete:
+    ; Enter: AI=16
+    ; X = movie slot to delete
+    LDA !sram_movies_prev_slot, X : STA $06
+    LDA !sram_movies_next_slot, X : STA $08
+    LDA !sram_movies_length, X : TAY
+
+  PHX
+    LDA $06 : TAX
+    LDA $08 : STA !sram_movies_next_slot, X
+    LDA $08 : TAX
+    LDA $06 : STA !sram_movies_prev_slot, X
+
+    JSR .recurse
+  PLX
+
+    LDA #$0000
+    STA !sram_movies_length, X
+    STA !sram_movies_input_length, X
+    STA !sram_movies_rng_length, X
+    STA !sram_movies_offset, X
+    STA !sram_movies_frame_counter, X
+    STA !sram_movies_prev_slot, X
+    STA !sram_movies_next_slot, X
+    STA !sram_movies_preset_type, X
+    STA !sram_movies_preset_destination, X
+    RTS
+
+  .recurse
+    ; X = slot to move
+    ; Y = the distance to move it
+    CPX #$FFFF : BEQ .done
+
+  PHY
+    TYA : STA $0D
+
+    LDA.w #!sram_movie_data : CLC : ADC !sram_movies_offset, X : STA $06
+    LDA.w #!sram_movie_data>>16 : STA $08 : STA $0B
+    LDA $06 : SEC : SBC $0D : STA $09
+
+    LDA !sram_movies_length, X : TAY
+  .loop
+    LDA [$06] : STA [$09]
+    INC $06 : INC $06
+    INC $09 : INC $09
+    DEY : DEY : BPL .loop
+  PLY
+
+    LDA !sram_movies_offset, X : SEC : SBC $0D : STA !sram_movies_offset, X
+    LDA !sram_movies_next_slot, X : TAX
+    JSR .recurse
+
+  .done
+    RTS
+
+
+cm_movie_load:
+    ; Enter: AI=16
+    ; X = movie slot
+    LDA !sram_movies_input_length, X : STA !ram_movie_length
+    LDA !sram_movies_rng_length, X : STA !ram_movie_rng_length
+    %a8() : LDA !sram_movies_frame_counter, X : STA !ram_movie_framecounter : %a16()
+
+    %a8() : LDA !sram_movies_preset_type, X : STA !ram_previous_preset_type : %a16()
+    LDA !sram_movies_preset_destination, X : STA !ram_previous_preset_destination
+
+    LDA.w #!sram_movie_data : CLC : ADC !sram_movies_offset, X : STA $06
+    LDA.w #!sram_movie_data>>16 : STA $08
+
+    LDA.w #!ram_movie : STA $09
+    LDA.w #!ram_movie>>16 : STA $0B
+
+    LDY !ram_movie_length : DEY
+  .movieLoop
+    LDA [$06] : STA [$09]
+    INC $06 : INC $06
+    INC $09 : INC $09
+    DEY : DEY : BPL .movieLoop
+
+    LDA #$DD00 : SEC : SBC !ram_movie_rng_length : STA $09
+
+    LDY !ram_movie_rng_length : DEY
+  .rngLoop
+    LDA [$06] : STA [$09]
+    INC $06 : INC $06
+    INC $09 : INC $09
+    DEY : DEY : BPL .rngLoop
+
+    LDA #$0002 : STA !ram_movie_next_mode
+    LDA !ram_previous_preset_destination : STA !ram_preset_destination
+    %a8()
+    LDA !ram_previous_preset_type : STA !ram_preset_type
+    LDA #$04 : STA $11
+    %a16()
+    RTS
+
 
 ; ------
 ; Data
