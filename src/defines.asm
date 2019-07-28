@@ -78,7 +78,7 @@ endif
 !ram_toggle_lanmola_cycles = !offset+16
 !ram_subpixels_toggle = !offset+58
 !ram_rerandomize_toggle = !offset+64
-!ram_skip_triforce_toggle = !offset+80
+!ram_skip_triforce_toggle = !offset+75
 
 !ram_previous_preset_destination = !offset+24
 !ram_previous_preset_type = !offset+26
