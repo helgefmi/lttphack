@@ -62,6 +62,7 @@ cm_mainmenu_indices:
     dw cm_main_goto_items
     dw cm_main_goto_equipment
     dw cm_main_goto_game_state
+    dw cm_main_goto_gameplay
     dw cm_main_goto_rng_control
     dw cm_main_goto_ctrl
     dw cm_main_goto_counters
@@ -520,8 +521,48 @@ incsrc cm_presets_hundo.asm
 incsrc cm_presets_low.asm
 
 ; }}}
-; FEATURES {{{
+; GAMEPLAY {{{
+cm_main_goto_gameplay:
+    %cm_submenu("Gameplay", cm_submenu_gameplay)
 
+cm_submenu_gameplay:
+    dw cm_gameplay_rerandomize
+    dw cm_gameplay_skip_triforce
+    dw cm_gameplay_sanctuary
+    dw cm_gameplay_disable_beams
+    dw cm_gameplay_lit_rooms
+    dw cm_gameplay_shutoffbg1
+    dw cm_gameplay_shutoffbg2
+    dw cm_gameplay_oob
+    dw #$0000
+    %cm_header("GAMEPLAY")
+
+cm_gameplay_rerandomize:
+    %cm_toggle("Rerandomize", !ram_rerandomize_toggle)
+
+cm_gameplay_skip_triforce:
+    %cm_toggle("Skip Triforce", !ram_skip_triforce_toggle)
+
+cm_gameplay_sanctuary:
+    %cm_toggle("Sanc Heart", !ram_sanctuary_heart)
+
+cm_gameplay_disable_beams:
+    %cm_toggle("Disable beams", !disable_beams)
+
+cm_gameplay_lit_rooms:
+    %cm_toggle("Lit Rooms", !ram_lit_rooms_toggle)
+
+cm_gameplay_shutoffbg1:
+    %cm_toggle_bit("BG1 Off", !disabled_layers, #$01)
+
+cm_gameplay_shutoffbg2:
+    %cm_toggle_bit("BG2 Off", !disabled_layers, #$02)
+
+cm_gameplay_oob:
+    %cm_toggle("OoB Mode", !ram_oob_toggle)
+
+; }}}
+; FEATURES {{{
 cm_main_goto_features:
     %cm_submenu("Features", cm_submenu_features)
 
@@ -530,17 +571,10 @@ cm_submenu_features:
     dw cm_feature_input_display
     dw cm_feature_enemy_hp
     dw cm_feature_music
-    dw cm_feature_rerandomize
-    dw cm_feature_skip_triforce
     dw cm_feature_qw
-    dw cm_feature_lit_rooms
-    dw cm_feature_oob
     dw cm_feature_lanmola_cycle_count
     dw cm_feature_autoload_preset
     dw cm_feature_preset_category
-    dw cm_feature_sanctuary
-    dw cm_feature_shutoffbg1
-    dw cm_feature_shutoffbg2
     dw #$0000
     %cm_header("FEATURES")
 
@@ -580,7 +614,6 @@ cm_feature_music:
 
     RTS
 
-
 cm_feature_enemy_hp:
     %cm_toggle_jsr("Enemy HP", !ram_enemy_hp_toggle)
 
@@ -590,12 +623,6 @@ cm_feature_enemy_hp:
     LDX.w #!POS_ENEMY_HEARTS : STA $7EC700,x : STA $7EC702,x
     RTS
 
-cm_feature_rerandomize:
-    %cm_toggle("Rerandomize", !ram_rerandomize_toggle)
-
-cm_feature_skip_triforce:
-    %cm_toggle("Skip Triforce", !ram_skip_triforce_toggle)
-
 cm_feature_qw:
     %cm_toggle_jsr("QW Indicator", !ram_qw_toggle)
 
@@ -604,12 +631,6 @@ cm_feature_qw:
     LDA #$207F : STA $7EC80A
     LDA #$207F : STA $7EC80C
     RTS
-
-cm_feature_lit_rooms:
-    %cm_toggle("Lit Rooms", !ram_lit_rooms_toggle)
-
-cm_feature_oob:
-    %cm_toggle("OoB Mode", !ram_oob_toggle)
 
 cm_feature_lanmola_cycle_count:
     %cm_toggle_jsr("Lanmola Cycs", !ram_toggle_lanmola_cycles)
@@ -632,15 +653,6 @@ cm_feature_preset_category:
     db #$24, "Hundo", #$FF
     db #$24, "Low", #$FF
     db #$FF
-
-cm_feature_sanctuary:
-    %cm_toggle("Sanc Heart", !ram_sanctuary_heart)
-
-cm_feature_shutoffbg1:
-    %cm_toggle_bit("BG1 Off", !disabled_layers, #$01)
-
-cm_feature_shutoffbg2:
-    %cm_toggle_bit("BG2 Off", !disabled_layers, #$02)
 ; }}}
 ; COUNTERS {{{
 
@@ -1009,6 +1021,7 @@ cm_main_goto_rng_control:
     %cm_submenu("RNG control", cm_submenu_rng_control)
 
 cm_submenu_rng_control:
+    dw cm_rng_drops
     dw cm_rng_pokey
     dw cm_rng_agahnim
     dw cm_rng_helmasaur
@@ -1305,6 +1318,15 @@ cm_rng_conveyor:
     db #$24, "left", #$FF
     db #$24, "down", #$FF
     db #$24, "up", #$FF
+    db #$FF
+
+cm_rng_drops:
+    dw !CM_ACTION_CHOICE
+    dl !ram_drop_rng
+    db #$24, "Prize packs", #$FF
+    db #$24, "Vanilla", #$FF
+    db #$24, "Always", #$FF
+    db #$24, "Never", #$FF
     db #$FF
 
 ; }}}

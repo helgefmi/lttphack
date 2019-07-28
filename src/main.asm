@@ -75,6 +75,10 @@ warnpc $31FFFF
 incsrc preset_data_low.asm
 warnpc $32FFFF
 
+!ORG = $338000
+incsrc misc.asm
+warnpc $33FFFF
+
 org !SPC_DATA_OVERWORLD
 incbin ../resources/spc_overworld.bin
 

@@ -56,6 +56,7 @@
 !ram_soldiers_rng = $7F771A
 !ram_lanmola_rng = $7F771C
 !ram_conveyor_rng = $7F771E
+!ram_drop_rng = $7F7720
 
 !ram_ctrl_last_input = $7F7710
 
@@ -88,7 +89,6 @@ endif
 !ram_lagometer_toggle = !offset+56
 !ram_sanctuary_heart = !offset+74
 !ram_autoload_preset = !offset+76
-
 
 !ram_ctrl_prachack_menu = !offset+30
 !ram_ctrl_load_last_preset = !offset+32
@@ -137,12 +137,16 @@ endif
 !TD_RESET = $00
 !TD_SHOW = $01
 
-
 ;-------------------------
 ; Layers
 ;-------------------------
 !disabled_layers = $35
 !disabled_layers_temp = $AB ; 2 bytes
+
+;-------------------------
+; Sword beams
+;-------------------------
+!disable_beams = $7A
 
 ;-------------------------
 ; HUD
