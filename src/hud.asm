@@ -1,3 +1,4 @@
+pushpc
 ; HUD
 ;
 ; Takes care of drawing the following:
@@ -60,7 +61,7 @@ org $0DFDCB
     RTS
 
 
-org !ORG
+pullpc
 
 ; Hud Template Hook
 hud_template_hook:

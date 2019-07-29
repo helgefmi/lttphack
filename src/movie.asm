@@ -1,3 +1,4 @@
+pushpc
 ; movieformat
 ; BYST udlr | AXLR 0000 | NNNN NNNN | NNNN NNNN
 
@@ -17,8 +18,7 @@ org !RandomNumGen
     PLP : PLX
     RTL
 
-
-org !ORG
+pullpc
 movie_readjoypads:
     STZ $4016
 

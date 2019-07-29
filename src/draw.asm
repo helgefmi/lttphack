@@ -1,4 +1,3 @@
-org !ORG
 draw_counters:
   %a16()
   PHX

@@ -1,5 +1,3 @@
-org !ORG
-
 ; Preset locations
 
 preset_nmg_esc_bed:

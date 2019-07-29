@@ -1,3 +1,4 @@
+pushpc
 ; -----------------
 ; Ganon transition
 ; -----------------
@@ -15,7 +16,7 @@ org $06F99E
 org $1CF640
     JSL swordbeams
 
-org !ORG
+pullpc
 triforce_transition:
     LDA !ram_skip_triforce_toggle : BNE .skip_triforce
     JSL $02A0BE ; Dungeon_SaveRoomData_justKeys

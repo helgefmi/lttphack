@@ -1,3 +1,4 @@
+pushpc
 ; VRAM buffer:
 ; $10C0 = first line -> $D100 in VRAM
 ; $1100 = second line
@@ -6,12 +7,11 @@
 
 
 ; Overrides Game Mode 0x0C.
-org $00806D : db #!ORG
-org $008089 : db #!ORG>>8
-org $0080A5 : db #!ORG>>16
+org $00806D : db #CM_Main
+org $008089 : db #CM_Main>>8
+org $0080A5 : db #CM_Main>>16
 
-
-org !ORG
+pullpc
 CM_Main:
     PHB : PHK : PLB
 
@@ -410,7 +410,7 @@ cm_transfer_tileset:
 
     LDX #$7000 : STX $2116 ; VRAM address (E000 in vram)
     LDX #cm_hud_table : STX $4302 ; Source offset
-    LDA #!ORG>>16 : STA $4304 ; Source bank
+    LDA #CM_Main>>16 : STA $4304 ; Source bank
     LDX #$0900 : STX $4305 ; Size (0x10 = 1 tile)
     LDA #$01 : STA $4300 ; word, normal increment (DMA MODE)
     LDA #$18 : STA $4301 ; destination (VRAM write)

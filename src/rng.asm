@@ -1,3 +1,4 @@
+pushpc
 ; Pokeys
 org $0688E9
     ; 0688e9 jsl $0dba71
@@ -91,8 +92,7 @@ org $09BD5D
     ; 09bd63 ldy $0b08,x
     JSL rng_conveyor_belt
 
-
-org !ORG
+pullpc
 
 tbl_pokey_speed:
     ; 00

@@ -1,10 +1,11 @@
+pushpc
 ; Game Mode Hijack
 org $008056
     JSL gamemode_hook
 
 
 ; Game Mode Hook
-org !ORG
+pullpc
 gamemode_hook:
   PHB : PHK : PLB
     JSR gamemode_shortcuts : BCS .skip_gamemode

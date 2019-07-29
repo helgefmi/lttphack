@@ -1,3 +1,4 @@
+pushpc
 ; NMI
 ;
 ; Expands the NMI (code run at the end of each frame)
@@ -32,8 +33,7 @@ nmi_hook:
   %ai16()
     JMP $80D1
 
-
-org !ORG
+pullpc
 nmi_expand:
    ; Enters AI=16
   %a8()

@@ -1,3 +1,4 @@
+pushpc
 ; Overworld music data
 ; Overwrites:
 ; LDA #$F5 : STA $00
@@ -31,8 +32,7 @@ org $008931
   NOP : NOP
   NOP : NOP
 
-
-org !ORG
+pullpc
 ; Used when turning on the console, so sound is correctly unmuted after selecting a file.
 ; This removes file screen music, but oh well.
 music_init:

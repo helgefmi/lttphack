@@ -1,5 +1,3 @@
-org !ORG
-
 ; Preset locations
 
 preset_hundo_esc_bed:

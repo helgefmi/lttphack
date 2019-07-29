@@ -1,5 +1,3 @@
-org !ORG
-
 ; Preset locations
 
 preset_low_esc_bed:

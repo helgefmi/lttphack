@@ -1,3 +1,4 @@
+pushpc
 ; INIT
 ;
 ; Code that is run once after the game has been powered on.
@@ -10,8 +11,7 @@ org $00802F
     JSL init_hook
     NOP
 
-
-org !ORG
+pullpc
 init_hook:
     LDA #$81 : STA $4200
     JSL init_expand

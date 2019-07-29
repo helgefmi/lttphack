@@ -1,3 +1,4 @@
+pushpc
 ; Replaces `JSL BirdTravel_LoadTargetAreaData` from BirdTravel_LoadTargetArea.
 org $0AB90D
     JSL preset_load_overworld
@@ -96,9 +97,7 @@ org $02922F
     ;029233 inc $b0
     ;029235 rts
 
-
-
-org !ORG
+pullpc
 preset_load_next_frame:
     ; This subroutine is used for any preset loading (load last, replay movie, from menu, autopreset)
   %ai8()
