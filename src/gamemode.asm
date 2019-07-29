@@ -38,7 +38,7 @@ gamemode_shortcuts:
   %a16()
     LDA !ram_ctrl1_filtered : BNE +
 
-  %a8()
+    %a8()
     CLC : RTS
 
   + LDA !ram_ctrl1 : AND !ram_ctrl_save_state : CMP !ram_ctrl_save_state : BNE +
@@ -80,6 +80,10 @@ gamemode_shortcuts:
   + LDA !ram_ctrl1 : AND !ram_ctrl_reset_segment_timer : CMP !ram_ctrl_reset_segment_timer : BNE +
     AND !ram_ctrl1_filtered : BEQ +
     JSR gamemode_reset_segment_timer : CLC : RTS
+
+  + LDA !ram_ctrl1 : AND !ram_ctrl_fix_vram : CMP !ram_ctrl_fix_vram : BNE +
+    AND !ram_ctrl1_filtered : BEQ +
+    JSR gamemode_fix_vram : CLC : RTS
 
   + CLC : RTS
 
@@ -668,8 +672,6 @@ gamemode_reset_segment_timer:
 
 gamemode_fix_vram:
   %a16()
-    LDA !ram_ctrl1 : AND !ram_ctrl_fix_vram : CMP !ram_ctrl_fix_vram : BNE .done
-    AND !ram_ctrl1_filtered : BEQ .done
 
     LDA #$0280 : STA $2100
     LDA #$0313 : STA $2107
@@ -677,9 +679,9 @@ gamemode_fix_vram:
     LDA #$0722 : STA $210B
     STZ $2133 ; mode 7 hit, but who cares
 
-  .done
-    %a8()
-    RTS
+  %a8()
+    JSL $00E1DB
+++  RTS
 
 gamemode_lagometer:
   %ai16()
