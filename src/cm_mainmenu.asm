@@ -557,7 +557,12 @@ cm_gameplay_disable_beams:
     %cm_toggle("Disable beams", !disable_beams)
 
 cm_gameplay_lit_rooms:
-    %cm_toggle("Lit Rooms", !ram_lit_rooms_toggle)
+    %cm_toggle_jsr("Lit Rooms", !ram_lit_rooms_toggle)
+  .toggle
+    LDA !ram_lit_rooms_toggle : BEQ .leaveon
+    LDA #$10 : STA $99
+  .leaveon
+    RTS
 
 cm_gameplay_shutoffbg1:
     %cm_toggle_bit("BG1 Off", !disabled_layers, #$01)
