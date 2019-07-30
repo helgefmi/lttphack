@@ -50,7 +50,7 @@ x Drop rate control: Always, Never, Random
 
 - A way to change/preset your antennae value for spoopy inputs presently lengthy. To easily engage in mirerod entanglements.
 
-- "Reset room" -> "Reset rooms" submenu with "Reset current room", "Reset current dungeon" (fmp lua has list) and "Reset all rooms". 
+x "Reset room" -> "Reset rooms" submenu with "Reset current room", "Reset current dungeon" (fmp lua has list) and "Reset all rooms". 
 
 
 ======== MINIGAMES TODO ========

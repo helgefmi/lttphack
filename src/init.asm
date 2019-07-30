@@ -81,8 +81,6 @@ init_initialize:
     LDA #$2060 : STA !ram_ctrl_load_state
     ; R + L + Select
     LDA #$3020 : STA !ram_ctrl_replay_last_movie
-    ; Select + R
-    LDA #$1020 : STA !ram_ctrl_fix_vram
 
     ; Unset
     LDA #$0000
@@ -91,6 +89,7 @@ init_initialize:
     STA !ram_ctrl_reset_segment_timer
     STA !ram_ctrl_disable_sprites
     STA !ram_ctrl_fill_everything
+    STA !ram_ctrl_fix_vram
 
     LDA #!SRAM_VERSION : STA !ram_sram_initialized
 
