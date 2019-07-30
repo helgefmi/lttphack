@@ -559,7 +559,7 @@ cm_gameplay_disable_beams:
 cm_gameplay_lit_rooms:
     %cm_toggle_jsr("Lit Rooms", !ram_lit_rooms_toggle)
   .toggle
-    LDA !ram_lit_rooms_toggle : BEQ .leaveon
+    LDA !ram_lit_rooms_toggle : ORA $1B : BEQ .leaveon
     LDA #$10 : STA $99
   .leaveon
     RTS
