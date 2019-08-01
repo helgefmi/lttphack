@@ -537,6 +537,7 @@ cm_submenu_gameplay:
     dw cm_gameplay_skip_triforce
     dw cm_gameplay_sanctuary
     dw cm_gameplay_disable_beams
+    dw cm_gameplay_probes
     dw cm_gameplay_lit_rooms
     dw cm_gameplay_shutoffbg1
     dw cm_gameplay_shutoffbg2
@@ -555,6 +556,9 @@ cm_gameplay_sanctuary:
 
 cm_gameplay_disable_beams:
     %cm_toggle("Disable beams", !disable_beams)
+
+cm_gameplay_probes:
+    %cm_toggle("Visible probes", !ram_probe_toggle)
 
 cm_gameplay_lit_rooms:
     %cm_toggle_jsr("Lit Rooms", !ram_lit_rooms_toggle)

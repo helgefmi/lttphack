@@ -76,6 +76,7 @@ endif
 !ram_xy_toggle = !offset+8
 !ram_qw_toggle = !offset+10
 !ram_lit_rooms_toggle = !offset+12
+!ram_probe_toggle = !offset+13 ; idk if this fits
 !ram_oob_toggle = !offset+14
 !ram_toggle_lanmola_cycles = !offset+16
 !ram_subpixels_toggle = !offset+58
