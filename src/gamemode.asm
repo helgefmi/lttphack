@@ -258,6 +258,12 @@ gamemode_safe_to_change_mode:
     LDA $11 : CMP #$23 : BEQ .not_safe ; Mirror transition
 
   .not_overworld
+    CMP #$0E : BNE .not_messaging
+    LDA $11 : CMP #$03 : BEQ .not_safe ; Dungeon map
+              CMP #$07 : BEQ .not_safe ; Overworld map
+              CMP #$09 : BEQ .not_safe ; Flute map
+
+  .not_messaging
     ; Don't allow custom menu during mosaic effects
     LDA $7EC011 : BNE .not_safe
 
@@ -673,16 +679,49 @@ gamemode_reset_segment_timer:
 
 gamemode_fix_vram:
   %a16()
-
     LDA #$0280 : STA $2100
     LDA #$0313 : STA $2107
     LDA #$0063 : STA $2109 ; zeros out unused bg4
     LDA #$0722 : STA $210B
-    STZ $2133 ; mode 7 hit, but who cares
+    STZ $2133 ; mode 7 register hit, but who cares
 
   %a8()
-    JSL $00E1DB
-++  RTS
+    LDA #$80 : STA $13 : STA $2100 ; keep fblank on while we do stuff
+    LDA $1B : BEQ ++
+    JSR fix_vram_uw
+    JSL load_default_tileset
+
+++  LDA #$0F : STA $13
+    RTS
+
+fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics - pc: $56F19
+    LDA $9B : PHA
+    STZ $420C
+    STZ $9B
+
+    JSL $00834B ; Vram_EraseTilemaps.normal
+
+    JSL $00E1DB ; InitTilesets
+
+    JSL $0DFA8C ; HUD.RebuildLong2
+
+    STZ $0418
+    STZ $045C
+
+  .drawQuadrants
+
+    JSL $0091C4
+    JSL $0090E3
+    JSL $00913F
+    JSL $0090E3
+
+    LDA $045C : CMP #$10 : BNE .drawQuadrants
+
+    STZ $17
+    STZ $B0
+
+    PLA : STA $9B
+    RTS
 
 gamemode_lagometer:
   %ai16()
