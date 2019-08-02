@@ -262,7 +262,7 @@ gamemode_safe_to_change_mode:
     LDA $11 : CMP #$23 : BEQ .not_safe ; Mirror transition
 
   .not_overworld
-    CMP #$0E : BNE .not_messaging
+    CPX #$0E : BNE .not_messaging
     LDA $11 : CMP #$03 : BEQ .not_safe ; Dungeon map
               CMP #$07 : BEQ .not_safe ; Overworld map
               CMP #$09 : BEQ .not_safe ; Flute map
@@ -722,6 +722,8 @@ fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics - pc: $56F19
     STZ $17
     STZ $B0
 
+    ; TODO : stuff related to and pegs
+
     PLA : STA $9B
     PLB : RTS
 
@@ -739,13 +741,13 @@ gamemode_somaria_pits_wrapper:
 
 gamemode_somaria_pits:
     PHB ; rebalanced in redraw
-    PEA $7F00 ; push both 7F wram and bank 00
+    PEA $7F00 ; push both bank 7F (wram) and bank 00
     PLB ; but only pull 7F for now
   %ai16()
 
     LDY #$0FFE
 
---  LDA $2000, Y : AND #$00FF
+--  LDA $2000, Y : AND #$00FF ; checks tile attributes table
       CMP #$0020 : BEQ .ispit
       CMP #$00B0 : BCC .skip
       CMP #$00BF : BCS .skip ; range B0-BE, which are pits
@@ -764,7 +766,7 @@ gamemode_somaria_pits:
     LDA $9B : PHA ; rebalanced in redraw
     STZ $9B : STZ $420C
 
-    JMP fix_vram_uw_just_redraw
+    JMP fix_vram_uw_just_redraw ; jmp to have 1 less rts and because of stack
 
 gamemode_lagometer:
   %ai16()

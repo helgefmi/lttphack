@@ -569,10 +569,10 @@ cm_gameplay_lit_rooms:
     RTS
 
 cm_gameplay_shutoffbg1:
-    %cm_toggle_bit("BG1 Off", !disabled_layers, #$01)
+    %cm_toggle_bit("Disable BG1", !disabled_layers, #$01)
 
 cm_gameplay_shutoffbg2:
-    %cm_toggle_bit("BG2 Off", !disabled_layers, #$02)
+    %cm_toggle_bit("Disable BG2", !disabled_layers, #$02)
 
 cm_gameplay_oob:
     %cm_toggle("OoB Mode", !lowram_oob_toggle)
