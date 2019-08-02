@@ -741,8 +741,9 @@ gamemode_somaria_pits_wrapper:
 
 gamemode_somaria_pits:
     PHB ; rebalanced in redraw
-    PEA $7F00 ; push both bank 7F (wram) and bank 00
+    PEA $007F ; push both bank 00 and bank 7F (wram)
     PLB ; but only pull 7F for now
+
   %ai16()
 
     LDY #$0FFE
@@ -754,7 +755,7 @@ gamemode_somaria_pits:
 
   .ispit
     TYA : ASL : TAX
-    LDA #$04FD : STA $7E2000, X
+    LDA #$050F : STA $7E2000, X
 
   .skip
     DEY : BPL --

@@ -44,8 +44,7 @@ dropluck:
     ; use vanilla value when this is 0 so that it can be used
     ; by people who want to test fairy stuff I guess
     LDA !ram_drop_rng : BEQ .vanilla
-    TAY : JML afterdropluck ; was hoping this coulda been simpler
-    JML afterdropluck        ; but luck needs to be in Y
+    TAY : JML afterdropluck ; was hoping this coulda been simpler but luck needs to be in Y
 
   .vanilla
     LDY $0CF9
@@ -86,7 +85,7 @@ probe_draw:
 
     SBC #$0F : STA ($90), Y
     INY
-    LDA #$EE : STA ($90), Y
+    LDA #$EE : STA ($90), Y ; #$CB for bubble ; #$AA for star
     INY
     LDA $05 : STA ($90), Y
 
