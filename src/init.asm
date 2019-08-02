@@ -32,7 +32,7 @@ init_expand:
   .sram_initialized
     ; Some features probably should be turned off after a reset
   %a8()
-    LDA #$00 : STA !ram_oob_toggle : STA !lowram_oob_toggle
+    STZ !lowram_oob_toggle
 
   .done
     JSL music_init

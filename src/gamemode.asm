@@ -86,6 +86,10 @@ gamemode_shortcuts:
     AND !ram_ctrl1_filtered : BEQ +
     JSR gamemode_fix_vram : CLC : RTS
 
+  + LDA !ram_ctrl1 : AND !ram_ctrl_somaria_pits : CMP !ram_ctrl_somaria_pits : BNE +
+    AND !ram_ctrl1_filtered : BEQ +
+    JSR gamemode_somaria_pits_wrapper : CLC : RTS
+
   + CLC : RTS
 
 
@@ -567,11 +571,7 @@ gamemode_savestate:
 
 gamemode_oob:
   %a8()
-    LDA !ram_oob_toggle : EOR #$01 : STA !ram_oob_toggle
-
-  .dont_toggle:
-  %a8()
-    LDA !ram_oob_toggle : STA !lowram_oob_toggle
+    LDA !lowram_oob_toggle : EOR #$01 : STA !lowram_oob_toggle
     RTS
 
 
@@ -695,10 +695,10 @@ gamemode_fix_vram:
     RTS
 
 fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics - pc: $56F19
-    PHB : PEA $0000 : PLB : PLB
+    PHB
+    PEA $0000 : PLB : PLB ; need to be bank00
     LDA $9B : PHA
-    STZ $420C
-    STZ $9B
+    STZ $9B : STZ $420C
 
     JSL $00834B ; Vram_EraseTilemaps.normal
 
@@ -706,6 +706,7 @@ fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics - pc: $56F19
 
     JSL $0DFA8C ; HUD.RebuildLong2
 
+  .just_redraw
     STZ $0418
     STZ $045C
 
@@ -723,6 +724,47 @@ fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics - pc: $56F19
 
     PLA : STA $9B
     PLB : RTS
+
+; wrapper because of push and pull logic
+; need this to make it safe and ultimately fix INIDISP ($13)
+gamemode_somaria_pits_wrapper:
+  %a8()
+    LDA $1B : BEQ ++ ; don't do this outdoors
+
+    LDA #$80 : STA $13 : STA $2100 ; keep fblank on while we do stuff
+    JSR gamemode_somaria_pits
+    LDA #$0F : STA $13
+
+++  RTS
+
+gamemode_somaria_pits:
+    PHB ; rebalanced in redraw
+    PEA $7F00 ; push both 7F wram and bank 00
+    PLB ; but only pull 7F for now
+  %ai16()
+
+    LDY #$0FFE
+
+--  LDA $2000, Y : AND #$00FF
+      CMP #$0020 : BEQ .ispit
+      CMP #$00B0 : BCC .skip
+      CMP #$00BF : BCS .skip ; range B0-BE, which are pits
+
+  .ispit
+    TYA : ASL : TAX
+    LDA #$04FD : STA $7E2000, X
+
+  .skip
+    DEY : BPL --
+
+  .time_for_tilemaps ; just a delimiting label
+    %ai8()
+    PLB ; pull to bank 00 for this next stuff
+
+    LDA $9B : PHA ; rebalanced in redraw
+    STZ $9B : STZ $420C
+
+    JMP fix_vram_uw_just_redraw
 
 gamemode_lagometer:
   %ai16()

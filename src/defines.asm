@@ -77,7 +77,6 @@ endif
 !ram_qw_toggle = !offset+10
 !ram_lit_rooms_toggle = !offset+12
 !ram_probe_toggle = !offset+13 ; idk if this fits
-!ram_oob_toggle = !offset+14
 !ram_toggle_lanmola_cycles = !offset+16
 !ram_subpixels_toggle = !offset+58
 !ram_rerandomize_toggle = !offset+64
@@ -104,6 +103,7 @@ endif
 !ram_ctrl_reset_segment_timer = !offset+44
 !ram_ctrl_fill_everything = !offset+70
 !ram_ctrl_fix_vram = !offset+72
+!ram_ctrl_somaria_pits = !offset+14
 
 !ram_counters_real = !offset+48
 !ram_counters_lag = !offset+50

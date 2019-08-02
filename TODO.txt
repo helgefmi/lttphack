@@ -33,7 +33,7 @@ x Drop rate control: Always, Never, Random
 - Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances
   the game one frame. Would be good for clip learning. Maybe stop timer during this.
 
-- Show invisible sprites (Guard LoS)
+x Show invisible sprites (Guard LoS)
   - Show sprite hitboxes in general?
 
 - Show intermediate room time in more places (bonk, walk up stairs)

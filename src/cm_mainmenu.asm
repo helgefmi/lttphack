@@ -575,7 +575,7 @@ cm_gameplay_shutoffbg2:
     %cm_toggle_bit("BG2 Off", !disabled_layers, #$02)
 
 cm_gameplay_oob:
-    %cm_toggle("OoB Mode", !ram_oob_toggle)
+    %cm_toggle("OoB Mode", !lowram_oob_toggle)
 
 ; }}}
 ; FEATURES {{{
@@ -1210,6 +1210,7 @@ cm_submenu_ctrl:
     dw cm_ctrl_disable_sprites
     dw cm_ctrl_fill_everything
     dw cm_ctrl_fix_vram
+    dw cm_ctrl_somaria_pits
     dw #$0000
     %cm_header("CONTROLLER SHORTCUTS")
 
@@ -1253,6 +1254,9 @@ cm_ctrl_fill_everything:
 
 cm_ctrl_fix_vram:
     %cm_ctrl_shortcut("VRAM repair", !ram_ctrl_fix_vram)
+
+cm_ctrl_somaria_pits:
+    %cm_ctrl_shortcut("Show somaria pits", !ram_ctrl_somaria_pits)
 ; }}}
 ; RNG CONTROL {{{
 
