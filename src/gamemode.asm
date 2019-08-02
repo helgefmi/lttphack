@@ -695,6 +695,7 @@ gamemode_fix_vram:
     RTS
 
 fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics - pc: $56F19
+    PHB : PEA $0000 : PLB : PLB
     LDA $9B : PHA
     STZ $420C
     STZ $9B
@@ -721,7 +722,7 @@ fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics - pc: $56F19
     STZ $B0
 
     PLA : STA $9B
-    RTS
+    PLB : RTS
 
 gamemode_lagometer:
   %ai16()

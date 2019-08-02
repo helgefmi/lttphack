@@ -876,23 +876,24 @@ cm_game_state_reset_screen:
     LDA #$09 : STA $012F
     RTS
 
-!EX = $01
-!EP = $02
-!DP = $03
-!TH = $04
+!EX = $01 ; escape
+!EP = $02 ; eastern palace
+!DP = $03 ; desert palace
+!TH = $04 ; tower of hera
 
-!AT = $0A
+!AT = $0A ; aga's tower
 
-!PD = $11
-!SP = $12
-!SW = $13
-!TT = $14
-!IP = $15
-!MM = $16
-!TR = $17
-!GT = $18
+!PD = $11 ; palace of darkness
+!SP = $12 ; swamp palace
+!SW = $13 ; skull woods
+!TT = $14 ; thieves' town
+!IP = $15 ; ice palace
+!MM = $16 ; misery mire
+!TR = $17 ; turtle rock
+!GT = $18 ; ganon's tower
 
-!CV = $FF
+!CV = $FF ; caves and houses
+!UU = !CV ; unused caves, just for convenience
 
 macro reset_dungeon(dungeon, id)
     dw !CM_ACTION_JSR
@@ -970,22 +971,28 @@ cm_game_state_dungeons_caves:
     %reset_dungeon("Other", !CV)
 
 supertile_dungeons:
-  dw !CV, !EX, !EX, !CV, !TR, !CV, !SP, !TH, !CV, !PD, !PD, !PD, !GT, !GT, !IP, !CV
-  dw !GT, !EX, !EX, !TR, !TR, !TR, !SP, !TH, !CV, !PD, !PD, !PD, !GT, !GT, !IP, !IP
-  dw !AT, !EX, !EX, !TR, !TR, !CV, !SP, !TH, !SP, !SW, !PD, !PD, !CV, !IP, !IP, !CV
+  ; eg1
+  dw !CV, !EX, !EX, !CV, !TR, !UU, !SP, !TH, !CV, !PD, !PD, !PD, !GT, !GT, !IP, !UU
+  dw !CV, !EX, !EX, !TR, !TR, !TR, !SP, !TH, !CV, !PD, !PD, !PD, !GT, !GT, !IP, !IP
+  dw !AT, !EX, !EX, !TR, !TR, !UU, !SP, !TH, !SP, !SW, !PD, !PD, !CV, !UU, !IP, !CV
   dw !AT, !TH, !EX, !DP, !SP, !SP, !SP, !SP, !SP, !SW, !PD, !PD, !CV, !GT, !IP, !IP
-  dw !AT, !EX, !EX, !DP, !TT, !TT, !SP, !CV, !CV, !SW, !PD, !PD, !GT, !GT, !IP, !IP
-  dw !EX, !EX, !EX, !DP, !SP, !EX, !SW, !SW, !SW, !SW, !PD, !GT, !GT, !GT, !IP, !IP
-  dw !EX, !EX, !EX, !DP, !TT, !TT, !SP, !SW, !SW, !CV, !PD, !GT, !GT, !GT, !IP, !CV
-  dw !EX, !EX, !EX, !DP, !DP, !DP, !SP, !TH, !CV, !CV, !CV, !GT, !GT, !GT, !IP, !IP
-  dw !EX, !EX, !EX, !DP, !DP, !DP, !CV, !TH, !CV, !EP, !CV, !GT, !GT, !GT, !IP, !CV
-  dw !MM, !MM, !MM, !MM, !CV, !GT, !GT, !MM, !MM, !EP, !CV, !GT, !GT, !GT, !IP, !IP
-  dw !MM, !MM, !MM, !MM, !TR, !GT, !GT, !TH, !EP, !EP, !EP, !TT, !TT, !IP, !IP, !IP
-  dw !AT, !MM, !MM, !MM, !TR, !TR, !TR, !TR, !EP, !EP, !EP, !TT, !TT, !IP, !IP, !IP
-  dw !AT, !MM, !MM, !MM, !TR, !TR, !TR, !TR, !EP, !EP, !CV, !TT, !TT, !IP, !IP, !CV
-  dw !AT, !MM, !MM, !CV, !CV, !TR, !TR, !CV, !EP, !EP, !EP, !TT, !TT, !IP, !IP, !CV
-  dw !AT, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV
+  dw !AT, !EX, !EX, !DP, !TT, !TT, !SP, !UU, !UU, !SW, !PD, !PD, !GT, !GT, !IP, !IP
+  dw !EX, !EX, !EX, !DP, !SP, !CV, !SW, !SW, !SW, !SW, !PD, !GT, !GT, !GT, !IP, !IP
+  dw !EX, !EX, !EX, !DP, !TT, !TT, !SP, !SW, !SW, !UU, !PD, !GT, !GT, !GT, !IP, !UU
+  dw !EX, !EX, !EX, !DP, !DP, !DP, !SP, !TH, !UU, !UU, !UU, !GT, !GT, !GT, !IP, !IP
+  dw !EX, !EX, !EX, !DP, !DP, !DP, !UU, !TH, !UU, !EP, !UU, !GT, !GT, !GT, !IP, !UU
+  dw !MM, !MM, !MM, !MM, !UU, !GT, !GT, !MM, !MM, !EP, !UU, !GT, !GT, !GT, !IP, !IP
+  dw !MM, !MM, !MM, !MM, !TR, !GT, !GT, !TH, !EP, !EP, !EP, !TT, !TT, !UU, !IP, !IP
+  dw !AT, !MM, !MM, !MM, !TR, !TR, !TR, !TR, !EP, !EP, !EP, !TT, !TT, !UU, !IP, !IP
+  dw !AT, !MM, !MM, !MM, !TR, !TR, !TR, !TR, !EP, !EP, !UU, !TT, !TT, !UU, !IP, !UU
+  dw !AT, !MM, !MM, !CV, !CV, !TR, !TR, !UU, !EP, !EP, !EP, !TT, !TT, !UU, !IP, !CV
+  dw !AT, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !UU, !CV, !CV, !UU, !CV, !CV, !CV
+  dw !CV, !CV, !CV, !CV, !CV, !CV, !UU, !UU, !CV, !CV, !CV, !CV, !UU, !CV, !CV, !CV
+
+  ; eg 2
   dw !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV
+  dw !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV
+  dw !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV
 
 reset_dungeon:
     PHB : PHK : PLB
@@ -994,14 +1001,23 @@ reset_dungeon:
     STA $00
     LDA #$0000
 
-    LDX #$01FE
+    LDX.w #(256+40)*2 ; eg1 size + eg2 size, words
 
 --  LDY supertile_dungeons, X
     CPY $00 : BNE ++
     STA $7EF000, X
 ++  DEX : DEX : BPL --
 
-    PLB : RTS
+    ; check current room
+    INC ; sets accum to #$0001
+    BIT $1B : BEQ ++ ; make sure we're indoors
+
+    LDA $A0 : ASL : TAX
+    LDA supertile_dungeons, X
+    CMP $00 : BNE ++
+    STZ $0400 : STZ $0402 : STZ $0408
+
+++  PLB : RTS
 
 cm_game_state_progress:
     dw !CM_ACTION_CHOICE
