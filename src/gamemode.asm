@@ -29,7 +29,6 @@ gamemode_hook:
   PLB
     RTL
 
-
 gamemode_shortcuts:
     LDA $10 : CMP #$0C : BNE .not_setting_new_inputs
     LDA $B0 : BEQ .not_setting_new_inputs
@@ -665,8 +664,6 @@ gamemode_fill_everything:
   .exit
     RTS
 
-
-
 gamemode_reset_segment_timer:
   %a16()
     STZ !lowram_seg_frames
@@ -691,7 +688,21 @@ gamemode_fix_vram:
     JSR fix_vram_uw
     JSL load_default_tileset
 
+    LDA $7EC172 : BEQ ++
+    JSR fixpegs ; quick and dirty pegs reset
+
 ++  LDA #$0F : STA $13
+    RTS
+
+fixpegs:
+
+  %ai16()
+    LDX #$0000
+--  LDA $7EB4C0, X : STA $7F0000, X
+    LDA $7EB340, X : STA $7F0080, X
+    INX #2 : CPX #$0080 : BNE --
+  %ai8()
+    LDA #$17 : STA $17
     RTS
 
 fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics - pc: $56F19

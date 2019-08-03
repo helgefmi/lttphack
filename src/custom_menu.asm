@@ -1343,7 +1343,6 @@ cm_do_ctrl_config:
     ; Enters AI=8
     ; Leaves AI=8
   %a16()
-  STA $7FFFFE
     LDA #$2080 : STA $0E
     LDA !ram_ctrl1 : BEQ .clear_and_draw
     CMP !ram_ctrl_last_input : BNE .clear_and_draw
@@ -1382,6 +1381,7 @@ cm_do_ctrl_config:
 
   .exit
     LDA #$000 : STA !ram_ctrl_last_input
+
   %ai8()
     STZ $B0
     STZ $0200
