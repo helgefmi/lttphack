@@ -27,7 +27,7 @@ load_default_tileset:
 
     LDX #$7000 : STX $2116 ; VRAM address (E000 in vram)
     LDX #hud_table : STX $4302 ; Source offset
-    LDA #load_default_tileset>>16 : STA $4304 ; Source bank
+    LDA #hud_table>>16 : STA $4304 ; Source bank
     LDX #$02C0 : STX $4305 ; Size (0x10 = 1 tile)
     LDA #$01 : STA $4300 ; word, normal increment (DMA MODE)
     LDA #$18 : STA $4301 ; destination (VRAM write)

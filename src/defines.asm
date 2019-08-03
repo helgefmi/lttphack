@@ -338,6 +338,10 @@ endif
 !ram_game_map_indicator = $7EF3C7
 !ram_capabilities = $7EF379
 
+; Magic words
+!menu_end = #$0000
+!list_end = #$FF
+
 ;-------------------------
 ; Macros
 ;-------------------------
@@ -381,5 +385,5 @@ endmacro
 
 
 macro wait_14_cycles()
-    PHA : PLA : PHA : PLA
+    PHP : PLP : PHP : PLP
 endmacro

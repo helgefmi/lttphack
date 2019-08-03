@@ -374,7 +374,7 @@ gamemode_savestate:
     INX
     INY : CPY #$000B : BNE -
     CPX #$007B : BEQ +
-    INX : INX : INX : INX : INX
+    INX #5
     LDY #$0000
     JMP -
     ; end of DMA to SRAM
@@ -546,7 +546,7 @@ gamemode_savestate:
     INX
     INY : CPY #$000B : BNE -
     CPX #$007B : BEQ +
-    INX : INX : INX : INX : INX
+    INX #5
     LDY #$0000
     JMP -
     ; end of DMA from SRAM

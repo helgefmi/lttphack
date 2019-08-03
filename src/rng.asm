@@ -56,7 +56,7 @@ org $0580D6
     ;0580da adc $1a
     ;0580dc and #$1f
     JSL rng_cannonballs
-    NOP : NOP
+    NOP #2
 
 ; Soldiers
 org $05C500
@@ -243,7 +243,7 @@ rng_cannonballs:
     RTL
 
   .random
-    TXA : ASL : ASL : CLC : ADC $1A
+    TXA : ASL #2 : CLC : ADC $1A
     RTL
 
 ; == Soldiers ==

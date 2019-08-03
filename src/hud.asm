@@ -52,7 +52,7 @@ org $0DFAAE
 ; $0DFC06:  20 AB FD  JSR HandleHearts
 
 org $0DFC26
-    NOP : NOP : NOP
+    NOP #3
 
 
 ; UpdateHearts Hijack
@@ -263,7 +263,7 @@ hud_draw_input_display:
     JMP ++
 +   LDA #$207F
 ++  STA !POS_MEM_INPUT_DISPLAY_TOP, X
-    INX : INX : CPX #$00C : BNE -
+    INX #2 : CPX #$00C : BNE -
 
     LDX #$0000
 
@@ -272,7 +272,7 @@ hud_draw_input_display:
     JMP ++
 +   LDA #$207F
 ++  STA !POS_MEM_INPUT_DISPLAY_BOT, X
-    INX : INX : CPX #$00C : BNE -
+    INX #2 : CPX #$00C : BNE -
 
   .end
     RTS
@@ -320,7 +320,7 @@ hud_draw_subpixels:
 
 
 hud_set_counter_position:
-    LDA.w #!POS_COUNTERS : DEC : DEC
+    LDA.w #!POS_COUNTERS : DEC #2
 
   .loop
     CPX #$0000 : BEQ .done

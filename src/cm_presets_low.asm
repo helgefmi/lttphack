@@ -14,7 +14,7 @@ cm_low_submenu_presets:
     dw cm_low_presets_goto_gtower
     dw cm_low_presets_goto_ganon
     dw cm_low_presets_goto_boss
-    dw #$0000
+    dw !menu_end
     %cm_header("PRESETS")
 
 ; HYRULE CASTLE
@@ -37,7 +37,7 @@ cm_low_presets_escape:
     dw cm_low_esc_water_rooms
     dw cm_low_esc_keyrat
     dw cm_low_esc_last_two_screens
-    dw #$0000
+    dw !menu_end
     %cm_header("HYRULE CASTLE")
 
 cm_low_esc_bed:
@@ -102,7 +102,7 @@ cm_low_presets_eastern:
     dw cm_low_east_pot_room
     dw cm_low_east_zeldagamer_room
     dw cm_low_east_armos
-    dw #$0000
+    dw !menu_end
     %cm_header("EASTERN")
 
 cm_low_east_before_cutscene:
@@ -167,7 +167,7 @@ cm_low_presets_desert:
     dw cm_low_desert_popo_genocide_room
     dw cm_low_desert_torches
     dw cm_low_desert_lanmolas
-    dw #$0000
+    dw !menu_end
     %cm_header("DESERT")
 
 cm_low_desert_outside_eastern_palace:
@@ -229,7 +229,7 @@ cm_low_presets_hera:
     dw cm_low_hera_beetles
     dw cm_low_hera_petting_zoo
     dw cm_low_hera_moldorm
-    dw #$0000
+    dw !menu_end
     %cm_header("HERA")
 
 cm_low_hera_outside_desert_palace:
@@ -284,7 +284,7 @@ cm_low_presets_atower:
     dw cm_low_aga_circle_of_pots
     dw cm_low_aga_pit_room
     dw cm_low_aga_agahnim
-    dw #$0000
+    dw !menu_end
     %cm_header("AGAHNIMS TOWER")
 
 cm_low_aga_outside_hera:
@@ -346,7 +346,7 @@ cm_low_presets_pod:
     dw cm_low_pod_basement
     dw cm_low_pod_turtle_room
     dw cm_low_pod_helma
-    dw #$0000
+    dw !menu_end
     %cm_header("PALACE OF DARKNESS")
 
 cm_low_pod_pyramid:
@@ -416,7 +416,7 @@ cm_low_presets_thieves:
     dw cm_low_thieves_backtracking_2
     dw cm_low_thieves_pot_hammerdash
     dw cm_low_thieves_blind
-    dw #$0000
+    dw !menu_end
     %cm_header("THIEVES TOWN")
 
 cm_low_thieves_outside_pod:
@@ -494,7 +494,7 @@ cm_low_presets_skull:
     dw cm_low_sw_mummy_hellway
     dw cm_low_sw_mummy_key
     dw cm_low_sw_mothula
-    dw #$0000
+    dw !menu_end
     %cm_header("SKULL WOODS")
 
 cm_low_sw_outside_thieves:
@@ -555,7 +555,7 @@ cm_low_presets_ice:
     dw cm_low_ice_lonely_firebar
     dw cm_low_ice_last_two_screens
     dw cm_low_ice_kholdstare
-    dw #$0000
+    dw !menu_end
     %cm_header("ICE PALACE")
 
 cm_low_ice_outside_skull:
@@ -630,7 +630,7 @@ cm_low_presets_swamp:
     dw cm_low_swamp_restock
     dw cm_low_swamp_phelps_way
     dw cm_low_swamp_arrghus
-    dw #$0000
+    dw !menu_end
     %cm_header("SWAMP PALACE")
 
 cm_low_swamp_outside_ice:
@@ -712,7 +712,7 @@ cm_low_presets_mire:
     dw cm_low_mire_spooky_action_1
     dw cm_low_mire_spooky_action_2
     dw cm_low_mire_vitty
-    dw #$0000
+    dw !menu_end
     %cm_header("MISERY MIRE")
 
 cm_low_mire_outside_swamp:
@@ -795,7 +795,7 @@ cm_low_presets_trock:
     dw cm_low_trock_laser_skip
     dw cm_low_trock_switch_room
     dw cm_low_trock_trinexx
-    dw #$0000
+    dw !menu_end
     %cm_header("TURTLE ROCK")
 
 cm_low_trock_outside_mire:
@@ -876,7 +876,7 @@ cm_low_presets_gtower:
     dw cm_low_gtower_bombable_wall
     dw cm_low_gtower_moldorm_2
     dw cm_low_gtower_agahnim_2
-    dw #$0000
+    dw !menu_end
     %cm_header("GANONS TOWER")
 
 cm_low_gtower_outside_trock:
@@ -950,7 +950,7 @@ cm_low_presets_goto_ganon:
 cm_low_presets_ganon:
     dw cm_low_ganon_pyramid
     dw cm_low_ganon_pyramid_magic
-    dw #$0000
+    dw !menu_end
     %cm_header("GANON")
 
 cm_low_ganon_pyramid:
@@ -979,5 +979,5 @@ cm_low_presets_boss:
     dw cm_low_gtower_agahnim_2
     dw cm_low_ganon_pyramid
     dw cm_low_ganon_pyramid_magic
-    dw #$0000
+    dw !menu_end
     %cm_header("BOSSES")

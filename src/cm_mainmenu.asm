@@ -1,6 +1,3 @@
-!menu_end = #$0000
-!list_end = #$FF
-
 macro cm_header(title)
     table ../resources/header.tbl
         db #$24, "<title>", #$FF
@@ -643,7 +640,7 @@ cm_feature_enemy_hp:
   .toggle
   %ai16()
     LDA #$207F : STA !POS_MEM_ENEMY_HEART_GFX
-    LDX.w #!POS_ENEMY_HEARTS : STA $7EC700,x : STA $7EC702,x
+    LDX.w #!POS_ENEMY_HEARTS : STA $7EC700, X : STA $7EC702, X
     RTS
 
 cm_feature_qw:
@@ -1013,7 +1010,7 @@ reset_dungeon:
 --  LDY supertile_dungeons, X
     CPY $00 : BNE ++
     STA $7EF000, X
-++  DEX : DEX : BPL --
+++  DEX #2 : BPL --
 
     ; check current room
     INC ; sets accum to #$0001

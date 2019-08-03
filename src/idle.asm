@@ -6,7 +6,7 @@ org $0EFB90
     ; 0efb96 and #$c0
     ; 0efb98 beq $fba6
     JSL idle_waitkey
-    NOP : NOP
+    NOP #2
 
 
 ; EndMessage
