@@ -143,7 +143,7 @@ endif
 ;-------------------------
 ; Layers
 ;-------------------------
-!disabled_layers = $35
+!disabled_layers = $B6
 !disabled_layers_temp = $AB ; 2 bytes
 
 ;-------------------------

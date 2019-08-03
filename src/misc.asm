@@ -70,6 +70,9 @@ set_probe_gfx:
 ;  1) it'd be a decent amount of lag, so every bit of optimization counts
 ;  2) Character seems to be based entirely on sprite id????
 ;     need to be explicit to get the correct gfx (also saves some cycles)
+!sparks_gfx = #$AA
+!bubble_gfx = #$CB
+!vortex_gfx = #$EE
 probe_draw:
     LDA $01 : ORA $03 : PHP ; storing the Z flag since we'll RTL to a BEQ
 
@@ -85,7 +88,7 @@ probe_draw:
 
     SBC #$0F : STA ($90), Y
     INY
-    LDA #$EE : STA ($90), Y ; #$CB for bubble ; #$AA for star
+    LDA !sparks_gfx : STA ($90), Y
     INY
     LDA $05 : STA ($90), Y
 

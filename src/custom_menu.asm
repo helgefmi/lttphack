@@ -1343,6 +1343,7 @@ cm_do_ctrl_config:
     ; Enters AI=8
     ; Leaves AI=8
   %a16()
+  STA $7FFFFE
     LDA #$2080 : STA $0E
     LDA !ram_ctrl1 : BEQ .clear_and_draw
     CMP !ram_ctrl_last_input : BNE .clear_and_draw
@@ -1364,7 +1365,7 @@ cm_do_ctrl_config:
     LDX !lowram_cm_stack_index
     LDY !lowram_cm_cursor_stack, X
 
-    TYA : ASL : ASL : ASL : ASL : ASL
+    TYA : ASL #5
     CLC : ADC #$022A : TAX
 
     ; Input display
