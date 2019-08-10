@@ -707,7 +707,7 @@ fixpegs:
 
 fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics - pc: $56F19
     PHB
-    PEA $0000 : PLB : PLB ; need to be bank00
+    LDA #$00 : PHA : PLB ; need to be bank00
     LDA $9B : PHA
     STZ $9B : STZ $420C
 
@@ -761,8 +761,9 @@ gamemode_somaria_pits:
 
 --  LDA $2000, Y : AND #$00FF ; checks tile attributes table
       CMP #$0020 : BEQ .ispit
-      CMP #$00B0 : BCC .skip
-      CMP #$00BF : BCS .skip ; range B0-BE, which are pits
+      ;CMP #$00B0 : BCC .skip
+      ;CMP #$00BF : BCS .skip ; range B0-BE, which are pits
+      BRA .skip
 
   .ispit
     TYA : ASL : TAX

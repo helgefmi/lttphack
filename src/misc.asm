@@ -27,6 +27,13 @@ org $05C21D
 org $05C63D
     JSL set_probe_gfx
 
+;---------------------------------------------
+; Visible bonk prizes
+;---------------------------------------------
+org $06D25A
+;JML absorbable_check
+;absorbexit: NOP
+
 pullpc
 
 triforce_transition:
@@ -94,3 +101,8 @@ probe_draw:
 
   .skip
     PLP : RTL
+
+absorbable_check:
+    LDA $0E90, X : BEQ ++
+    PLA : PLA
+++  JML absorbexit
