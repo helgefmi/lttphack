@@ -103,6 +103,6 @@ probe_draw:
     PLP : RTL
 
 absorbable_check:
-    LDA $0E90, X : BEQ ++
-    PLA : PLA
-++  JML absorbexit
+;    LDA $0E90, X : BEQ ++
+;    PLA : PLA
+;++  JML absorbexit

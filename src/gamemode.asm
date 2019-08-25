@@ -332,7 +332,10 @@ gamemode_load_previous_preset:
 
     ; Loading during text mode make the text stay or the item menu to bug
     LDA $10 : CMP #$0E : BEQ .no_load_preset
-    LDA !ram_previous_preset_destination : BEQ .no_load_preset
+  %a16()
+    LDA !ram_previous_preset_destination
+  %a8()
+    BEQ .no_load_preset
 
     STZ !lowram_is_poverty_load
 
