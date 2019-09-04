@@ -60,6 +60,8 @@ org $0DFDCB
     JSL update_hearts_hook
     RTS
 
+org $0DFEC3 ; remove -LIFE- from HUD
+    dw $207F, $207F, $207F, $207F, $207F, $207F
 
 pullpc
 
@@ -69,12 +71,6 @@ hud_template_hook:
     STZ !lowram_last_frame_hearts
 
   %a16()
-    ; Remove some HUD stuff.
-    LDA #$207F
-    STA $7EC72C : STA $7EC72E
-    STA $7EC730 : STA $7EC732
-    STA $7EC734 : STA $7EC736
-
     JSL draw_counters
 
     LDA !ram_qw_toggle : BEQ .dont_update_qw
@@ -182,7 +178,7 @@ hud_draw_hearts:
 
   %a16()
     LDA #$24A0
-    JMP .draw_hearts
+    BRA .draw_hearts
 
   .not_full_hp
   %a16()
@@ -193,7 +189,7 @@ hud_draw_hearts:
     STA !POS_MEM_HEART_GFX
 
     ; Full hearts
-    LDA !ram_equipment_curhp : AND #$00FF : LSR : LSR : LSR : JSL hex_to_dec : LDX.w #!POS_HEARTS : JSL draw2_white
+    LDA !ram_equipment_curhp : AND #$00FF : LSR #3 : JSL hex_to_dec : LDX.w #!POS_HEARTS : JSL draw2_white
 
     ; Quarters
     LDA !ram_equipment_curhp : AND #$0007 : ORA #$3490 : STA $7EC704, X
@@ -202,7 +198,7 @@ hud_draw_hearts:
     LDA #$24A2 : STA !POS_MEM_CONTAINER_GFX
 
     ; Container
-    LDA !ram_equipment_maxhp : AND #$00FF : LSR : LSR : LSR : JSL hex_to_dec : LDX.w #!POS_CONTAINERS : JSL draw2_white
+    LDA !ram_equipment_maxhp : AND #$00FF : LSR #3 : JSL hex_to_dec : LDX.w #!POS_CONTAINERS : JSL draw2_white
 
     RTS
 
@@ -260,7 +256,7 @@ hud_draw_input_display:
 
 -   TYA : AND.l ctrl_top_bit_table, X : BEQ +
     LDA.l ctrl_top_gfx_table, X
-    JMP ++
+    BRA ++
 +   LDA #$207F
 ++  STA !POS_MEM_INPUT_DISPLAY_TOP, X
     INX #2 : CPX #$00C : BNE -
@@ -269,7 +265,7 @@ hud_draw_input_display:
 
 -   TYA : AND.l ctrl_bot_bit_table, X : BEQ +
     LDA.l ctrl_bot_gfx_table, X
-    JMP ++
+    BRA ++
 +   LDA #$207F
 ++  STA !POS_MEM_INPUT_DISPLAY_BOT, X
     INX #2 : CPX #$00C : BNE -
@@ -322,9 +318,10 @@ hud_draw_subpixels:
 hud_set_counter_position:
     LDA.w #!POS_COUNTERS : DEC #2
 
-  .loop
     CPX #$0000 : BEQ .done
-    CLC : ADC #$0040 : DEX : BRA .loop
+
+.loop
+    CLC : ADC #$0040 : DEX : BNE .loop
 
   .done
     STA !lowram_draw_tmp

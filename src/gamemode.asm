@@ -736,8 +736,6 @@ fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics - pc: $56F19
     STZ $17
     STZ $B0
 
-    ; TODO : stuff related to and pegs
-
     PLA : STA $9B
     PLB : RTS
 
