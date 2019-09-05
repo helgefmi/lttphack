@@ -145,16 +145,26 @@ hex_to_dec:
 
   %a8()
     LDA #$64 : STA $4206
-    %wait_14_cycles()
-  %a16()
+
+    ; Need to wait 14 cycles
+    ; 13 cycles here with REP and a useless operation
+    ; 1 more cycle spent fetching the next opcode
+  %a16() ; 3 cycles
+    PEA $0000 : PLA ; Push 4 bytes to stack (5 cycles), Pull back (5 cycles)
+    ; Normally wouldn't have such cycle whoring
+    ; but hex_to_dec can cause a lot of lag
 
     LDA $4214 : STA !ram_hex2dec_tmp
     LDA $4216 : STA $4204
 
   %a8()
     LDA #$0A : STA $4206
-    %wait_14_cycles()
-  %a16()
+
+    ; Need to wait 14 cycles
+    ; 13 cycles here with REP and a useless operation
+    ; 1 more cycle spent fetching the next opcode
+  %a16() ; 3 cycles
+    PEA $0000 : PLA ; Push 4 bytes to stack (5 cycles), Pull back (5 cycles)
 
     LDA $4214 : STA !ram_hex2dec_second_digit
     LDA $4216 : STA !ram_hex2dec_third_digit
@@ -162,8 +172,12 @@ hex_to_dec:
 
   %a8()
     LDA #$0A : STA $4206
-    %wait_14_cycles()
-  %a16()
+
+    ; Need to wait 14 cycles
+    ; 13 cycles here with REP and a useless operation
+    ; 1 more cycle spent fetching the next opcode
+  %a16() ; 3 cycles
+    PEA $0000 : PLA ; Push 4 bytes to stack (5 cycles), Pull back (5 cycles)
 
     LDA $4214 : STA !ram_hex2dec_tmp
     LDA $4216 : STA !ram_hex2dec_first_digit
