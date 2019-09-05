@@ -31,7 +31,7 @@ org $05C63D
 ; Visible bonk prizes
 ;---------------------------------------------
 org $06D25A
-JML absorbable_check
+JML absorbable_check ; can't JSL because we potentially need to pull from stack
 
 absorbexit_stop: RTS
 
@@ -113,10 +113,10 @@ absorbable_check:
     JML absorbexit_continue
 
 ++  PLA : PLA
-    JML absorbexit_stop
+    JML absorbexit_stop ; leads to an RTS
 
   .alwaysdraw
     LDA $0E90, X : BEQ ++
 
     PLA : PLA
-++  JML absorbexit_continue ; leads to an RTS
+++  JML absorbexit_continue
