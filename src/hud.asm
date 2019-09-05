@@ -54,14 +54,72 @@ org $0DFAAE
 org $0DFC26
     NOP #3
 
-
 ; UpdateHearts Hijack
 org $0DFDCB
     JSL update_hearts_hook
     RTS
 
-org $0DFEC3 ; remove -LIFE- from HUD
-    dw $207F, $207F, $207F, $207F, $207F, $207F
+!QMARK = $212A
+!BLANK_TILE = $24F5
+!EMPTY = $207F
+
+macro what_item_is_this()
+    fillword !BLANK_TILE : fill 16
+    fillword !QMARK : fill 8
+    fillword !BLANK_TILE : fill 8
+endmacro
+
+org $0DF1C9
+    rep 36 : %what_item_is_this()
+
+; these clean up the messy menu tiles in the DO section
+org $0DF96B
+    dw !BLANK_TILE
+
+org $0DF951
+    fillword !BLANK_TILE : fill 12
+    fillword !QMARK : fill 8
+
+org $0DF965
+    fillword !BLANK_TILE : fill 12
+    fillword !QMARK : fill 8
+
+org $0DF979
+    fillword !BLANK_TILE : fill 12
+    fillword !QMARK : fill 8
+
+org $0DF99B
+    dw !QMARK, !QMARK
+
+org $0DF9AF
+    dw !QMARK, !QMARK, !QMARK
+
+org $0DF9CD
+    dw !BLANK_TILE
+
+org $0DF9D3
+    dw !QMARK, !QMARK, !QMARK, !QMARK
+
+org $0DF9E9
+    dw !QMARK, !QMARK, !QMARK
+
+org $0DF9F7
+    dw !BLANK_TILE
+
+org $0DF9FD
+    dw !QMARK, !QMARK, !QMARK
+
+org $0DFA07
+    dw !EMPTY
+
+org $0DFA11
+    dw !EMPTY
+
+org $0DF829
+	dw $64DB, $64DA, $64EB, $64EA
+; remove -LIFE- from HUD
+org $0DFEC3
+    dw !EMPTY, !EMPTY, !EMPTY, !EMPTY, !EMPTY, !EMPTY
 
 pullpc
 
@@ -208,8 +266,8 @@ hud_draw_qw:
     LDA $E2 : AND.b #$06 : CMP.b #$06 : BEQ .is_qw
 
   %a16()
-    LDA #$207F : STA $7EC80A
-    LDA #$207F : STA $7EC80C
+    LDA #!EMPTY : STA $7EC80A
+    LDA #!EMPTY : STA $7EC80C
     BRA .end
 
   .is_qw
@@ -225,7 +283,7 @@ hud_draw_qw:
 hud_draw_enemy_hp:
     ; Assumes: I=16
     ; Draw over Enemy Heart stuff in case theres no enemies
-    LDA #$207F : STA !POS_MEM_ENEMY_HEART_GFX
+    LDA #!EMPTY : STA !POS_MEM_ENEMY_HEART_GFX
     LDX.w #!POS_ENEMY_HEARTS : STA $7EC700, X : STA $7EC702, X : STA $7EC704, X
 
     LDX #$FFFF
@@ -257,7 +315,7 @@ hud_draw_input_display:
 -   TYA : AND.l ctrl_top_bit_table, X : BEQ +
     LDA.l ctrl_top_gfx_table, X
     BRA ++
-+   LDA #$207F
++   LDA #!EMPTY
 ++  STA !POS_MEM_INPUT_DISPLAY_TOP, X
     INX #2 : CPX #$00C : BNE -
 
@@ -266,7 +324,7 @@ hud_draw_input_display:
 -   TYA : AND.l ctrl_bot_bit_table, X : BEQ +
     LDA.l ctrl_bot_gfx_table, X
     BRA ++
-+   LDA #$207F
++   LDA #!EMPTY
 ++  STA !POS_MEM_INPUT_DISPLAY_BOT, X
     INX #2 : CPX #$00C : BNE -
 

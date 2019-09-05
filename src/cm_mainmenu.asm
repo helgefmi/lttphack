@@ -282,6 +282,7 @@ cm_submenu_equipment:
     dw cm_equipment_bombs
     dw cm_equipment_arrows
     dw cm_equipment_keys
+    ; dw cm_equipment_goto_small_keys_submenu ; maybe?
     dw cm_equipment_goto_big_keys_submenu
 
     dw !menu_end
@@ -436,8 +437,8 @@ cm_equipment_maxhp:
     db !list_end
 
   .set_maxhp
-    INC : INC : INC
-    ASL : ASL : ASL
+    INC #3
+    ASL #3
     ; Need to fill HP to get immediate effect
     STA !ram_equipment_maxhp : STA !ram_equipment_curhp
     RTS
@@ -515,6 +516,69 @@ cm_big_keys_trock:
 cm_big_keys_gtower:
     %cm_toggle_bit("GTower", !ram_game_big_keys_1, #$04)
 
+;-----
+
+cm_equipment_goto_small_keys_submenu:
+    %cm_submenu("Small keys", cm_submenu_small_keys)
+
+cm_submenu_small_keys:
+    dw cm_small_keys_escape
+    dw cm_small_keys_eastern
+    dw cm_small_keys_desert
+    dw cm_small_keys_hera
+    dw cm_small_keys_aga
+    dw cm_small_keys_pod
+    dw cm_small_keys_thieves
+    dw cm_small_keys_skull
+    dw cm_small_keys_ice
+    dw cm_small_keys_swamp
+    dw cm_small_keys_mire
+    dw cm_small_keys_trock
+    dw cm_small_keys_gtower
+
+    dw !menu_end
+    %cm_header("SMALL KEYS")
+
+cm_small_keys_escape:
+    %cm_numfield("Escape", $7EF37C, #$00, #$09, #$01)
+
+cm_small_keys_eastern:
+    %cm_numfield("Eastern", $7EF37E, #$00, #$09, #$01)
+
+cm_small_keys_desert:
+    %cm_numfield("Desert", $7EF37F, #$00, #$09, #$01)
+
+cm_small_keys_hera:
+    %cm_numfield("Hera", $7EF386, #$00, #$09, #$01)
+
+cm_small_keys_aga:
+    %cm_numfield("ATower", $7EF380, #$00, #$09, #$01)
+
+cm_small_keys_pod:
+    %cm_numfield("Darkness", $7EF382, #$00, #$09, #$01)
+
+cm_small_keys_thieves:
+    %cm_numfield("Thieves", $7EF387, #$00, #$09, #$01)
+
+cm_small_keys_skull:
+    %cm_numfield("Skull", $7EF384, #$00, #$09, #$01)
+
+cm_small_keys_ice:
+    %cm_numfield("Ice", $7EF385, #$00, #$09, #$01)
+
+cm_small_keys_swamp:
+    %cm_numfield("Swamp", $7EF381, #$00, #$09, #$01)
+
+cm_small_keys_mire:
+    %cm_numfield("Mire", $7EF383, #$00, #$09, #$01)
+
+cm_small_keys_trock:
+    %cm_numfield("Turtle Rock", $7EF388, #$00, #$09, #$01)
+
+cm_small_keys_gtower:
+    %cm_numfield("GTower", $7EF389, #$00, #$09, #$01)
+
+
 ; }}}
 ; PRESETS {{{
 
@@ -543,6 +607,7 @@ cm_submenu_gameplay:
     dw cm_gameplay_disable_beams
     dw cm_gameplay_probes
     dw cm_gameplay_lit_rooms
+    dw cm_gameplay_bonk_items
     dw cm_gameplay_shutoffbg1
     dw cm_gameplay_shutoffbg2
     dw cm_gameplay_oob
@@ -563,6 +628,9 @@ cm_gameplay_disable_beams:
 
 cm_gameplay_probes:
     %cm_toggle("Visible probes", !ram_probe_toggle)
+
+cm_gameplay_bonk_items:
+    %cm_toggle("See bonk items", !ram_bonk_items_toggle)
 
 cm_gameplay_lit_rooms:
     %cm_toggle_jsr("Lit Rooms", !ram_lit_rooms_toggle)

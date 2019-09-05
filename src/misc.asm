@@ -31,8 +31,11 @@ org $05C63D
 ; Visible bonk prizes
 ;---------------------------------------------
 org $06D25A
-;JML absorbable_check
-;absorbexit: NOP
+JML absorbable_check
+
+absorbexit_stop: RTS
+
+absorbexit_continue:
 
 pullpc
 
@@ -103,6 +106,17 @@ probe_draw:
     PLP : RTL
 
 absorbable_check:
-;    LDA $0E90, X : BEQ ++
-;    PLA : PLA
-;++  JML absorbexit
+    LDA !ram_bonk_items_toggle : BNE .alwaysdraw ; always draw, if on
+
+  .vanilla
+    LDA $0E90, X : BNE ++
+    JML absorbexit_continue
+
+++  PLA : PLA
+    JML absorbexit_stop
+
+  .alwaysdraw
+    LDA $0E90, X : BEQ ++
+
+    PLA : PLA
+++  JML absorbexit_continue ; leads to an RTS

@@ -20,9 +20,20 @@ init_hook:
 
 init_expand:
     ; enters AI=8
-  %a16()
     ; If user holds Start+Select, we reinitialize.
-    LDA !ram_ctrl1 : CMP #$0030 : BEQ .reinitialize
+    ; we need some manual joypad reading
+    LDA #$01 : STA $4016 : STZ $4016 ; pulse controller
+
+    STZ $00 : STZ $01
+    LDY #$10 ; reading 16 bits
+--  LDA $4016 ; if the last bit is on, carry will be set, otherwise, it won't; A is still 1
+    LSR
+    ROL $00 : ROL $01 ; roll carry
+    DEY : BNE -- ; decrement
+
+  %a16()
+    LDA $00
+    AND #$FF00 : CMP #$3000 : BEQ .reinitialize
 
     LDA !ram_sram_initialized : CMP #!SRAM_VERSION : BEQ .sram_initialized
 
