@@ -724,6 +724,7 @@ cm_submenu_counters:
     dw cm_counter_segment
     dw cm_counter_xy
     dw cm_counter_subpixels
+    dw cm_counter_misslots
     dw #$0000
     %cm_header("COUNTERS")
 
@@ -756,6 +757,9 @@ cm_counter_subpixels:
     db #$24, "Subpixels", #$FF
     db #$24, "Speed", #$FF
     db #$FF
+
+cm_counter_misslots:
+    %cm_toggle("Misslots RAM", !ram_misslots_toggle)
 
 ; }}}
 ; GAME STATE {{{

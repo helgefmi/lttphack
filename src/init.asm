@@ -53,6 +53,7 @@ init_initialize:
     LDA #$0000
     STA !ram_can_load_pss
     STA !ram_counters_segment
+    STA !ram_misslots_toggle
     STA !ram_enemy_hp_toggle
     STA !ram_lagometer_toggle
     STA !ram_lit_rooms_toggle

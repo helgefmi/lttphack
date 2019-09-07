@@ -105,6 +105,7 @@ endif
 !ram_counters_lag = !offset+50
 !ram_counters_idle = !offset+52
 !ram_counters_segment = !offset+54
+!ram_misslots_toggle = !offset+80
 
 !ram_rerandomize_framecount = !offset+66
 !ram_rerandomize_accumulator = !offset+68
