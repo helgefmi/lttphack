@@ -516,15 +516,17 @@ cm_big_keys_gtower:
 cm_main_goto_presets:
     dw !CM_ACTION_SUBMENU_VARIABLE
     dl !ram_preset_category
-    db $03
+    db $04
     dw cm_nmg_submenu_presets
     dw cm_hundo_submenu_presets
     dw cm_low_submenu_presets
+    dw cm_ad_submenu_presets
     db #$24, "Presets", #$FF
 
 incsrc cm_presets_nmg.asm
 incsrc cm_presets_hundo.asm
 incsrc cm_presets_low.asm
+incsrc cm_presets_ad.asm
 
 ; }}}
 ; FEATURES {{{
@@ -632,6 +634,7 @@ cm_feature_preset_category:
     db #$24, "NMG", #$FF
     db #$24, "Hundo", #$FF
     db #$24, "Low", #$FF
+    db #$24, "AD", #$FF
     db #$FF
 
 cm_feature_sanctuary:

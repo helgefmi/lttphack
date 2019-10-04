@@ -695,8 +695,10 @@ preset_start_ptrs:
     dw sram_nmg_esc_bed
     dw sram_hundo_esc_bed
     dw sram_low_esc_bed
+    dw sram_ad_esc_links_bed
 
 preset_end_of_base_states:
     dw sram_nmg_esc_bed_after
     dw sram_hundo_esc_bed_after
     dw sram_low_esc_bed_after
+    dw sram_ad_esc_links_bed_after

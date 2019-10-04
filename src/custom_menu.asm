@@ -831,6 +831,7 @@ cm_preset_data_banks:
     db #sram_nmg_esc_bed>>16
     db #sram_hundo_esc_bed>>16
     db #sram_low_esc_bed>>16
+    db #sram_ad_esc_links_bed>>16
 
 
 cm_execute_toggle_bit:
