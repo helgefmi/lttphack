@@ -1,3 +1,4 @@
+pushpc
 ; INIT
 ;
 ; Code that is run once after the game has been powered on.
@@ -10,8 +11,7 @@ org $00802F
     JSL init_hook
     NOP
 
-
-org !ORG
+pullpc
 init_hook:
     LDA #$81 : STA $4200
     JSL init_expand
@@ -20,9 +20,20 @@ init_hook:
 
 init_expand:
     ; enters AI=8
-  %a16()
     ; If user holds Start+Select, we reinitialize.
-    LDA !ram_ctrl1 : CMP #$0030 : BEQ .reinitialize
+    ; we need some manual joypad reading
+    LDA #$01 : STA $4016 : STZ $4016 ; pulse controller
+
+    STZ $00 : STZ $01
+    LDY #$10 ; reading 16 bits
+--  LDA $4016 ; if the last bit is on, carry will be set, otherwise, it won't; A is still 1
+    LSR
+    ROL $00 : ROL $01 ; roll carry
+    DEY : BNE -- ; decrement
+
+  %a16()
+    LDA $00
+    AND #$FF00 : CMP #$3000 : BEQ .reinitialize
 
     LDA !ram_sram_initialized : CMP #!SRAM_VERSION : BEQ .sram_initialized
 
@@ -32,7 +43,7 @@ init_expand:
   .sram_initialized
     ; Some features probably should be turned off after a reset
   %a8()
-    LDA #$00 : STA !ram_oob_toggle : STA !lowram_oob_toggle
+    STZ !lowram_oob_toggle
 
   .done
     JSL music_init
@@ -60,6 +71,7 @@ init_initialize:
     STA !ram_preset_category
     STA !ram_previous_preset_destination
     STA !ram_previous_preset_type
+    STA !ram_skip_triforce_toggle
     STA !ram_qw_toggle
     STA !ram_secondary_counter_type
     STA !ram_subpixels_toggle
@@ -89,6 +101,7 @@ init_initialize:
     STA !ram_ctrl_reset_segment_timer
     STA !ram_ctrl_disable_sprites
     STA !ram_ctrl_fill_everything
+    STA !ram_ctrl_fix_vram
 
     LDA #!SRAM_VERSION : STA !ram_sram_initialized
 

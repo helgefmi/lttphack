@@ -1,3 +1,4 @@
+pushpc
 ; Pokeys
 org $0688E9
     ; 0688e9 jsl $0dba71
@@ -55,7 +56,7 @@ org $0580D6
     ;0580da adc $1a
     ;0580dc and #$1f
     JSL rng_cannonballs
-    NOP : NOP
+    NOP #2
 
 ; Soldiers
 org $05C500
@@ -91,8 +92,7 @@ org $09BD5D
     ; 09bd63 ldy $0b08,x
     JSL rng_conveyor_belt
 
-
-org !ORG
+pullpc
 
 tbl_pokey_speed:
     ; 00
@@ -243,7 +243,7 @@ rng_cannonballs:
     RTL
 
   .random
-    TXA : ASL : ASL : CLC : ADC $1A
+    TXA : ASL #2 : CLC : ADC $1A
     RTL
 
 ; == Soldiers ==

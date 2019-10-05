@@ -1,3 +1,4 @@
+pushpc
 ; NMI
 ;
 ; Expands the NMI (code run at the end of each frame)
@@ -12,13 +13,16 @@ org $0080CC
     ; 0080d1 lda #$0000 <-- we'll jump back here
     JMP nmi_hook
 
+org $008174
+LDA $1C : STA $AB : NOP
+LDA $1D : STA $AC : NOP
 
 ; HUD update hook
 org $008B6B
     ; 008b6b ldx $0219
     ; 008b6e stx $2116
     JSL nmi_hud_update
-    NOP : NOP
+    NOP #2
 
 ; NMI HOOK
 org $0089C2
@@ -29,14 +33,16 @@ nmi_hook:
   %ai16()
     JMP $80D1
 
-
-org !ORG
+pullpc
 nmi_expand:
    ; Enters AI=16
   %a8()
     INC !lowram_nmi_counter
     LDA !lowram_last_frame_did_saveload : BNE .dont_update_counters
 
+    LDA !disabled_layers : TRB $AB : TRB $AC
+    LDA $AB : STA $212C
+    LDA $AC : STA $212D
     JSR nmi_do_update_counters
     RTL
 

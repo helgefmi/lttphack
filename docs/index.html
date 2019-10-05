@@ -1,0 +1,590 @@
+<html><head>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>LTTPHack - A practice romhack for ALttP speedrunners</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="hack.css">
+	<style type="text/css">
+		header {
+			padding: 154px 0 100px;
+		}
+
+		@media (min-width: 992px) {
+			header {
+				padding: 156px 0 100px;
+			}
+		}
+
+		section {
+			padding: 150px 0;
+		}
+
+		img {
+			max-width: 300px;
+			margin-bottom: 12px;
+		}
+
+		.dl-tbl th {
+			background-color: #fafafa;
+		}
+
+		header {
+			background-color: #4a545f;
+		}
+
+		.bg-dark a {
+			color: #a0b6ce;
+		}
+
+		h2 {
+			font-size: 2.5rem;
+		}
+	</style>
+</head>
+<body id="page-top">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+		<div class="container">
+			<a class="navbar-brand js-scroll-trigger" href="#page-top">LTTPHack</a>
+			<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item"><a class="nav-link js-scroll-trigger" href="#download">Download</a></li>
+					<li class="nav-item"><a class="nav-link js-scroll-trigger" href="#features">Features</a></li>
+					<li class="nav-item"><a class="nav-link js-scroll-trigger" href="#changelog">Changelog</a></li>
+					<li class="nav-item"><a class="nav-link js-scroll-trigger" href="#credits">Credits</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<header class="text-white">
+		<div class="container text-center">
+			<h1>LTTPHack</h1>
+			<p class="lead">A practice romhack of The Legend of Zelda: A Link to the Past (JP 1.0)</p>
+		</div>
+	</header>
+
+	<section id="download">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 mx-auto">
+					<h2>Download</h2>
+					<p class="lead">Download one of the following ROM files (<strong>pick the right one for your system!</strong>):</p>
+					<div class="d-lg-none">
+						<strong>For emulators, Everdrive, SNES classic, UFO etc:</strong>
+						<ul>
+							<li><a href="lttphack_9.sfc">lttphack_9.sfc</a></li>
+							<li><a href="lttphack_9_VanillaHUD.sfc">lttphack_9_VanillaHUD.sfc</a></li>
+						</ul>
+
+						<strong>For SD2SNES only:</strong>
+						<ul>
+							<li><a href="lttphack_9_SD2SNES.sfc">lttphack_9_SD2SNES.sfc</a></li>
+							<li><a href="lttphack_9_SD2SNES_VanillaHUD.sfc">lttphack_9_SD2SNES_VanillaHUD.sfc</a></li>
+						</ul>
+					</div>
+					<div class="d-none d-lg-block">
+						<table class="table table-bordered dl-tbl">
+							<tbody><tr>
+								<th></th>
+								<th>Emulators, Everdrive,<br>SNES classic, UFO etc.</th>
+								<th>SD2SNES only</th>
+							</tr>
+							<tr>
+								<th>Modified HUD</th>
+								<td><a href="lttphack_9.sfc">lttphack_9.sfc</a></td>
+								<td><a href="lttphack_9_SD2SNES.sfc">lttphack_9_SD2SNES.sfc</a></td>
+							</tr>
+							<tr>
+								<th>Vanilla HUD</th>
+								<td><a href="lttphack_9_VanillaHUD.sfc">lttphack_9_VanillaHUD.sfc</a></td>
+								<td><a href="lttphack_9_SD2SNES_VanillaHUD.sfc">lttphack_9_SD2SNES_VanillaHUD.sfc</a></td>
+							</tr>
+						</tbody></table>
+					</div>
+
+					<p>
+						<strong>SD2SNES</strong> is the only SNES system that supports 256kb SRAM. This makes it possible to have in-game save states, so that feature is only turned on for the SD2SNES variants. These will not work on emulators, Everdrive etc.
+					</p>
+
+					<p>
+						<strong>VanillaHUD</strong> variants uses the HUD from the original game. Counters are turned off by default, but can be turned on if you wish. They will be drawn over some of the hearts, though.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="features" class="bg-light">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 mx-auto">
+					<h2>Features</h2>
+
+					<h3>General</h3>
+
+					<ul>
+						<li>Using the third filename slot will grant you full equipment when starting a new game.</li>
+						<li>Counters shows intermediate values sometimes, like when opening a chest or when text appears.</li>
+						<li>Lag is not the same as on original cart.</li>
+						<li>If something weird happens, just reset your console, start a new game and use a preset to get back to where you were.</li>
+						<li>Check out <a href="https://rtlbs.milde.no/">ALttP Room Time Leaderboards</a> for optimal room times.</li>
+					</ul>
+					<!--
+					<p>Send any ideas for future improvements my way. I'm Pinkus on <a href="https://alttp-wiki.net/index.php/Community#Discord" target="_blank">Discord</a>.</p>
+					-->
+
+					<div class="center">
+						<img src="hudfeatures.png" class="helpvis"" width="1127">
+					</div>
+					<h3>Main menu</h3>
+					<dl class="subDefinition">
+						<dt><a href="#menuPresets">Presets</a></dt>
+						<dd>Built in savestates for various categories</dd>
+						<dt><a href="#menuItems">Items</a></dt>
+						<dd>Modify Y-item loadout</dd>
+						<dt><a href="#menuEquipment">Equipment</a></dt>
+						<dd>Modify A-items, combat items, health, and keys</dd>
+						<dt><a href="#menuGameState">Game State</a></dt>
+						<dd>Modify game progress, status, and mode</dd>
+						<dt><a href="#menuGameplay">Gameplay</a></dt>
+						<dd>Feature toggles related to gameplay</dd>
+						<dt><a href="#menuRNGControl">RNG Control</a></dt>
+						<dd>Fix specific RNG calls to specific values</dd>
+						<dt><a href="#menuShortcuts">Shortcuts</a></dt>
+						<dd>Modify shortcuts for quick feature access</dd>
+						<dt><a href="#menuCounters">Counters</a></dt>
+						<dd>Toggle counters that appear on the HUD</dd>
+						<dt><a href="#menuFeatures">Features</a></dt>
+						<dd>Feature toggles related to meta-operation</dd>
+					</dl>
+
+					
+					<h3 id="menuPresets">Presets</h3>
+
+					<h3 id="menuItems">Items</h3>
+					<dl class="inlineDefinition dinkyList">
+						<dt>Bow</dt>
+						<dd class="optionList">
+							<ol>
+								<li>No</li>
+								<li>Normal</li>
+								<li>Silver</li>
+							</ol>
+						</dd>
+					</dl>
+
+					<h3 id="menuGameState">Game State</h3>
+					<dl>
+						<dt>Skip text</dt>
+						<dd>Skips the current text box</dd>
+						<dt>Remove sprites</dt>
+						<dd>Removes all sprites, overlords, and ancillae from the screen</dd>
+						<dt>Reset current room</dt>
+						<dd>Resets the following data of the current room:
+							<strong class="lag"><b>NOTE:</b> This only affects the data pertaining to that specific room, but not data pertaining to the dungeon as a whole. For example, even though key collection is reset, the key count for that dungeon is left unaltered.</strong>
+							<ul>
+								<li>Quadrants visited</li>
+								<li>Keys collected</li>
+								<li>Chests opened</li>
+								<li>Doors opened</li>
+								<li>Moving walls</li>
+								<li>Water level</li>
+								<li>Boss defeated</li>
+								<li>Heart collected</li>
+								<li>Rupee tiles collected</li>
+							</ul>
+						</dd>
+						<dt>Reset dungeons</dt>
+						<dd>Resets every room associated with a specific dungeon (including all non-dungeon rooms as a single group) with the same caveats and restrictions as Reset current room.</dd>
+						<dt>Toggle bosses defeated</dt>
+						<dd>Modifies the boss defeated room flag for the specific boss's room.</dd>
+						<dt>Pendants and crystals</dt>
+						<dd>Toggle collection status of each dungeon prize.</dd>
+						<dt>Game flags</dt>
+						<dd>Toggles miscellaneous SRAM flags:
+							<dl class="subDefinition">
+								<dt>Uncle dead</dt>
+								<dd>Talking to uncle in the secret passage</dd>
+								<dt>Sanc priest</dt>
+								<dd>Talking to the priest after mastersword</dd>
+								<dt>Escaped</dt>
+								<dd>Returning Zelda to sanctuary</dd>
+								<dt>Uncle left</dt>
+								<dd>Uncle leaving the house</dd>
+								<dt>Aginah</dt>
+								<dd>Aginah discussing book</dd>
+								<dt>Fortune cycle</dt>
+								<dd>Fortune teller hint selector</dd>
+							</dl>
+						</dd>
+						<dt>Progress</dt>
+						<dd>Game mode selector:
+							<dl class="subDefinition">
+								<dt>Started</dt>
+								<dd>No progress. Game will not save. Always respawned in bed.</dd>
+								<dt>Uncle</dt>
+								<dd>Sword and shield obtained from uncle. Spawn is somewhere in escape (or Sanctuary with old man rescue).</dd>
+								<dt>Zelda</dt>
+								<dd>Zelda has been rescued. Spawn is standard selection, or mountain with old man follower.</dd>
+								<dt>Agahnim</dt>
+								<dd>Agahnim has been defeated. Spawn is standard selection in Light World, Pyramid in Dark World, or mountain with old man follower. Fake Light World from dungeon death no longer possible.</dd>
+							</dl>
+						</dd>
+						<dt>Map indicator</dt>
+						<dd>World map marker:
+							<dl class="subDefinition">
+								<dt>Castle</dt>
+								<dd>Zelda rescue mission</dd>
+								<dt>Kakariko</dt>
+								<dd>Go speak to villagers to learn about the Elders</dd>
+								<dt>Sahasrahla</dt>
+								<dd>Go speak to Sahasrahla to learn about the Master Sword</dd>
+								<dt>Pendants</dt>
+								<dd>Light World dungeons</dd>
+								<dt>MS</dt>
+								<dd>Go collect the master sword</dd>
+								<dt>ATower</dt>
+								<dd>Go fight Agahnim</dd>
+								<dt>Darkness</dt>
+								<dd>First Dark World dungeon</dd>
+								<dt>Crystals</dt>
+								<dd>Remaining Dark World dungeons</dd>
+								<dt>GTower</dt>
+								<dd>Go fight Ganon</dd>
+							</dl>
+						</dd>
+						<dt>Switch color</dt>
+						<dd>Toggle status of pegs and switches in dungeons</dd>
+						<dt>Armed EG</dt>
+						<dd>Toggle status of EG</dd>
+						<dt>Strong EG</dt>
+						<dd>Switch between strong and weak EG<strong class="lag"><b>NOTE:</b> this toggle cannot overpower the strength of the current room.</strong></dd>
+					</dl>
+
+					<h3 id="menuGameplay">Gameplay</h3>
+					<dl>
+						<dt>Rerandomize</dt>
+						<dd>When using built-in savestates and presets, this will run the RNG function to create a new value on each load.</dd>
+						<dt>Skip Triforce</dt>
+						<dd>Transitioning north from Ganon's Room will behave like a normal screen transition, allowing consistent and reliable room times for the fight.</dd>
+						<dt>Sanc heart</dt>
+						<dd>Presets will have more health, as if the Sanctuary heart were collected earlier in the run</dd>
+						<dt>Disable beams</dt>
+						<dd>The Master Sword and its upgrades will no longer fire sword beams at full health</dd>
+						<dt>Visible probes</dt>
+						<dd>Search probes used by guards, beamos, etc. will display a graphic.</dd>
+						<dt>Lit rooms</dt>
+						<dd>Dark rooms will be at full brightness and visibility. This option will remove the darkness in the current room as well.</dd>
+						<dt>See bonk items</dt>
+						<dd>Shows bonk items on the overworld as stationary sprites</dd>
+						<dt>Disable BG1</dt>
+						<dd>Disables SNES background 1 via PPU registers. Has no effect on lag.</dd>
+						<dt>Disable BG2</dt>
+						<dd>Disables SNES background 2 via PPU registers. Has no effect on lag.</dd>
+						<dt id="descOOB">OoB Mode</dt>
+						<dd>Turns on the debug OoB mode, which has the following features:
+							<ul>
+								<li>Link ignores all collision, and can walk everywhere.</li>
+								<li>The mirror works to go from Light World to Dark World</li>
+							</ul>
+						</dd>
+					</dl>
+
+					<h3 id="menuRNGControl">RNG Control</h3>
+					<dl>
+						<dt>Prize packs</dt>
+						<dd>Modifies drop percentages. This option only affects prize packs, not other guaranteed drops such as the stun drop or keys. It will, however, affect the 100% prize packs.<strong class="lag"><b>WARNING:</b> toggling this option will reset existing fairy luck.</strong>
+							<dl class="subDefinition">
+								<dt>Vanilla</dt>
+								<dd>Drops behave normally. 50% for most prize packs, and fairy luck works.</dd>
+								<dt>Always</dt>
+								<dd>All enemies drop their prize packs when possible</dd>
+								<dt>Never</dt>
+								<dd>No enemy drops prize packs, ever.</dd>
+							</dl>
+						</dd>
+					</dl>
+					<dl class="inlineDefinition dinkyList">
+						<dt>Pokeys</dt>
+						<dd>?</dd>
+					</dl>
+					<h3 id="menuShortcuts">Shortcuts</h3>
+					<dl>
+						<dt>LTTPHack menu</dt>
+						<dd>Opens the practice hack menu. <strong class="lag"><b>NOTE:</b> this shortcut cannot be changed.</strong></dd>
+						<dt>Load last preset</dt>
+						<dd>Loads the last preset used from the preset menu</dd>
+						<dt>Save preset</dt>
+						<dt>Save state <em class="SD2SNES">(SD2SNES only)</em></dt>
+						<dd>Saves current state of the game, similar to emulator savestates. Both custom presets and states operate the same, but the SD2SNES version is implemented differently.</dd>
+						<dt>Save preset</dt>
+						<dt>Load state <em class="SD2SNES">(SD2SNES only)</em></dt>
+						<dd>Loads custom savestate/preset, similar to emulator savestates. Both custom presets and states operate the same, but the SD2SNES version is implemented differently.</dd>
+						<dt>Reset seg timer</dt>
+						<dd>Resets the segment timer, which is not automatic like room timer.</dd>
+						<dt>Toggle OoB</dt>
+						<dd>Turns on <a href="#descOOB">out-of-bounds</a> mode</dd>
+						<dt>Skip text</dt>
+						<dd>Skips the current text box</dd>
+						<dt>Remove sprites</dt>
+						<dd>Removes all sprites, overlords, and ancillae from the screen</dd>
+						<dt>Fill everything</dt>
+						<dd>Maxes out equipment, rupees, items, and health</dd>
+						<dt>VRAM repair</dt>
+						<dd>Attempts to fix important graphics registers and VRAM data that have been corrupted by door glitches.<strong class="lag"><b>WARNING:</b> If this shortcut is triggered during a text box, the text box will disappear, but the game will remain in text mode.</strong><strong class="lag"><b>WARNING:</b> this shortcut only repairs registers and VRAM; other areas of RAM may result in vanilla game crashes unrelated to this feature, but which are never normally encountered in vanilla.</strong></dd>
+						<dt>Show somaria pits</dt>
+						<dd>Modifies the upper layer tilemap to mark pits.<strong class="lag"><b>NOTE:</b> this feature is intended for finding pits created by door glitches, but it will mark all standard pit tiles the same way.</strong></dd>
+					</dl>
+
+					<h3 id="menuCounters">Counters</h3>
+					<dl>
+						<dt>Counter Room</dt>
+						<dd>Time spent on the current screen, starting from the beginning of the last transition.</dd>
+						<dt>Counter Lag</dt>
+						<dd>Count of lag frames on the current screen, starting from the beginning of the last transition.</dd>
+						<dt>Counter Idle</dt>
+						<dd>Count of frames with no relevant input, starting from the beginning of the last transition.</dd>
+						<dt>Counter segment</dt>
+						<dd>Time spent since the beginning of the last segment timer reset</dd>
+						<dt>Coordinates</dt>
+						<dd>Absolute position of Link (X,Y)
+							<dl class="subDefinition">
+								<dt>Hexadecimal</dt>
+								<dd>12-bit precision</dd>
+								<dt>Decimal</dt>
+								<dd><strong class="lag"><b>WARNING:</b> decimal display can be laggy.</strong></dd>
+							</dl>
+						</dd>
+						<dt>Subpixels</dt>
+						<dd>
+							<dl class="subDefinition">
+								<dt>Subpixels</dt>
+								<dd>Displays current subpixel remainder (Hexadecimal)</dd>
+								<dt>Speed</dt>
+								<dd>Displays current subpixel speed (Hexadecimal</dd>
+							</dl>
+						</dd>
+						<dt>Misslots RAM</dt>
+						<dd>Ancillae RAM watch geared towards misslotting (see diagram below)</dd>
+					</dl>
+
+					<div class="center">
+						<img src="ancillawatch.png" class="helpvis" width="729">
+					</div>
+					<h3 id="menuFeatures">Features</h3>
+					<dl>
+						<dt>Lagometer</dt>
+						<dd>Shows a rough calculation of the amount of lag a frame has. The more the bar is filled, the closer a frame was to producing a lag frame. Lag from one frame does not affect the next, but trends in the lagometer can be used to gauge how laggy an area is.</dd>
+						<dt>Input display</dt>
+						<dd>Visual indication of every button registered each frame.</dd>
+						<dt>Enemy HP</dt>
+						<dd>Shows the exact health of a single enemy. Attempts to find the most relevant enemy as you play. <strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
+						<dt>Music</dt>
+						<dd>Sets the volume of every track in every song to 0. The size of the SPC transfers remains the same, so this feature does not affect lag.</dd>
+						<dt>QW Indicator</dt>
+						<dd>Displays an icon on the HUD when the current camera will produce a quickwarp. <strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
+						<dt>Lanmola Cycs</dt>
+						<dd>Displays a counter for the cycle count of the three Lanmolas individually.</dd>
+						<dt>Auto Preset</dt>
+						<dt>Preset Cat</dd>
+						<dd>Changes the selection of <a href="#menuPresets">presets</a></dd>
+					</dl>
+
+	</section>
+	<section id="changelog">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 mx-auto">
+					<h2>Changelog</h2>
+					<h3><a href="lttphack_9.sfc">v9</a> - <small>08.02.2018</small></h3>
+					<ul>
+						<li>
+							Presets
+							<ul>
+								<li>Added "Bosses" menu at the bottom.</li>
+								<li>Added "Ganon (full magic)" preset.</li>
+								<li>Fixed crystal state for Pokey 1.</li>
+								<li>Misspellings.</li>
+							</ul>
+						</li>
+						<li>
+							Item/Equipment
+							<ul>
+								<li>Better control over each bottle and its contents.</li>
+								<li>Set which big keys you have.</li>
+							</ul>
+						</li>
+						<li>
+							Game state
+							<ul>
+								<li>Skip text</li>
+								<li>Remove sprites</li>
+								<li>Boss defeated</li>
+								<li>Pendants and crystals</li>
+								<li>Game flags, Progress, Map indicator</li>
+								<li>Toggle armed/strong EG</li>
+							</ul>
+						</li>
+						<li>RNG control</li>
+						<li>Configurable controller shortcuts</li>
+						<li>
+							Features
+							<ul>
+								<li>Music</li>
+								<li>Idle frames</li>
+								<li>Lagometer</li>
+								<li>Made it possible to toggle on/off any of the counters.</li>
+								<li>Disabled the "Show enemy HP" by default.</li>
+							</ul>
+						</li>
+						<li>Persist some things through console power-off/on, resets or load state.</li>
+						<li>Comes in VanillaHUD and NoSaveState versions.</li>
+						<li>Fixed bug that set game phase to "Agahnim killed" when upgrading sword manually</li>
+						<li>Fixed bug that didn't update frame counters on mirror or underworld warps.</li>
+						<li>Set the SNES header ROM size to 2mb. This fixes an issue where the ROM would not load properly on some platforms (everdrive).</li>
+						<li>Show version in lttphack menu.</li>
+						<li>Instant lttphack menu (no waiting for menu to go up/down).</li>
+						<li>Improved transition detection (triggers on mirror/warp, reset counters when you start a new file)</li>
+					</ul>
+
+					<h3><a href="lttphack_8.sfc">v8</a> - <small>24.10.2016</small></h3>
+					<ul>
+						<li>Complete rewrite.</li>
+						<li>Presets.</li>
+						<li>I don't even remember anymore. This is the same version that's been around for a while, I just arbitrarily decided to remove "beta2" from the version.</li>
+					</ul>
+
+					<h3><a href="lttphack_7.sfc">v7</a> - <small>15.12.2015</small></h3>
+					<ul>
+						<li>
+							Made save/load state code more robust.
+							Screen should not get messed up anymore by loading during mirror warp.<br>
+							Big thanks to <em>total</em> for this fix.
+						</li>
+						<li>
+							Added a toggle for "always lit rooms".
+						</li>
+					</ul>
+
+					<h3><a href="lttphack_6.sfc">v6</a> - <small>09.12.2015</small></h3>
+					<ul>
+						<li>Fixed a bug that made the game crash when resetting segment counter.</li>
+					</ul>
+
+					<h3><a href="lttphack_5.sfc">v5</a> - <small>08.12.2015</small></h3>
+					<ul>
+						<li>Made Link get full equipment when using 3rd filename slot before starting a game.</li>
+						<li>
+							Added controller inputs for:
+							<ul>
+								<li>Upgrading sword, armor and shield.</li>
+								<li>Filling HP, magic, rupees and stuff.</li>
+								<li>Pause game and frame advance.</li>
+								<li>Displaying Link's coordinates.</li>
+							</ul>
+						</li>
+					</ul>
+
+					<h3><a href="lttphack_4.sfc">v4</a> - <small>05.12.2015</small></h3>
+					<ul>
+						<li>Fixed a bug where saving or loading would add a frame to your attempts in a room.</li>
+						<li>Added a "Full HP indicator".</li>
+					</ul>
+
+					<h3><a href="lttphack_3.sfc">v3</a> - <small>02.12.2015</small></h3>
+					<ul>
+						<li>Removed a bunch of lag. Should be less laggy than original ROM now.</li>
+						<li>Added "Quick Warp Indicator".</li>
+						<li>Better enemy detection.</li>
+						<li>Removed per-room Game Time counter.</li>
+						<li>Better B. Thanks, Audity.</li>
+					</ul>
+
+					<h3><a href="lttphack_2.sfc">v2</a> - <small>30.11.2015</small></h3>
+					<ul>
+						<li>Fixed issue where parts of segment timer was erased.</li>
+						<li>Fixed issue where counters didn't run during maiden crystal sequence.</li>
+						<li>Added better transition detection for boss victory -&gt; overworld.</li>
+					</ul>
+
+					<h3><a href="lttphack_1.sfc">v1</a> - <small>29.11.2015</small></h3>
+					<p>
+						Initial release.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="credits" class="bg-light">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 mx-auto">
+					<h2>Credits</h2>
+					<p>Thanks to:</p>
+					<ul>
+						<li><em>MathOnNapkins</em> for making the <a href="https://www.zeldix.net/t143-disassembly-zelda-docs" target="_blank">ALTTP disassembly</a>.</li>
+						<li><a href="https://twitch.tv/Acmlm">Acmlm</a> for the save/load technique on SD2SNES. He is #1.</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<footer class="py-5 bg-dark">
+		<div class="container">
+			<p class="m-0 text-center text-white">
+				<a target="_blank" href="https://github.com/helgefmi/lttphack/">Github repository</a> -
+				<!--<a target="_blank" href="https://twitch.tv/poor_little_pinkus">My Twitch</a> -->
+				<a target="_blank" href="https://alttp-wiki.net/index.php/Community#Discord">ALttP Discord</a>
+			</p>
+		</div>
+	</footer>
+
+	<script async="" src="https://www.google-analytics.com/analytics.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		(function($) {
+			$('a.js-scroll-trigger[href*="#"]:not([href="#"])').click(function() {
+				if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+					var target = $(this.hash);
+					target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+
+					if (target.length) {
+						$('html, body').animate({
+							scrollTop: (target.offset().top - 54)
+						}, 200, 'easeInOutExpo');
+						return false;
+					}
+				}
+			});
+
+			$('.js-scroll-trigger').click(function() {
+				$('.navbar-collapse').collapse('hide');
+			});
+
+			$('body').scrollspy({
+				target: '#mainNav',
+				offset: 54
+			});
+
+		})(jQuery);
+	</script>
+  
+
+
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-92622835-1', 'auto');
+	ga('send', 'pageview');
+</script>
+</body></html>

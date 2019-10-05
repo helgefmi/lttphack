@@ -28,7 +28,7 @@ org $0083F8
 ; Overrides the following
 ;$008039: 80 16  BRA $008051
 org $008039
-    NOP : NOP
+    NOP #2
 
 
 ; Overrides the following

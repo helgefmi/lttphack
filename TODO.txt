@@ -18,9 +18,9 @@ Big stuff
 Other stuff
 -----------
 
-- Toggle beams
+x Toggle beams
 
-- Drop rate control: Always, Never, Random
+x Drop rate control: Always, Never, Random
 
 - Preset for double reddies
 
@@ -33,7 +33,7 @@ Other stuff
 - Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances
   the game one frame. Would be good for clip learning. Maybe stop timer during this.
 
-- Show invisible sprites (Guard LoS)
+x Show invisible sprites (Guard LoS)
   - Show sprite hitboxes in general?
 
 - Show intermediate room time in more places (bonk, walk up stairs)
@@ -50,7 +50,7 @@ Other stuff
 
 - A way to change/preset your antennae value for spoopy inputs presently lengthy. To easily engage in mirerod entanglements.
 
-- "Reset room" -> "Reset rooms" submenu with "Reset current room", "Reset current dungeon" (fmp lua has list) and "Reset all rooms". 
+x "Reset room" -> "Reset rooms" submenu with "Reset current room", "Reset current dungeon" (fmp lua has list) and "Reset all rooms". 
 
 - hey pinkus! Thanks for working on the LTTP practice hack. I have a feature request. I'm still early enough in my NMG play that i get the powder. It's annoying to have to turn on for every single preset, I imagine in the same way turning on the sanc heart was annoying. Can we get a setting to have powder on for the presets?
 

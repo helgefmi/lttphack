@@ -1,3 +1,4 @@
+pushpc
 ; Waitkey
 org $0EFB90
     ; 0efb90 lda $00f4
@@ -5,7 +6,7 @@ org $0EFB90
     ; 0efb96 and #$c0
     ; 0efb98 beq $fba6
     JSL idle_waitkey
-    NOP : NOP
+    NOP #2
 
 
 ; EndMessage
@@ -28,7 +29,7 @@ org $0DE0E2
     JSL idle_menu
 
 
-org !ORG
+pullpc
 
 idle_waitkey:
     LDA $00F4 : ORA $00F6 : AND #$C0 : BNE .pressed_key

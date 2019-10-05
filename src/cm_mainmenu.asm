@@ -4,6 +4,10 @@ macro cm_header(title)
     table ../resources/normal.tbl
 endmacro
 
+macro cm_item(title)
+    db #$24, "<title>", #$FF
+endmacro
+
 macro cm_preset(title, addr)
     dw !CM_ACTION_PRESET
     dw <addr>
@@ -68,12 +72,13 @@ cm_mainmenu_indices:
     dw cm_main_goto_items
     dw cm_main_goto_equipment
     dw cm_main_goto_game_state
+    dw cm_main_goto_gameplay
     dw cm_main_goto_rng_control
     dw cm_main_goto_ctrl
     dw cm_main_goto_counters
     dw cm_main_goto_features
     dw cm_main_goto_movies
-    dw #$0000
+    dw !menu_end
     %cm_header("LTTPHACK !VERSION")
 
 ; ITEMS {{{
@@ -102,18 +107,18 @@ cm_submenu_items:
     dw cm_items_byrna
     dw cm_items_cape
     dw cm_items_mirror
-    dw #$0000
+    dw !menu_end
     %cm_header("ITEMS")
 
 cm_items_bow:
     dw !CM_ACTION_CHOICE_JSR
     dw #.set_ram_value
     dl #!ram_cm_item_bow
-    db #$24, "Bow", #$FF
-    db #$24, "No", #$FF
-    db #$24, "Normal", #$FF
-    db #$24, "Silver", #$FF
-    db #$FF
+    %cm_item("Bow")
+    %cm_item("No")
+    %cm_item("Normal")
+    %cm_item("Silver")
+    db !list_end
 
   .set_ram_value
     ; 0 = No bow
@@ -130,11 +135,11 @@ cm_items_bow:
 cm_items_boom:
     dw !CM_ACTION_CHOICE
     dl #!ram_item_boom
-    db #$24, "Boom", #$FF
-    db #$24, "No", #$FF
-    db #$24, "Blue", #$FF
-    db #$24, "Red", #$FF
-    db #$FF
+    %cm_item("Boom")
+    %cm_item("No")
+    %cm_item("Blue")
+    %cm_item("Red")
+    db !list_end
 
 cm_items_hook:
     %cm_toggle("Hook", !ram_item_hook)
@@ -142,11 +147,11 @@ cm_items_hook:
 cm_items_powder:
     dw !CM_ACTION_CHOICE
     dl #!ram_item_powder
-    db #$24, "Powder", #$FF
-    db #$24, "No", #$FF
-    db #$24, "Shroom", #$FF
-    db #$24, "Powder", #$FF
-    db #$FF
+    %cm_item("Powder")
+    %cm_item("No")
+    %cm_item("Shroom")
+    %cm_item("Powder")
+    db !list_end
 
 cm_items_fire_rod:
     %cm_toggle("Fire Rod", !ram_item_fire_rod)
@@ -172,12 +177,12 @@ cm_items_hammer:
 cm_items_flute:
     dw !CM_ACTION_CHOICE
     dl #!ram_item_flute
-    db #$24, "Flute", #$FF
-    db #$24, "No", #$FF
-    db #$24, "Shovel", #$FF
-    db #$24, "Flute (no)", #$FF
-    db #$24, "Flute", #$FF
-    db #$FF
+    %cm_item("Flute")
+    %cm_item("No")
+    %cm_item("Shovel")
+    %cm_item("Flute (no)")
+    %cm_item("Flute")
+    db !list_end
 
 cm_items_net:
     %cm_toggle("Net", !ram_item_net)
@@ -212,44 +217,44 @@ cm_submenu_bottles:
     dw cm_items_bottle_2
     dw cm_items_bottle_3
     dw cm_items_bottle_4
-    dw #$0000
+    dw !menu_end
     %cm_header("BOTTLES")
 
 macro bottle_contents()
-    db #$24, "No bottle", #$FF
-    db #$24, "Shroooom", #$FF
-    db #$24, "Empty", #$FF
-    db #$24, "Red", #$FF
-    db #$24, "Green", #$FF
-    db #$24, "Blue", #$FF
-    db #$24, "Fairy", #$FF
-    db #$24, "Bee", #$FF
-    db #$24, "Golden bee", #$FF
-    db #$FF
+    %cm_item("No bottle")
+    %cm_item("Shroooom")
+    %cm_item("Empty")
+    %cm_item("Red")
+    %cm_item("Green")
+    %cm_item("Blue")
+    %cm_item("Fairy")
+    %cm_item("Bee")
+    %cm_item("Golden bee")
+    db !list_end
 endmacro
 
 cm_items_bottle_1:
     dw !CM_ACTION_CHOICE
     dl !ram_item_bottle_array
-    db #$24, "Bottle 1", #$FF
+    %cm_item("Bottle 1")
     %bottle_contents()
 
 cm_items_bottle_2:
     dw !CM_ACTION_CHOICE
     dl !ram_item_bottle_array+1
-    db #$24, "Bottle 2", #$FF
+    %cm_item("Bottle 2")
     %bottle_contents()
 
 cm_items_bottle_3:
     dw !CM_ACTION_CHOICE
     dl !ram_item_bottle_array+2
-    db #$24, "Bottle 3", #$FF
+    %cm_item("Bottle 3")
     %bottle_contents()
 
 cm_items_bottle_4:
     dw !CM_ACTION_CHOICE
     dl !ram_item_bottle_array+3
-    db #$24, "Bottle 4", #$FF
+    %cm_item("Bottle 4")
     %bottle_contents()
 
 ; }}}
@@ -277,9 +282,10 @@ cm_submenu_equipment:
     dw cm_equipment_bombs
     dw cm_equipment_arrows
     dw cm_equipment_keys
+    ; dw cm_equipment_goto_small_keys_submenu ; maybe?
     dw cm_equipment_goto_big_keys_submenu
 
-    dw #$0000
+    dw !menu_end
     %cm_header("EQUIPMENT")
 
 cm_equipment_boots:
@@ -304,11 +310,11 @@ cm_equipment_boots:
 cm_equipment_gloves:
     dw !CM_ACTION_CHOICE
     dl !ram_equipment_gloves
-    db #$24, "Gloves", #$FF
-    db #$24, "No", #$FF
-    db #$24, "Power Glove", #$FF
-    db #$24, "Titan's Mitts", #$FF
-    db #$FF
+    %cm_item("Gloves")
+    %cm_item("No")
+    %cm_item("Power Glove")
+    %cm_item("Titan's Mitts")
+    db !list_end
 
 cm_equipment_flippers:
     %cm_toggle_jsr("Flippers", !ram_cm_equipment_flippers)
@@ -339,13 +345,13 @@ cm_equipment_sword:
     dw !CM_ACTION_CHOICE_JSR
     dw #.toggle_sword
     dl !ram_equipment_sword
-    db #$24, "Sword", #$FF
-    db #$24, "No", #$FF
-    db #$24, "Fighter", #$FF
-    db #$24, "Master", #$FF
-    db #$24, "Tempered", #$FF
-    db #$24, "Gold", #$FF
-    db #$FF
+    %cm_item("Sword")
+    %cm_item("No")
+    %cm_item("Fighter")
+    %cm_item("Master")
+    %cm_item("Tempered")
+    %cm_item("Gold")
+    db !list_end
 
   .toggle_sword
     JSL !DecompSwordGfx
@@ -356,12 +362,12 @@ cm_equipment_shield:
     dw !CM_ACTION_CHOICE_JSR
     dw #.toggle_shield
     dl !ram_equipment_shield
-    db #$24, "Shield", #$FF
-    db #$24, "No", #$FF
-    db #$24, "Fighter", #$FF
-    db #$24, "Red", #$FF
-    db #$24, "Mirror", #$FF
-    db #$FF
+    %cm_item("Shield")
+    %cm_item("No")
+    %cm_item("Fighter")
+    %cm_item("Red")
+    %cm_item("Mirror")
+    db !list_end
 
   .toggle_shield
     JSL !DecompShieldGfx
@@ -372,11 +378,11 @@ cm_equipment_armor:
     dw !CM_ACTION_CHOICE_JSR
     dw #.toggle_armor
     dl !ram_equipment_armor
-    db #$24, "Armor", #$FF
-    db #$24, "Green", #$FF
-    db #$24, "Blue", #$FF
-    db #$24, "Red", #$FF
-    db #$FF
+    %cm_item("Armor")
+    %cm_item("Green")
+    %cm_item("Blue")
+    %cm_item("Red")
+    db !list_end
 
   .toggle_armor
     JSL !Palette_Armor
@@ -409,30 +415,30 @@ cm_equipment_maxhp:
     dw !CM_ACTION_CHOICE_JSR
     dw #.set_maxhp
     dl !ram_cm_equipment_maxhp
-    db #$24, "Max HP", #$FF
-    db #$24, "3", #$FF
-    db #$24, "4", #$FF
-    db #$24, "5", #$FF
-    db #$24, "6", #$FF
-    db #$24, "7", #$FF
-    db #$24, "8", #$FF
-    db #$24, "9", #$FF
-    db #$24, "10", #$FF
-    db #$24, "11", #$FF
-    db #$24, "12", #$FF
-    db #$24, "13", #$FF
-    db #$24, "14", #$FF
-    db #$24, "15", #$FF
-    db #$24, "16", #$FF
-    db #$24, "17", #$FF
-    db #$24, "18", #$FF
-    db #$24, "19", #$FF
-    db #$24, "20", #$FF
-    db #$FF
+    %cm_item("Max HP")
+    %cm_item("3")
+    %cm_item("4")
+    %cm_item("5")
+    %cm_item("6")
+    %cm_item("7")
+    %cm_item("8")
+    %cm_item("9")
+    %cm_item("10")
+    %cm_item("11")
+    %cm_item("12")
+    %cm_item("13")
+    %cm_item("14")
+    %cm_item("15")
+    %cm_item("16")
+    %cm_item("17")
+    %cm_item("18")
+    %cm_item("19")
+    %cm_item("20")
+    db !list_end
 
   .set_maxhp
-    INC : INC : INC
-    ASL : ASL : ASL
+    INC #3
+    ASL #3
     ; Need to fill HP to get immediate effect
     STA !ram_equipment_maxhp : STA !ram_equipment_curhp
     RTS
@@ -465,7 +471,7 @@ cm_submenu_big_keys:
     dw cm_big_keys_trock
     dw cm_big_keys_gtower
 
-    dw #$0000
+    dw !menu_end
     %cm_header("BIG KEYS")
 
 cm_big_keys_sewers:
@@ -510,6 +516,69 @@ cm_big_keys_trock:
 cm_big_keys_gtower:
     %cm_toggle_bit("GTower", !ram_game_big_keys_1, #$04)
 
+;-----
+
+cm_equipment_goto_small_keys_submenu:
+    %cm_submenu("Small keys", cm_submenu_small_keys)
+
+cm_submenu_small_keys:
+    dw cm_small_keys_escape
+    dw cm_small_keys_eastern
+    dw cm_small_keys_desert
+    dw cm_small_keys_hera
+    dw cm_small_keys_aga
+    dw cm_small_keys_pod
+    dw cm_small_keys_thieves
+    dw cm_small_keys_skull
+    dw cm_small_keys_ice
+    dw cm_small_keys_swamp
+    dw cm_small_keys_mire
+    dw cm_small_keys_trock
+    dw cm_small_keys_gtower
+
+    dw !menu_end
+    %cm_header("SMALL KEYS")
+
+cm_small_keys_escape:
+    %cm_numfield("Escape", $7EF37C, #$00, #$09, #$01)
+
+cm_small_keys_eastern:
+    %cm_numfield("Eastern", $7EF37E, #$00, #$09, #$01)
+
+cm_small_keys_desert:
+    %cm_numfield("Desert", $7EF37F, #$00, #$09, #$01)
+
+cm_small_keys_hera:
+    %cm_numfield("Hera", $7EF386, #$00, #$09, #$01)
+
+cm_small_keys_aga:
+    %cm_numfield("ATower", $7EF380, #$00, #$09, #$01)
+
+cm_small_keys_pod:
+    %cm_numfield("Darkness", $7EF382, #$00, #$09, #$01)
+
+cm_small_keys_thieves:
+    %cm_numfield("Thieves", $7EF387, #$00, #$09, #$01)
+
+cm_small_keys_skull:
+    %cm_numfield("Skull", $7EF384, #$00, #$09, #$01)
+
+cm_small_keys_ice:
+    %cm_numfield("Ice", $7EF385, #$00, #$09, #$01)
+
+cm_small_keys_swamp:
+    %cm_numfield("Swamp", $7EF381, #$00, #$09, #$01)
+
+cm_small_keys_mire:
+    %cm_numfield("Mire", $7EF383, #$00, #$09, #$01)
+
+cm_small_keys_trock:
+    %cm_numfield("Turtle Rock", $7EF388, #$00, #$09, #$01)
+
+cm_small_keys_gtower:
+    %cm_numfield("GTower", $7EF389, #$00, #$09, #$01)
+
+
 ; }}}
 ; PRESETS {{{
 
@@ -521,7 +590,7 @@ cm_main_goto_presets:
     dw cm_hundo_submenu_presets
     dw cm_low_submenu_presets
     dw cm_ad_submenu_presets
-    db #$24, "Presets", #$FF
+    %cm_item("Presets")
 
 incsrc cm_presets_nmg.asm
 incsrc cm_presets_hundo.asm
@@ -529,8 +598,61 @@ incsrc cm_presets_low.asm
 incsrc cm_presets_ad.asm
 
 ; }}}
-; FEATURES {{{
+; GAMEPLAY {{{
+cm_main_goto_gameplay:
+    %cm_submenu("Gameplay", cm_submenu_gameplay)
 
+cm_submenu_gameplay:
+    dw cm_gameplay_rerandomize
+    dw cm_gameplay_skip_triforce
+    dw cm_gameplay_sanctuary
+    dw cm_gameplay_disable_beams
+    dw cm_gameplay_probes
+    dw cm_gameplay_lit_rooms
+    dw cm_gameplay_bonk_items
+    dw cm_gameplay_shutoffbg1
+    dw cm_gameplay_shutoffbg2
+    dw cm_gameplay_oob
+    dw !menu_end
+    %cm_header("GAMEPLAY")
+
+cm_gameplay_rerandomize:
+    %cm_toggle("Rerandomize", !ram_rerandomize_toggle)
+
+cm_gameplay_skip_triforce:
+    %cm_toggle("Skip Triforce", !ram_skip_triforce_toggle)
+
+cm_gameplay_sanctuary:
+    %cm_toggle("Sanc Heart", !ram_sanctuary_heart)
+
+cm_gameplay_disable_beams:
+    %cm_toggle("Disable beams", !disable_beams)
+
+cm_gameplay_probes:
+    %cm_toggle("Visible probes", !ram_probe_toggle)
+
+cm_gameplay_bonk_items:
+    %cm_toggle("See bonk items", !ram_bonk_items_toggle)
+
+cm_gameplay_lit_rooms:
+    %cm_toggle_jsr("Lit Rooms", !ram_lit_rooms_toggle)
+  .toggle
+    LDA !ram_lit_rooms_toggle : ORA $1B : BEQ .leaveon
+    LDA #$10 : STA $99
+  .leaveon
+    RTS
+
+cm_gameplay_shutoffbg1:
+    %cm_toggle_bit("Disable BG1", !disabled_layers, #$01)
+
+cm_gameplay_shutoffbg2:
+    %cm_toggle_bit("Disable BG2", !disabled_layers, #$02)
+
+cm_gameplay_oob:
+    %cm_toggle("OoB Mode", !lowram_oob_toggle)
+
+; }}}
+; FEATURES {{{
 cm_main_goto_features:
     %cm_submenu("Features", cm_submenu_features)
 
@@ -539,15 +661,11 @@ cm_submenu_features:
     dw cm_feature_input_display
     dw cm_feature_enemy_hp
     dw cm_feature_music
-    dw cm_feature_rerandomize
     dw cm_feature_qw
-    dw cm_feature_lit_rooms
-    dw cm_feature_oob
     dw cm_feature_lanmola_cycle_count
     dw cm_feature_autoload_preset
     dw cm_feature_preset_category
-    dw cm_feature_sanctuary
-    dw #$0000
+    dw !menu_end
     %cm_header("FEATURES")
 
 cm_feature_lagometer:
@@ -586,18 +704,14 @@ cm_feature_music:
 
     RTS
 
-
 cm_feature_enemy_hp:
     %cm_toggle_jsr("Enemy HP", !ram_enemy_hp_toggle)
 
   .toggle
   %ai16()
     LDA #$207F : STA !POS_MEM_ENEMY_HEART_GFX
-    LDX.w #!POS_ENEMY_HEARTS : STA $7EC700,x : STA $7EC702,x
+    LDX.w #!POS_ENEMY_HEARTS : STA $7EC700, X : STA $7EC702, X
     RTS
-
-cm_feature_rerandomize:
-    %cm_toggle("Rerandomize", !ram_rerandomize_toggle)
 
 cm_feature_qw:
     %cm_toggle_jsr("QW Indicator", !ram_qw_toggle)
@@ -607,12 +721,6 @@ cm_feature_qw:
     LDA #$207F : STA $7EC80A
     LDA #$207F : STA $7EC80C
     RTS
-
-cm_feature_lit_rooms:
-    %cm_toggle("Lit Rooms", !ram_lit_rooms_toggle)
-
-cm_feature_oob:
-    %cm_toggle("OoB Mode", !ram_oob_toggle)
 
 cm_feature_lanmola_cycle_count:
     %cm_toggle_jsr("Lanmola Cycs", !ram_toggle_lanmola_cycles)
@@ -630,16 +738,12 @@ cm_feature_autoload_preset:
 cm_feature_preset_category:
     dw !CM_ACTION_CHOICE
     dl !ram_preset_category
-    db #$24, "Preset Cat", #$FF
-    db #$24, "NMG", #$FF
-    db #$24, "Hundo", #$FF
-    db #$24, "Low", #$FF
-    db #$24, "AD", #$FF
-    db #$FF
-
-cm_feature_sanctuary:
-    %cm_toggle("Sanc Heart", !ram_sanctuary_heart)
-
+    %cm_item("Preset Cat")
+    %cm_item("NMG")
+    %cm_item("Hundo")
+    %cm_item("Low")
+    %cm_item("AD")
+    db !list_end
 ; }}}
 ; MOVIES {{{
 
@@ -663,7 +767,7 @@ cm_submenu_movies:
     dw cm_movie_14
     dw cm_movie_15
     dw cm_movie_16
-    dw #$0000
+    dw !menu_end
     %cm_header("MOVIES")
 
 cm_movie_1:
@@ -728,7 +832,7 @@ cm_submenu_counters:
     dw cm_counter_xy
     dw cm_counter_subpixels
     dw cm_counter_misslots
-    dw #$0000
+    dw !menu_end
     %cm_header("COUNTERS")
 
 cm_counter_real:
@@ -746,20 +850,20 @@ cm_counter_segment:
 cm_counter_xy:
     dw !CM_ACTION_CHOICE
     dl #!ram_xy_toggle
-    db #$24, "Coordinates", #$FF
-    db #$24, "No", #$FF
-    db #$24, "Hexadecimal", #$FF
-    db #$24, "Decimal", #$FF
-    db #$FF
+    %cm_item("Coordinates")
+    %cm_item("No")
+    %cm_item("Hexadecimal")
+    %cm_item("Decimal")
+    db !list_end
 
 cm_counter_subpixels:
     dw !CM_ACTION_CHOICE
     dl #!ram_subpixels_toggle
-    db #$24, "Subpixels", #$FF
-    db #$24, "No", #$FF
-    db #$24, "Subpixels", #$FF
-    db #$24, "Speed", #$FF
-    db #$FF
+    %cm_item("Subpixels")
+    %cm_item("No")
+    %cm_item("Subpixels")
+    %cm_item("Speed")
+    db !list_end
 
 cm_counter_misslots:
     %cm_toggle("Misslots RAM", !ram_misslots_toggle)
@@ -774,6 +878,7 @@ cm_submenu_game_state:
     dw cm_game_state_skip_text
     dw cm_game_state_disable_sprites
     dw cm_game_state_reset_screen
+    dw cm_game_state_goto_reset_dungeons_submenu
     dw cm_game_state_goto_bosses_submenu
     dw cm_game_state_goto_crystals_submenu
     dw cm_game_state_goto_flags_submenu
@@ -782,17 +887,17 @@ cm_submenu_game_state:
     dw cm_game_state_crystal_switch
     dw cm_game_state_armed_eg
     dw cm_game_state_eg_strength
-    dw #$0000
+    dw !menu_end
     %cm_header("GAME STATE")
 
 cm_game_state_crystal_switch:
     dw !CM_ACTION_CHOICE_JSR
     dw #.update_tilemap
     dl #!ram_cm_crystal_switch
-    db #$24, "Switch Color", #$FF
-    db #$24, "Red", #$FF
-    db #$24, "Blue", #$FF
-    db #$FF
+    %cm_item("Switch Color")
+    %cm_item("Red")
+    %cm_item("Blue")
+    db !list_end
 
   .update_tilemap
     STA $7EC172
@@ -847,32 +952,176 @@ cm_game_state_reset_screen:
     LDA #$00 : STA $7EF280, X
 
   .end
+    LDA #$09 : STA $012F
     RTS
+
+!EX = $01 ; escape
+!EP = $02 ; eastern palace
+!DP = $03 ; desert palace
+!TH = $04 ; tower of hera
+
+!AT = $0A ; aga's tower
+
+!PD = $11 ; palace of darkness
+!SP = $12 ; swamp palace
+!SW = $13 ; skull woods
+!TT = $14 ; thieves' town
+!IP = $15 ; ice palace
+!MM = $16 ; misery mire
+!TR = $17 ; turtle rock
+!GT = $18 ; ganon's tower
+
+!CV = $FF ; caves and houses
+!UU = !CV ; unused caves, just for convenience
+
+macro reset_dungeon(dungeon, id)
+    dw !CM_ACTION_JSR
+    dw ?routine
+    db #$24, "<dungeon>", #$FF
+
+  ?routine:
+    LDA #$09 : STA $012F
+    LDA #<id>
+    JMP reset_dungeon
+endmacro
+
+cm_game_state_goto_reset_dungeons_submenu:
+    %cm_submenu("Reset dungeons", cm_game_reset_dungeons_submenu)
+
+cm_game_reset_dungeons_submenu:
+    dw cm_game_state_dungeons_escape
+    dw cm_game_state_dungeons_eastern_palace
+    dw cm_game_state_dungeons_desert_palace
+    dw cm_game_state_dungeons_tower_of_hera
+    dw cm_game_state_dungeons_aga_tower
+    dw cm_game_state_dungeons_palace_of_darkness
+    dw cm_game_state_dungeons_swamp_palace
+    dw cm_game_state_dungeons_skull_woods
+    dw cm_game_state_dungeons_thieves_town
+    dw cm_game_state_dungeons_ice_palace
+    dw cm_game_state_dungeons_misery_mire
+    dw cm_game_state_dungeons_turtle_rock
+    dw cm_game_state_dungeons_ganons_tower
+    dw cm_game_state_dungeons_caves
+    dw !menu_end
+    %cm_header("RESET DUNGEONS")
+
+
+cm_game_state_dungeons_escape:
+    %reset_dungeon("Escape", !EX)
+
+cm_game_state_dungeons_eastern_palace:
+    %reset_dungeon("Eastern Palace", !EP)
+
+cm_game_state_dungeons_desert_palace:
+    %reset_dungeon("Desert Palace", !DP)
+
+cm_game_state_dungeons_tower_of_hera:
+    %reset_dungeon("Tower of Hera", !TH)
+
+cm_game_state_dungeons_aga_tower:
+    %reset_dungeon("Agahnim's Tower", !AT)
+
+cm_game_state_dungeons_palace_of_darkness:
+    %reset_dungeon("Palace of Darkness", !PD)
+
+cm_game_state_dungeons_swamp_palace:
+    %reset_dungeon("Swamp Palace", !SP)
+
+cm_game_state_dungeons_skull_woods:
+    %reset_dungeon("Skull Woods", !SW)
+
+cm_game_state_dungeons_thieves_town:
+    %reset_dungeon("Thieves' Town", !TT)
+
+cm_game_state_dungeons_ice_palace:
+    %reset_dungeon("Ice Palace", !IP)
+
+cm_game_state_dungeons_misery_mire:
+    %reset_dungeon("Misery Mire", !MM)
+
+cm_game_state_dungeons_turtle_rock:
+    %reset_dungeon("Turtle Rock", !TR)
+
+cm_game_state_dungeons_ganons_tower:
+    %reset_dungeon("Ganon's Tower", !GT)
+
+cm_game_state_dungeons_caves:
+    %reset_dungeon("Other", !CV)
+
+supertile_dungeons:
+  ; eg1
+  dw !CV, !EX, !EX, !CV, !TR, !UU, !SP, !TH, !CV, !PD, !PD, !PD, !GT, !GT, !IP, !UU
+  dw !CV, !EX, !EX, !TR, !TR, !TR, !SP, !TH, !CV, !PD, !PD, !PD, !GT, !GT, !IP, !IP
+  dw !AT, !EX, !EX, !TR, !TR, !UU, !SP, !TH, !SP, !SW, !PD, !PD, !CV, !UU, !IP, !CV
+  dw !AT, !TH, !EX, !DP, !SP, !SP, !SP, !SP, !SP, !SW, !PD, !PD, !CV, !GT, !IP, !IP
+  dw !AT, !EX, !EX, !DP, !TT, !TT, !SP, !UU, !UU, !SW, !PD, !PD, !GT, !GT, !IP, !IP
+  dw !EX, !EX, !EX, !DP, !SP, !CV, !SW, !SW, !SW, !SW, !PD, !GT, !GT, !GT, !IP, !IP
+  dw !EX, !EX, !EX, !DP, !TT, !TT, !SP, !SW, !SW, !UU, !PD, !GT, !GT, !GT, !IP, !UU
+  dw !EX, !EX, !EX, !DP, !DP, !DP, !SP, !TH, !UU, !UU, !UU, !GT, !GT, !GT, !IP, !IP
+  dw !EX, !EX, !EX, !DP, !DP, !DP, !UU, !TH, !UU, !EP, !UU, !GT, !GT, !GT, !IP, !UU
+  dw !MM, !MM, !MM, !MM, !UU, !GT, !GT, !MM, !MM, !EP, !UU, !GT, !GT, !GT, !IP, !IP
+  dw !MM, !MM, !MM, !MM, !TR, !GT, !GT, !TH, !EP, !EP, !EP, !TT, !TT, !UU, !IP, !IP
+  dw !AT, !MM, !MM, !MM, !TR, !TR, !TR, !TR, !EP, !EP, !EP, !TT, !TT, !UU, !IP, !IP
+  dw !AT, !MM, !MM, !MM, !TR, !TR, !TR, !TR, !EP, !EP, !UU, !TT, !TT, !UU, !IP, !UU
+  dw !AT, !MM, !MM, !CV, !CV, !TR, !TR, !UU, !EP, !EP, !EP, !TT, !TT, !UU, !IP, !CV
+  dw !AT, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !UU, !CV, !CV, !UU, !CV, !CV, !CV
+  dw !CV, !CV, !CV, !CV, !CV, !CV, !UU, !UU, !CV, !CV, !CV, !CV, !UU, !CV, !CV, !CV
+
+  ; eg 2
+  dw !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV
+  dw !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV
+  dw !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV
+
+reset_dungeon:
+    PHB : PHK : PLB
+  %ai16()
+    AND #$00FF
+    STA $00
+    LDA #$0000
+
+    LDX.w #(256+40)*2 ; eg1 size + eg2 size, words
+
+--  LDY supertile_dungeons, X
+    CPY $00 : BNE ++
+    STA $7EF000, X
+++  DEX #2 : BPL --
+
+    ; check current room
+    INC ; sets accum to #$0001
+    BIT $1B : BEQ ++ ; make sure we're indoors
+
+    LDA $A0 : ASL : TAX
+    LDA supertile_dungeons, X
+    CMP $00 : BNE ++
+    STZ $0400 : STZ $0402 : STZ $0408
+
+++  PLB : RTS
 
 cm_game_state_progress:
     dw !CM_ACTION_CHOICE
     dl !ram_game_progress
-    db #$24, "Progress", #$FF
-    db #$24, "Started", #$FF
-    db #$24, "Uncle", #$FF
-    db #$24, "Zelda", #$FF
-    db #$24, "Agahnim", #$FF
-    db #$FF
+    %cm_item("Progress")
+    %cm_item("Started")
+    %cm_item("Uncle")
+    %cm_item("Zelda")
+    %cm_item("Agahnim")
+    db !list_end
 
 cm_game_state_map_indicator:
     dw !CM_ACTION_CHOICE
     dl !ram_game_map_indicator
-    db #$24, "Map Indicator", #$FF
-    db #$24, "Castle", #$FF
-    db #$24, "Kakariko", #$FF
-    db #$24, "Sahashrala", #$FF
-    db #$24, "Pendants", #$FF
-    db #$24, "MS", #$FF
-    db #$24, "ATower", #$FF
-    db #$24, "Darkness", #$FF
-    db #$24, "Crystals", #$FF
-    db #$24, "GTower", #$FF
-    db #$FF
+    %cm_item("Map Indicator")
+    %cm_item("Castle")
+    %cm_item("Kakariko")
+    %cm_item("Sahashrala")
+    %cm_item("Pendants")
+    %cm_item("MS")
+    %cm_item("ATower")
+    %cm_item("Darkness")
+    %cm_item("Crystals")
+    %cm_item("GTower")
+    db !list_end
 
 cm_game_state_goto_flags_submenu:
     %cm_submenu("Game flags", cm_submenu_game_state_flags)
@@ -884,7 +1133,7 @@ cm_submenu_game_state_flags:
     dw cm_game_state_flags_uncle_left_home
     dw cm_game_state_flags_talked_to_aginah
     dw cm_game_state_flags_fortune_teller_cycle
-    dw #$0000
+    dw !menu_end
     %cm_header("GAME FLAGS")
 
 cm_game_state_flags_uncle:
@@ -921,7 +1170,7 @@ cm_game_state_bosses_submenu:
     dw cm_game_state_bosses_vitty
     dw cm_game_state_bosses_trinexx
     dw cm_game_state_bosses_agahnim_2
-    dw #$0000
+    dw !menu_end
     %cm_header("BOSSES DEFEATED")
 
 cm_game_state_bosses_armos:
@@ -974,7 +1223,7 @@ cm_game_state_crystals_submenu:
     dw cm_game_state_crystal_swamp
     dw cm_game_state_crystal_mire
     dw cm_game_state_crystal_trock
-    dw #$0000
+    dw !menu_end
     %cm_header("PENDANTS AND CRYSTALS")
 
 cm_game_state_pendant_eastern:
@@ -1039,7 +1288,9 @@ cm_submenu_ctrl:
     dw cm_ctrl_skip_text
     dw cm_ctrl_disable_sprites
     dw cm_ctrl_fill_everything
-    dw #$0000
+    dw cm_ctrl_fix_vram
+    dw cm_ctrl_somaria_pits
+    dw !menu_end
     %cm_header("CONTROLLER SHORTCUTS")
 
 cm_ctrl_open_lttphack_menu:
@@ -1080,6 +1331,11 @@ cm_ctrl_disable_sprites:
 cm_ctrl_fill_everything:
     %cm_ctrl_shortcut("Fill everything", !ram_ctrl_fill_everything)
 
+cm_ctrl_fix_vram:
+    %cm_ctrl_shortcut("VRAM repair", !ram_ctrl_fix_vram)
+
+cm_ctrl_somaria_pits:
+    %cm_ctrl_shortcut("Show somaria pits", !ram_ctrl_somaria_pits)
 ; }}}
 ; RNG CONTROL {{{
 
@@ -1087,6 +1343,7 @@ cm_main_goto_rng_control:
     %cm_submenu("RNG control", cm_submenu_rng_control)
 
 cm_submenu_rng_control:
+    dw cm_rng_drops
     dw cm_rng_pokey
     dw cm_rng_agahnim
     dw cm_rng_helmasaur
@@ -1099,290 +1356,299 @@ cm_submenu_rng_control:
     dw cm_rng_soldiers
     dw cm_rng_lanmola
     dw cm_rng_conveyor
-    dw #$0000
+    dw !menu_end
     %cm_header("RNG CONTROL")
 
 cm_rng_pokey:
     dw !CM_ACTION_CHOICE
     dl !ram_pokey_rng
-    db #$24, "Pokeys", #$FF
-    db #$24, "Random", #$FF
-    db #$24, "ul ul", #$FF
-    db #$24, "ur ul", #$FF
-    db #$24, "dr ul", #$FF
-    db #$24, "dl ul", #$FF
-    db #$24, "ul ur", #$FF
-    db #$24, "ur ur", #$FF
-    db #$24, "dr ur", #$FF
-    db #$24, "dl ur", #$FF
-    db #$24, "ul dr", #$FF
-    db #$24, "ur dr", #$FF
-    db #$24, "dr dr", #$FF
-    db #$24, "dl dr", #$FF
-    db #$24, "ul dl", #$FF
-    db #$24, "ur dl", #$FF
-    db #$24, "dr dl", #$FF
-    db #$24, "dl dl", #$FF
-    db #$FF
+    %cm_item("Pokeys")
+    %cm_item("Random")
+    %cm_item("ul ul")
+    %cm_item("ur ul")
+    %cm_item("dr ul")
+    %cm_item("dl ul")
+    %cm_item("ul ur")
+    %cm_item("ur ur")
+    %cm_item("dr ur")
+    %cm_item("dl ur")
+    %cm_item("ul dr")
+    %cm_item("ur dr")
+    %cm_item("dr dr")
+    %cm_item("dl dr")
+    %cm_item("ul dl")
+    %cm_item("ur dl")
+    %cm_item("dr dl")
+    %cm_item("dl dl")
+    db !list_end
 
 cm_rng_agahnim:
     dw !CM_ACTION_CHOICE
     dl !ram_agahnim_rng
-    db #$24, "Agahnim", #$FF
-    db #$24, "Random", #$FF
-    db #$24, "Yellow", #$FF
-    db #$24, "Blue", #$FF
-    db #$FF
+    %cm_item("Agahnim")
+    %cm_item("Random")
+    %cm_item("Yellow")
+    %cm_item("Blue")
+    db !list_end
 
 cm_rng_helmasaur:
     dw !CM_ACTION_CHOICE
     dl !ram_helmasaur_rng
-    db #$24, "Helmasaur", #$FF
-    db #$24, "Random", #$FF
-    db #$24, "No fireball", #$FF
-    db #$24, "Fireball", #$FF
-    db #$FF
+    %cm_item("Helmasaur")
+    %cm_item("Random")
+    %cm_item("No fireball")
+    %cm_item("Fireball")
+    db !list_end
 
 cm_rng_ganon_warp:
     dw !CM_ACTION_CHOICE
     dl !ram_ganon_warp_rng
-    db #$24, "Ganon warps", #$FF
-    db #$24, "Random", #$FF
-    db #$24, "No warp", #$FF
-    db #$24, "Warp", #$FF
-    db #$FF
+    %cm_item("Ganon warps")
+    %cm_item("Random")
+    %cm_item("No warp")
+    %cm_item("Warp")
+    db !list_end
 
 cm_rng_ganon_warp_location:
     dw !CM_ACTION_CHOICE
     dl !ram_ganon_warp_location_rng
-    db #$24, "Ganon warp to", #$FF
-    db #$24, "Random", #$FF
-    db #$24, "Far left", #$FF
-    db #$24, "Bottom left", #$FF
-    db #$24, "Bottom right", #$FF
-    db #$24, "Far right", #$FF
-    db #$FF
+    %cm_item("Ganon warp to")
+    %cm_item("Random")
+    %cm_item("Far left")
+    %cm_item("Bottom left")
+    %cm_item("Bottom right")
+    %cm_item("Far right")
+    db !list_end
 
 cm_rng_eyegore:
     dw !CM_ACTION_CHOICE
     dl !ram_eyegore_rng
-    db #$24, "Eyegore walk", #$FF
-    db #$24, "Random", #$FF
-    db #$24, "Short", #$FF
-    db #$24, "Medium", #$FF
-    db #$24, "Long", #$FF
-    db #$FF
+    %cm_item("Eyegore walk")
+    %cm_item("Random")
+    %cm_item("Short")
+    %cm_item("Medium")
+    %cm_item("Long")
+    db !list_end
 
 cm_rng_arrghus:
     dw !CM_ACTION_CHOICE
     dl !ram_arrghus_rng
-    db #$24, "Arrghus walk", #$FF
-    db #$24, "Random", #$FF
-    db #$24, "Shortest", #$FF
-    db #$24, "Short", #$FF
-    db #$24, "Medium", #$FF
-    db #$24, "Long", #$FF
-    db #$24, "Longest", #$FF
-    db #$FF
+    %cm_item("Arrghus walk")
+    %cm_item("Random")
+    %cm_item("Shortest")
+    %cm_item("Short")
+    %cm_item("Medium")
+    %cm_item("Long")
+    %cm_item("Longest")
+    db !list_end
 
 cm_rng_turtles:
     dw !CM_ACTION_CHOICE
     dl !ram_turtles_rng
-    db #$24, "Turtles walk", #$FF
-    db #$24, "Random", #$FF
-    db #$24, "Shortest", #$FF
-    db #$24, "01", #$FF
-    db #$24, "02", #$FF
-    db #$24, "03", #$FF
-    db #$24, "04", #$FF
-    db #$24, "05", #$FF
-    db #$24, "06", #$FF
-    db #$24, "07", #$FF
-    db #$24, "08", #$FF
-    db #$24, "09", #$FF
-    db #$24, "0A", #$FF
-    db #$24, "0B", #$FF
-    db #$24, "0C", #$FF
-    db #$24, "0D", #$FF
-    db #$24, "0E", #$FF
-    db #$24, "0F", #$FF
-    db #$24, "10", #$FF
-    db #$24, "11", #$FF
-    db #$24, "12", #$FF
-    db #$24, "13", #$FF
-    db #$24, "14", #$FF
-    db #$24, "15", #$FF
-    db #$24, "16", #$FF
-    db #$24, "17", #$FF
-    db #$24, "18", #$FF
-    db #$24, "19", #$FF
-    db #$24, "1A", #$FF
-    db #$24, "1B", #$FF
-    db #$24, "1C", #$FF
-    db #$24, "1D", #$FF
-    db #$24, "1E", #$FF
-    db #$24, "Slowest", #$FF
-    db #$FF
+    %cm_item("Turtles walk")
+    %cm_item("Random")
+    %cm_item("Shortest")
+    %cm_item("01")
+    %cm_item("02")
+    %cm_item("03")
+    %cm_item("04")
+    %cm_item("05")
+    %cm_item("06")
+    %cm_item("07")
+    %cm_item("08")
+    %cm_item("09")
+    %cm_item("0A")
+    %cm_item("0B")
+    %cm_item("0C")
+    %cm_item("0D")
+    %cm_item("0E")
+    %cm_item("0F")
+    %cm_item("10")
+    %cm_item("11")
+    %cm_item("12")
+    %cm_item("13")
+    %cm_item("14")
+    %cm_item("15")
+    %cm_item("16")
+    %cm_item("17")
+    %cm_item("18")
+    %cm_item("19")
+    %cm_item("1A")
+    %cm_item("1B")
+    %cm_item("1C")
+    %cm_item("1D")
+    %cm_item("1E")
+    %cm_item("Slowest")
+    db !list_end
 
 cm_rng_cannonballs:
     dw !CM_ACTION_CHOICE
     dl !ram_cannonballs_rng
-    db #$24, "Cannonballs", #$FF
-    db #$24, "Random", #$FF
-    db #$24, "00", #$FF
-    db #$24, "01", #$FF
-    db #$24, "02", #$FF
-    db #$24, "03", #$FF
-    db #$24, "04", #$FF
-    db #$24, "05", #$FF
-    db #$24, "06", #$FF
-    db #$24, "07", #$FF
-    db #$24, "08", #$FF
-    db #$24, "09", #$FF
-    db #$24, "0A", #$FF
-    db #$24, "0B", #$FF
-    db #$24, "0C", #$FF
-    db #$24, "0D", #$FF
-    db #$24, "0E", #$FF
-    db #$24, "0F", #$FF
-    db #$24, "10", #$FF
-    db #$24, "11", #$FF
-    db #$24, "12", #$FF
-    db #$24, "13", #$FF
-    db #$24, "14", #$FF
-    db #$24, "15", #$FF
-    db #$24, "16", #$FF
-    db #$24, "17", #$FF
-    db #$24, "18", #$FF
-    db #$24, "19", #$FF
-    db #$24, "1A", #$FF
-    db #$24, "1B", #$FF
-    db #$24, "1C", #$FF
-    db #$24, "1D", #$FF
-    db #$24, "1E", #$FF
-    db #$24, "1F", #$FF
-    db #$FF
+    %cm_item("Cannonballs")
+    %cm_item("Random")
+    %cm_item("00")
+    %cm_item("01")
+    %cm_item("02")
+    %cm_item("03")
+    %cm_item("04")
+    %cm_item("05")
+    %cm_item("06")
+    %cm_item("07")
+    %cm_item("08")
+    %cm_item("09")
+    %cm_item("0A")
+    %cm_item("0B")
+    %cm_item("0C")
+    %cm_item("0D")
+    %cm_item("0E")
+    %cm_item("0F")
+    %cm_item("10")
+    %cm_item("11")
+    %cm_item("12")
+    %cm_item("13")
+    %cm_item("14")
+    %cm_item("15")
+    %cm_item("16")
+    %cm_item("17")
+    %cm_item("18")
+    %cm_item("19")
+    %cm_item("1A")
+    %cm_item("1B")
+    %cm_item("1C")
+    %cm_item("1D")
+    %cm_item("1E")
+    %cm_item("1F")
+    db !list_end
 
 cm_rng_soldiers:
     dw !CM_ACTION_CHOICE
     dl !ram_soldiers_rng
-    db #$24, "Soldiers", #$FF
-    db #$24, "Random", #$FF
-    db #$24, "00", #$FF
-    db #$24, "01", #$FF
-    db #$24, "02", #$FF
-    db #$24, "03", #$FF
-    db #$24, "04", #$FF
-    db #$24, "05", #$FF
-    db #$24, "06", #$FF
-    db #$24, "07", #$FF
-    db #$24, "08", #$FF
-    db #$24, "09", #$FF
-    db #$24, "0A", #$FF
-    db #$24, "0B", #$FF
-    db #$24, "0C", #$FF
-    db #$24, "0D", #$FF
-    db #$24, "0E", #$FF
-    db #$24, "0F", #$FF
-    db #$24, "10", #$FF
-    db #$24, "11", #$FF
-    db #$24, "12", #$FF
-    db #$24, "13", #$FF
-    db #$24, "14", #$FF
-    db #$24, "15", #$FF
-    db #$24, "16", #$FF
-    db #$24, "17", #$FF
-    db #$24, "18", #$FF
-    db #$24, "19", #$FF
-    db #$24, "1A", #$FF
-    db #$24, "1B", #$FF
-    db #$24, "1C", #$FF
-    db #$24, "1D", #$FF
-    db #$24, "1E", #$FF
-    db #$24, "1F", #$FF
-    db #$FF
+    %cm_item("Soldiers")
+    %cm_item("Random")
+    %cm_item("00")
+    %cm_item("01")
+    %cm_item("02")
+    %cm_item("03")
+    %cm_item("04")
+    %cm_item("05")
+    %cm_item("06")
+    %cm_item("07")
+    %cm_item("08")
+    %cm_item("09")
+    %cm_item("0A")
+    %cm_item("0B")
+    %cm_item("0C")
+    %cm_item("0D")
+    %cm_item("0E")
+    %cm_item("0F")
+    %cm_item("10")
+    %cm_item("11")
+    %cm_item("12")
+    %cm_item("13")
+    %cm_item("14")
+    %cm_item("15")
+    %cm_item("16")
+    %cm_item("17")
+    %cm_item("18")
+    %cm_item("19")
+    %cm_item("1A")
+    %cm_item("1B")
+    %cm_item("1C")
+    %cm_item("1D")
+    %cm_item("1E")
+    %cm_item("1F")
+    db !list_end
 
 
 cm_rng_lanmola:
     dw !CM_ACTION_CHOICE
     dl !ram_lanmola_rng
-    db #$24, "Lanmola exit", #$FF
-    db #$24, "Random", #$FF
-    db #$24, "0,0", #$FF
-    db #$24, "0,1", #$FF
-    db #$24, "0,2", #$FF
-    db #$24, "0,3", #$FF
-    db #$24, "0,4", #$FF
-    db #$24, "0,5", #$FF
-    db #$24, "0,6", #$FF
-    db #$24, "0,7", #$FF
-    db #$24, "1,0", #$FF
-    db #$24, "1,1", #$FF
-    db #$24, "1,2", #$FF
-    db #$24, "1,3", #$FF
-    db #$24, "1,4", #$FF
-    db #$24, "1,5", #$FF
-    db #$24, "1,6", #$FF
-    db #$24, "1,7", #$FF
-    db #$24, "2,0", #$FF
-    db #$24, "2,1", #$FF
-    db #$24, "2,2", #$FF
-    db #$24, "2,3", #$FF
-    db #$24, "2,4", #$FF
-    db #$24, "2,5", #$FF
-    db #$24, "2,6", #$FF
-    db #$24, "2,7", #$FF
-    db #$24, "3,0", #$FF
-    db #$24, "3,1", #$FF
-    db #$24, "3,2", #$FF
-    db #$24, "3,3", #$FF
-    db #$24, "3,4", #$FF
-    db #$24, "3,5", #$FF
-    db #$24, "3,6", #$FF
-    db #$24, "3,7", #$FF
-    db #$24, "4,0", #$FF
-    db #$24, "4,1", #$FF
-    db #$24, "4,2", #$FF
-    db #$24, "4,3", #$FF
-    db #$24, "4,4", #$FF
-    db #$24, "4,5", #$FF
-    db #$24, "4,6", #$FF
-    db #$24, "4,7", #$FF
-    db #$24, "5,0", #$FF
-    db #$24, "5,1", #$FF
-    db #$24, "5,2", #$FF
-    db #$24, "5,3", #$FF
-    db #$24, "5,4", #$FF
-    db #$24, "5,5", #$FF
-    db #$24, "5,6", #$FF
-    db #$24, "5,7", #$FF
-    db #$24, "6,0", #$FF
-    db #$24, "6,1", #$FF
-    db #$24, "6,2", #$FF
-    db #$24, "6,3", #$FF
-    db #$24, "6,4", #$FF
-    db #$24, "6,5", #$FF
-    db #$24, "6,6", #$FF
-    db #$24, "6,7", #$FF
-    db #$24, "7,0", #$FF
-    db #$24, "7,1", #$FF
-    db #$24, "7,2", #$FF
-    db #$24, "7,3", #$FF
-    db #$24, "7,4", #$FF
-    db #$24, "7,5", #$FF
-    db #$24, "7,6", #$FF
-    db #$24, "7,7", #$FF
-    db #$FF
+    %cm_item("Lanmola exit")
+    %cm_item("Random")
+    %cm_item("0,0")
+    %cm_item("0,1")
+    %cm_item("0,2")
+    %cm_item("0,3")
+    %cm_item("0,4")
+    %cm_item("0,5")
+    %cm_item("0,6")
+    %cm_item("0,7")
+    %cm_item("1,0")
+    %cm_item("1,1")
+    %cm_item("1,2")
+    %cm_item("1,3")
+    %cm_item("1,4")
+    %cm_item("1,5")
+    %cm_item("1,6")
+    %cm_item("1,7")
+    %cm_item("2,0")
+    %cm_item("2,1")
+    %cm_item("2,2")
+    %cm_item("2,3")
+    %cm_item("2,4")
+    %cm_item("2,5")
+    %cm_item("2,6")
+    %cm_item("2,7")
+    %cm_item("3,0")
+    %cm_item("3,1")
+    %cm_item("3,2")
+    %cm_item("3,3")
+    %cm_item("3,4")
+    %cm_item("3,5")
+    %cm_item("3,6")
+    %cm_item("3,7")
+    %cm_item("4,0")
+    %cm_item("4,1")
+    %cm_item("4,2")
+    %cm_item("4,3")
+    %cm_item("4,4")
+    %cm_item("4,5")
+    %cm_item("4,6")
+    %cm_item("4,7")
+    %cm_item("5,0")
+    %cm_item("5,1")
+    %cm_item("5,2")
+    %cm_item("5,3")
+    %cm_item("5,4")
+    %cm_item("5,5")
+    %cm_item("5,6")
+    %cm_item("5,7")
+    %cm_item("6,0")
+    %cm_item("6,1")
+    %cm_item("6,2")
+    %cm_item("6,3")
+    %cm_item("6,4")
+    %cm_item("6,5")
+    %cm_item("6,6")
+    %cm_item("6,7")
+    %cm_item("7,0")
+    %cm_item("7,1")
+    %cm_item("7,2")
+    %cm_item("7,3")
+    %cm_item("7,4")
+    %cm_item("7,5")
+    %cm_item("7,6")
+    %cm_item("7,7")
+    db !list_end
 
 cm_rng_conveyor:
     dw !CM_ACTION_CHOICE
     dl !ram_conveyor_rng
-    db #$24, "Conveyor Belt", #$FF
-    db #$24, "Random", #$FF
-    db #$24, "right", #$FF
-    db #$24, "left", #$FF
-    db #$24, "down", #$FF
-    db #$24, "up", #$FF
-    db #$FF
+    %cm_item("Conveyor Belt")
+    %cm_item("Random")
+    %cm_item("right")
+    %cm_item("left")
+    %cm_item("down")
+    %cm_item("up")
+    db !list_end
+
+cm_rng_drops:
+    dw !CM_ACTION_CHOICE
+    dl !ram_drop_rng
+    %cm_item("Prize packs")
+    %cm_item("Vanilla")
+    %cm_item("Always")
+    %cm_item("Never")
+    db !list_end
 
 ; }}}

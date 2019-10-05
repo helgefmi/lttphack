@@ -1,3 +1,4 @@
+pushpc
 ; HUD
 ;
 ; Takes care of drawing the following:
@@ -32,7 +33,6 @@ org $0AFDB0
     SEP #$30
     RTL
 
-
 ; -------------
 ; HUD TEMPLATE
 ; -------------
@@ -59,16 +59,76 @@ org $0DFAAE
 ; $0DFC06:  20 AB FD  JSR HandleHearts
 
 org $0DFC26
-    NOP : NOP : NOP
-
+    NOP #3
 
 ; UpdateHearts Hijack
 org $0DFDCB
     JSL update_hearts_hook
     RTS
 
+!QMARK = $212A
+!BLANK_TILE = $24F5
+!EMPTY = $207F
 
-org !ORG
+macro what_item_is_this()
+    fillword !BLANK_TILE : fill 16
+    fillword !QMARK : fill 8
+    fillword !BLANK_TILE : fill 8
+endmacro
+
+org $0DF1C9
+    rep 36 : %what_item_is_this()
+
+; these clean up the messy menu tiles in the DO section
+org $0DF96B
+    dw !BLANK_TILE
+
+org $0DF951
+    fillword !BLANK_TILE : fill 12
+    fillword !QMARK : fill 8
+
+org $0DF965
+    fillword !BLANK_TILE : fill 12
+    fillword !QMARK : fill 8
+
+org $0DF979
+    fillword !BLANK_TILE : fill 12
+    fillword !QMARK : fill 8
+
+org $0DF99B
+    dw !QMARK, !QMARK
+
+org $0DF9AF
+    dw !QMARK, !QMARK, !QMARK
+
+org $0DF9CD
+    dw !BLANK_TILE
+
+org $0DF9D3
+    dw !QMARK, !QMARK, !QMARK, !QMARK
+
+org $0DF9E9
+    dw !QMARK, !QMARK, !QMARK
+
+org $0DF9F7
+    dw !BLANK_TILE
+
+org $0DF9FD
+    dw !QMARK, !QMARK, !QMARK
+
+org $0DFA07
+    dw !EMPTY
+
+org $0DFA11
+    dw !EMPTY
+
+org $0DF829
+	dw $64DB, $64DA, $64EB, $64EA
+; remove -LIFE- from HUD
+org $0DFEC3
+    dw !EMPTY, !EMPTY, !EMPTY, !EMPTY, !EMPTY, !EMPTY
+
+pullpc
 
 ; Hud Template Hook
 hud_template_hook:
@@ -76,12 +136,6 @@ hud_template_hook:
     STZ !lowram_last_frame_hearts
 
   %a16()
-    ; Remove some HUD stuff.
-    LDA #$207F
-    STA $7EC72C : STA $7EC72E
-    STA $7EC730 : STA $7EC732
-    STA $7EC734 : STA $7EC736
-
     JSL draw_counters
 
     LDA !ram_qw_toggle : BEQ .dont_update_qw
@@ -196,7 +250,7 @@ hud_draw_hearts:
 
   %a16()
     LDA #$24A0
-    JMP .draw_hearts
+    BRA .draw_hearts
 
   .not_full_hp
   %a16()
@@ -207,7 +261,7 @@ hud_draw_hearts:
     STA !POS_MEM_HEART_GFX
 
     ; Full hearts
-    LDA !ram_equipment_curhp : AND #$00FF : LSR : LSR : LSR : JSL hex_to_dec : LDX.w #!POS_HEARTS : JSL draw2_white
+    LDA !ram_equipment_curhp : AND #$00FF : LSR #3 : JSL hex_to_dec : LDX.w #!POS_HEARTS : JSL draw2_white
 
     ; Quarters
     LDA !ram_equipment_curhp : AND #$0007 : ORA #$3490 : STA $7EC704, X
@@ -216,7 +270,7 @@ hud_draw_hearts:
     LDA #$24A2 : STA !POS_MEM_CONTAINER_GFX
 
     ; Container
-    LDA !ram_equipment_maxhp : AND #$00FF : LSR : LSR : LSR : JSL hex_to_dec : LDX.w #!POS_CONTAINERS : JSL draw2_white
+    LDA !ram_equipment_maxhp : AND #$00FF : LSR #3 : JSL hex_to_dec : LDX.w #!POS_CONTAINERS : JSL draw2_white
 
     RTS
 
@@ -226,8 +280,8 @@ hud_draw_qw:
     LDA $E2 : AND.b #$06 : CMP.b #$06 : BEQ .is_qw
 
   %a16()
-    LDA #$207F : STA $7EC80A
-    LDA #$207F : STA $7EC80C
+    LDA #!EMPTY : STA $7EC80A
+    LDA #!EMPTY : STA $7EC80C
     BRA .end
 
   .is_qw
@@ -243,7 +297,7 @@ hud_draw_qw:
 hud_draw_enemy_hp:
     ; Assumes: I=16
     ; Draw over Enemy Heart stuff in case theres no enemies
-    LDA #$207F : STA !POS_MEM_ENEMY_HEART_GFX
+    LDA #!EMPTY : STA !POS_MEM_ENEMY_HEART_GFX
     LDX.w #!POS_ENEMY_HEARTS : STA $7EC700, X : STA $7EC702, X : STA $7EC704, X
 
     LDX #$FFFF
@@ -274,19 +328,19 @@ hud_draw_input_display:
 
 -   TYA : AND.l ctrl_top_bit_table, X : BEQ +
     LDA.l ctrl_top_gfx_table, X
-    JMP ++
-+   LDA #$207F
+    BRA ++
++   LDA #!EMPTY
 ++  STA !POS_MEM_INPUT_DISPLAY_TOP, X
-    INX : INX : CPX #$00C : BNE -
+    INX #2 : CPX #$00C : BNE -
 
     LDX #$0000
 
 -   TYA : AND.l ctrl_bot_bit_table, X : BEQ +
     LDA.l ctrl_bot_gfx_table, X
-    JMP ++
-+   LDA #$207F
+    BRA ++
++   LDA #!EMPTY
 ++  STA !POS_MEM_INPUT_DISPLAY_BOT, X
-    INX : INX : CPX #$00C : BNE -
+    INX #2 : CPX #$00C : BNE -
 
   .end
     RTS
@@ -321,15 +375,13 @@ hud_draw_subpixels:
     LDA !ram_subpixels_toggle : CMP #$0002 : BEQ .speed
 
   .subpix
-    LDA $2B : AND #$00FF : TAX
-    LDA $2A : AND #$00FF : TAY
-    JSL draw_coordinates_2
+    LDA $2A
+    JSL draw_xy_single
     RTS
 
   .speed
-    LDA $27 : AND #$00FF : TAY
-    LDA $28 : AND #$00FF : TAX
-    JSL draw_coordinates_2
+    LDA $27
+    JSL draw_xy_single
     RTS
 
 
@@ -380,11 +432,12 @@ hud_draw_misslots:
 
 
 hud_set_counter_position:
-    LDA.w #!POS_COUNTERS : DEC : DEC
+    LDA.w #!POS_COUNTERS-2
 
-  .loop
     CPX #$0000 : BEQ .done
-    CLC : ADC #$0040 : DEX : BRA .loop
+
+.loop
+    CLC : ADC #$0040 : DEX : BNE .loop
 
   .done
     STA !lowram_draw_tmp

@@ -2,6 +2,9 @@
 ;
 ; 7C[0x08] (84)
 ; 8E[0x02] (90)
+; AB[0x02]
+; B6[0x01]
+; 7A[0x01]
 ; 04CB[0x25] (04F0)
 ; $7F7667[0x6719] (7FDD80)
 ; $7EC900[0x1F00] (7EE800)
@@ -58,6 +61,7 @@
 !ram_soldiers_rng = $7F771A
 !ram_lanmola_rng = $7F771C
 !ram_conveyor_rng = $7F771E
+!ram_drop_rng = $7F7720
 
 !ram_ctrl_last_input = $7F7710
 
@@ -69,46 +73,58 @@ else
     !offset = $701E00
 endif
 
-!ram_sram_initialized = !offset+0
-!ram_input_display_toggle = !offset+4
-!ram_enemy_hp_toggle = !offset+6
-!ram_xy_toggle = !offset+8
-!ram_qw_toggle = !offset+10
-!ram_lit_rooms_toggle = !offset+12
-!ram_oob_toggle = !offset+14
-!ram_toggle_lanmola_cycles = !offset+16
-!ram_subpixels_toggle = !offset+58
-!ram_rerandomize_toggle = !offset+64
+!offsetinc = 0
+macro def_sram(name, size)
+    !ram_<name> #= !offset+!offsetinc
+    !offsetinc #= !offsetinc+<size>
+endmacro
 
-!ram_previous_preset_destination = !offset+24
-!ram_previous_preset_type = !offset+26
-!ram_preset_category = !offset+60
-!ram_can_load_pss = !offset+62
-!ram_feature_music = !offset+28
-!ram_secondary_counter_type = !offset+46
-!ram_lagometer_toggle = !offset+56
-!ram_sanctuary_heart = !offset+74
-!ram_autoload_preset = !offset+76
+%def_sram("sram_initialized", 1)
 
-!ram_ctrl_prachack_menu = !offset+30
-!ram_ctrl_load_last_preset = !offset+32
-!ram_ctrl_replay_last_movie = !offset+78
-!ram_ctrl_save_state = !offset+34
-!ram_ctrl_load_state = !offset+36
-!ram_ctrl_toggle_oob = !offset+38
-!ram_ctrl_skip_text = !offset+40
-!ram_ctrl_disable_sprites = !offset+42
-!ram_ctrl_reset_segment_timer = !offset+44
-!ram_ctrl_fill_everything = !offset+70
+%def_sram("ctrl_prachack_menu", 2)
+%def_sram("ctrl_load_last_preset", 2)
+%def_sram("ctrl_replay_last_movie", 2)
+%def_sram("ctrl_save_state", 2)
+%def_sram("ctrl_load_state", 2)
+%def_sram("ctrl_toggle_oob", 2)
+%def_sram("ctrl_skip_text", 2)
+%def_sram("ctrl_disable_sprites", 2)
+%def_sram("ctrl_reset_segment_timer", 2)
+%def_sram("ctrl_fill_everything", 2)
+%def_sram("ctrl_fix_vram", 2)
+%def_sram("ctrl_somaria_pits", 2)
 
-!ram_counters_real = !offset+48
-!ram_counters_lag = !offset+50
-!ram_counters_idle = !offset+52
-!ram_counters_segment = !offset+54
-!ram_misslots_toggle = !offset+80
+%def_sram("can_load_pss", 1)
+%def_sram("previous_preset_destination", 2)
+%def_sram("previous_preset_type", 2)
+%def_sram("preset_category", 2)
+%def_sram("autoload_preset", 2)
 
-!ram_rerandomize_framecount = !offset+66
-!ram_rerandomize_accumulator = !offset+68
+%def_sram("input_display_toggle", 1)
+%def_sram("feature_music", 1)
+%def_sram("secondary_counter_type", 2)
+%def_sram("lagometer_toggle", 1)
+%def_sram("toggle_lanmola_cycles", 1)
+%def_sram("subpixels_toggle", 1)
+
+%def_sram("counters_real", 1)
+%def_sram("counters_lag", 1)
+%def_sram("counters_idle", 1)
+%def_sram("counters_segment", 1)
+%def_sram("misslots_toggle", 1)
+
+%def_sram("rerandomize_framecount", 1)
+%def_sram("rerandomize_accumulator", 1)
+
+%def_sram("enemy_hp_toggle", 1)
+%def_sram("xy_toggle", 1)
+%def_sram("qw_toggle", 1)
+%def_sram("lit_rooms_toggle", 1)
+%def_sram("probe_toggle", 1)
+%def_sram("sanctuary_heart", 1)
+%def_sram("rerandomize_toggle", 1)
+%def_sram("skip_triforce_toggle", 1)
+%def_sram("bonk_items_toggle", 1)
 
 !lowram_oob_toggle = $037F
 
@@ -136,6 +152,17 @@ endif
 
 !TD_RESET = $00
 !TD_SHOW = $01
+
+;-------------------------
+; Layers
+;-------------------------
+!disabled_layers = $B6
+!disabled_layers_temp = $AB ; 2 bytes
+
+;-------------------------
+; Sword beams
+;-------------------------
+!disable_beams = $7A
 
 ;-------------------------
 ; HUD
@@ -324,6 +351,10 @@ endif
 !ram_game_map_indicator = $7EF3C7
 !ram_capabilities = $7EF379
 
+; Magic words
+!menu_end = #$0000
+!list_end = #$FF
+
 ;-------------------------
 ; Macros
 ;-------------------------
@@ -352,7 +383,6 @@ macro ai16()
     REP #$30
 endmacro
 
-
 macro ppu_off()
     LDA #$80 : STA $2100 : STA $13
     STZ $420C : LDA $9B : PHA : STZ $9B
@@ -365,7 +395,12 @@ macro ppu_on()
     PLA : STA $9B : STA $420C
 endmacro
 
-
+; alternative:
+; PHD : 4 cycles
+; PLD : 5 cycles
+; NOP : 2 cycles
+; NOP : 2 cycles
+; next opcode takes 1 cycle to fetch
 macro wait_14_cycles()
-    PHA : PLA : PHA : PLA
+    PHP : PLP : PHP : PLP
 endmacro

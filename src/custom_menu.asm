@@ -1,3 +1,4 @@
+pushpc
 ; VRAM buffer:
 ; $10C0 = first line -> $D100 in VRAM
 ; $1100 = second line
@@ -6,12 +7,11 @@
 
 
 ; Overrides Game Mode 0x0C.
-org $00806D : db #!ORG
-org $008089 : db #!ORG>>8
-org $0080A5 : db #!ORG>>16
+org $00806D : db #CM_Main
+org $008089 : db #CM_Main>>8
+org $0080A5 : db #CM_Main>>16
 
-
-org !ORG
+pullpc
 CM_Main:
     PHB : PHK : PLB
 
@@ -116,14 +116,14 @@ CM_Active:
   .pressed_up
   %a16()
     LDX !lowram_cm_stack_index
-    LDA !lowram_cm_cursor_stack, X : DEC : DEC : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor_stack, X
+    LDA !lowram_cm_cursor_stack, X : DEC #2 : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor_stack, X
   %a8()
     BRA .redraw
 
   .pressed_down
   %a16()
     LDX !lowram_cm_stack_index
-    LDA !lowram_cm_cursor_stack, X : INC : INC : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor_stack, X
+    LDA !lowram_cm_cursor_stack, X : INC #2 : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor_stack, X
   %a8()
     BRA .redraw
 
@@ -252,8 +252,7 @@ cm_init_item_variables:
 
     ; MaxHP
     LDA !ram_equipment_maxhp
-    LSR : LSR : LSR
-    DEC : DEC : DEC
+    LSR #3 : DEC #3
     STA !ram_cm_equipment_maxhp
 
     ; EG
@@ -311,7 +310,7 @@ cm_clear_stack:
   .loop
     STA !lowram_cm_cursor_stack, X
     STA !ram_cm_menu_stack, X
-    INX : INX
+    INX #2
     CPX.b #$10 : BNE .loop
 
   %a8()
@@ -337,7 +336,7 @@ cm_clear_buffer:
     STA $1600, X : STA $1680, X
     STA $1700, X : STA $1780, X
 
-    INX : INX
+    INX #2
     CPX.b #$80 : BNE .loop
   %a8()
     RTS
@@ -366,7 +365,7 @@ cm_cache_buffer:
     LDA $1680, X : STA $7ED680, X
     LDA $1700, X : STA $7ED700, X
     LDA $1780, X : STA $7ED780, X
-    INX : INX : CPX #$080 : BNE .loop
+    INX #2 : CPX #$080 : BNE .loop
 
   %ai8()
     RTS
@@ -395,7 +394,7 @@ cm_restore_buffer:
     LDA $7ED680, X : STA $1680, X
     LDA $7ED700, X : STA $1700, X
     LDA $7ED780, X : STA $1780, X
-    INX : INX : CPX #$080 : BNE .loop
+    INX #2 : CPX #$080 : BNE .loop
 
   %ai8()
     RTS
@@ -410,7 +409,7 @@ cm_transfer_tileset:
 
     LDX #$7000 : STX $2116 ; VRAM address (E000 in vram)
     LDX #cm_hud_table : STX $4302 ; Source offset
-    LDA #!ORG>>16 : STA $4304 ; Source bank
+    LDA #cm_hud_table>>16 : STA $4304 ; Source bank
     LDX #$0900 : STX $4305 ; Size (0x10 = 1 tile)
     LDA #$01 : STA $4300 ; word, normal increment (DMA MODE)
     LDA #$18 : STA $4301 ; destination (VRAM write)
@@ -524,7 +523,7 @@ cm_draw_active_menu:
     JSR (cm_draw_action_table, X)
 
     PLX : PLY
-    INY : INY
+    INY #2
     JMP .loop
 
   .done_with_items
@@ -573,7 +572,7 @@ cm_fix_cursor_wrap:
 
   .loop
     LDA ($00), Y : BEQ .after_loop
-    INY : INY
+    INY #2
     JMP .loop
 
   .after_loop
@@ -591,7 +590,7 @@ cm_fix_cursor_wrap:
 
   .set_to_max
     LDA $00
-    DEC : DEC
+    DEC #2
 
   .end
   %ai8()
@@ -682,7 +681,7 @@ cm_execute_submenu:
 
     ; Increments stack index and puts the submenu into the stack.
   %a16()
-    LDA !lowram_cm_stack_index : INC : INC : STA !lowram_cm_stack_index : TAX
+    LDA !lowram_cm_stack_index : INC #2 : STA !lowram_cm_stack_index : TAX
     LDA ($00) : INC $00 : INC $00 : STA !ram_cm_menu_stack, X
 
   .end
@@ -701,7 +700,7 @@ cm_execute_back:
     LDA #$0000 : STA !lowram_cm_cursor_stack, X
 
     ; make sure we dont set a negative number
-    LDA !lowram_cm_stack_index : DEC : DEC : BPL .done
+    LDA !lowram_cm_stack_index : DEC #2 : BPL .done
     LDA #$0000
 
   .done
@@ -818,7 +817,7 @@ cm_execute_preset:
   %ai8()
   PHB
     LDA !ram_preset_category : TAX
-    LDA.l cm_preset_data_banks,x : PHA : PLB
+    LDA.l cm_preset_data_banks, X : PHA : PLB
     LDA ($02) : STA !ram_preset_type : STA !ram_previous_preset_type
     STZ !lowram_is_poverty_load
   PLB
@@ -880,7 +879,7 @@ cm_execute_submenu_variable:
 
     ; Increments stack index and puts the submenu into the stack.
   %a16()
-    LDA !lowram_cm_stack_index : INC : INC : STA !lowram_cm_stack_index : TAX
+    LDA !lowram_cm_stack_index : INC #2 : STA !lowram_cm_stack_index : TAX
 
     LDA ($00) : STA $02 : INC $00 : INC $00
     LDA ($00) : STA $04 : INC $00
@@ -896,7 +895,7 @@ cm_execute_submenu_variable:
 
   .in_range
     ASL : TAY
-    LDA ($00),y : STA !ram_cm_menu_stack,x
+    LDA ($00), Y : STA !ram_cm_menu_stack, X
 
   %a8()
     LDA $00 : CLC : ADC $05 : STA $00
@@ -1072,7 +1071,7 @@ cm_draw_choice:
     LDA [$04] : TAY
 
     ; find the correct text that should be drawn (the selected choice)
-    INY : INY ; uh, skipping the first text that we already draw..
+    INY #2 ; uh, skipping the first text that we already draw..
   .loop_choices
     DEY : BEQ .found
 
@@ -1127,12 +1126,12 @@ cm_draw_numfield:
     ; Draw numbers
     LDA !ram_hex2dec_first_digit : BEQ .second_digit
     CLC : ADC $0E : STA $1000, X
-    INX : INX
+    INX #2
 
   .second_digit
     LDA !ram_hex2dec_second_digit : BEQ .third_digit
     CLC : ADC $0E : STA $1000, X
-    INX : INX
+    INX #2
 
   .third_digit
     LDA !ram_hex2dec_third_digit : CLC : ADC $0E : STA $1000, X
@@ -1198,7 +1197,7 @@ cm_draw_ctrl_shortcut:
   PLY
 
   %ai16()
-    TYA : ASL : ASL : ASL : ASL : ASL
+    TYA : ASL #5
     CLC : ADC #$022A : TAX
 
     LDA #$2480 : STA $0E
@@ -1365,7 +1364,7 @@ cm_do_ctrl_config:
     LDX !lowram_cm_stack_index
     LDY !lowram_cm_cursor_stack, X
 
-    TYA : ASL : ASL : ASL : ASL : ASL
+    TYA : ASL #5
     CLC : ADC #$022A : TAX
 
     ; Input display
@@ -1382,6 +1381,7 @@ cm_do_ctrl_config:
 
   .exit
     LDA #$000 : STA !ram_ctrl_last_input
+
   %ai8()
     STZ $B0
     STZ $0200
@@ -1471,7 +1471,7 @@ cm_movie_save:
     LDA [$06] : STA [$09]
     INC $06 : INC $06
     INC $09 : INC $09
-    DEX : DEX : BPL .movieLoop
+    DEX #2 : BPL .movieLoop
 
     LDA #$DD00 : SEC : SBC !ram_movie_rng_length : STA $06
 
@@ -1480,7 +1480,7 @@ cm_movie_save:
     LDA [$06] : STA [$09]
     INC $06 : INC $06
     INC $09 : INC $09
-    DEX : DEX : BPL .rngLoop
+    DEX #2 : BPL .rngLoop
 
     RTS
 
@@ -1493,9 +1493,9 @@ cm_movie_delete:
     LDA !sram_movies_length, X : TAY
 
   PHX
-    LDA $06 : TAX
+    LDX $06
     LDA $08 : STA !sram_movies_next_slot, X
-    LDA $08 : TAX
+    LDX $08
     LDA $06 : STA !sram_movies_prev_slot, X
 
     JSR .recurse
@@ -1530,7 +1530,7 @@ cm_movie_delete:
     LDA [$06] : STA [$09]
     INC $06 : INC $06
     INC $09 : INC $09
-    DEY : DEY : BPL .loop
+    DEY #2 : BPL .loop
   PLY
 
     LDA !sram_movies_offset, X : SEC : SBC $0D : STA !sram_movies_offset, X
@@ -1562,7 +1562,7 @@ cm_movie_load:
     LDA [$06] : STA [$09]
     INC $06 : INC $06
     INC $09 : INC $09
-    DEY : DEY : BPL .movieLoop
+    DEY #2 : BPL .movieLoop
 
     LDA #$DD00 : SEC : SBC !ram_movie_rng_length : STA $09
 
@@ -1571,7 +1571,7 @@ cm_movie_load:
     LDA [$06] : STA [$09]
     INC $06 : INC $06
     INC $09 : INC $09
-    DEY : DEY : BPL .rngLoop
+    DEY #2 : BPL .rngLoop
 
     LDA #$0002 : STA !ram_movie_next_mode
     LDA !ram_previous_preset_destination : STA !ram_preset_destination

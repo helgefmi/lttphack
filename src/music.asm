@@ -1,3 +1,4 @@
+pushpc
 ; Overworld music data
 ; Overwrites:
 ; LDA #$F5 : STA $00
@@ -5,9 +6,7 @@
 ; LDA #$1A : STA $02
 org $008913
   LDX #$00 : JSL music_setup_bank
-  NOP : NOP
-  NOP : NOP
-  NOP : NOP
+  NOP #6
 
 
 ; Underworld music data
@@ -17,8 +16,7 @@ org $008913
 ; LDA #$1B
 org $008925
   LDX #$01 : JSL music_setup_bank
-  NOP : NOP
-  NOP : NOP
+  NOP #4
 
 
 ; Ending credits music data
@@ -28,11 +26,9 @@ org $008925
 ; LDA #$1A
 org $008931
   LDX #$02 : JSL music_setup_bank
-  NOP : NOP
-  NOP : NOP
+  NOP #4
 
-
-org !ORG
+pullpc
 ; Used when turning on the console, so sound is correctly unmuted after selecting a file.
 ; This removes file screen music, but oh well.
 music_init:

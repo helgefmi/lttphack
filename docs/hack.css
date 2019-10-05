@@ -1,0 +1,84 @@
+strong.lag {
+	color: red;
+	font-weight: normal;
+	display: block;
+}
+
+div.center {
+	text-align: center;
+}
+
+img {
+	max-width: 100% !important;
+}
+
+img.helpvis {
+	background: #C3C3C3;
+}
+
+dt {
+	font-size:120%;
+}
+
+dt:after {
+	content: ":";
+}
+
+dt:before {
+	content: " ";
+	display: block;
+}
+
+dd {
+	padding-left: 60px;
+}
+
+dt {
+	padding-left: 30px;
+}
+
+dl.subDefinition {
+	padding-left: 10px;
+	font-size: 100%;
+}
+
+dl.subDefinition dt,
+dl.inlineDefinition:not(.dinkyList) dt {
+	display: contents;
+	font-size:100%;
+}
+
+dl.inlineDefinition.dinkyList {
+	padding-left:30px;
+}
+
+dl.subDefinition dt,
+dl.inlineDefinition.dinkyList dt {
+	display: contents;
+	padding-left:30px;
+}
+
+dl.subDefinition dd,
+dl.inlineDefinition dd {
+	display: inline;
+	padding-left: 5px;
+}
+
+dl.inlineDefinition dd ol {
+	display: inline;
+	padding-left: 0;
+}
+
+dl.inlineDefinition dd li {
+	display: inline
+}
+
+dl.inlineDefinition dd ol>li:not(:last-child):after {
+	content: ",";
+}
+
+em.SD2SNES {
+	font-weight: 600;
+	font-size: 70%;
+	color: #555555;
+}

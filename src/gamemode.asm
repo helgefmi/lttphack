@@ -1,10 +1,11 @@
+pushpc
 ; Game Mode Hijack
 org $008056
     JSL gamemode_hook
 
 
 ; Game Mode Hook
-org !ORG
+pullpc
 gamemode_hook:
   PHB : PHK : PLB
     JSR gamemode_shortcuts : BCS .skip_gamemode
@@ -28,7 +29,6 @@ gamemode_hook:
   PLB
     RTL
 
-
 gamemode_shortcuts:
     LDA $10 : CMP #$0C : BNE .not_setting_new_inputs
     LDA $B0 : BEQ .not_setting_new_inputs
@@ -38,7 +38,7 @@ gamemode_shortcuts:
   %a16()
     LDA !ram_ctrl1_filtered : BNE +
 
-  %a8()
+    %a8()
     CLC : RTS
 
   + LDA !ram_ctrl1 : AND !ram_ctrl_save_state : CMP !ram_ctrl_save_state : BNE +
@@ -80,6 +80,14 @@ gamemode_shortcuts:
   + LDA !ram_ctrl1 : AND !ram_ctrl_reset_segment_timer : CMP !ram_ctrl_reset_segment_timer : BNE +
     AND !ram_ctrl1_filtered : BEQ +
     JSR gamemode_reset_segment_timer : CLC : RTS
+
+  + LDA !ram_ctrl1 : AND !ram_ctrl_fix_vram : CMP !ram_ctrl_fix_vram : BNE +
+    AND !ram_ctrl1_filtered : BEQ +
+    JSR gamemode_fix_vram : CLC : RTS
+
+  + LDA !ram_ctrl1 : AND !ram_ctrl_somaria_pits : CMP !ram_ctrl_somaria_pits : BNE +
+    AND !ram_ctrl1_filtered : BEQ +
+    JSR gamemode_somaria_pits_wrapper : CLC : RTS
 
   + CLC : RTS
 
@@ -253,6 +261,12 @@ gamemode_safe_to_change_mode:
     LDA $11 : CMP #$23 : BEQ .not_safe ; Mirror transition
 
   .not_overworld
+    CPX #$0E : BNE .not_messaging
+    LDA $11 : CMP #$03 : BEQ .not_safe ; Dungeon map
+              CMP #$07 : BEQ .not_safe ; Overworld map
+              CMP #$09 : BEQ .not_safe ; Flute map
+
+  .not_messaging
     ; Don't allow custom menu during mosaic effects
     LDA $7EC011 : BNE .not_safe
 
@@ -318,7 +332,10 @@ gamemode_load_previous_preset:
 
     ; Loading during text mode make the text stay or the item menu to bug
     LDA $10 : CMP #$0E : BEQ .no_load_preset
-    LDA !ram_previous_preset_destination : BEQ .no_load_preset
+  %a16()
+    LDA !ram_previous_preset_destination
+  %a8()
+    BEQ .no_load_preset
 
     STZ !lowram_is_poverty_load
 
@@ -328,7 +345,6 @@ gamemode_load_previous_preset:
   .no_load_preset
   %a8()
     CLC : RTS
-
 
 ; Replay last movie
 gamemode_replay_last_movie:
@@ -344,8 +360,7 @@ gamemode_replay_last_movie:
   .no_replay
   %a8()
     CLC : RTS
-
-
+ 
 ; Save state
 gamemode_savestate:
   .save
@@ -362,7 +377,7 @@ gamemode_savestate:
     INX
     INY : CPY #$000B : BNE -
     CPX #$007B : BEQ +
-    INX : INX : INX : INX : INX
+    INX #5
     LDY #$0000
     JMP -
     ; end of DMA to SRAM
@@ -534,7 +549,7 @@ gamemode_savestate:
     INX
     INY : CPY #$000B : BNE -
     CPX #$007B : BEQ +
-    INX : INX : INX : INX : INX
+    INX #5
     LDY #$0000
     JMP -
     ; end of DMA from SRAM
@@ -558,11 +573,7 @@ gamemode_savestate:
 
 gamemode_oob:
   %a8()
-    LDA !ram_oob_toggle : EOR #$01 : STA !ram_oob_toggle
-
-  .dont_toggle:
-  %a8()
-    LDA !ram_oob_toggle : STA !lowram_oob_toggle
+    LDA !lowram_oob_toggle : EOR #$01 : STA !lowram_oob_toggle
     RTS
 
 
@@ -656,8 +667,6 @@ gamemode_fill_everything:
   .exit
     RTS
 
-
-
 gamemode_reset_segment_timer:
   %a16()
     STZ !lowram_seg_frames
@@ -668,6 +677,110 @@ gamemode_reset_segment_timer:
     %a8()
     RTS
 
+gamemode_fix_vram:
+  %a16()
+    LDA #$0280 : STA $2100
+    LDA #$0313 : STA $2107
+    LDA #$0063 : STA $2109 ; zeros out unused bg4
+    LDA #$0722 : STA $210B
+    STZ $2133 ; mode 7 register hit, but who cares
+
+  %a8()
+    LDA #$80 : STA $13 : STA $2100 ; keep fblank on while we do stuff
+    LDA $1B : BEQ ++
+    JSR fix_vram_uw
+    JSL load_default_tileset
+
+    LDA $7EC172 : BEQ ++
+    JSR fixpegs ; quick and dirty pegs reset
+
+++  LDA #$0F : STA $13
+    RTS
+
+fixpegs:
+
+  %ai16()
+    LDX #$0000
+--  LDA $7EB4C0, X : STA $7F0000, X
+    LDA $7EB340, X : STA $7F0080, X
+    INX #2 : CPX #$0080 : BNE --
+  %ai8()
+    LDA #$17 : STA $17
+    RTS
+
+fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics - pc: $56F19
+    PHB
+    LDA #$00 : PHA : PLB ; need to be bank00
+    LDA $9B : PHA
+    STZ $9B : STZ $420C
+
+    JSL $00834B ; Vram_EraseTilemaps.normal
+
+    JSL $00E1DB ; InitTilesets
+
+    JSL $0DFA8C ; HUD.RebuildLong2
+
+  .just_redraw
+    STZ $0418
+    STZ $045C
+
+  .drawQuadrants
+
+    JSL $0091C4
+    JSL $0090E3
+    JSL $00913F
+    JSL $0090E3
+
+    LDA $045C : CMP #$10 : BNE .drawQuadrants
+
+    STZ $17
+    STZ $B0
+
+    PLA : STA $9B
+    PLB : RTS
+
+; wrapper because of push and pull logic
+; need this to make it safe and ultimately fix INIDISP ($13)
+gamemode_somaria_pits_wrapper:
+  %a8()
+    LDA $1B : BEQ ++ ; don't do this outdoors
+
+    LDA #$80 : STA $13 : STA $2100 ; keep fblank on while we do stuff
+    JSR gamemode_somaria_pits
+    LDA #$0F : STA $13
+
+++  RTS
+
+gamemode_somaria_pits:
+    PHB ; rebalanced in redraw
+    PEA $007F ; push both bank 00 and bank 7F (wram)
+    PLB ; but only pull 7F for now
+
+  %ai16()
+
+    LDY #$0FFE
+
+--  LDA $2000, Y : AND #$00FF ; checks tile attributes table
+      CMP #$0020 : BEQ .ispit
+      ;CMP #$00B0 : BCC .skip
+      ;CMP #$00BF : BCS .skip ; range B0-BE, which are pits
+      BRA .skip
+
+  .ispit
+    TYA : ASL : TAX
+    LDA #$050F : STA $7E2000, X
+
+  .skip
+    DEY : BPL --
+
+  .time_for_tilemaps ; just a delimiting label
+    %ai8()
+    PLB ; pull to bank 00 for this next stuff
+
+    LDA $9B : PHA ; rebalanced in redraw
+    STZ $9B : STZ $420C
+
+    JMP fix_vram_uw_just_redraw ; jmp to have 1 less rts and because of stack
 
 gamemode_lagometer:
   %ai16()
