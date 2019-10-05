@@ -4,7 +4,7 @@
 	<title>LTTPHack - A practice romhack for ALttP speedrunners</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-	<meta name="google-site-verification" content="xKj9oATHIbNd0hOrZ9fVtp4ptnq6OcwC0UO_KJA3SL8">
+	<link rel="stylesheet" href="hack.css">
 	<style type="text/css">
 		header {
 			padding: 154px 0 100px;
@@ -137,13 +137,16 @@
 					<p>Send any ideas for future improvements my way. I'm Pinkus on <a href="https://alttp-wiki.net/index.php/Community#Discord" target="_blank">Discord</a>.</p>
 					-->
 
-					<h2>Main menu</h2>
-					<dl>
+					<div class="center">
+						<img src="hudfeatures.png" class="helpvis"" width="1127">
+					</div>
+					<h3>Main menu</h3>
+					<dl class="subDefinition">
 						<dt><a href="#menuPresets">Presets</a></dt>
 						<dd>Built in savestates for various categories</dd>
-						<dt><a href="#menuItems">Items</a><dt>
+						<dt><a href="#menuItems">Items</a></dt>
 						<dd>Modify Y-item loadout</dd>
-						<dt><a href="#menuEquipment">Equipment</a><dt>
+						<dt><a href="#menuEquipment">Equipment</a></dt>
 						<dd>Modify A-items, combat items, health, and keys</dd>
 						<dt><a href="#menuGameState">Game State</a></dt>
 						<dd>Modify game progress, status, and mode</dd>
@@ -155,18 +158,18 @@
 						<dd>Modify shortcuts for quick feature access</dd>
 						<dt><a href="#menuCounters">Counters</a></dt>
 						<dd>Toggle counters that appear on the HUD</dd>
-						<dt><a href="#menuFeatures">Features</a><dt>
+						<dt><a href="#menuFeatures">Features</a></dt>
 						<dd>Feature toggles related to meta-operation</dd>
 					</dl>
 
-					<h2 id="menuPresets">Presets</h2>
+					
+					<h3 id="menuPresets">Presets</h3>
 
-					<h2 id="menuItems">Items<h2>
-					<p>This submenu controls the Y-item inventory</p>
-					<dl>
+					<h3 id="menuItems">Items</h3>
+					<dl class="inlineDefinition dinkyList">
 						<dt>Bow</dt>
-						<dd>
-							<ol class="optionList">
+						<dd class="optionList">
+							<ol>
 								<li>No</li>
 								<li>Normal</li>
 								<li>Silver</li>
@@ -174,7 +177,7 @@
 						</dd>
 					</dl>
 
-					<h2 id="menuGameState">Game State</h2>
+					<h3 id="menuGameState">Game State</h3>
 					<dl>
 						<dt>Skip text</dt>
 						<dd>Skips the current text box</dd>
@@ -182,7 +185,7 @@
 						<dd>Removes all sprites, overlords, and ancillae from the screen</dd>
 						<dt>Reset current room</dt>
 						<dd>Resets the following data of the current room:
-							<strong class="lag">NOTE: This only affects the data pertaining to that specific room, but not data pertaining to the dungeon as a whole. For example, even though key collection is reset, the key count for that dungeon is left unaltered.</strong>
+							<strong class="lag"><b>NOTE:</b> This only affects the data pertaining to that specific room, but not data pertaining to the dungeon as a whole. For example, even though key collection is reset, the key count for that dungeon is left unaltered.</strong>
 							<ul>
 								<li>Quadrants visited</li>
 								<li>Keys collected</li>
@@ -227,7 +230,7 @@
 								<dd>Sword and shield obtained from uncle. Spawn is somewhere in escape (or Sanctuary with old man rescue).</dd>
 								<dt>Zelda</dt>
 								<dd>Zelda has been rescued. Spawn is standard selection, or mountain with old man follower.</dd>
-								<dt>Agahnim<dt>
+								<dt>Agahnim</dt>
 								<dd>Agahnim has been defeated. Spawn is standard selection in Light World, Pyramid in Dark World, or mountain with old man follower. Fake Light World from dungeon death no longer possible.</dd>
 							</dl>
 						</dd>
@@ -240,7 +243,7 @@
 								<dd>Go speak to villagers to learn about the Elders</dd>
 								<dt>Sahasrahla</dt>
 								<dd>Go speak to Sahasrahla to learn about the Master Sword</dd>
-								<dt>Pendants<dt>
+								<dt>Pendants</dt>
 								<dd>Light World dungeons</dd>
 								<dt>MS</dt>
 								<dd>Go collect the master sword</dd>
@@ -259,10 +262,10 @@
 						<dt>Armed EG</dt>
 						<dd>Toggle status of EG</dd>
 						<dt>Strong EG</dt>
-						<dd>Switch between strong and weak EG<strong class="lag">NOTE: this toggle cannot overpower the strength of the current room.</strong></dd>
+						<dd>Switch between strong and weak EG<strong class="lag"><b>NOTE:</b> this toggle cannot overpower the strength of the current room.</strong></dd>
 					</dl>
 
-					<h2 id="menuGameplay">Gameplay</h2>
+					<h3 id="menuGameplay">Gameplay</h3>
 					<dl>
 						<dt>Rerandomize</dt>
 						<dd>When using built-in savestates and presets, this will run the RNG function to create a new value on each load.</dd>
@@ -291,26 +294,28 @@
 						</dd>
 					</dl>
 
-					<h2 id="menuRNGControl">RNG Control</h2>
+					<h3 id="menuRNGControl">RNG Control</h3>
 					<dl>
 						<dt>Prize packs</dt>
-						<dd>Modifies drop percentages. This option only affects prize packs, not other guaranteed drops such as the stun drop or keys. It will, however, affect the 100% prize packs.<strong class="lag">WARNING: toggling this option will reset existing fairy luck.</strong>
+						<dd>Modifies drop percentages. This option only affects prize packs, not other guaranteed drops such as the stun drop or keys. It will, however, affect the 100% prize packs.<strong class="lag"><b>WARNING:</b> toggling this option will reset existing fairy luck.</strong>
 							<dl class="subDefinition">
 								<dt>Vanilla</dt>
 								<dd>Drops behave normally. 50% for most prize packs, and fairy luck works.</dd>
 								<dt>Always</dt>
 								<dd>All enemies drop their prize packs when possible</dd>
 								<dt>Never</dt>
-								<dt>No enemy drops prize packs, ever.<dt>
+								<dd>No enemy drops prize packs, ever.</dd>
 							</dl>
 						</dd>
+					</dl>
+					<dl class="inlineDefinition dinkyList">
 						<dt>Pokeys</dt>
 						<dd>?</dd>
 					</dl>
-					<h2 id="menuShortcuts">Shortcuts</h2>
+					<h3 id="menuShortcuts">Shortcuts</h3>
 					<dl>
 						<dt>LTTPHack menu</dt>
-						<dd>Opens the practice hack menu. <strong class="lag">NOTE: this shortcut cannot be changed.</strong><dd>
+						<dd>Opens the practice hack menu. <strong class="lag"><b>NOTE:</b> this shortcut cannot be changed.</strong></dd>
 						<dt>Load last preset</dt>
 						<dd>Loads the last preset used from the preset menu</dd>
 						<dt>Save preset</dt>
@@ -322,7 +327,7 @@
 						<dt>Reset seg timer</dt>
 						<dd>Resets the segment timer, which is not automatic like room timer.</dd>
 						<dt>Toggle OoB</dt>
-						<dd>Turns on <a href="descOOB">out-of-bounds</a> mode</dd>
+						<dd>Turns on <a href="#descOOB">out-of-bounds</a> mode</dd>
 						<dt>Skip text</dt>
 						<dd>Skips the current text box</dd>
 						<dt>Remove sprites</dt>
@@ -330,12 +335,12 @@
 						<dt>Fill everything</dt>
 						<dd>Maxes out equipment, rupees, items, and health</dd>
 						<dt>VRAM repair</dt>
-						<dd>Attempts to fix important graphics registers and VRAM data that have been corrupted by door glitches.<strong class="lag">WARNING: If this shortcut is triggered during a text box, the text box will disappear, but the game will remain in text mode.</strong><strong class="lag">WARNING: this shortcut only repairs registers and VRAM; other areas of RAM may result in vanilla game crashes unrelated to this feature, but which are never normally encountered in vanilla.</strong></dd>
+						<dd>Attempts to fix important graphics registers and VRAM data that have been corrupted by door glitches.<strong class="lag"><b>WARNING:</b> If this shortcut is triggered during a text box, the text box will disappear, but the game will remain in text mode.</strong><strong class="lag"><b>WARNING:</b> this shortcut only repairs registers and VRAM; other areas of RAM may result in vanilla game crashes unrelated to this feature, but which are never normally encountered in vanilla.</strong></dd>
 						<dt>Show somaria pits</dt>
-						<dd>Modifies the upper layer tilemap to mark pits.<strong class="lag">NOTE: this feature is intended for finding pits created by door glitches, but it will mark all standard pit tiles the same way.</strong></dd>
+						<dd>Modifies the upper layer tilemap to mark pits.<strong class="lag"><b>NOTE:</b> this feature is intended for finding pits created by door glitches, but it will mark all standard pit tiles the same way.</strong></dd>
 					</dl>
 
-					<h2 id="menuCounters">Counters</h2>
+					<h3 id="menuCounters">Counters</h3>
 					<dl>
 						<dt>Counter Room</dt>
 						<dd>Time spent on the current screen, starting from the beginning of the last transition.</dd>
@@ -345,13 +350,13 @@
 						<dd>Count of frames with no relevant input, starting from the beginning of the last transition.</dd>
 						<dt>Counter segment</dt>
 						<dd>Time spent since the beginning of the last segment timer reset</dd>
-						<dt>Coordinates<dt>
+						<dt>Coordinates</dt>
 						<dd>Absolute position of Link (X,Y)
 							<dl class="subDefinition">
 								<dt>Hexadecimal</dt>
 								<dd>12-bit precision</dd>
 								<dt>Decimal</dt>
-								<dd><strong class="lag">WARNING: this feature can be laggy.</strong></dd>
+								<dd><strong class="lag"><b>WARNING:</b> decimal display can be laggy.</strong></dd>
 							</dl>
 						</dd>
 						<dt>Subpixels</dt>
@@ -359,7 +364,7 @@
 							<dl class="subDefinition">
 								<dt>Subpixels</dt>
 								<dd>Displays current subpixel remainder (Hexadecimal)</dd>
-								<dt>Speed<dt>
+								<dt>Speed</dt>
 								<dd>Displays current subpixel speed (Hexadecimal</dd>
 							</dl>
 						</dd>
@@ -367,25 +372,29 @@
 						<dd>Ancillae RAM watch geared towards misslotting (see diagram below)</dd>
 					</dl>
 
-					<h2 id="menuFeatures">Features</h2>
+					<div class="center">
+						<img src="ancillawatch.png" class="helpvis" width="729">
+					</div>
+					<h3 id="menuFeatures">Features</h3>
 					<dl>
 						<dt>Lagometer</dt>
 						<dd>Shows a rough calculation of the amount of lag a frame has. The more the bar is filled, the closer a frame was to producing a lag frame. Lag from one frame does not affect the next, but trends in the lagometer can be used to gauge how laggy an area is.</dd>
 						<dt>Input display</dt>
-						<dd>Visual indication of every button registered each frame.<dd>
+						<dd>Visual indication of every button registered each frame.</dd>
 						<dt>Enemy HP</dt>
-						<dd>Shows the exact health of a single enemy. Attempts to find the most relevant enemy as you play. <strong class="lag">WARNING: this feature can be laggy.</strong></dd>
+						<dd>Shows the exact health of a single enemy. Attempts to find the most relevant enemy as you play. <strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
 						<dt>Music</dt>
 						<dd>Sets the volume of every track in every song to 0. The size of the SPC transfers remains the same, so this feature does not affect lag.</dd>
 						<dt>QW Indicator</dt>
-						<dd>Displays an icon on the HUD when the current camera will produce a quickwarp. <strong class="lag">WARNING: this feature can be laggy.</strong></dd>
+						<dd>Displays an icon on the HUD when the current camera will produce a quickwarp. <strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
 						<dt>Lanmola Cycs</dt>
 						<dd>Displays a counter for the cycle count of the three Lanmolas individually.</dd>
 						<dt>Auto Preset</dt>
-						<dt>Preset Cat<dd>
+						<dt>Preset Cat</dd>
 						<dd>Changes the selection of <a href="#menuPresets">presets</a></dd>
 					</dl>
 
+	</section>
 	<section id="changelog">
 		<div class="container">
 			<div class="row">
