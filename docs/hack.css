@@ -82,3 +82,34 @@ em.SD2SNES {
 	font-size: 70%;
 	color: #555555;
 }
+
+p.warped {
+	transform: skewX(45deg) rotate(-3deg) translateY(-19px);
+	font-family: impact;
+	text-shadow: -10px 16px 4px #005691;
+	padding-left: 60px;
+}
+
+p.warped span{
+	display: inline-block;
+}
+span.morewarped {
+	transform: skewX(12deg) rotate(30deg) translate(05px,15px);
+}
+
+.warped:hover span:not(.morewarped) {
+	transform: rotate(180deg);
+	text-shadow: 10px -16px 4px #005691;
+}
+
+p.warped::selection {
+	transform: scale(3);
+	color: red;
+	font-family: monospace;
+	text-shadow: none
+
+}
+
+span.morewarped::selection {
+	color: blue;
+}
