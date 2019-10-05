@@ -1,5 +1,3 @@
-org !ORG
-
 ; Preset locations
 
 preset_ad_esc_links_bed:
