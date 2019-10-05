@@ -361,20 +361,18 @@ hud_draw_subpixels:
     LDA !ram_subpixels_toggle : CMP #$0002 : BEQ .speed
 
   .subpix
-    LDA $2B : AND #$00FF : TAX
-    LDA $2A : AND #$00FF : TAY
-    JSL draw_coordinates_2
+    LDA $2A
+    JSL draw_xy_single
     RTS
 
   .speed
-    LDA $27 : AND #$00FF : TAY
-    LDA $28 : AND #$00FF : TAX
-    JSL draw_coordinates_2
+    LDA $27
+    JSL draw_xy_single
     RTS
 
 
 hud_set_counter_position:
-    LDA.w #!POS_COUNTERS : DEC #2
+    LDA.w #!POS_COUNTERS-2
 
     CPX #$0000 : BEQ .done
 

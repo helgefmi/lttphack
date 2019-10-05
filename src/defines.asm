@@ -2,6 +2,9 @@
 ;
 ; 7C[0x08] (84)
 ; 8E[0x02] (90)
+; AB[0x02]
+; B6[0x01]
+; 7A[0x01]
 ; 04CB[0x25] (04F0)
 ; $7F7667[0x6719] (7FDD80)
 ; $7EC900[0x1F00] (7EE800)
@@ -391,6 +394,12 @@ macro ppu_on()
     PLA : STA $9B : STA $420C
 endmacro
 
+; alternative:
+; PHD : 4 cycles
+; PLD : 5 cycles
+; NOP : 2 cycles
+; NOP : 2 cycles
+; next opcode takes 1 cycle to fetch
 macro wait_14_cycles()
     PHP : PLP : PHP : PLP
 endmacro

@@ -58,15 +58,31 @@ draw_coordinates_3:
     LDX !lowram_draw_tmp
     AND #$000F : ORA #$3C10 : STA $7EC704, X
     TYA : LSR #4 : AND #$000F : ORA #$3C10 : STA $7EC702, X
-    TYA : LSR #8 : AND #$000F : ORA #$3C10 : STA $7EC700, X
+    TYA : XBA ; swap to high byte
+    AND #$000F : ORA #$3C10 : STA $7EC700, X
   PLY
 
     ; y coordinate
     TYA : AND #$000F : ORA #$3410 : STA $7EC70A, X
     TYA : LSR #4 : AND #$000F : ORA #$3410 : STA $7EC708, X
-    TYA : LSR #8 : AND #$000F : ORA #$3410 : STA $7EC706, X
+    TYA : XBA ; swap to high byte
+    AND #$000F : ORA #$3410 : STA $7EC706, X
     RTL
 
+draw_xy_single: ; byte in A, drawn HH:LL
+    TAY ; cache A
+    ; low byte, Y coord
+    LDX !lowram_draw_tmp
+    AND #$000F : ORA #$3410 : STA $7EC70A, X
+    TYA : LSR #4 : AND #$000F : ORA #$3410 : STA $7EC708, X
+
+    TYA : XBA : TAY ; get old value back, change to high byte
+
+    ; high byte, X coord
+    AND #$000F : ORA #$3C10 : STA $7EC706, X
+    TYA : LSR #4 : AND #$000F : ORA #$3C10 : STA $7EC704, X
+
+    RTL
 
 draw_coordinates_2:
     ; x coordinate
@@ -89,7 +105,7 @@ draw3_white:
     LDA #$207F : STA $7EC702, X
 
     LDA !ram_hex2dec_first_digit : BEQ .check_second_digit
-    ORA #$3C90 : STA $7EC700, X : JMP .draw_second_digit
+    ORA #$3C90 : STA $7EC700, X : BRA .draw_second_digit
 
   .check_second_digit
     LDA !ram_hex2dec_second_digit : BEQ .draw_third_digit
@@ -193,3 +209,34 @@ hex_to_dec_a:
     ORA !ram_hex2dec_second_digit : ASL #4
     ORA !ram_hex2dec_third_digit
     RTL
+
+; scratch space cycle golf test
+;	REP #$20 : LDA.w #0299
+;	STZ !ram_hex2dec_first_digit
+;	STZ !ram_hex2dec_second_digit
+;	STZ !ram_hex2dec_third_digit
+;	STA !HEX_BUFFER ; cache value
+;
+;	AND #$000F ; get low 4 bits
+;	SEP #$28 ; set M=8 and Decimal flag
+;	CLC ; clear carry
+;	ADC #$00 ; add 0, we now have decimal digits in upper and lower nibble
+;
+;	AND #$0F ; get just bottom nibble for digit
+;	STA !ram_hex2dec_third_digit
+;
+;	REP #$28 ; M=16 and Decimal off
+;
+;	LDA !HEX_BUFFER : CMP.w #100 : BCC ++ ; <100
+;	SBC.w #100
+;	INC !ram_hex2dec_first_digit
+;
+;	CMP.w #100 : BCC ++ ; <200
+;	SBC.w #100
+;	INC !ram_hex2dec_first_digit
+;
+;++	SEP #$21 ; 8bit mode and clear carry
+;--	SBC #10 : BCC ++
+;	INC !ram_hex2dec_second_digit
+;	BRA --
+;++	REP #$20
