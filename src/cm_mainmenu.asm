@@ -77,7 +77,7 @@ cm_mainmenu_indices:
     dw cm_main_goto_ctrl
     dw cm_main_goto_counters
     dw cm_main_goto_features
-    dw cm_main_goto_movies
+;    dw cm_main_goto_movies
     dw !menu_end
     %cm_header("LTTPHACK !VERSION")
 
@@ -135,14 +135,14 @@ cm_items_bow:
 cm_items_boom:
     dw !CM_ACTION_CHOICE
     dl #!ram_item_boom
-    %cm_item("Boom")
+    %cm_item("Boomerang")
     %cm_item("No")
     %cm_item("Blue")
     %cm_item("Red")
     db !list_end
 
 cm_items_hook:
-    %cm_toggle("Hook", !ram_item_hook)
+    %cm_toggle("Hookshot", !ram_item_hook)
 
 cm_items_powder:
     dw !CM_ACTION_CHOICE
@@ -180,7 +180,7 @@ cm_items_flute:
     %cm_item("Flute")
     %cm_item("No")
     %cm_item("Shovel")
-    %cm_item("Flute (no)")
+    %cm_item("Flute (off)")
     %cm_item("Flute")
     db !list_end
 
@@ -312,8 +312,8 @@ cm_equipment_gloves:
     dl !ram_equipment_gloves
     %cm_item("Gloves")
     %cm_item("No")
-    %cm_item("Power Glove")
-    %cm_item("Titan's Mitts")
+    %cm_item("Power glove")
+    %cm_item("Titan's mitts")
     db !list_end
 
 cm_equipment_flippers:
@@ -336,10 +336,10 @@ cm_equipment_flippers:
     RTS
 
 cm_equipment_moon_pearl:
-    %cm_toggle("Moon Pearl", !ram_equipment_moon_pearl)
+    %cm_toggle("Moon pearl", !ram_equipment_moon_pearl)
 
 cm_equipment_half_magic:
-    %cm_toggle("Half Magic", !ram_equipment_half_magic)
+    %cm_toggle("Half magic", !ram_equipment_half_magic)
 
 cm_equipment_sword:
     dw !CM_ACTION_CHOICE_JSR
@@ -389,14 +389,14 @@ cm_equipment_armor:
     RTS
 
 cm_equipment_fill_magic:
-    %cm_jsr("Fill Magic")
+    %cm_jsr("Fill magic")
 
   .routine
     LDA #$80 : STA !ram_equipment_magic_meter
     RTS
 
 cm_equipment_fill_rupees:
-    %cm_jsr("Fill Rupees")
+    %cm_jsr("Fill rupees")
 
   .routine
   %a16()
@@ -623,7 +623,7 @@ cm_gameplay_skip_triforce:
     %cm_toggle("Skip Triforce", !ram_skip_triforce_toggle)
 
 cm_gameplay_sanctuary:
-    %cm_toggle("Sanc Heart", !ram_sanctuary_heart)
+    %cm_toggle("Sanc heart", !ram_sanctuary_heart)
 
 cm_gameplay_disable_beams:
     %cm_toggle("Disable beams", !disable_beams)
@@ -635,7 +635,7 @@ cm_gameplay_bonk_items:
     %cm_toggle("See bonk items", !ram_bonk_items_toggle)
 
 cm_gameplay_lit_rooms:
-    %cm_toggle_jsr("Lit Rooms", !ram_lit_rooms_toggle)
+    %cm_toggle_jsr("Lit rooms", !ram_lit_rooms_toggle)
   .toggle
     LDA !ram_lit_rooms_toggle : ORA $1B : BEQ .leaveon
     LDA #$10 : STA $99
@@ -677,7 +677,7 @@ cm_feature_lagometer:
     RTS
 
 cm_feature_input_display:
-    %cm_toggle_jsr("Input Display", !ram_input_display_toggle)
+    %cm_toggle_jsr("Input display", !ram_input_display_toggle)
 
   .toggle
   %a16()
@@ -714,7 +714,7 @@ cm_feature_enemy_hp:
     RTS
 
 cm_feature_qw:
-    %cm_toggle_jsr("QW Indicator", !ram_qw_toggle)
+    %cm_toggle_jsr("QW indicator", !ram_qw_toggle)
 
   .toggle
   %a16()
@@ -723,7 +723,7 @@ cm_feature_qw:
     RTS
 
 cm_feature_lanmola_cycle_count:
-    %cm_toggle_jsr("Lanmola Cycs", !ram_toggle_lanmola_cycles)
+    %cm_toggle_jsr("Lanmola cycs", !ram_toggle_lanmola_cycles)
 
   .toggle
   %a8()
@@ -733,7 +733,7 @@ cm_feature_lanmola_cycle_count:
     RTS
 
 cm_feature_autoload_preset:
-    %cm_toggle("Auto Preset", !ram_autoload_preset)
+    %cm_toggle("Death reload", !ram_autoload_preset)
 
 cm_feature_preset_category:
     dw !CM_ACTION_CHOICE
@@ -747,76 +747,76 @@ cm_feature_preset_category:
 ; }}}
 ; MOVIES {{{
 
-cm_main_goto_movies:
-    %cm_submenu("Movies", cm_submenu_movies)
-
-cm_submenu_movies:
-    dw cm_movie_1
-    dw cm_movie_2
-    dw cm_movie_3
-    dw cm_movie_4
-    dw cm_movie_5
-    dw cm_movie_6
-    dw cm_movie_7
-    dw cm_movie_8
-    dw cm_movie_9
-    dw cm_movie_10
-    dw cm_movie_11
-    dw cm_movie_12
-    dw cm_movie_13
-    dw cm_movie_14
-    dw cm_movie_15
-    dw cm_movie_16
-    dw !menu_end
-    %cm_header("MOVIES")
-
-cm_movie_1:
-    %cm_movie("Movie 01 (0000 bytes)", 0)
-
-cm_movie_2:
-    %cm_movie("Movie 02 (0000 bytes)", 1)
-
-cm_movie_3:
-    %cm_movie("Movie 03 (0000 bytes)", 2)
-
-cm_movie_4:
-    %cm_movie("Movie 04 (0000 bytes)", 3)
-
-cm_movie_5:
-    %cm_movie("Movie 05 (0000 bytes)", 4)
-
-cm_movie_6:
-    %cm_movie("Movie 06 (0000 bytes)", 5)
-
-cm_movie_7:
-    %cm_movie("Movie 07 (0000 bytes)", 6)
-
-cm_movie_8:
-    %cm_movie("Movie 08 (0000 bytes)", 7)
-
-cm_movie_9:
-    %cm_movie("Movie 09 (0000 bytes)", 8)
-
-cm_movie_10:
-    %cm_movie("Movie 10 (0000 bytes)", 9)
-
-cm_movie_11:
-    %cm_movie("Movie 11 (0000 bytes)", 10)
-
-cm_movie_12:
-    %cm_movie("Movie 12 (0000 bytes)", 11)
-
-cm_movie_13:
-    %cm_movie("Movie 13 (0000 bytes)", 12)
-
-cm_movie_14:
-    %cm_movie("Movie 14 (0000 bytes)", 13)
-
-cm_movie_15:
-    %cm_movie("Movie 15 (0000 bytes)", 14)
-
-cm_movie_16:
-    %cm_movie("Movie 16 (0000 bytes)", 15)
+;cm_main_goto_movies:
+;    %cm_submenu("Movies", cm_submenu_movies)
+;
+;cm_submenu_movies:
+;    dw cm_movie_1
+;    dw cm_movie_2
+;    dw cm_movie_3
+;    dw cm_movie_4
+;    dw cm_movie_5
+;    dw cm_movie_6
+;    dw cm_movie_7
+;    dw cm_movie_8
+;    dw cm_movie_9
+;    dw cm_movie_10
+;    dw cm_movie_11
+;    dw cm_movie_12
+;    dw cm_movie_13
+;    dw cm_movie_14
+;    dw cm_movie_15
+;    dw cm_movie_16
+;    dw !menu_end
+;    %cm_header("MOVIES")
+;
+;cm_movie_1:
+;    %cm_movie("Movie 01 (0000 bytes)", 0)
+;
+;cm_movie_2:
+;    %cm_movie("Movie 02 (0000 bytes)", 1)
+;
+;cm_movie_3:
+;    %cm_movie("Movie 03 (0000 bytes)", 2)
+;
+;cm_movie_4:
+;    %cm_movie("Movie 04 (0000 bytes)", 3)
+;
+;cm_movie_5:
+;    %cm_movie("Movie 05 (0000 bytes)", 4)
+;
+;cm_movie_6:
+;    %cm_movie("Movie 06 (0000 bytes)", 5)
+;
+;cm_movie_7:
+;    %cm_movie("Movie 07 (0000 bytes)", 6)
+;
+;cm_movie_8:
+;    %cm_movie("Movie 08 (0000 bytes)", 7)
+;
+;cm_movie_9:
+;    %cm_movie("Movie 09 (0000 bytes)", 8)
+;
+;cm_movie_10:
+;    %cm_movie("Movie 10 (0000 bytes)", 9)
+;
+;cm_movie_11:
+;    %cm_movie("Movie 11 (0000 bytes)", 10)
+;
+;cm_movie_12:
+;    %cm_movie("Movie 12 (0000 bytes)", 11)
+;
+;cm_movie_13:
+;    %cm_movie("Movie 13 (0000 bytes)", 12)
+;
+;cm_movie_14:
+;    %cm_movie("Movie 14 (0000 bytes)", 13)
+;
+;cm_movie_15:
+;    %cm_movie("Movie 15 (0000 bytes)", 14)
+;
+;cm_movie_16:
+;    %cm_movie("Movie 16 (0000 bytes)", 15)
 
 ; }}}
 ; COUNTERS {{{
@@ -1111,10 +1111,10 @@ cm_game_state_progress:
 cm_game_state_map_indicator:
     dw !CM_ACTION_CHOICE
     dl !ram_game_map_indicator
-    %cm_item("Map Indicator")
+    %cm_item("Map indicator")
     %cm_item("Castle")
     %cm_item("Kakariko")
-    %cm_item("Sahashrala")
+    %cm_item("Sahasrahla")
     %cm_item("Pendants")
     %cm_item("MS")
     %cm_item("ATower")
@@ -1280,7 +1280,7 @@ cm_main_goto_ctrl:
 cm_submenu_ctrl:
     dw cm_ctrl_open_lttphack_menu
     dw cm_ctrl_load_last_preset
-    dw cm_ctrl_replay_last_movie
+;    dw cm_ctrl_replay_last_movie
     dw cm_ctrl_save_state
     dw cm_ctrl_load_state
     dw cm_ctrl_reset_segment_timer
@@ -1299,8 +1299,8 @@ cm_ctrl_open_lttphack_menu:
 cm_ctrl_load_last_preset:
     %cm_ctrl_shortcut("Load last preset", !ram_ctrl_load_last_preset)
 
-cm_ctrl_replay_last_movie:
-    %cm_ctrl_shortcut("Replay last movie", !ram_ctrl_replay_last_movie)
+;cm_ctrl_replay_last_movie:
+;    %cm_ctrl_shortcut("Replay last movie", !ram_ctrl_replay_last_movie)
 
 if !FEATURE_SD2SNES
     cm_ctrl_save_state:
@@ -1634,7 +1634,7 @@ cm_rng_lanmola:
 cm_rng_conveyor:
     dw !CM_ACTION_CHOICE
     dl !ram_conveyor_rng
-    %cm_item("Conveyor Belt")
+    %cm_item("Conveyor belt")
     %cm_item("Random")
     %cm_item("right")
     %cm_item("left")

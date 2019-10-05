@@ -430,7 +430,7 @@ preset_sprite_reset_all:
     JSL load_poverty_state
 
   .notPoverty
-    JSL movie_preset_loaded
+    ;JSL movie_preset_loaded
   .end
   %ai8()
     RTL

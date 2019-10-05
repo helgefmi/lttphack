@@ -390,12 +390,12 @@ hud_draw_misslots:
   ; Search index / EG (03A4)
 
     LDX.w #$00C8
-    LDA $03C4 : LSR #4 : AND #$000F : ORA #$3010 : STA $7EC708,x
-    LDA $03C4 : AND #$000F : ORA #$3010 : STA $7EC70A,x
+    LDA $03C4 : LSR #4 : AND #$000F : ORA #$3010 : STA $7EC708, X
+    LDA $03C4 : AND #$000F : ORA #$3010 : STA $7EC70A, X
 
     LDX.w #$00CC
-    LDA $03A4 : LSR #4 : AND #$000F : ORA #$3810 : STA $7EC708,x
-    LDA $03A4 : AND #$000F : ORA #$3810 : STA $7EC70A,x
+    LDA $03A4 : LSR #4 : AND #$000F : ORA #$3810 : STA $7EC708, X
+    LDA $03A4 : AND #$000F : ORA #$3810 : STA $7EC70A, X
 
 
   ; Slots
@@ -405,9 +405,9 @@ hud_draw_misslots:
     LDA #$3C10 : STA !lowram_draw_tmp
 
   .loop
-    LDA $0C4A, Y : LSR #4 : AND #$000F : ORA !lowram_draw_tmp : STA $7EC708,x
-    LDA $0C4A, Y : AND #$000F : ORA !lowram_draw_tmp : STA $7EC70A,x
-    INX.w #$0004
+    LDA $0C4A, Y : LSR #4 : AND #$000F : ORA !lowram_draw_tmp : STA $7EC708, X
+    LDA $0C4A, Y : AND #$000F : ORA !lowram_draw_tmp : STA $7EC70A, X
+    INX #4
 
     INY
     CPY.w #$0005 : BNE .dont_update_colors
@@ -423,9 +423,9 @@ hud_draw_misslots:
     LDY.w #$0000
 
   .loop_2
-    LDA $0C5E, Y : LSR #4 : AND #$000F : ORA #$3410 : STA $7EC708,x
-    LDA $0C5E, Y : AND #$000F : ORA #$3410 : STA $7EC70A,x
-    INX.w #$0004
+    LDA $0C5E, Y : LSR #4 : AND #$000F : ORA #$3410 : STA $7EC708, X
+    LDA $0C5E, Y : AND #$000F : ORA #$3410 : STA $7EC70A, X
+    INX #4
     INY : CPY.w #$0004 : BNE .loop_2
 
     RTS

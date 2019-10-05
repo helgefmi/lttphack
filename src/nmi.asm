@@ -21,8 +21,8 @@ LDA $1D : STA $AC : NOP
 org $008B6B
     ; 008b6b ldx $0219
     ; 008b6e stx $2116
-    JSL nmi_hud_update
-    NOP #2
+    ;JSL nmi_hud_update
+    ;NOP #2
 
 ; NMI HOOK
 org $0089C2

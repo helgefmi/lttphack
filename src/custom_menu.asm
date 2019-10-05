@@ -636,7 +636,7 @@ cm_execute_action_table:
     dw cm_execute_toggle_bit
     dw cm_execute_ctrl_shortcut
     dw cm_execute_submenu_variable
-    dw cm_execute_movie
+;    dw cm_execute_movie
 
 
 cm_execute_toggle:
@@ -965,7 +965,7 @@ cm_draw_action_table:
     dw cm_draw_toggle_bit
     dw cm_draw_ctrl_shortcut
     dw cm_draw_submenu_variable
-    dw cm_draw_movie
+;    dw cm_draw_movie
 
 
 macro item_index_to_vram_index()
@@ -1223,82 +1223,82 @@ cm_draw_submenu_variable:
     RTS
 
 
-cm_draw_movie:
-  PHY
-    LDA ($02) : INC $02 : AND #$00FF : ASL #4 : TAX
-    LDA !sram_movies, X : PHA
-
-    BNE .normalColor
-    LDA $0E : BNE .normalColor
-    LDA #$0020 : STA $0E
-    BRA .drawItem
-
-  .normalColor
-    LDA #$0024 : ORA $0E : STA $0E
-
-  .drawItem
-    %item_index_to_vram_index()
-    JSR cm_draw_text
-  PLY
-
-    CPY #$0000 : BEQ .emptyFile
-
-    DEX #22
-
-    LDA $0E : ASL #8 : STA $06
-    TYA : LSR #12 : AND #$000F : ORA #$0020 : ORA $06 : STA $1000, X : INX #2
-    TYA : LSR #8 : AND #$000F : ORA #$0020 : ORA $06 : STA $1000, X : INX #2
-    TYA : LSR #4 : AND #$000F : ORA #$0020 : ORA $06 : STA $1000, X : INX #2
-    TYA : AND #$000F : ORA #$0020 : ORA $06 : STA $1000, X : INX #2
-    BRA .end
-
-  .emptyFile
-    DEX #22
-    LDA #.emptyFileText : STA $02
-    JSR cm_draw_text
-
-  .end
-  PLY
-    CPY #$0000 : BEQ .drawInstructions
-    RTS
-
-  .drawInstructions
-    STZ $0E
-
-    LDX #$0646
-    LDA #.instruction1 : STA $02
-    JSR cm_draw_text
-
-    LDX #$0686
-    LDA #.instruction2 : STA $02
-    JSR cm_draw_text
-
-    LDX #$0198
-    LDA #.bytesLeftText : STA $02
-    JSR cm_draw_text
-
-    DEX #8
-
-  PHX
-    JSR cm_movie_get_bytes_left : TAY
-  PLX
-
-    TYA : LSR #12 : AND #$000F : ORA #$2420 : STA $1000, X : INX #2
-    TYA : LSR #8 : AND #$000F : ORA #$2420 : STA $1000, X : INX #2
-    TYA : LSR #4 : AND #$000F : ORA #$2420 : STA $1000, X : INX #2
-    TYA : AND #$000F : ORA #$2420 : STA $1000, X : INX #2
-
-    RTS
-
-  table ../resources/normal.tbl
-  .emptyFileText
-    db #$20, "empty)      ", #$FF
-  .bytesLeftText
-    db #$24, "Space left 0000", #$FF
-  .instruction1
-    db #$24, "A  Load or Save", #$FF
-  .instruction2
-    db #$24, "X  Delete", #$FF
+;cm_draw_movie:
+;  PHY
+;    LDA ($02) : INC $02 : AND #$00FF : ASL #4 : TAX
+;    LDA !sram_movies, X : PHA
+;
+;    BNE .normalColor
+;    LDA $0E : BNE .normalColor
+;    LDA #$0020 : STA $0E
+;    BRA .drawItem
+;
+;  .normalColor
+;    LDA #$0024 : ORA $0E : STA $0E
+;
+;  .drawItem
+;    %item_index_to_vram_index()
+;    JSR cm_draw_text
+;  PLY
+;
+;    CPY #$0000 : BEQ .emptyFile
+;
+;    DEX #22
+;
+;    LDA $0E : ASL #8 : STA $06
+;    TYA : LSR #12 : AND #$000F : ORA #$0020 : ORA $06 : STA $1000, X : INX #2
+;    TYA : LSR #8 : AND #$000F : ORA #$0020 : ORA $06 : STA $1000, X : INX #2
+;    TYA : LSR #4 : AND #$000F : ORA #$0020 : ORA $06 : STA $1000, X : INX #2
+;    TYA : AND #$000F : ORA #$0020 : ORA $06 : STA $1000, X : INX #2
+;    BRA .end
+;
+;  .emptyFile
+;    DEX #22
+;    LDA #.emptyFileText : STA $02
+;    JSR cm_draw_text
+;
+;  .end
+;  PLY
+;    CPY #$0000 : BEQ .drawInstructions
+;    RTS
+;
+;  .drawInstructions
+;    STZ $0E
+;
+;    LDX #$0646
+;    LDA #.instruction1 : STA $02
+;    JSR cm_draw_text
+;
+;    LDX #$0686
+;    LDA #.instruction2 : STA $02
+;    JSR cm_draw_text
+;
+;    LDX #$0198
+;    LDA #.bytesLeftText : STA $02
+;    JSR cm_draw_text
+;
+;    DEX #8
+;
+;  PHX
+;    JSR cm_movie_get_bytes_left : TAY
+;  PLX
+;
+;    TYA : LSR #12 : AND #$000F : ORA #$2420 : STA $1000, X : INX #2
+;    TYA : LSR #8 : AND #$000F : ORA #$2420 : STA $1000, X : INX #2
+;    TYA : LSR #4 : AND #$000F : ORA #$2420 : STA $1000, X : INX #2
+;    TYA : AND #$000F : ORA #$2420 : STA $1000, X : INX #2
+;
+;    RTS
+;
+;  table ../resources/normal.tbl
+;  .emptyFileText
+;    db #$20, "empty)      ", #$FF
+;  .bytesLeftText
+;    db #$24, "Space left 0000", #$FF
+;  .instruction1
+;    db #$24, "A  Load or Save", #$FF
+;  .instruction2
+;    db #$24, "X  Delete", #$FF
 
 
 

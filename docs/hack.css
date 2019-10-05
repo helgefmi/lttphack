@@ -1,7 +1,20 @@
 strong.lag {
 	color: red;
 	font-weight: normal;
-	display: block;
+	border-bottom: 1px dashed red;
+}
+
+strong.lag b {
+	font-size:80%;
+}
+
+strong.lag b:before {
+	content: '⚠️';
+}
+
+h3 {
+	margin-top: 20px;
+	border-bottom: 2px solid #505050;
 }
 
 div.center {
@@ -9,21 +22,18 @@ div.center {
 }
 
 img {
-	max-width: 100% !important;
+	max-width: 100%;
 }
 
 img.helpvis {
 	background: #C3C3C3;
 }
 
-dt {
-	font-size:120%;
-}
-
 dt:after {
 	content: ":";
 }
 
+strong.lag:before,
 dt:before {
 	content: " ";
 	display: block;
@@ -79,8 +89,9 @@ dl.inlineDefinition dd ol>li:not(:last-child):after {
 
 em.SD2SNES {
 	font-weight: 600;
-	font-size: 70%;
+	font-size: 80%;
 	color: #555555;
+	display:inline-block;
 }
 
 p.warped {
@@ -112,4 +123,38 @@ p.warped::selection {
 
 span.morewarped::selection {
 	color: blue;
+}
+
+.jaeger:hover::before {
+	content: 'Attack on ';
+}
+
+header {
+	padding: 154px 0 100px;
+}
+
+@media (min-width: 992px) {
+	header {
+		padding: 156px 0 100px;
+	}
+}
+
+section {
+	padding: 150px 0;
+}
+
+.dl-tbl th {
+	background-color: #fafafa;
+}
+
+header {
+	background-color: #4a545f;
+}
+
+.bg-dark a {
+	color: #a0b6ce;
+}
+
+h2 {
+	font-size: 2.5rem;
 }

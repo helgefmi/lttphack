@@ -5,42 +5,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="hack.css">
-	<style type="text/css">
-		header {
-			padding: 154px 0 100px;
-		}
-
-		@media (min-width: 992px) {
-			header {
-				padding: 156px 0 100px;
-			}
-		}
-
-		section {
-			padding: 150px 0;
-		}
-
-		img {
-			max-width: 300px;
-			margin-bottom: 12px;
-		}
-
-		.dl-tbl th {
-			background-color: #fafafa;
-		}
-
-		header {
-			background-color: #4a545f;
-		}
-
-		.bg-dark a {
-			color: #a0b6ce;
-		}
-
-		h2 {
-			font-size: 2.5rem;
-		}
-	</style>
 </head>
 <body id="page-top">
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
@@ -63,7 +27,7 @@
 	<header class="text-white">
 		<div class="container text-center">
 			<h1>LTTPHack</h1>
-			<p class="lead">A practice romhack of The Legend of Zelda: A Link to the Past (JP 1.0)</p>
+			<p class="lead">A practice romhack of <i>The Legend of Zelda: A Link to the Past</i> (JP 1.0)</p>
 		</div>
 	</header>
 
@@ -131,7 +95,7 @@
 						<li>Counters shows intermediate values sometimes, like when opening a chest or when text appears.</li>
 						<li>Lag is not the same as on original cart.</li>
 						<li>If something weird happens, just reset your console, start a new game and use a preset to get back to where you were.</li>
-						<li>Check out <a href="https://rtlbs.milde.no/">ALttP Room Time Leaderboards</a> for optimal room times.</li>
+						<li>Check out <a href="https://strats.alttp.run">ALttP Room Time Leaderboards</a> for optimal room times.</li>
 					</ul>
 					<!--
 					<p>Send any ideas for future improvements my way. I'm Pinkus on <a href="https://alttp-wiki.net/index.php/Community#Discord" target="_blank">Discord</a>.</p>
@@ -164,17 +128,189 @@
 
 					
 					<h3 id="menuPresets">Presets</h3>
-
+					<dl class="inlineDefinition dinkylist">
+						<dt>NMG</dt>
+						<dd><i><a href="presets.html#NMG">Full list here</a></i></dd>
+						<dt>Hundo</dt>
+						<dd><i><a href="presets.html#Hundo">Full list here</a></i></dd>
+						<dt>Low</dt>
+						<dd><i><a href="presets.html#Low">Full list here</a></i></dd>
+						<dt>AD</dt>
+						<dd><i><a href="presets.html#AllDungeons">Full list here</a></i></dd>
+					</dl>
 					<h3 id="menuItems">Items</h3>
 					<dl class="inlineDefinition dinkyList">
 						<dt>Bow</dt>
 						<dd class="optionList">
 							<ol>
-								<li>No</li>
+								<li>None</li>
 								<li>Normal</li>
 								<li>Silver</li>
 							</ol>
 						</dd>
+						<dt>Boom</dt>
+						<dd class="optionList">
+							<ol>
+								<li>None</li>
+								<li>Blue</li>
+								<li>Red</li>
+							</ol>
+						</dd>
+						<dt>Hookshot</dt>
+						<dd>On/Off</dd>
+						<dt>Bombs</dt>
+						<dd class="optionList">
+							<ol>
+								<li>0</li>
+								<li>5</li>
+								<li>10</li>
+								<li>15</li>
+								<li>20</li>
+								<li>25</li>
+								<li>30</li>
+							</ol>
+						</dd>
+						<dt>Powder</dt>
+						<dd class="optionList">
+							<ol>
+								<li>None</li>
+								<li>Mushroom</li>
+								<li>Powder</li>
+							</ol>
+						</dd>
+						<dt>Fire rod</dt>
+						<dd>On/Off</dd>
+						<dt>Ice rod</dt>
+						<dd>On/Off</dd>
+						<dt>Bombos</dt>
+						<dd>On/Off</dd>
+						<dt>Ether</dt>
+						<dd>On/Off</dd>
+						<dt>Quake</dt>
+						<dd>On/Off</dd>
+						<dt>Lantern</dt>
+						<dd>On/Off</dd>
+						<dt>Hammer</dt>
+						<dd>On/Off</dd>
+						<dt>Flute</dt>
+						<dd class="optionList">
+							<ol>
+								<li>None</li>
+								<li>Shovel</li>
+								<li>Inactive flute</li>
+								<li>Active flute</li>
+							</ol>
+						</dd>
+						<dt>Net</dt>
+						<dd>On/Off</dd>
+						<dt>Book</dt>
+						<dd>On/Off</dd>
+						<dt>Bottles</dt>
+						<dd class="optionList">
+							For each bottle (1–4):
+							<ol>
+								<li>None</li>
+								<li>Unobtainable shroooom</li>
+								<li>Empty</li>
+								<li>Red potion</li>
+								<li>Green potion</li>
+								<li>Blue potion</li>
+								<li>Fairy</li>
+								<li>Bee</li>
+								<li>Good bee</li>
+							</ol>
+						</dd>
+						<dt>Somaria</dt>
+						<dd>On/Off</dd>
+						<dt>Byrna</dt>
+						<dd>On/Off</dd>
+						<dt>Cape</dt>
+						<dd>On/Off</dd>
+						<dt>Mirror</dt>
+						<dd>On/Off</dd>
+					</dl>
+
+					<h3 id="menuItems">Items</h3>
+					<dl class="inlineDefinition dinkyList">
+						<dt>Fill magic</dt>
+						<dd>Tops off the magic meter</dd>
+						<dt>Fill HP</dt>
+						<dd>Fully replenishes health</dd>
+						<dt>Fill rupees</dt>
+						<dd>Grants 999 rupees</dd>
+						<dt>Sword</dt>
+						<dd class="optionList">
+							<ol>
+								<li>None</li>
+								<li>Fighter's sword</li>
+								<li>Master sword</li>
+								<li>Tempered sword</li>
+								<li>Butter sword</li>
+							</ol>
+						</dd>
+						<dt>Shield</dt>
+						<dd class="optionList">
+							<ol>
+								<li>None</li>
+								<li>Fighter's shield</li>
+								<li>Red shield</li>
+								<li>Mirror shield</li>
+							</ol>
+						</dd>
+						<dt>Armor</dt>
+						<dd class="optionList">
+							<ol>
+								<li>Green jerkin</li>
+								<li>Blue mail</li>
+								<li>Red mail</li>
+							</ol>
+						</dd>
+						<dt>Gloves</dt>
+						<dd class="optionList">
+							<ol>
+								<li>None</li>
+								<li>Power glove</li>
+								<li class="jaeger">Titan's mitts</li>
+							</ol>
+						</dd>
+						<dt>Boots</dt>
+						<dd>On/Off</dd>
+						<dt>Flippers</dt>
+						<dd>On/Off</dd>
+						<dt>Moon pearl</dt>
+						<dd>On/Off</dd>
+						<dt>Half magic</dt>
+						<dd>On/Off</dd>
+						<dt>Max HP</dt>
+						<dd>3–20</dt>
+						<dt>Bombs</dt>
+						<dd class="optionList">
+							<ol>
+								<li>0</li>
+								<li>5</li>
+								<li>10</li>
+								<li>15</li>
+								<li>20</li>
+								<li>25</li>
+								<li>30</li>
+							</ol>
+						</dd>
+						<dt>Arrows</dt>
+						<dd class="optionList">
+							<ol>
+								<li>0</li>
+								<li>5</li>
+								<li>10</li>
+								<li>15</li>
+								<li>20</li>
+								<li>25</li>
+								<li>30</li>
+							</ol>
+						</dd>
+						<dt>Keys</dt>
+						<dd>0–9</dt>
+						<dt>Big keys</dt>
+						<dd>Toggle big keys for each dungeon</dd>
 					</dl>
 
 					<h3 id="menuGameState">Game State</h3>
@@ -185,7 +321,6 @@
 						<dd>Removes all sprites, overlords, and ancillae from the screen</dd>
 						<dt>Reset current room</dt>
 						<dd>Resets the following data of the current room:
-							<strong class="lag"><b>NOTE:</b> This only affects the data pertaining to that specific room, but not data pertaining to the dungeon as a whole. For example, even though key collection is reset, the key count for that dungeon is left unaltered.</strong>
 							<ul>
 								<li>Quadrants visited</li>
 								<li>Keys collected</li>
@@ -197,6 +332,7 @@
 								<li>Heart collected</li>
 								<li>Rupee tiles collected</li>
 							</ul>
+							<strong class="lag"><b>NOTE:</b> This only affects the data pertaining to that specific room, but not data pertaining to the dungeon as a whole. For example, even though key collection is reset, the key count for that dungeon is left unaltered.</strong>
 						</dd>
 						<dt>Reset dungeons</dt>
 						<dd>Resets every room associated with a specific dungeon (including all non-dungeon rooms as a single group) with the same caveats and restrictions as Reset current room.</dd>
@@ -297,7 +433,7 @@
 					<h3 id="menuRNGControl">RNG Control</h3>
 					<dl>
 						<dt>Prize packs</dt>
-						<dd>Modifies drop percentages. This option only affects prize packs, not other guaranteed drops such as the stun drop or keys. It will, however, affect the 100% prize packs.<strong class="lag"><b>WARNING:</b> toggling this option will reset existing fairy luck.</strong>
+						<dd>Modifies drop percentages. This option only affects prize packs, not other guaranteed drops such as the stun drop or keys. It will, however, affect the 100% prize packs.
 							<dl class="subDefinition">
 								<dt>Vanilla</dt>
 								<dd>Drops behave normally. 50% for most prize packs, and fairy luck works.</dd>
@@ -306,11 +442,84 @@
 								<dt>Never</dt>
 								<dd>No enemy drops prize packs, ever.</dd>
 							</dl>
+							<strong class="lag"><b>WARNING:</b> toggling this option will reset existing fairy luck.</strong>
 						</dd>
 					</dl>
 					<dl class="inlineDefinition dinkyList">
 						<dt>Pokeys</dt>
-						<dd>?</dd>
+						<dd>Random, fixed RNG for every combination of UD/LR for each pokey</dd>
+						<dt>Agahnim</dt>
+						<dd class="optionList">
+							<ol>
+								<li>Random</li>
+								<li>Yellow</li>
+								<li>Blue</li>
+							</ol>
+						</dd>
+						<dt>Helmasaur</dt>
+						<dd class="optionList">
+							<ol>
+								<li>Random</li>
+								<li>No fireball</li>
+								<li>Fireball</li>
+							</ol>
+						</dd>
+						<dt>Ganon warps</dt>
+						<dd class="optionList">
+							<ol>
+								<li>Random</li>
+								<li>No warp</li>
+								<li>Warp</li>
+							</ol>
+						</dd>
+						<dt>Ganon warp location</dt>
+						<dd class="optionList">
+							<ol>
+								<li>Random</li>
+								<li>Far left</li>
+								<li>Bottom left</li>
+								<li>Bottom right</li>
+								<li>Far right</li>
+							</ol>
+						</dd>
+						<dt>Eyegore walk</dt>
+						<dd class="optionList">
+							<ol>
+								<li>Random</li>
+								<li>Short</li>
+								<li>Medium</li>
+								<li>Long</li>
+							</ol>
+						</dd>
+						<dt>Arrghus walk</dt>
+						<dd class="optionList">
+							<ol>
+								<li>Random</li>
+								<li>Shortest</li>
+								<li>Short</li>
+								<li>Medium</li>
+								<li>Long</li>
+								<li>Longest</li>
+							</ol>
+						</dd>
+						<dt>Turtles walk</dt>
+						<dd>Random, 32 fixed RNGs</dd>
+						<dt>Cannonballs</dt>
+						<dd>Random, 32 fixed RNGs</dd>
+						<dt>Soldiers</dt>
+						<dd>Random, 32 fixed RNGs</dd>
+						<dt>Lanmola exit</dt>
+						<dd>Random, fixed {X,Y} for 0≤X≤7; 0≤Y≤7</dd>
+						<dt>Conveyor belt</dt>
+						<dd class="optionList">
+							<ol>
+								<li>Random</li>
+								<li>Right</li>
+								<li>Left</li>
+								<li>Up</li>
+								<li>Down</li>
+							</ol>
+						</dd>
 					</dl>
 					<h3 id="menuShortcuts">Shortcuts</h3>
 					<dl>
@@ -385,12 +594,13 @@
 						<dd>Shows the exact health of a single enemy. Attempts to find the most relevant enemy as you play. <strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
 						<dt>Music</dt>
 						<dd>Sets the volume of every track in every song to 0. The size of the SPC transfers remains the same, so this feature does not affect lag.</dd>
-						<dt>QW Indicator</dt>
+						<dt>QW indicator</dt>
 						<dd>Displays an icon on the HUD when the current camera will produce a quickwarp. <strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
-						<dt>Lanmola Cycs</dt>
+						<dt>Lanmola cycs</dt>
 						<dd>Displays a counter for the cycle count of the three Lanmolas individually.</dd>
-						<dt>Auto Preset</dt>
-						<dt>Preset Cat</dd>
+						<dt>Death reload</dt>
+						<dd>Reloads the last preset upon death</dd>
+						<dt>Preset cat</dd>
 						<dd>Changes the selection of <a href="#menuPresets">presets</a></dd>
 					</dl>
 
@@ -454,7 +664,7 @@
 
 					<h3>v10</h3>
 					<p class="warped"><span>This version was lost in a time </span><span class="morewarped">paradox.</span></p>
-					<h3><a href="lttphack_9.sfc">v9</a> - <small>08.02.2018</small></h3>
+					<h3><a href="https://milde.no/lttp/lttphack_9.sfc">v9</a> - <small>08.02.2018</small></h3>
 					<ul>
 						<li>
 							Presets
@@ -505,14 +715,14 @@
 						<li>Improved transition detection (triggers on mirror/warp, reset counters when you start a new file)</li>
 					</ul>
 
-					<h3><a href="lttphack_8.sfc">v8</a> - <small>24.10.2016</small></h3>
+					<h3><a href="https://milde.no/lttp/lttphack_8.sfc">v8</a> - <small>24.10.2016</small></h3>
 					<ul>
 						<li>Complete rewrite.</li>
 						<li>Presets.</li>
 						<li>I don't even remember anymore. This is the same version that's been around for a while, I just arbitrarily decided to remove "beta2" from the version.</li>
 					</ul>
 
-					<h3><a href="lttphack_7.sfc">v7</a> - <small>15.12.2015</small></h3>
+					<h3><a href="https://milde.no/lttp/lttphack_7.sfc">v7</a> - <small>15.12.2015</small></h3>
 					<ul>
 						<li>
 							Made save/load state code more robust.
@@ -524,12 +734,12 @@
 						</li>
 					</ul>
 
-					<h3><a href="lttphack_6.sfc">v6</a> - <small>09.12.2015</small></h3>
+					<h3><a href="https://milde.no/lttp/lttphack_6.sfc">v6</a> - <small>09.12.2015</small></h3>
 					<ul>
 						<li>Fixed a bug that made the game crash when resetting segment counter.</li>
 					</ul>
 
-					<h3><a href="lttphack_5.sfc">v5</a> - <small>08.12.2015</small></h3>
+					<h3><a href="https://milde.no/lttp/lttphack_5.sfc">v5</a> - <small>08.12.2015</small></h3>
 					<ul>
 						<li>Made Link get full equipment when using 3rd filename slot before starting a game.</li>
 						<li>
@@ -543,13 +753,13 @@
 						</li>
 					</ul>
 
-					<h3><a href="lttphack_4.sfc">v4</a> - <small>05.12.2015</small></h3>
+					<h3><a href="https://milde.no/lttp/lttphack_4.sfc">v4</a> - <small>05.12.2015</small></h3>
 					<ul>
 						<li>Fixed a bug where saving or loading would add a frame to your attempts in a room.</li>
 						<li>Added a "Full HP indicator".</li>
 					</ul>
 
-					<h3><a href="lttphack_3.sfc">v3</a> - <small>02.12.2015</small></h3>
+					<h3><a href="https://milde.no/lttp/lttphack_3.sfc">v3</a> - <small>02.12.2015</small></h3>
 					<ul>
 						<li>Removed a bunch of lag. Should be less laggy than original ROM now.</li>
 						<li>Added "Quick Warp Indicator".</li>
@@ -558,16 +768,18 @@
 						<li>Better B. Thanks, Audity.</li>
 					</ul>
 
-					<h3><a href="lttphack_2.sfc">v2</a> - <small>30.11.2015</small></h3>
+					<h3><a href="https://milde.no/lttp/lttphack_2.sfc">v2</a> - <small>30.11.2015</small></h3>
 					<ul>
 						<li>Fixed issue where parts of segment timer was erased.</li>
 						<li>Fixed issue where counters didn't run during maiden crystal sequence.</li>
 						<li>Added better transition detection for boss victory -&gt; overworld.</li>
 					</ul>
 
-					<h3><a href="lttphack_1.sfc">v1</a> - <small>29.11.2015</small></h3>
+					<h3><a href="https://milde.no/lttp/lttphack_1.sfc">v1</a> - <small>29.11.2015</small></h3>
 					<p>
-						Initial release.
+						<ul>
+							<li>Initial release</li>
+						</ul>
 					</p>
 				</div>
 			</div>

@@ -57,10 +57,10 @@ gamemode_shortcuts:
     AND !ram_ctrl1_filtered : BEQ +
     JSR gamemode_load_previous_preset : RTS
 
-  + LDA !ram_ctrl1 : AND !ram_ctrl_replay_last_movie : CMP !ram_ctrl_replay_last_movie : BNE +
-    AND !ram_ctrl1_filtered : BEQ +
-    JSR gamemode_replay_last_movie : RTS
-
+;  + LDA !ram_ctrl1 : AND !ram_ctrl_replay_last_movie : CMP !ram_ctrl_replay_last_movie : BNE +
+;    AND !ram_ctrl1_filtered : BEQ +
+;    JSR gamemode_replay_last_movie : RTS
+;
   + LDA !ram_ctrl1 : AND !ram_ctrl_toggle_oob : CMP !ram_ctrl_toggle_oob : BNE +
     AND !ram_ctrl1_filtered : BEQ +
     JSR gamemode_oob : CLC : RTS
