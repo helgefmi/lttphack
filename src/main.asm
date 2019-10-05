@@ -7,61 +7,77 @@ lorom
 incsrc defines.asm
 incsrc hexedits.asm
 
-org $208000
+!ORG = $208000
 incsrc gamemode.asm
+warnpc $208FFF
 
 if !FEATURE_HUD
-    org $218000
+    !ORG = $218000
     incsrc hud.asm
     warnpc $21BFFF
 endif
 
-org $21C000
+!ORG = $21C000
 incsrc nmi.asm
+warnpc $21FFFF
 
-org $228000
+!ORG = $228000
 incsrc draw.asm
+warnpc $22BFFF
 
-org $22C000
+!ORG = $22C000
 incsrc tiles.asm
+warnpc $22FFFF
 
-org $238000
+!ORG = $238000
 incsrc init.asm
+warnpc $23CFFF
 
-org $23C000
+!ORG = $23C000
 incsrc rng.asm
+warnpc $23DFFF
 
-org $23E000
+!ORG = $23E000
 incsrc idle.asm
+warnpc $23FFFF
 
-org $248000
+!ORG = $248000
 incsrc custom_menu.asm
+warnpc $24FFFF
 
-org $258000
+!ORG = $258000
 incsrc presets.asm
+warnpc $25FFFF
 
-org $268000
+!ORG = $268000
 incsrc poverty_states.asm
+warnpc $26FFFF
 
-org $278000
+!ORG = $278000
 incsrc music.asm
+warnpc $27FFFF
 
-org $288000
+!ORG = $288000
 incsrc movie.asm
+warnpc $28FFFF
 
 ; ---- data ----
 
-org $308000
+!ORG = $308000
 incsrc preset_data_nmg.asm
+warnpc $30FFFF
 
-org $318000
+!ORG = $318000
 incsrc preset_data_hundo.asm
+warnpc $31FFFF
 
-org $328000
+!ORG = $328000
 incsrc preset_data_low.asm
+warnpc $32FFFF
 
-org $338000
-incsrc misc.asm
+!ORG = $338000
+incsrc preset_data_ad.asm
+warnpc $33FFFF
 
 org !SPC_DATA_OVERWORLD
 incbin ../resources/spc_overworld.bin
