@@ -52,6 +52,8 @@ x Show invisible sprites (Guard LoS)
 
 x "Reset room" -> "Reset rooms" submenu with "Reset current room", "Reset current dungeon" (fmp lua has list) and "Reset all rooms". 
 
+- hey pinkus! Thanks for working on the LTTP practice hack. I have a feature request. I'm still early enough in my NMG play that i get the powder. It's annoying to have to turn on for every single preset, I imagine in the same way turning on the sanc heart was annoying. Can we get a setting to have powder on for the presets?
+
 
 ======== MINIGAMES TODO ========
 

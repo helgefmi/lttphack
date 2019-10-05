@@ -111,6 +111,7 @@ endmacro
 %def_sram("counters_lag", 1)
 %def_sram("counters_idle", 1)
 %def_sram("counters_segment", 1)
+%def_sram("misslots_toggle", 1)
 
 %def_sram("rerandomize_framecount", 1)
 %def_sram("rerandomize_accumulator", 1)

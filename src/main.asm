@@ -7,73 +7,61 @@ lorom
 incsrc defines.asm
 incsrc hexedits.asm
 
-!ORG = $208000
+org $208000
 incsrc gamemode.asm
-warnpc $208FFF
 
 if !FEATURE_HUD
-    !ORG = $218000
+    org $218000
     incsrc hud.asm
     warnpc $21BFFF
 endif
 
-!ORG = $21C000
+org $21C000
 incsrc nmi.asm
-warnpc $21FFFF
 
-!ORG = $228000
+org $228000
 incsrc draw.asm
-warnpc $22BFFF
 
-!ORG = $22C000
+org $22C000
 incsrc tiles.asm
-warnpc $22FFFF
 
-!ORG = $238000
+org $238000
 incsrc init.asm
-warnpc $23CFFF
 
-!ORG = $23C000
+org $23C000
 incsrc rng.asm
-warnpc $23DFFF
 
-!ORG = $23E000
+org $23E000
 incsrc idle.asm
-warnpc $23FFFF
 
-!ORG = $248000
+org $248000
 incsrc custom_menu.asm
-warnpc $24FFFF
 
-!ORG = $258000
+org $258000
 incsrc presets.asm
-warnpc $25FFFF
 
-!ORG = $268000
+org $268000
 incsrc poverty_states.asm
-warnpc $26FFFF
 
-!ORG = $278000
+org $278000
 incsrc music.asm
-warnpc $27FFFF
 
-!ORG = $288000
+org $288000
 incsrc movie.asm
-warnpc $28FFFF
 
 ; ---- data ----
 
-!ORG = $308000
+org $308000
 incsrc preset_data_nmg.asm
-warnpc $30FFFF
 
-!ORG = $318000
+org $318000
 incsrc preset_data_hundo.asm
-warnpc $31FFFF
 
-!ORG = $328000
+org $328000
 incsrc preset_data_low.asm
-warnpc $32FFFF
+
+org $338000
+incsrc misc.asm
 
 !ORG = $338000
 incsrc preset_data_ad.asm

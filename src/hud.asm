@@ -8,6 +8,13 @@ pushpc
 ; - Quick Warp Indicator
 ; - X/Y Coordinates
 
+; This is just temporary for the misslots hack
+org $07AC5A
+    ; 07ac5a ldx $039d
+    ; 07ac5d stz $0c4a,x
+    JSL hud_play_error
+    NOP : NOP
+
 ; ----------------
 ; FLOOR INDICATOR
 ; ----------------
@@ -173,11 +180,18 @@ update_hearts_hook:
 
   .dont_update_input_display
 
-    LDA !ram_subpixels_toggle : BEQ .done_update_subpixels
+    LDA !ram_subpixels_toggle : BEQ .dont_update_subpixels
 
     JSR hud_draw_subpixels
 
-  .done_update_subpixels
+  .dont_update_subpixels
+
+    LDA !ram_misslots_toggle : BEQ .dont_update_misslots
+
+    JSR hud_draw_misslots
+
+  .dont_update_misslots
+
   %a8()
     LDA !ram_xy_toggle : BEQ .dont_update_xy
 
@@ -371,6 +385,52 @@ hud_draw_subpixels:
     RTS
 
 
+hud_draw_misslots:
+
+  ; Search index / EG (03A4)
+
+    LDX.w #$00C8
+    LDA $03C4 : LSR #4 : AND #$000F : ORA #$3010 : STA $7EC708,x
+    LDA $03C4 : AND #$000F : ORA #$3010 : STA $7EC70A,x
+
+    LDX.w #$00CC
+    LDA $03A4 : LSR #4 : AND #$000F : ORA #$3810 : STA $7EC708,x
+    LDA $03A4 : AND #$000F : ORA #$3810 : STA $7EC70A,x
+
+
+  ; Slots
+
+    LDX.w #$0102
+    LDY.w #$0000
+    LDA #$3C10 : STA !lowram_draw_tmp
+
+  .loop
+    LDA $0C4A, Y : LSR #4 : AND #$000F : ORA !lowram_draw_tmp : STA $7EC708,x
+    LDA $0C4A, Y : AND #$000F : ORA !lowram_draw_tmp : STA $7EC70A,x
+    INX.w #$0004
+
+    INY
+    CPY.w #$0005 : BNE .dont_update_colors
+    LDA #$2010 : STA !lowram_draw_tmp
+
+  .dont_update_colors
+    CPY.w #$000A : BNE .loop
+
+
+  ; Hook timer
+
+    LDX.w #$00D0
+    LDY.w #$0000
+
+  .loop_2
+    LDA $0C5E, Y : LSR #4 : AND #$000F : ORA #$3410 : STA $7EC708,x
+    LDA $0C5E, Y : AND #$000F : ORA #$3410 : STA $7EC70A,x
+    INX.w #$0004
+    INY : CPY.w #$0004 : BNE .loop_2
+
+    RTS
+
+
 hud_set_counter_position:
     LDA.w #!POS_COUNTERS-2
 
@@ -383,6 +443,14 @@ hud_set_counter_position:
     STA !lowram_draw_tmp
     RTS
 
+
+; This is just temprary for the misslots hack
+hud_play_error:
+    ; AI=8
+    LDA #$0C : STA $012E
+    LDX $039D
+    STZ $0C4A,x
+    RTL
 
 ; L, u, R, Y, X, SL
 ctrl_top_bit_table:

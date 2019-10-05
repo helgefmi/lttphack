@@ -585,15 +585,17 @@ cm_small_keys_gtower:
 cm_main_goto_presets:
     dw !CM_ACTION_SUBMENU_VARIABLE
     dl !ram_preset_category
-    db $03
+    db $04
     dw cm_nmg_submenu_presets
     dw cm_hundo_submenu_presets
     dw cm_low_submenu_presets
+    dw cm_ad_submenu_presets
     %cm_item("Presets")
 
 incsrc cm_presets_nmg.asm
 incsrc cm_presets_hundo.asm
 incsrc cm_presets_low.asm
+incsrc cm_presets_ad.asm
 
 ; }}}
 ; GAMEPLAY {{{
@@ -740,6 +742,7 @@ cm_feature_preset_category:
     %cm_item("NMG")
     %cm_item("Hundo")
     %cm_item("Low")
+    %cm_item("AD")
     db !list_end
 ; }}}
 ; MOVIES {{{
@@ -828,6 +831,7 @@ cm_submenu_counters:
     dw cm_counter_segment
     dw cm_counter_xy
     dw cm_counter_subpixels
+    dw cm_counter_misslots
     dw !menu_end
     %cm_header("COUNTERS")
 
@@ -860,6 +864,9 @@ cm_counter_subpixels:
     %cm_item("Subpixels")
     %cm_item("Speed")
     db !list_end
+
+cm_counter_misslots:
+    %cm_toggle("Misslots RAM", !ram_misslots_toggle)
 
 ; }}}
 ; GAME STATE {{{
