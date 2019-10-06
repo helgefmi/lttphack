@@ -8,13 +8,6 @@ pushpc
 ; - Quick Warp Indicator
 ; - X/Y Coordinates
 
-; This is just temporary for the misslots hack
-org $07AC5A
-    ; 07ac5a ldx $039d
-    ; 07ac5d stz $0c4a,x
-    JSL hud_play_error
-    NOP : NOP
-
 ; ----------------
 ; FLOOR INDICATOR
 ; ----------------
@@ -138,7 +131,7 @@ hud_template_hook:
   %a16()
     JSL draw_counters
 
-    LDA !ram_qw_toggle : BEQ .dont_update_qw
+    LDA !ram_qw_toggle : AND #$00FF : BEQ .dont_update_qw
     JSR hud_draw_qw
   .dont_update_qw
 
@@ -154,48 +147,41 @@ update_hearts_hook:
     LDA !ram_equipment_curhp : CMP !lowram_last_frame_hearts : BEQ .dont_update_hearts
     STA !lowram_last_frame_hearts
   %a16()
-
     JSR hud_draw_hearts
-
   .dont_update_hearts
   %a16()
-
-    LDA !ram_qw_toggle : BEQ .dont_update_qw
+    LDA !ram_qw_toggle : AND #$00FF : BEQ .dont_update_qw
     LDA $E2 : CMP !ram_qw_last_scroll : BEQ .dont_update_qw
     STA !ram_qw_last_scroll
 
-    JSR hud_draw_qw
-
   .dont_update_qw
 
-    LDA !ram_enemy_hp_toggle : BEQ .dont_draw_enemy_hp
+    LDA !ram_enemy_hp_toggle : AND #$00FF : BEQ .dont_draw_enemy_hp
 
     JSR hud_draw_enemy_hp
 
   .dont_draw_enemy_hp
 
-    LDA !ram_input_display_toggle : BEQ .dont_update_input_display
+    LDA !ram_input_display_toggle : AND #$00FF : BEQ .dont_update_input_display
 
     JSR hud_draw_input_display
 
   .dont_update_input_display
 
-    LDA !ram_subpixels_toggle : BEQ .dont_update_subpixels
+    LDA !ram_subpixels_toggle : AND #$00FF : BEQ .dont_update_subpixels
 
     JSR hud_draw_subpixels
 
   .dont_update_subpixels
 
-    LDA !ram_misslots_toggle : BEQ .dont_update_misslots
+    LDA !ram_misslots_toggle : AND #$00FF : BEQ .dont_update_misslots
 
     JSR hud_draw_misslots
 
   .dont_update_misslots
 
-  %a8()
-    LDA !ram_xy_toggle : BEQ .dont_update_xy
+    LDA !ram_xy_toggle : AND #$00FF : BEQ .dont_update_xy
 
-  %a16()
     JSR hud_draw_xy_display
   %a8()
 
@@ -276,21 +262,15 @@ hud_draw_hearts:
 
 
 hud_draw_qw:
-  %a8()
-    LDA $E2 : AND.b #$06 : CMP.b #$06 : BEQ .is_qw
+    LDA $E2 : AND.b #$0006 : CMP.b #$0006 : BEQ .is_qw
 
-  %a16()
     LDA #!EMPTY : STA $7EC80A
     LDA #!EMPTY : STA $7EC80C
-    BRA .end
+    RTS
 
   .is_qw
-  %a16()
     LDA #$340C : STA $7EC80A
     LDA #$340D : STA $7EC80C
-
-  .end
-  %a16()
     RTS
 
 
@@ -331,7 +311,7 @@ hud_draw_input_display:
     BRA ++
 +   LDA #!EMPTY
 ++  STA !POS_MEM_INPUT_DISPLAY_TOP, X
-    INX #2 : CPX #$00C : BNE -
+    INX #2 : CPX.w #$000C : BNE -
 
     LDX #$0000
 
@@ -340,7 +320,7 @@ hud_draw_input_display:
     BRA ++
 +   LDA #!EMPTY
 ++  STA !POS_MEM_INPUT_DISPLAY_BOT, X
-    INX #2 : CPX #$00C : BNE -
+    INX #2 : CPX.w #$000C : BNE -
 
   .end
     RTS
@@ -348,14 +328,21 @@ hud_draw_input_display:
 
 hud_draw_xy_display:
     ; Assumes: I=16
-    LDA #$0000
-    CLC : ADC !ram_counters_real : ADC !ram_counters_lag : ADC !ram_counters_idle : ADC !ram_counters_segment
+  %a8()
+    LDA #$00
+    CLC
+    ADC !ram_counters_real
+    ADC !ram_counters_lag
+    ADC !ram_counters_idle
+    ADC !ram_counters_segment
+  %a16()
+    AND.w #$00FF
     TAX : JSR hud_set_counter_position
 
     LDA $22 : TAX
     LDA $20 : TAY
 
-    LDA !ram_xy_toggle : CMP #$0001 : BEQ .hex
+    LDA !ram_xy_toggle : AND #$00FF : CMP #$0001 : BEQ .hex
 
   .dec
     TXA : JSL hex_to_dec_a : TAX
@@ -368,11 +355,19 @@ hud_draw_xy_display:
 
 hud_draw_subpixels:
     ; Assumes: I=16
-    LDA #$0000
-    CLC : ADC !ram_counters_real : ADC !ram_counters_lag : ADC !ram_counters_idle : ADC !ram_counters_segment : ADC !ram_xy_toggle
+  %a8()
+    LDA #$00
+    CLC
+    ADC !ram_counters_real
+    ADC !ram_counters_lag
+    ADC !ram_counters_idle
+    ADC !ram_counters_segment
+    ADC !ram_xy_toggle
+  %a16()
+    AND.w #$00FF
     TAX : JSR hud_set_counter_position
 
-    LDA !ram_subpixels_toggle : CMP #$0002 : BEQ .speed
+    LDA !ram_subpixels_toggle : AND #$00FF : CMP #$0002 : BEQ .speed
 
   .subpix
     LDA $2A

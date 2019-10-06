@@ -934,17 +934,13 @@ cm_game_state_armed_eg:
     RTS
 
 cm_game_state_eg_strength:
-    %cm_toggle_jsr("Strong EG", !ram_cm_eg_strength)
-
-  .toggle
-    LDA !ram_cm_eg_strength : BEQ .weak
-
-    LDA #$01 : STA $7E044A
-    RTS
-
-  .weak
-    LDA #$02 : STA $7E044A
-    RTS
+    dw !CM_ACTION_CHOICE
+    dl !ram_eg_strength 
+	%cm_item("EG strength")
+    %cm_item("EG 0")
+    %cm_item("Strong")
+    %cm_item("Weak")
+    db !list_end
 
 cm_game_state_reset_screen:
     %cm_jsr("Reset current room")

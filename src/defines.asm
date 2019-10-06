@@ -10,6 +10,8 @@
 ; $7EC900[0x1F00] (7EE800)
 ;  * 7ED000 - 7ED780 = VRAM buffer backup in custom_menu.asm
 
+!pracmenu_shortcut = #$1010
+
 !menu_dma_buffer = $7F8000 ; [0x800] reserved
 
 !lowram_room_realtime = $04CC
@@ -112,20 +114,20 @@ endmacro
 %def_sram("secondary_counter_type", 2)
 %def_sram("lagometer_toggle", 1)
 %def_sram("toggle_lanmola_cycles", 1)
-%def_sram("subpixels_toggle", 2)
 
-%def_sram("counters_real", 2)
-%def_sram("counters_lag", 2)
-%def_sram("counters_idle", 2)
-%def_sram("counters_segment", 2)
-%def_sram("misslots_toggle", 2)
+%def_sram("xy_toggle", 1)
+%def_sram("subpixels_toggle", 1)
+%def_sram("counters_real", 1)
+%def_sram("counters_lag", 1)
+%def_sram("counters_idle", 1)
+%def_sram("counters_segment", 1)
+%def_sram("misslots_toggle", 1)
+%def_sram("qw_toggle", 1)
 
 %def_sram("rerandomize_framecount", 1)
 %def_sram("rerandomize_accumulator", 1)
 
 %def_sram("enemy_hp_toggle", 1)
-%def_sram("xy_toggle", 2)
-%def_sram("qw_toggle", 2)
 %def_sram("lit_rooms_toggle", 1)
 %def_sram("probe_toggle", 1)
 %def_sram("sanctuary_heart", 1)
@@ -134,6 +136,7 @@ endmacro
 %def_sram("bonk_items_toggle", 1)
 
 !lowram_oob_toggle = $037F
+!ram_eg_strength = $7E04AA
 
 !ram_debug = $7F7777
 !ram_debug2 = $7F7779
@@ -347,7 +350,6 @@ endif
 !ram_cm_gamestate_world = $7EF3CA
 
 !ram_cm_armed_eg = $7EF380
-!ram_cm_eg_strength = $7EF382
 !ram_cm_crystal_switch = $7EF384
 
 !ram_game_big_keys_1 = $7EF366

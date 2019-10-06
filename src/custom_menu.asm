@@ -234,7 +234,6 @@ cm_init_item_variables:
 
     ; EG
     LDA $7E047A : STA !ram_cm_armed_eg
-    LDA $7E044A : AND #$01 : STA !ram_cm_eg_strength
 
     LDA $7EC172 : AND #$01 : STA !ram_cm_crystal_switch
     RTS

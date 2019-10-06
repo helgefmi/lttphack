@@ -53,7 +53,7 @@ gamemode_shortcuts:
 
 	%test_shortcut(!ram_ctrl_save_state, gamemode_savestate_save, 1)
 	%test_shortcut(!ram_ctrl_load_state, gamemode_savestate_load, 1)
-	%test_shortcut(!ram_ctrl_prachack_menu, gamemode_custom_menu, 1)
+	%test_shortcut(!pracmenu_shortcut, gamemode_custom_menu, 1)
 	%test_shortcut(!ram_ctrl_load_last_preset, gamemode_load_previous_preset, 1)
 
 ;	%test_shortcut(!ram_ctrl_replay_last_movie, gamemode_replay_last_movie, 1)
