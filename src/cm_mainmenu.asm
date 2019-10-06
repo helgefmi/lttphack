@@ -882,6 +882,7 @@ cm_submenu_game_state:
     dw cm_game_state_goto_bosses_submenu
     dw cm_game_state_goto_crystals_submenu
     dw cm_game_state_goto_flags_submenu
+    dw cm_game_state_world
     dw cm_game_state_progress
     dw cm_game_state_map_indicator
     dw cm_game_state_crystal_switch
@@ -889,6 +890,15 @@ cm_submenu_game_state:
     dw cm_game_state_eg_strength
     dw !menu_end
     %cm_header("GAME STATE")
+
+cm_game_state_world:
+    dw !CM_ACTION_TOGGLE_BIT_TEXT
+    dl !ram_cm_gamestate_world
+    db $40
+    db #$24, "World", #$FF
+    %cm_item("Light World")
+    %cm_item("Dark World")
+    db !list_end
 
 cm_game_state_crystal_switch:
     dw !CM_ACTION_CHOICE_JSR

@@ -569,7 +569,8 @@ cm_execute_action_table:
     dw cm_execute_toggle_bit
     dw cm_execute_ctrl_shortcut
     dw cm_execute_submenu_variable
-;    dw cm_execute_movie
+    dw cm_execute_movie
+	dw cm_execute_toggle_bit
 
 
 cm_execute_toggle:
@@ -900,7 +901,8 @@ cm_draw_action_table:
     dw cm_draw_toggle_bit
     dw cm_draw_ctrl_shortcut
     dw cm_draw_submenu_variable
-;    dw cm_draw_movie
+    dw cm_draw_movie
+	dw cm_draw_toggle_bit_customtext
 
 
 macro item_index_to_vram_index()
@@ -988,6 +990,31 @@ cm_draw_back:
     RTS
 
 
+cm_draw_toggle_bit_customtext:
+    ; grab the memory address (long)
+    LDA ($02) : INC $02 : INC $02 : STA $04
+    LDA ($02) : INC $02 : STA $06
+    ; grab bitmask
+    LDA ($02) : INC $02 : STA $07
+
+    ; Draw the text first (since it uses A)
+    %item_index_to_vram_index()
+  PHX
+    JSR cm_draw_text
+  PLX
+
+    ; set position for ON/OFF
+    TXA : CLC : ADC #$001C : TAX
+
+    LDA #$0000
+	LDY #$0000
+    ; grab the value at that memory address
+
+	LDA [$04] : AND $07 : AND #$00FF
+	BEQ ++
+	INY
+++	BRA cm_draw_choice_findText
+
 cm_draw_choice:
     ; grab the memory address (long)
     LDA ($02) : INC $02 : INC $02 : STA $04
@@ -1004,18 +1031,18 @@ cm_draw_choice:
 
     LDY #$0000
     LDA #$0000
-  %a8()
     ; grab the value at that memory address
-    LDA [$04] : TAY
+    LDA [$04] : AND #$00FF : TAY
 
+.findText
     ; find the correct text that should be drawn (the selected choice)
     INY #2 ; uh, skipping the first text that we already draw..
   .loop_choices
     DEY : BEQ .found
 
   .loop_text
-    LDA ($02) : %a16() : INC $02 : %a8()
-    CMP.b #$FF : BEQ .loop_choices
+    LDA ($02) : INC $02 : AND #$00FF
+    CMP.w #$00FF : BEQ .loop_choices
     BRA .loop_text
 
   .found
@@ -1129,7 +1156,6 @@ cm_draw_toggle_bit:
   %a16()
     RTS
 
-
 cm_draw_ctrl_shortcut:
     LDA ($02) : STA $04 : INC $02 : INC $02
     LDA ($02) : STA $06 : INC $02
@@ -1166,7 +1192,7 @@ cm_draw_submenu_variable:
     RTS
 
 
-;cm_draw_movie:
+cm_draw_movie: RTS
 ;  PHY
 ;    LDA ($02) : INC $02 : AND #$00FF : ASL #4 : TAX
 ;    LDA !sram_movies, X : PHA

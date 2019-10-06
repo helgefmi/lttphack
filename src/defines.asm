@@ -112,20 +112,20 @@ endmacro
 %def_sram("secondary_counter_type", 2)
 %def_sram("lagometer_toggle", 1)
 %def_sram("toggle_lanmola_cycles", 1)
-%def_sram("subpixels_toggle", 1)
+%def_sram("subpixels_toggle", 2)
 
-%def_sram("counters_real", 1)
-%def_sram("counters_lag", 1)
-%def_sram("counters_idle", 1)
-%def_sram("counters_segment", 1)
-%def_sram("misslots_toggle", 1)
+%def_sram("counters_real", 2)
+%def_sram("counters_lag", 2)
+%def_sram("counters_idle", 2)
+%def_sram("counters_segment", 2)
+%def_sram("misslots_toggle", 2)
 
 %def_sram("rerandomize_framecount", 1)
 %def_sram("rerandomize_accumulator", 1)
 
 %def_sram("enemy_hp_toggle", 1)
-%def_sram("xy_toggle", 1)
-%def_sram("qw_toggle", 1)
+%def_sram("xy_toggle", 2)
+%def_sram("qw_toggle", 2)
 %def_sram("lit_rooms_toggle", 1)
 %def_sram("probe_toggle", 1)
 %def_sram("sanctuary_heart", 1)
@@ -206,6 +206,7 @@ endmacro
 !CM_ACTION_CTRL_SHORTCUT = #$14
 !CM_ACTION_SUBMENU_VARIABLE = #$16
 !CM_ACTION_MOVIE = #$18
+!CM_ACTION_TOGGLE_BIT_TEXT = #$1A
 
 !ram_react_counter = $7F76CA
 !ram_react_frames = $7F76CC
@@ -342,6 +343,8 @@ endif
 !ram_equipment_magic_meter = $7EF36E
 
 ; OTHER
+
+!ram_cm_gamestate_world = $7EF3CA
 
 !ram_cm_armed_eg = $7EF380
 !ram_cm_eg_strength = $7EF382

@@ -36,46 +36,46 @@
 			<div class="row">
 				<div class="col-lg-8 mx-auto">
 					<h2>Download</h2>
-					<p class="lead">Download one of the following ROM files (<strong>pick the right one for your system!</strong>):</p>
-					<div class="d-lg-none">
-						<strong>For emulators, Everdrive, SNES classic, UFO etc:</strong>
-						<ul>
-							<li><a href="lttphack_9.sfc">lttphack_9.sfc</a></li>
-							<li><a href="lttphack_9_VanillaHUD.sfc">lttphack_9_VanillaHUD.sfc</a></li>
-						</ul>
-
-						<strong>For SD2SNES only:</strong>
-						<ul>
-							<li><a href="lttphack_9_SD2SNES.sfc">lttphack_9_SD2SNES.sfc</a></li>
-							<li><a href="lttphack_9_SD2SNES_VanillaHUD.sfc">lttphack_9_SD2SNES_VanillaHUD.sfc</a></li>
-						</ul>
-					</div>
-					<div class="d-none d-lg-block">
-						<table class="table table-bordered dl-tbl">
-							<tbody><tr>
-								<th></th>
-								<th>Emulators, Everdrive,<br>SNES classic, UFO etc.</th>
-								<th>SD2SNES only</th>
+					<table class="table table-bordered dl-tbl romtable">
+						<caption>We are currently on version 11.0.0</caption>
+						<tbody>
+							<tr>
+								<th rowspan="2">Emulator, Everdrive, SNES Classic</th>
+								<td>
+									<a href="https://drive.google.com/open?id=1Dtffq2FlD_EnR-xgnspM8_CNlselsfS-">
+									Custom HUD
+								</td>
 							</tr>
 							<tr>
-								<th>Modified HUD</th>
-								<td><a href="lttphack_9.sfc">lttphack_9.sfc</a></td>
-								<td><a href="lttphack_9_SD2SNES.sfc">lttphack_9_SD2SNES.sfc</a></td>
+								<td>
+									<a href="https://drive.google.com/open?id=1dXikjTltJszYRdv1ke-wgPIshBqzCigz">
+									Vanilla HUD
+								</td>
+							</tr>
+
+							<tr>
+								<th rowspan="2">SD2SNES</th>
+								<td>
+									<a href="https://drive.google.com/open?id=1fmOKsrliogQdBj__sPbQPv96PxnNV2rJ">
+									Custom HUD
+								</td>
 							</tr>
 							<tr>
-								<th>Vanilla HUD</th>
-								<td><a href="lttphack_9_VanillaHUD.sfc">lttphack_9_VanillaHUD.sfc</a></td>
-								<td><a href="lttphack_9_SD2SNES_VanillaHUD.sfc">lttphack_9_SD2SNES_VanillaHUD.sfc</a></td>
+								<td>
+									<a href="https://drive.google.com/open?id=1GFF9OeaUPu-kLeInpv5w_9COTFGcNtVo">
+									Vanilla HUD
+								</td>
 							</tr>
-						</tbody></table>
-					</div>
-
+						</tbody>
+						<caption>Pick the correct ROM for your system. SD2SNES ROMs will not work on other carts or emulators.</caption>
+						
+					</table>
 					<p>
 						<strong>SD2SNES</strong> is the only SNES system that supports 256kb SRAM. This makes it possible to have in-game save states, so that feature is only turned on for the SD2SNES variants. These will not work on emulators, Everdrive etc.
 					</p>
 
 					<p>
-						<strong>VanillaHUD</strong> variants uses the HUD from the original game. Counters are turned off by default, but can be turned on if you wish. They will be drawn over some of the hearts, though.
+						<strong>VanillaHUD</strong> variants use the HUD from the original game. Counters are turned off by default, but can be turned on if you wish. They will be drawn over some of the hearts, though.
 					</p>
 				</div>
 			</div>
@@ -357,6 +357,8 @@
 								<dd>Fortune teller hint selector</dd>
 							</dl>
 						</dd>
+						<dt>World</dt>
+						<dd>Switch between Light World and Dark World. Intended for experimenting with fake worlds.</dd>
 						<dt>Progress</dt>
 						<dd>Game mode selector:
 							<dl class="subDefinition">
@@ -621,6 +623,7 @@
 						<li>Game state
 							<ul>
 								<li>Full dungeon room resets</li>
+								<li>World state toggle</li>
 								<li>Crystal switch toggle</li>
 							</ul>
 						</li>
@@ -660,6 +663,7 @@
 						<li>Various features are now disabled during map screens.</li>
 						<li>Fixed a bug that somehow only prevented the GT Wizzrobes 2 preset from loading.</li>
 						<li>Replaced broken graphics in the item menu with placeholder tiles.</li>
+						<li>General refactoring. Practice hack control should be smoother now.</li>
 					</ul>
 
 					<h3>v10</h3>

@@ -1,3 +1,19 @@
+table.romtable th {
+	width: 25%;
+	vertical-align: middle;
+	text-align: right;
+}
+
+table.romtable caption {
+	caption-side: top;
+	text-align: center;
+}
+
+table.romtable caption:last-of-type {
+	caption-side: bottom;
+	text-align: center;
+}
+
 strong.lag {
 	color: red;
 	font-weight: normal;
