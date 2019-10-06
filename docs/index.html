@@ -97,9 +97,6 @@
 						<li>If something weird happens, just reset your console, start a new game and use a preset to get back to where you were.</li>
 						<li>Check out <a href="https://strats.alttp.run">ALttP Room Time Leaderboards</a> for optimal room times.</li>
 					</ul>
-					<!--
-					<p>Send any ideas for future improvements my way. I'm Pinkus on <a href="https://alttp-wiki.net/index.php/Community#Discord" target="_blank">Discord</a>.</p>
-					-->
 
 					<div class="center">
 						<img src="hudfeatures.png" class="helpvis"" width="1127">
@@ -400,7 +397,14 @@
 						<dt>Armed EG</dt>
 						<dd>Toggle status of EG</dd>
 						<dt>Strong EG</dt>
-						<dd>Switch between strong and weak EG<strong class="lag"><b>NOTE:</b> this toggle cannot overpower the strength of the current room.</strong></dd>
+						<dd class="optionList">
+							<ol>
+								<li>EG 0</li>
+								<li>Strong</li>
+								<li>Weak</li>
+							</ol>
+							<strong class="lag"><b>NOTE:</b> this toggle cannot overpower the strength of the current room.</strong>
+						</dd>
 					</dl>
 
 					<h3 id="menuGameplay">Gameplay</h3>
@@ -427,7 +431,7 @@
 						<dd>Turns on the debug OoB mode, which has the following features:
 							<ul>
 								<li>Link ignores all collision, and can walk everywhere.</li>
-								<li>The mirror works to go from Light World to Dark World</li>
+								<li>The mirror works to go from Light World to Dark World.</li>
 							</ul>
 						</dd>
 					</dl>
@@ -440,7 +444,7 @@
 								<dt>Vanilla</dt>
 								<dd>Drops behave normally. 50% for most prize packs, and fairy luck works.</dd>
 								<dt>Always</dt>
-								<dd>All enemies drop their prize packs when possible</dd>
+								<dd>All enemies drop their prize packs when possible.</dd>
 								<dt>Never</dt>
 								<dd>No enemy drops prize packs, ever.</dd>
 							</dl>
@@ -526,15 +530,15 @@
 					<h3 id="menuShortcuts">Shortcuts</h3>
 					<dl>
 						<dt>LTTPHack menu</dt>
-						<dd>Opens the practice hack menu. <strong class="lag"><b>NOTE:</b> this shortcut cannot be changed.</strong></dd>
+						<dd>R+Start - Opens the practice hack menu. <strong class="lag"><b>NOTE:</b> this shortcut cannot be changed.</strong></dd>
 						<dt>Load last preset</dt>
 						<dd>Loads the last preset used from the preset menu</dd>
 						<dt>Save preset</dt>
 						<dt>Save state <em class="SD2SNES">(SD2SNES only)</em></dt>
-						<dd>Saves current state of the game, similar to emulator savestates. Both custom presets and states operate the same, but the SD2SNES version is implemented differently.</dd>
+						<dd>Saves current state of the game, similar to emulator savestates. Both custom presets and states operate the same, but the SD2SNES version is implemented differently and is more powerful.</dd>
 						<dt>Save preset</dt>
 						<dt>Load state <em class="SD2SNES">(SD2SNES only)</em></dt>
-						<dd>Loads custom savestate/preset, similar to emulator savestates. Both custom presets and states operate the same, but the SD2SNES version is implemented differently.</dd>
+						<dd>Loads custom savestate/preset, similar to emulator savestates. Both custom presets and states operate the same, but the SD2SNES version is implemented differently and is more powerful.</dd>
 						<dt>Reset seg timer</dt>
 						<dd>Resets the segment timer, which is not automatic like room timer.</dd>
 						<dt>Toggle OoB</dt>
@@ -546,7 +550,7 @@
 						<dt>Fill everything</dt>
 						<dd>Maxes out equipment, rupees, items, and health</dd>
 						<dt>VRAM repair</dt>
-						<dd>Attempts to fix important graphics registers and VRAM data that have been corrupted by door glitches.<strong class="lag"><b>WARNING:</b> If this shortcut is triggered during a text box, the text box will disappear, but the game will remain in text mode.</strong><strong class="lag"><b>WARNING:</b> this shortcut only repairs registers and VRAM; other areas of RAM may result in vanilla game crashes unrelated to this feature, but which are never normally encountered in vanilla.</strong></dd>
+						<dd>Attempts to fix important graphics registers and VRAM data that have been corrupted by door glitches.<strong class="lag"><b>WARNING:</b> If this shortcut is triggered during a text box, the text box will disappear, but the game will remain in text mode.</strong><strong class="lag"><b>WARNING:</b> this feature only repairs registers and VRAM; other areas of RAM may result in vanilla game crashes unrelated to this feature, but which are never normally encountered in vanilla.</strong></dd>
 						<dt>Show somaria pits</dt>
 						<dd>Modifies the upper layer tilemap to mark pits.<strong class="lag"><b>NOTE:</b> this feature is intended for finding pits created by door glitches, but it will mark all standard pit tiles the same way.</strong></dd>
 					</dl>
@@ -625,6 +629,7 @@
 								<li>Full dungeon room resets</li>
 								<li>World state toggle</li>
 								<li>Crystal switch toggle</li>
+								<li>EG strength - renamed and added EG 0</li>
 							</ul>
 						</li>
 						<li>Gameplay
@@ -776,7 +781,7 @@
 					<ul>
 						<li>Fixed issue where parts of segment timer was erased.</li>
 						<li>Fixed issue where counters didn't run during maiden crystal sequence.</li>
-						<li>Added better transition detection for boss victory -&gt; overworld.</li>
+						<li>Added better transition detection for boss victory &rarr; overworld.</li>
 					</ul>
 
 					<h3><a href="https://milde.no/lttp/lttphack_1.sfc">v1</a> - <small>29.11.2015</small></h3>
@@ -811,7 +816,6 @@
 		<div class="container">
 			<p class="m-0 text-center text-white">
 				<a target="_blank" href="https://github.com/spannerisms/lttphack/">Github repository</a> -
-				<!--<a target="_blank" href="https://twitch.tv/poor_little_pinkus">My Twitch</a> -->
 				<a target="_blank" href="https://alttp-wiki.net/index.php/Community#Discord">ALttP Discord</a>
 			</p>
 		</div>
