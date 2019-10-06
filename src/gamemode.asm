@@ -29,6 +29,16 @@ gamemode_hook:
   PLB
     RTL
 
+macro test_shortcut(shortcut, func, continue)
++	LDA.w !ram_ctrl1 : AND.l <shortcut> : CMP.l <shortcut> : BNE +
+	AND.l !ram_ctrl1_filtered : BEQ +
+	JSR.w <func>
+	if equal(<continue>, 0)
+		CLC
+	endif
+	RTS
+endmacro
+
 gamemode_shortcuts:
     LDA $10 : CMP #$0C : BNE .not_setting_new_inputs
     LDA $B0 : BEQ .not_setting_new_inputs
@@ -41,55 +51,22 @@ gamemode_shortcuts:
     %a8()
     CLC : RTS
 
-  + LDA !ram_ctrl1 : AND !ram_ctrl_save_state : CMP !ram_ctrl_save_state : BNE +
-    AND !ram_ctrl1_filtered : BEQ +
-    JSR gamemode_savestate_save : RTS
+	%test_shortcut(!ram_ctrl_save_state, gamemode_savestate_save, 1)
+	%test_shortcut(!ram_ctrl_load_state, gamemode_savestate_load, 1)
+	%test_shortcut(!ram_ctrl_prachack_menu, gamemode_custom_menu, 1)
+	%test_shortcut(!ram_ctrl_load_last_preset, gamemode_load_previous_preset, 1)
 
-  + LDA !ram_ctrl1 : AND !ram_ctrl_load_state : CMP !ram_ctrl_load_state : BNE +
-    AND !ram_ctrl1_filtered : BEQ +
-    JSR gamemode_savestate_load : RTS
+;	%test_shortcut(!ram_ctrl_replay_last_movie, gamemode_replay_last_movie, 1)
 
-  + LDA !ram_ctrl1 : AND !ram_ctrl_prachack_menu : CMP !ram_ctrl_prachack_menu : BNE +
-    AND !ram_ctrl1_filtered : BEQ +
-    JSR gamemode_custom_menu : RTS
+	%test_shortcut(!ram_ctrl_toggle_oob, gamemode_oob, 0)
+	%test_shortcut(!ram_ctrl_skip_text, gamemode_skip_text, 0)
+	%test_shortcut(!ram_ctrl_disable_sprites, gamemode_disable_sprites, 0)
+	%test_shortcut(!ram_ctrl_fill_everything, gamemode_fill_everything, 0)
+	%test_shortcut(!ram_ctrl_reset_segment_timer, gamemode_reset_segment_timer, 0)
+	%test_shortcut(!ram_ctrl_fix_vram, gamemode_fix_vram, 0)
+	%test_shortcut(!ram_ctrl_somaria_pits, gamemode_somaria_pits_wrapper, 0)
 
-  + LDA !ram_ctrl1 : AND !ram_ctrl_load_last_preset : CMP !ram_ctrl_load_last_preset : BNE +
-    AND !ram_ctrl1_filtered : BEQ +
-    JSR gamemode_load_previous_preset : RTS
-
-;  + LDA !ram_ctrl1 : AND !ram_ctrl_replay_last_movie : CMP !ram_ctrl_replay_last_movie : BNE +
-;    AND !ram_ctrl1_filtered : BEQ +
-;    JSR gamemode_replay_last_movie : RTS
-;
-  + LDA !ram_ctrl1 : AND !ram_ctrl_toggle_oob : CMP !ram_ctrl_toggle_oob : BNE +
-    AND !ram_ctrl1_filtered : BEQ +
-    JSR gamemode_oob : CLC : RTS
-
-  + LDA !ram_ctrl1 : AND !ram_ctrl_skip_text : CMP !ram_ctrl_skip_text : BNE +
-    AND !ram_ctrl1_filtered : BEQ +
-    JSR gamemode_skip_text : CLC : RTS
-
-  + LDA !ram_ctrl1 : AND !ram_ctrl_disable_sprites : CMP !ram_ctrl_disable_sprites : BNE +
-    AND !ram_ctrl1_filtered : BEQ +
-    JSR gamemode_disable_sprites : CLC : RTS
-
-  + LDA !ram_ctrl1 : AND !ram_ctrl_fill_everything : CMP !ram_ctrl_fill_everything : BNE +
-    AND !ram_ctrl1_filtered : BEQ +
-    JSR gamemode_fill_everything : CLC : RTS
-
-  + LDA !ram_ctrl1 : AND !ram_ctrl_reset_segment_timer : CMP !ram_ctrl_reset_segment_timer : BNE +
-    AND !ram_ctrl1_filtered : BEQ +
-    JSR gamemode_reset_segment_timer : CLC : RTS
-
-  + LDA !ram_ctrl1 : AND !ram_ctrl_fix_vram : CMP !ram_ctrl_fix_vram : BNE +
-    AND !ram_ctrl1_filtered : BEQ +
-    JSR gamemode_fix_vram : CLC : RTS
-
-  + LDA !ram_ctrl1 : AND !ram_ctrl_somaria_pits : CMP !ram_ctrl_somaria_pits : BNE +
-    AND !ram_ctrl1_filtered : BEQ +
-    JSR gamemode_somaria_pits_wrapper : CLC : RTS
-
-  + CLC : RTS
++	CLC : RTS
 
 
 ; Transition detection
@@ -277,35 +254,37 @@ gamemode_safe_to_change_mode:
   PLB
     CLC : RTS
 
+!safe = 0
+!unsafe = 1
   .unsafe_gamemodes
-    db #$01 ; 0x00 - Triforce / Zelda startup screens
-    db #$01 ; 0x01 - File Select screen
-    db #$01 ; 0x02 - Copy Player Mode
-    db #$01 ; 0x03 - Erase Player Mode
-    db #$01 ; 0x04 - Name Player Mode
-    db #$01 ; 0x05 - Loading Game Mode
-    db #$01 ; 0x06 - Pre Dungeon Mode
-    db #$00 ; 0x07 - Dungeon Mode
-    db #$01 ; 0x08 - Pre Overworld Mode
-    db #$00 ; 0x09 - Overworld Mode
-    db #$00 ; 0x0A - Pre Overworld Mode (special overworld)
-    db #$00 ; 0x0B - Overworld Mode (special overworld)
-    db #$01 ; 0x0C - Custom Menu
-    db #$00 ; 0x0D - Blank Screen
-    db #$00 ; 0x0E - Text Mode/Item Screen/Map
-    db #$01 ; 0x0F - Closing Spotlight
-    db #$01 ; 0x10 - Opening Spotlight
-    db #$01 ; 0x11 - Happens when you fall into a hole from the OW.
-    db #$01 ; 0x12 - Death Mode
-    db #$00 ; 0x13 - Boss Victory Mode (refills stats)
-    db #$01 ; 0x14 - Attract Mode
-    db #$00 ; 0x15 - Module for Magic Mirror
-    db #$00 ; 0x16 - Module for refilling stats after boss.
-    db #$01 ; 0x17 - Quitting mode (save and quit)
-    db #$00 ; 0x18 - Ganon exits from Agahnim's body. Chase Mode.
-    db #$01 ; 0x19 - Triforce Room scene
-    db #$01 ; 0x1A - End sequence
-    db #$01 ; 0x1B - Screen to select where to start from (House, sanctuary, etc.)
+    db !unsafe ; 0x00 - Triforce / Zelda startup screens
+    db !unsafe ; 0x01 - File Select screen
+    db !unsafe ; 0x02 - Copy Player Mode
+    db !unsafe ; 0x03 - Erase Player Mode
+    db !unsafe ; 0x04 - Name Player Mode
+    db !unsafe ; 0x05 - Loading Game Mode
+    db !unsafe ; 0x06 - Pre Dungeon Mode
+    db !safe ; 0x07 - Dungeon Mode
+    db !unsafe ; 0x08 - Pre Overworld Mode
+    db !safe ; 0x09 - Overworld Mode
+    db !safe ; 0x0A - Pre Overworld Mode (special overworld)
+    db !safe ; 0x0B - Overworld Mode (special overworld)
+    db !unsafe ; 0x0C - Custom Menu
+    db !safe ; 0x0D - Blank Screen
+    db !safe ; 0x0E - Text Mode/Item Screen/Map
+    db !unsafe ; 0x0F - Closing Spotlight
+    db !unsafe ; 0x10 - Opening Spotlight
+    db !unsafe ; 0x11 - Happens when you fall into a hole from the OW.
+    db !unsafe ; 0x12 - Death Mode
+    db !safe ; 0x13 - Boss Victory Mode (refills stats)
+    db !unsafe ; 0x14 - Attract Mode
+    db !safe ; 0x15 - Module for Magic Mirror
+    db !safe ; 0x16 - Module for refilling stats after boss.
+    db !unsafe ; 0x17 - Quitting mode (save and quit)
+    db !safe ; 0x18 - Ganon exits from Agahnim's body. Chase Mode.
+    db !unsafe ; 0x19 - Triforce Room scene
+    db !unsafe ; 0x1A - End sequence
+    db !unsafe ; 0x1B - Screen to select where to start from (House, sanctuary, etc.)
 
 
 ; Custom Menu
@@ -379,7 +358,7 @@ gamemode_savestate:
     CPX #$007B : BEQ +
     INX #5
     LDY #$0000
-    JMP -
+    BRA -
     ; end of DMA to SRAM
 
   + JSR ppuoff
@@ -551,7 +530,7 @@ gamemode_savestate:
     CPX #$007B : BEQ +
     INX #5
     LDY #$0000
-    JMP -
+    BRA -
     ; end of DMA from SRAM
 
   +

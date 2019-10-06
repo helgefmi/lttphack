@@ -298,6 +298,8 @@ cm_clear_buffer:
     ; Assumes I=8
   %a16()
 
+    PHB
+    LDX.b #!menu_dma_buffer>>16 : PHX : PLB
     LDX.b #$00
 
     ; value of a transparent tile
@@ -315,7 +317,9 @@ cm_clear_buffer:
 
     INX #2
     CPX.b #$80 : BNE .loop
+
   %a8()
+    PLB
     RTS
 
 cm_transfer_tileset:
@@ -356,8 +360,8 @@ cm_redraw:
 cm_draw_background_gfx:
   %a8()
     PHB
-    LDA #$7F : PHA : PLB
-	WDM
+    LDA.b #!menu_dma_buffer>>16 : PHA : PLB
+
   %ai16()
     LDA #$30FB : STA.w !menu_dma_buffer+$0102
     ORA #$8000 : STA.w !menu_dma_buffer+$0742
@@ -453,7 +457,7 @@ cm_draw_active_menu:
 
     PLX : PLY
     INY #2
-    JMP .loop
+    BRA .loop
 
   .done_with_items
     STZ $0E
@@ -475,9 +479,9 @@ cm_draw_text:
 
   .loop
     LDA ($02), Y : CMP #$FF : BEQ .end
-    STA.l !menu_dma_buffer+$0000, X : INX
-    LDA $0E : STA.l !menu_dma_buffer+$0000, X : INX
-    INY : JMP .loop
+    STA.l !menu_dma_buffer, X : INX
+    LDA $0E : STA.l !menu_dma_buffer, X : INX
+    INY : BRA .loop
 
   .end
   %a16()
@@ -502,7 +506,7 @@ cm_fix_cursor_wrap:
   .loop
     LDA ($00), Y : BEQ .after_loop
     INY #2
-    JMP .loop
+    BRA .loop
 
   .after_loop
     ; Top of stack = cursor index
@@ -782,6 +786,8 @@ cm_execute_ctrl_shortcut:
   %a16()
     LDA ($00) : STA $35 : INC $00 : INC $00
     LDA ($00) : STA $37 : INC $00
+    LDA #!ram_ctrl_prachack_menu : CMP $35 : BEQ .end
+
   %a8()
 
     LDA $F6 : CMP #$40 : BEQ .reset_shortcut
@@ -792,7 +798,7 @@ cm_execute_ctrl_shortcut:
 
   .reset_shortcut
   %a16()
-    LDA #!ram_ctrl_prachack_menu : CMP $35 : BEQ .end
+    
 
     LDA #$0000 : STA [$35]
 
@@ -923,22 +929,25 @@ cm_draw_toggle:
 
   %a8()
     ; set palette
-    LDA $0E : STA $1001, X : STA $1003, X : STA $1005, X
+    LDA $0E
+	STA.l !menu_dma_buffer+1, X
+	STA.l !menu_dma_buffer+3, X
+	STA.l !menu_dma_buffer+5, X
 
     ; grab the value at that memory address
     LDA [$04] : BNE .checked
 
     ; No
-    LDA.b #$0D : STA $1000, X
-    LDA.b #$38 : STA $1002, X
+    LDA.b #$0D : STA.l !menu_dma_buffer+0, X
+    LDA.b #$38 : STA.l !menu_dma_buffer+2, X
 
     BRA .end
 
   .checked
     ; Yes
-    LDA.b #$18 : STA $1000, X
-    LDA.b #$2E : STA $1002, X
-    LDA.b #$3C : STA $1004, X
+    LDA.b #$18 : STA.l !menu_dma_buffer+0, X
+    LDA.b #$2E : STA.l !menu_dma_buffer+2, X
+    LDA.b #$3C : STA.l !menu_dma_buffer+4, X
 
   .end
   %a16()
@@ -1042,9 +1051,10 @@ cm_draw_numfield:
     LDA [$04] : AND #$00FF : JSL hex_to_dec
 
     ; Clear out the area (black tile)
-    LDA #$24F5 : STA $1000, X
-                 STA $1000+2, X
-                 STA $1000+4, X
+    LDA #$24F5
+	STA.l !menu_dma_buffer+0, X
+    STA.l !menu_dma_buffer+2, X
+    STA.l !menu_dma_buffer+4, X
 
     ; Set palette
   %a8()
@@ -1054,16 +1064,17 @@ cm_draw_numfield:
 
     ; Draw numbers
     LDA !ram_hex2dec_first_digit : BEQ .second_digit
-    CLC : ADC $0E : STA $1000, X
+    CLC : ADC $0E : STA.l !menu_dma_buffer+0, X
     INX #2
 
   .second_digit
     LDA !ram_hex2dec_second_digit : BEQ .third_digit
-    CLC : ADC $0E : STA $1000, X
+    CLC : ADC $0E : STA.l !menu_dma_buffer+0, X
     INX #2
 
   .third_digit
-    LDA !ram_hex2dec_third_digit : CLC : ADC $0E : STA $1000, X
+    LDA !ram_hex2dec_third_digit : CLC : ADC $0E
+	STA.l !menu_dma_buffer+0, X
 
     RTS
 
@@ -1094,22 +1105,25 @@ cm_draw_toggle_bit:
 
   %a8()
     ; set palette
-    LDA $0E : STA $1001, X : STA $1003, X : STA $1005, X
+    LDA $0E
+	STA.l !menu_dma_buffer+1, X
+	STA.l !menu_dma_buffer+3, X
+	STA.l !menu_dma_buffer+5, X
 
     ; grab the value at that memory address
     LDA [$04] : AND $07 : BNE .checked
 
     ; No
-    LDA.b #$0D : STA $1000, X
-    LDA.b #$38 : STA $1002, X
+    LDA.b #$0D : STA.l !menu_dma_buffer+0, X
+    LDA.b #$38 : STA.l !menu_dma_buffer+2, X
 
     BRA .end
 
   .checked
     ; Yes
-    LDA.b #$18 : STA $1000, X
-    LDA.b #$2E : STA $1002, X
-    LDA.b #$3C : STA $1004, X
+    LDA.b #$18 : STA.l !menu_dma_buffer+0, X
+    LDA.b #$2E : STA.l !menu_dma_buffer+2, X
+    LDA.b #$3C : STA.l !menu_dma_buffer+4, X
 
   .end
   %a16()
@@ -1246,7 +1260,7 @@ cm_ctrl_input_display:
     AND #$0001 : CMP #$0001 : BNE .no_draw
 
     TYA : CLC : ADC $0E
-    STA $1000, X : INX : INX
+    STA.l !menu_dma_buffer+0, X : INX : INX
 
   .no_draw
   PLA
@@ -1261,9 +1275,15 @@ cm_ctrl_clear_input_display:
     ; X = pointer to tilemap area
   PHA
     LDA #$24F5
-    STA $1000, X : STA $1002, X : STA $1004, X : STA $1006, X
-    STA $1008, X : STA $100A, X : STA $100C, X : STA $100E, X
-    STA $1010, X
+    STA.l !menu_dma_buffer+$00, X
+	STA.l !menu_dma_buffer+$02, X
+	STA.l !menu_dma_buffer+$04, X
+	STA.l !menu_dma_buffer+$06, X
+    STA.l !menu_dma_buffer+$08, X
+	STA.l !menu_dma_buffer+$0A, X
+	STA.l !menu_dma_buffer+$0C, X
+	STA.l !menu_dma_buffer+$0E, X
+    STA.l !menu_dma_buffer+$10, X
   PLA
     RTS
 
@@ -1302,7 +1322,7 @@ cm_do_ctrl_config:
 
   %ai8()
     LDA.b #$05 : STA $17
-    LDA.b #$22 : STA $0116
+    LDA.b #$23 : STA $0116
 
   .next_frame
   %ai8()

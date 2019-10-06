@@ -41,10 +41,9 @@ NMI_UpdatePracticeHUD:
 	REP #$20
 	LDA #$0080 : STA $2115
 	LDA #$1801 : STA $4300
-	TAY ; give Y 1
 	LDA.w #!menu_dma_buffer : STA $4302
 	LDA #$0800 : STA $4305
-	STY $420B
+	LDY #$01 : STY $420B
 	TDC : STA.l !menu_dma_buffer
 	SEP #$20
 	RTS

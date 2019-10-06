@@ -19,7 +19,26 @@ org !RandomNumGen
     RTL
 
 pullpc
-movie_readjoypads:
+movie_readjoypads: ; simplify while movies are gone
+    STZ $4016
+
+    LDA $4218 : STA $00
+    LDA $4219 : STA $01
+
+    LDA $00 : STA $F2 : TAY
+
+    EOR $FA : AND $F2 : STA $F6 : STY $FA
+
+    LDA $01 : STA $F0 : TAY
+    EOR $F8 : AND $F0 : STA $F4 : STY $F8
+
+    LDA $F0 : STA !ram_ctrl1
+    LDA $F2 : STA !ram_ctrl1+1
+    LDA $F4 : STA !ram_ctrl1_filtered
+    LDA $F6 : STA !ram_ctrl1_filtered+1
+RTL
+
+;---------------
     STZ $4016
 
     LDA $4218 : STA $00
