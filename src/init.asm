@@ -102,6 +102,7 @@ init_initialize:
     STA !ram_ctrl_disable_sprites
     STA !ram_ctrl_fill_everything
     STA !ram_ctrl_fix_vram
+    STA !ram_ctrl_somaria_pits
 
     LDA #!SRAM_VERSION : STA !ram_sram_initialized
 

@@ -10,6 +10,8 @@
 ; $7EC900[0x1F00] (7EE800)
 ;  * 7ED000 - 7ED780 = VRAM buffer backup in custom_menu.asm
 
+!menu_dma_buffer = $7F8000 ; [0x800] reserved
+
 !lowram_room_realtime = $04CC
 !lowram_room_gametime = $04CE
 !lowram_seg_frames = $04D0
@@ -69,17 +71,22 @@
 
 if !FEATURE_SD2SNES
     !offset = $770100
+    !statename = "State"
+    !statename2 = "State"
 else
     !offset = $701E00
+    !statename = "Preset"
+    !statename2 = "saved preset"
 endif
 
 !offsetinc = 0
 macro def_sram(name, size)
     !ram_<name> #= !offset+!offsetinc
     !offsetinc #= !offsetinc+<size>
+    ;print "<name>: ", hex(!ram_<name>)
 endmacro
 
-%def_sram("sram_initialized", 1)
+%def_sram("sram_initialized", 2)
 
 %def_sram("ctrl_prachack_menu", 2)
 %def_sram("ctrl_load_last_preset", 2)

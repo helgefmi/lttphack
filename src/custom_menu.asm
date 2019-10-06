@@ -49,7 +49,8 @@ CM_Init:
     LDA #$0000 : STA !lowram_cm_stack_index
     LDA #cm_mainmenu_indices : STA !ram_cm_menu_stack
     ; Scroll down
-    LDA #$FF18 : STA $EA
+	LDA #$0100 : STA $E4
+    LDA #$0018 : STA $EA
   %a8()
 
     JSR cm_init_item_variables
@@ -62,7 +63,7 @@ CM_Init:
 
 CM_DrawMenu:
     ; Save $1000-1680 so we can transfer it back aferwards
-    JSR cm_cache_buffer
+    ;JSR cm_cache_buffer
 
   %ppu_off()
     JSR cm_transfer_tileset
@@ -149,7 +150,7 @@ CM_Active:
 
 CM_MenuUp:
   %a16()
-    LDA #$0000 : STA $EA
+    STZ $E4 : STZ $EA
   %a8()
 
     INC $11
@@ -169,34 +170,10 @@ CM_Return:
 
   %ai8()
     LDA !ram_preset_type : BEQ .no_preset
-
-    ; clear up any text we that might've been displayed on the screen
-    JSR cm_clear_buffer
-
-    ; tell NMI to update tilemap
-    LDA.b #$01 : STA $17
-    LDA.b #$22 : STA $0116
-
-    ; This section clears any text boxes, in case we came from one.
-  %a16()
-    LDA $1CD2 : XBA : STA $1002
-    LDA #$2E42 : STA $1004
-    LDA #$387F : STA $1006
-    LDA #$FFFF : STA $1008
-  %a8()
-    LDA #$01 : STA $14
-
     JSL preset_load_next_frame
     RTS
 
   .no_preset
-    ; Restores $1000-1680 in case it was used for something.
-    JSR cm_restore_buffer
-
-    ; tell NMI to update tilemap
-    LDA.b #$01 : STA $17
-    LDA.b #$22 : STA $0116
-
     LDA !ram_cm_old_gamemode : STA $10
     LDA !ram_cm_old_submode : STA $11
 
@@ -327,78 +304,19 @@ cm_clear_buffer:
     LDA #$207F
 
   .loop
-    STA $1000, X : STA $1080, X
-    STA $1100, X : STA $1180, X
-    STA $1200, X : STA $1280, X
-    STA $1300, X : STA $1380, X
-    STA $1400, X : STA $1480, X
-    STA $1500, X : STA $1580, X
-    STA $1600, X : STA $1680, X
-    STA $1700, X : STA $1780, X
+    STA.w !menu_dma_buffer+$0000, X : STA.w !menu_dma_buffer+$0080, X
+    STA.w !menu_dma_buffer+$0100, X : STA.w !menu_dma_buffer+$0180, X
+    STA.w !menu_dma_buffer+$0200, X : STA.w !menu_dma_buffer+$0280, X
+    STA.w !menu_dma_buffer+$0300, X : STA.w !menu_dma_buffer+$0380, X
+    STA.w !menu_dma_buffer+$0400, X : STA.w !menu_dma_buffer+$0480, X
+    STA.w !menu_dma_buffer+$0500, X : STA.w !menu_dma_buffer+$0580, X
+    STA.w !menu_dma_buffer+$0600, X : STA.w !menu_dma_buffer+$0680, X
+    STA.w !menu_dma_buffer+$0700, X : STA.w !menu_dma_buffer+$0780, X
 
     INX #2
     CPX.b #$80 : BNE .loop
   %a8()
     RTS
-
-
-cm_cache_buffer:
-    ; Assumes I=8
-  %ai16()
-
-    LDX #$0000
-
-  .loop
-    LDA $1000, X : STA $7ED000, X
-    LDA $1080, X : STA $7ED080, X
-    LDA $1100, X : STA $7ED100, X
-    LDA $1180, X : STA $7ED180, X
-    LDA $1200, X : STA $7ED200, X
-    LDA $1280, X : STA $7ED280, X
-    LDA $1300, X : STA $7ED300, X
-    LDA $1380, X : STA $7ED380, X
-    LDA $1400, X : STA $7ED400, X
-    LDA $1480, X : STA $7ED480, X
-    LDA $1500, X : STA $7ED500, X
-    LDA $1580, X : STA $7ED580, X
-    LDA $1600, X : STA $7ED600, X
-    LDA $1680, X : STA $7ED680, X
-    LDA $1700, X : STA $7ED700, X
-    LDA $1780, X : STA $7ED780, X
-    INX #2 : CPX #$080 : BNE .loop
-
-  %ai8()
-    RTS
-
-
-cm_restore_buffer:
-    ; Assumes I=8
-  %ai16()
-
-    LDX #$0000
-
-  .loop
-    LDA $7ED000, X : STA $1000, X
-    LDA $7ED080, X : STA $1080, X
-    LDA $7ED100, X : STA $1100, X
-    LDA $7ED180, X : STA $1180, X
-    LDA $7ED200, X : STA $1200, X
-    LDA $7ED280, X : STA $1280, X
-    LDA $7ED300, X : STA $1300, X
-    LDA $7ED380, X : STA $1380, X
-    LDA $7ED400, X : STA $1400, X
-    LDA $7ED480, X : STA $1480, X
-    LDA $7ED500, X : STA $1500, X
-    LDA $7ED580, X : STA $1580, X
-    LDA $7ED600, X : STA $1600, X
-    LDA $7ED680, X : STA $1680, X
-    LDA $7ED700, X : STA $1700, X
-    LDA $7ED780, X : STA $1780, X
-    INX #2 : CPX #$080 : BNE .loop
-
-  %ai8()
-    RTS
-
 
 cm_transfer_tileset:
     ; Assumes A=8
@@ -429,26 +347,30 @@ cm_redraw:
     JSR cm_draw_active_menu
 
     ; tell NMI to update tilemap
-    LDA.b #$01 : STA $17
-    LDA.b #$22 : STA $0116
+    LDA.b #$05 : STA $17
+    LDA.b #$23 : STA $0116
 
     RTS
 
 
 cm_draw_background_gfx:
+  %a8()
+    PHB
+    LDA #$7F : PHA : PLB
+	WDM
   %ai16()
-    LDA #$30FB : STA $1102
-    ORA #$8000 : STA $1742
-    ORA #$4000 : STA $177C
-    EOR #$8000 : STA $113C
+    LDA #$30FB : STA.w !menu_dma_buffer+$0102
+    ORA #$8000 : STA.w !menu_dma_buffer+$0742
+    ORA #$4000 : STA.w !menu_dma_buffer+$077C
+    EOR #$8000 : STA.w !menu_dma_buffer+$013C
 
     LDX #$0000
     LDY #$0017
 
   .drawVerticalEdges
 
-    LDA.w #$30FC : STA $1142, X
-    ORA.w #$4000 : STA $117C, X
+    LDA.w #$30FC : STA.w !menu_dma_buffer+$0142, X
+    ORA.w #$4000 : STA.w !menu_dma_buffer+$017C, X
 
     TXA : CLC : ADC #$0040 : TAX
 
@@ -459,8 +381,8 @@ cm_draw_background_gfx:
 
   .drawHorizontalEdges
 
-    LDA.w #$30F9 : STA $1104, X
-    ORA.w #$8000 : STA $1744, X
+    LDA.w #$30F9 : STA.w !menu_dma_buffer+$0104, X
+    ORA.w #$8000 : STA.w !menu_dma_buffer+$0744, X
 
     INX #2
 
@@ -472,18 +394,25 @@ cm_draw_background_gfx:
 
   .drawBoxInterior
 
-    STA $1144, X : STA $1184, X : STA $11C4, X : STA $1204, X
-    STA $1244, X : STA $1284, X : STA $12C4, X : STA $1304, X
-    STA $1344, X : STA $1384, X : STA $13C4, X : STA $1404, X
-    STA $1444, X : STA $1484, X : STA $14C4, X : STA $1504, X
-    STA $1544, X : STA $1584, X : STA $15C4, X : STA $1604, X
-    STA $1644, X : STA $1684, X : STA $16C4, X : STA $1704, X
+    STA.w !menu_dma_buffer+$0144, X : STA.w !menu_dma_buffer+$0184, X
+	STA.w !menu_dma_buffer+$01C4, X : STA.w !menu_dma_buffer+$0204, X
+    STA.w !menu_dma_buffer+$0244, X : STA.w !menu_dma_buffer+$0284, X
+	STA.w !menu_dma_buffer+$02C4, X : STA.w !menu_dma_buffer+$0304, X
+    STA.w !menu_dma_buffer+$0344, X : STA.w !menu_dma_buffer+$0384, X
+	STA.w !menu_dma_buffer+$03C4, X : STA.w !menu_dma_buffer+$0404, X
+    STA.w !menu_dma_buffer+$0444, X : STA.w !menu_dma_buffer+$0484, X
+	STA.w !menu_dma_buffer+$04C4, X : STA.w !menu_dma_buffer+$0504, X
+    STA.w !menu_dma_buffer+$0544, X : STA.w !menu_dma_buffer+$0584, X
+	STA.w !menu_dma_buffer+$05C4, X : STA.w !menu_dma_buffer+$0604, X
+    STA.w !menu_dma_buffer+$0644, X : STA.w !menu_dma_buffer+$0684, X
+	STA.w !menu_dma_buffer+$06C4, X : STA.w !menu_dma_buffer+$0704, X
 
     INX #2
 
     DEY : BPL .drawBoxInterior
 
   %ai8()
+    PLB
     RTS
 
 
@@ -546,8 +475,8 @@ cm_draw_text:
 
   .loop
     LDA ($02), Y : CMP #$FF : BEQ .end
-    STA $1000, X : INX
-    LDA $0E : STA $1000, X : INX
+    STA.l !menu_dma_buffer+$0000, X : INX
+    LDA $0E : STA.l !menu_dma_buffer+$0000, X : INX
     INY : JMP .loop
 
   .end
@@ -827,10 +756,10 @@ cm_execute_preset:
     RTS
 
 cm_preset_data_banks:
-    db #sram_nmg_esc_bed>>16
-    db #sram_hundo_esc_bed>>16
-    db #sram_low_esc_bed>>16
-    db #sram_ad_esc_links_bed>>16
+    db sram_nmg_esc_bed>>16
+    db sram_hundo_esc_bed>>16
+    db sram_low_esc_bed>>16
+    db sram_ad_esc_links_bed>>16
 
 
 cm_execute_toggle_bit:
@@ -1372,7 +1301,7 @@ cm_do_ctrl_config:
     JSR cm_ctrl_input_display
 
   %ai8()
-    LDA.b #$01 : STA $17
+    LDA.b #$05 : STA $17
     LDA.b #$22 : STA $0116
 
   .next_frame

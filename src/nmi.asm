@@ -33,6 +33,25 @@ nmi_hook:
   %ai16()
     JMP $80D1
 
+; Unused $17 function repurposed
+org $008E09
+NMI_UpdatePracticeHUD:
+	LDX $0116 : LDA $9888, X : STA $2117
+	LDA.b #!menu_dma_buffer>>16 : STA $4304
+	REP #$20
+	LDA #$0080 : STA $2115
+	LDA #$1801 : STA $4300
+	TAY ; give Y 1
+	LDA.w #!menu_dma_buffer : STA $4302
+	LDA #$0800 : STA $4305
+	STY $420B
+	TDC : STA.l !menu_dma_buffer
+	SEP #$20
+	RTS
+
+warnpc $008E4B
+
+org $0098AB : db $64
 pullpc
 nmi_expand:
    ; Enters AI=16
