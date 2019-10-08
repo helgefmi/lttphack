@@ -82,58 +82,69 @@ else
 endif
 
 !offsetinc = 0
-macro def_sram(name, size)
+!OFF = 0
+!ON = 1
+!HUDONLY = select(!FEATURE_HUD, !ON, !OFF)
+
+macro def_sram(name, default)
 	!ram_<name> #= !offset+!offsetinc
-	!offsetinc #= !offsetinc+<size>
-	;print "<name>: ", hex(!ram_<name>)
+	!newval := "LDA.w #<default> : STA.l !ram_<name>"
+
+	if defined("INIT_ASSEMBLY")
+		!INIT_ASSEMBLY := "!INIT_ASSEMBLY : !newval"
+	else
+		!INIT_ASSEMBLY := "!newval"
+	endif
+
+	!offsetinc #= !offsetinc+2
 endmacro
 
-%def_sram("sram_initialized", 2)
+%def_sram("sram_initialized", !OFF)
 
-%def_sram("ctrl_prachack_menu", 2)
-%def_sram("ctrl_load_last_preset", 2)
-%def_sram("ctrl_replay_last_movie", 2)
-%def_sram("ctrl_save_state", 2)
-%def_sram("ctrl_load_state", 2)
-%def_sram("ctrl_toggle_oob", 2)
-%def_sram("ctrl_skip_text", 2)
-%def_sram("ctrl_disable_sprites", 2)
-%def_sram("ctrl_reset_segment_timer", 2)
-%def_sram("ctrl_fill_everything", 2)
-%def_sram("ctrl_fix_vram", 2)
-%def_sram("ctrl_somaria_pits", 2)
+%def_sram("ctrl_prachack_menu", $1010)
+%def_sram("ctrl_load_last_preset", $20A0)
+%def_sram("ctrl_replay_last_movie", $3020)
+%def_sram("ctrl_save_state", $1060)
+%def_sram("ctrl_load_state", $2060)
+%def_sram("ctrl_toggle_oob", !OFF)
+%def_sram("ctrl_skip_text", !OFF)
+%def_sram("ctrl_disable_sprites", !OFF)
+%def_sram("ctrl_reset_segment_timer", !OFF)
+%def_sram("ctrl_fill_everything", !OFF)
+%def_sram("ctrl_fix_vram", !OFF)
+%def_sram("ctrl_somaria_pits", !OFF)
 
-%def_sram("can_load_pss", 1)
-%def_sram("previous_preset_destination", 2)
-%def_sram("previous_preset_type", 2)
-%def_sram("preset_category", 2)
-%def_sram("autoload_preset", 2)
+%def_sram("can_load_pss", !OFF)
+%def_sram("previous_preset_destination", !OFF)
+%def_sram("previous_preset_type", !OFF)
+%def_sram("preset_category", $0000)
+%def_sram("autoload_preset", !OFF)
 
-%def_sram("input_display_toggle", 1)
-%def_sram("feature_music", 1)
-%def_sram("secondary_counter_type", 2)
-%def_sram("lagometer_toggle", 1)
-%def_sram("toggle_lanmola_cycles", 1)
+%def_sram("feature_music", !ON)
+%def_sram("lagometer_toggle", !OFF)
+%def_sram("secondary_counter_type", !OFF)
+%def_sram("toggle_lanmola_cycles", !HUDONLY)
+%def_sram("input_display_toggle", !HUDONLY)
 
-%def_sram("xy_toggle", 1)
-%def_sram("subpixels_toggle", 1)
-%def_sram("counters_real", 1)
-%def_sram("counters_lag", 1)
-%def_sram("counters_idle", 1)
-%def_sram("counters_segment", 1)
-%def_sram("misslots_toggle", 1)
-%def_sram("qw_toggle", 1)
+%def_sram("xy_toggle", !HUDONLY)
+%def_sram("subpixels_toggle", !OFF)
+%def_sram("counters_real", !HUDONLY)
+%def_sram("counters_lag", !HUDONLY)
+%def_sram("counters_idle", !HUDONLY)
+%def_sram("counters_segment", !HUDONLY)
+%def_sram("misslots_toggle", !OFF)
+%def_sram("qw_toggle", !OFF)
 
-%def_sram("rerandomize_framecount", 1)
-%def_sram("rerandomize_accumulator", 1)
+%def_sram("rerandomize_framecount", !OFF)
+%def_sram("rerandomize_accumulator", !OFF)
 
-%def_sram("enemy_hp_toggle", 1)
-%def_sram("lit_rooms_toggle", 1)
-%def_sram("probe_toggle", 1)
-%def_sram("sanctuary_heart", 1)
-%def_sram("rerandomize_toggle", 1)
-%def_sram("skip_triforce_toggle", 1)
-%def_sram("bonk_items_toggle", 1)
+%def_sram("enemy_hp_toggle", !OFF)
+%def_sram("lit_rooms_toggle", !OFF)
+%def_sram("probe_toggle", !OFF)
+%def_sram("sanctuary_heart",!OFF )
+%def_sram("rerandomize_toggle", !ON)
+%def_sram("skip_triforce_toggle", !OFF)
+%def_sram("bonk_items_toggle", !OFF)
 
 !lowram_oob_toggle = $037F
 !ram_eg_strength = $7E04AA

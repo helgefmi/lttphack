@@ -10,7 +10,7 @@ org $02B793
 ;------------------
 org $06F99E
 	JML dropluck ; can't JSL because we need an unbalanced PHA
-  afterdropluck:
+afterdropluck:
 
 ;------------------
 ; Sword beams

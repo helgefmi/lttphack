@@ -11,8 +11,8 @@ org $028068
 ; Load Tiles Hook
 pullpc
 load_default_tileset:
-  ; Enters: AI=8
-  ; Leave with: AI=8
+	; Enters: AI=8
+	; Leave with: AI=8
 	%ai8()
 	LDA.b #$02 : STA $2101
 

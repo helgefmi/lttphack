@@ -198,10 +198,10 @@ hud_template_hook:
 	%a16()
 	JSL draw_counters
 
-	LDA !ram_qw_toggle : AND #$00FF : BEQ .dont_update_qw
+	LDA !ram_qw_toggle : BEQ .dont_update_qw
 	JSR hud_draw_qw
-.dont_update_qw
 
+.dont_update_qw
 	SEP #$30
 	INC $16
 	RTL
@@ -220,37 +220,37 @@ update_hearts_hook:
 	JSR hud_draw_hearts
 .dont_update_hearts
 	%a16()
-	LDA !ram_qw_toggle : AND #$00FF : BEQ .dont_update_qw
+	LDA !ram_qw_toggle : BEQ .dont_update_qw
 	LDA $E2 : CMP !ram_qw_last_scroll : BEQ .dont_update_qw
 	STA !ram_qw_last_scroll
 
 .dont_update_qw
 
-	LDA !ram_enemy_hp_toggle : AND #$00FF : BEQ .dont_draw_enemy_hp
+	LDA !ram_enemy_hp_toggle : BEQ .dont_draw_enemy_hp
 
 	JSR hud_draw_enemy_hp
 
 .dont_draw_enemy_hp
 
-	LDA !ram_input_display_toggle : AND #$00FF : BEQ .dont_update_input_display
+	LDA !ram_input_display_toggle : BEQ .dont_update_input_display
 
 	JSR hud_draw_input_display
 
 .dont_update_input_display
 
-	LDA !ram_subpixels_toggle : AND #$00FF : BEQ .dont_update_subpixels
+	LDA !ram_subpixels_toggle : BEQ .dont_update_subpixels
 
 	JSR hud_draw_subpixels
 
 .dont_update_subpixels
 
-	LDA !ram_misslots_toggle : AND #$00FF : BEQ .dont_update_misslots
+	LDA !ram_misslots_toggle : BEQ .dont_update_misslots
 
 	JSR hud_draw_misslots
 
 .dont_update_misslots
 
-	LDA !ram_xy_toggle : AND #$00FF : BEQ .dont_update_xy
+	LDA !ram_xy_toggle : BEQ .dont_update_xy
 
 	JSR hud_draw_xy_display
 	%a8()
@@ -452,7 +452,7 @@ hud_draw_subpixels:
 
 hud_draw_misslots:
 
-  ; Search index / EG (03A4)
+	; Search index / EG (03A4)
 
 	LDX.w #$00C8
 	LDA $03C4 : LSR #4 : AND #$000F : ORA #$3010 : STA $7EC708, X
@@ -463,7 +463,7 @@ hud_draw_misslots:
 	LDA $03A4 : AND #$000F : ORA #$3810 : STA $7EC70A, X
 
 
-  ; Slots
+	; Slots
 
 	LDX.w #$0102
 	LDY.w #$0000
@@ -482,7 +482,7 @@ hud_draw_misslots:
 	CPY.w #$000A : BNE .loop
 
 
-  ; Hook timer
+	; Hook timer
 
 	LDX.w #$00D0
 	LDY.w #$0000

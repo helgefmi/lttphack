@@ -4,13 +4,13 @@ draw_counters:
 	LDX #!POS_COUNTERS
 
 	; Real time
-	LDA !ram_counters_real : AND #$00FF : BEQ .do_lag
+	LDA !ram_counters_real : BEQ .do_lag
 
 	LDA !lowram_room_realtime_copy : JSL draw_seconds_and_frames
 	TXA : CLC : ADC #$0040 : TAX
 
 .do_lag
-	LDA !ram_counters_lag : AND #$00FF : BEQ .do_idle
+	LDA !ram_counters_lag : BEQ .do_idle
 
 	INX #4
 	LDA !lowram_room_realtime_copy : SEC : SBC !lowram_room_gametime_copy
@@ -18,7 +18,7 @@ draw_counters:
 	TXA : CLC : ADC #$003C : TAX
 
 .do_idle
-	LDA !ram_counters_idle : AND #$00FF : BEQ .do_segment
+	LDA !ram_counters_idle : BEQ .do_segment
 
 	INX #4
 	LDA !lowram_idle_frames_copy : JSL hex_to_dec : JSL draw3_white

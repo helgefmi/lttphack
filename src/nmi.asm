@@ -34,7 +34,10 @@ nmi_hook:
 	JMP $80D1
 
 ; Unused $17 function repurposed
-org $008E09
+org $008C8A
+	dw NMI_UpdatePracticeHUD ; $17=0x06
+
+org $00FDEE ; please be unused
 NMI_UpdatePracticeHUD:
 	LDX $0116 : LDA $9888, X : STA $2117
 	LDA.b #!menu_dma_buffer>>16 : STA $4304
@@ -48,12 +51,12 @@ NMI_UpdatePracticeHUD:
 	SEP #$20
 	RTS
 
-warnpc $008E4B
+warnpc $00FE5D
 
 org $0098AB : db $64
 pullpc
 nmi_expand:
-   ; Enters AI=16
+	; Enters AI=16
 	%a8()
 	INC !lowram_nmi_counter
 	LDA !lowram_last_frame_did_saveload : BNE .dont_update_counters

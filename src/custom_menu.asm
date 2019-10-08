@@ -353,7 +353,7 @@ cm_redraw:
 	JSR cm_draw_active_menu
 
 	; tell NMI to update tilemap
-	LDA.b #$05 : STA $17
+	LDA.b #$06 : STA $17
 	LDA.b #$23 : STA $0116
 
 	RTS
@@ -596,8 +596,9 @@ cm_execute_toggle_jsr:
 cm_execute_jsr:
 	; < and > should do nothing here
 	%a8()
-	LDA $F0 : CMP #$01 : BEQ .end
-			  CMP #$02 : BEQ .end
+	LDA $F0
+	CMP #$01 : BEQ .end
+	CMP #$02 : BEQ .end
 
 	%a16()
 	LDA ($00) : INC $00 : INC $00 : STA $02
@@ -1349,7 +1350,7 @@ cm_do_ctrl_config:
 	JSR cm_ctrl_input_display
 
 	%ai8()
-	LDA.b #$05 : STA $17
+	LDA.b #$06 : STA $17
 	LDA.b #$23 : STA $0116
 
 .next_frame

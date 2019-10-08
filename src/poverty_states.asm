@@ -112,8 +112,7 @@ load_poverty_state:
 	BRA +
 .dungeon
 	LDY #$0031
-  +
-	STY $03
++	STY $03
 	LDY #$0000
 
 	; A->B (SRAM->WRAM)
@@ -135,7 +134,7 @@ load_poverty_state:
 	BRA .fetch
 
 .done
-   PLB
+	PLB
 
 	%ai8()
 	LDA !ram_rerandomize_toggle : BEQ .dont_rerandomize_2
@@ -169,9 +168,7 @@ load_poverty_state:
 	; Check if we currently have a tagalong
 	LDA $7EF3CC : BEQ +
 	JSL !Tagalong_LoadGfx
-  +
-
-	%ai16()
++	%ai16()
 	RTL
 
 
