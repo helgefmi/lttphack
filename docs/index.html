@@ -16,7 +16,20 @@
 			<div class="collapse navbar-collapse" id="navbarResponsive">
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item"><a class="nav-link js-scroll-trigger" href="#download">Download</a></li>
-					<li class="nav-item"><a class="nav-link js-scroll-trigger" href="#features">Features</a></li>
+					<li class="nav-item nav-dropdown"><a class="nav-link js-scroll-trigger" href="#features">Features</a>
+						<ul>
+							<li><a href="#menuMain">Main Menu</a></li>
+							<li><a href="#menuPresets">Presets</a></li>
+							<li><a href="#menuItems">Items</a></li>
+							<li><a href="#menuEquipment">Equipment</a></li>
+							<li><a href="#menuGameState">Game state</a></li>
+							<li><a href="#menuGameplay">Gameplay</a></li>
+							<li><a href="#menuRNGControl">RNG control</a></li>
+							<li><a href="#menuShortcuts">Shortcuts</a></li>
+							<li><a href="#menuHUD">HUD extras</a></li>
+							<li><a href="#menuConfiguration">Configuration</a></li>
+						</ul>
+					</li>
 					<li class="nav-item"><a class="nav-link js-scroll-trigger" href="#changelog">Changelog</a></li>
 					<li class="nav-item"><a class="nav-link js-scroll-trigger" href="#credits">Credits</a></li>
 				</ul>
@@ -105,7 +118,7 @@
 					<div class="center">
 						<img src="hudfeatures.png" class="helpvis"" width="1127">
 					</div>
-					<h3>Main menu</h3>
+					<h3 id="menuMain">Main menu</h3>
 					<dl class="subDefinition">
 						<dt><a href="#menuPresets">Presets</a></dt>
 						<dd>Built in savestates for various categories</dd>
@@ -113,18 +126,18 @@
 						<dd>Modify Y-item loadout</dd>
 						<dt><a href="#menuEquipment">Equipment</a></dt>
 						<dd>Modify A-items, combat items, health, and keys</dd>
-						<dt><a href="#menuGameState">Game State</a></dt>
+						<dt><a href="#menuGameState">Game state</a></dt>
 						<dd>Modify game progress, status, and mode</dd>
 						<dt><a href="#menuGameplay">Gameplay</a></dt>
 						<dd>Feature toggles related to gameplay</dd>
-						<dt><a href="#menuRNGControl">RNG Control</a></dt>
+						<dt><a href="#menuRNGControl">RNG control</a></dt>
 						<dd>Fix specific RNG calls to specific values</dd>
 						<dt><a href="#menuShortcuts">Shortcuts</a></dt>
 						<dd>Modify shortcuts for quick feature access</dd>
-						<dt><a href="#menuCounters">Counters</a></dt>
-						<dd>Toggle counters that appear on the HUD</dd>
-						<dt><a href="#menuFeatures">Features</a></dt>
-						<dd>Feature toggles related to meta-operation</dd>
+						<dt><a href="#menuHUD">HUD extras</a></dt>
+						<dd>Toggle features that appear on the HUD</dd>
+						<dt><a href="#menuConfiguration">Configuration</a></dt>
+						<dd>Configuration toggles related to meta-operation</dd>
 					</dl>
 
 					
@@ -231,7 +244,7 @@
 						<dd>On/Off</dd>
 					</dl>
 
-					<h3 id="menuItems">Items</h3>
+					<h3 id="menuItems">Equipment</h3>
 					<dl class="inlineDefinition dinkyList">
 						<dt>Fill magic</dt>
 						<dd>Tops off the magic meter</dd>
@@ -314,7 +327,7 @@
 						<dd>Toggle big keys for each dungeon</dd>
 					</dl>
 
-					<h3 id="menuGameState">Game State</h3>
+					<h3 id="menuGameState">Game state</h3>
 					<dl>
 						<dt>Skip text</dt>
 						<dd>Skips the current text box</dd>
@@ -413,8 +426,6 @@
 
 					<h3 id="menuGameplay">Gameplay</h3>
 					<dl>
-						<dt>Rerandomize</dt>
-						<dd>When using built-in savestates and presets, this will run the RNG function to create a new value on each load.</dd>
 						<dt>Skip Triforce</dt>
 						<dd>Transitioning north from Ganon's Room will behave like a normal screen transition, allowing consistent and reliable room times for the fight.</dd>
 						<dt>Sanc heart</dt>
@@ -559,15 +570,17 @@
 						<dd>Modifies the upper layer tilemap to mark pits.<strong class="lag"><b>NOTE:</b> this feature is intended for finding pits created by door glitches, but it will mark all standard pit tiles the same way.</strong></dd>
 					</dl>
 
-					<h3 id="menuCounters">Counters</h3>
+					<h3 id="menuHUD">HUD extras</h3>
 					<dl>
-						<dt>Counter Room</dt>
+						<dt>Input display</dt>
+						<dd>Visual indication of every button registered each frame.</dd>
+						<dt>Room time</dt>
 						<dd>Time spent on the current screen, starting from the beginning of the last transition.</dd>
-						<dt>Counter Lag</dt>
+						<dt>Lag counter</dt>
 						<dd>Count of lag frames on the current screen, starting from the beginning of the last transition.</dd>
-						<dt>Counter Idle</dt>
+						<dt>Idle frames</dt>
 						<dd>Count of frames with no relevant input, starting from the beginning of the last transition.</dd>
-						<dt>Counter segment</dt>
+						<dt>Segment time</dt>
 						<dd>Time spent since the beginning of the last segment timer reset</dd>
 						<dt>Coordinates</dt>
 						<dd>Absolute position of Link (X,Y)
@@ -587,6 +600,14 @@
 								<dd>Displays current subpixel speed (Hexadecimal</dd>
 							</dl>
 						</dd>
+						<dt>QW indicator</dt>
+						<dd>Displays an icon on the HUD when the current camera will produce a quickwarp. <strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
+						<dt>Lanmola cycs</dt>
+						<dd>Displays a counter for the cycle count of the three Lanmolas individually.</dd>
+						<dt>Lagometer</dt>
+						<dd>Shows a rough calculation of the amount of lag a frame has. The more the bar is filled, the closer a frame was to producing a lag frame. Lag from one frame does not affect the next, but trends in the lagometer can be used to gauge how laggy an area is.</dd>
+						<dt>Enemy HP</dt>
+						<dd>Shows the exact health of a single enemy. Attempts to find the most relevant enemy as you play. <strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
 						<dt>Misslots RAM</dt>
 						<dd>Ancillae RAM watch geared towards misslotting (see diagram below)</dd>
 					</dl>
@@ -594,20 +615,12 @@
 					<div class="center">
 						<img src="ancillawatch.png" class="helpvis" width="729">
 					</div>
-					<h3 id="menuFeatures">Features</h3>
+					<h3 id="menuConfiguration">Configuration</h3>
 					<dl>
-						<dt>Lagometer</dt>
-						<dd>Shows a rough calculation of the amount of lag a frame has. The more the bar is filled, the closer a frame was to producing a lag frame. Lag from one frame does not affect the next, but trends in the lagometer can be used to gauge how laggy an area is.</dd>
-						<dt>Input display</dt>
-						<dd>Visual indication of every button registered each frame.</dd>
-						<dt>Enemy HP</dt>
-						<dd>Shows the exact health of a single enemy. Attempts to find the most relevant enemy as you play. <strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
+						<dt>Rerandomize</dt>
+						<dd>When using built-in savestates and presets, this will run the RNG function to create a new value on each load.</dd>
 						<dt>Music</dt>
 						<dd>Sets the volume of every track in every song to 0. The size of the SPC transfers remains the same, so this feature does not affect lag.</dd>
-						<dt>QW indicator</dt>
-						<dd>Displays an icon on the HUD when the current camera will produce a quickwarp. <strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
-						<dt>Lanmola cycs</dt>
-						<dd>Displays a counter for the cycle count of the three Lanmolas individually.</dd>
 						<dt>Death reload</dt>
 						<dd>Reloads the last preset upon death</dd>
 						<dt>Preset cat</dd>
@@ -638,20 +651,19 @@
 						</li>
 						<li>Gameplay
 							<ul>
-								<li>Rerandomize*</li>
 								<li>Skip Triforce</li>
-								<li>Sanc heart*</li>
+								<li>Sanc heart<sup class="footnote">*</em></li>
 								<li>Disable beams</li>
 								<li>Visible probes</li>
-								<li>Lit rooms* - also improved to work on current room</li>
+								<li>Lit rooms<sup class="footnote">*</em> - also improved to work on current room</li>
 								<li>See bonk items</li>
 								<li>Disable BG1</li>
 								<li>Disable BG2</li>
 								<li>OoB Mode</li>
 							</ul>
-							<em>* moved from another menu</em>
+							<em><sup class="footnote">*</em> moved from another menu</em>
 						</li>
-						<li>RNG Control
+						<li>RNG control
 							<ul>
 								<li>Prize packs</li>
 							</ul>
@@ -663,11 +675,25 @@
 								<li>Somaria pits</li>
 							</ul>
 						</li>
-						<li>Counters
+						<li>HUD extras - renamed from "Counters"
 							<ul>
+								<li>Input display<sup class="footnote">‡</sup></li>
+								<li>Room time<sup class="footnote">†</em></li>
+								<li>Lag counter<sup class="footnote">†</em></li>
+								<li>Idle frames<sup class="footnote">†</em></li>
+								<li>Segment time<sup class="footnote">†</em></li>
+								<li>Lanmolas cycles<sup class="footnote">‡</em></li>
+								<li>Lagometer<sup class="footnote">‡</em></li>
+								<li>Enemy HP<sup class="footnote">‡</em></li>
 								<li>Misslots RAM watch</li>
 							</ul>
+							<ul class="quietlist">
+								<li><em><sup class="footnote">†</em> Option already existed, but was renamed</em></li>
+								<li><em><sup class="footnote">‡</em> Moved from "Features" menu</em></li>
+							</ul>
 						</li>
+						<li>Renamed "Features" menu to "Configuration"</li>
+						<li>Renamed "Features" menu to "Configuration"</li>
 						<li>Holding START+SELECT on boot will now reset the practice hack configuration as intended.</li>
 						<li>Various features are now disabled during map screens.</li>
 						<li>Fixed a bug that somehow only prevented the GT Wizzrobes 2 preset from loading.</li>

@@ -75,8 +75,8 @@ cm_mainmenu_indices:
 	dw cm_main_goto_gameplay
 	dw cm_main_goto_rng_control
 	dw cm_main_goto_ctrl
-	dw cm_main_goto_counters
-	dw cm_main_goto_features
+	dw cm_main_goto_hud
+	dw cm_main_goto_config
 ;    dw cm_main_goto_movies
 	dw !menu_end
 	%cm_header("LTTPHACK !VERSION")
@@ -154,10 +154,10 @@ cm_items_powder:
 	db !list_end
 
 cm_items_fire_rod:
-	%cm_toggle("Fire Rod", !ram_item_fire_rod)
+	%cm_toggle("Fire rod", !ram_item_fire_rod)
 
 cm_items_ice_rod:
-	%cm_toggle("Ice Rod", !ram_item_ice_rod)
+	%cm_toggle("Ice rod", !ram_item_ice_rod)
 
 cm_items_bombos:
 	%cm_toggle("Bombos", !ram_item_bombos)
@@ -313,7 +313,7 @@ cm_equipment_gloves:
 	%cm_item("Gloves")
 	%cm_item("No")
 	%cm_item("Power glove")
-	%cm_item("Titan's mitts")
+	%cm_item("Titan's mitt")
 	db !list_end
 
 cm_equipment_flippers:
@@ -603,7 +603,6 @@ cm_main_goto_gameplay:
 	%cm_submenu("Gameplay", cm_submenu_gameplay)
 
 cm_submenu_gameplay:
-	dw cm_gameplay_rerandomize
 	dw cm_gameplay_skip_triforce
 	dw cm_gameplay_sanctuary
 	dw cm_gameplay_disable_beams
@@ -615,9 +614,6 @@ cm_submenu_gameplay:
 	dw cm_gameplay_oob
 	dw !menu_end
 	%cm_header("GAMEPLAY")
-
-cm_gameplay_rerandomize:
-	%cm_toggle("Rerandomize", !ram_rerandomize_toggle)
 
 cm_gameplay_skip_triforce:
 	%cm_toggle("Skip Triforce", !ram_skip_triforce_toggle)
@@ -652,45 +648,24 @@ cm_gameplay_oob:
 	%cm_toggle("OoB Mode", !lowram_oob_toggle)
 
 ; }}}
-; FEATURES {{{
-cm_main_goto_features:
-	%cm_submenu("Features", cm_submenu_features)
+; CONFIGURATION {{{
+cm_main_goto_config:
+	%cm_submenu("Configuration", cm_submenu_config)
 
-cm_submenu_features:
-	dw cm_feature_lagometer
-	dw cm_feature_input_display
-	dw cm_feature_enemy_hp
-	dw cm_feature_music
-	dw cm_feature_qw
-	dw cm_feature_lanmola_cycle_count
-	dw cm_feature_autoload_preset
-	dw cm_feature_preset_category
+cm_submenu_config:
+	dw cm_gameplay_rerandomize
+	dw cm_config_music
+	dw cm_config_autoload_preset
+	dw cm_config_preset_category
 	dw !menu_end
-	%cm_header("FEATURES")
+	%cm_header("CONFIGURATION")
 
-cm_feature_lagometer:
-	%cm_toggle_jsr("Lagometer", !ram_lagometer_toggle)
+cm_gameplay_rerandomize:
+	%cm_toggle("Rerandomize", !ram_rerandomize_toggle)
 
-.toggle
-	%a16()
-	  LDA #$207F : STA $7EC742 : STA $7EC782 : STA $7EC7C2 : STA $7EC802
-	RTS
 
-cm_feature_input_display:
-	%cm_toggle_jsr("Input display", !ram_input_display_toggle)
 
-.toggle
-	%a16()
-	LDA #$207F
-	STA !POS_MEM_INPUT_DISPLAY_TOP+0 : STA !POS_MEM_INPUT_DISPLAY_TOP+2
-	STA !POS_MEM_INPUT_DISPLAY_TOP+4 : STA !POS_MEM_INPUT_DISPLAY_TOP+6
-	STA !POS_MEM_INPUT_DISPLAY_TOP+8 : STA !POS_MEM_INPUT_DISPLAY_BOT+0
-	STA !POS_MEM_INPUT_DISPLAY_BOT+2 : STA !POS_MEM_INPUT_DISPLAY_BOT+4
-	STA !POS_MEM_INPUT_DISPLAY_BOT+6 : STA !POS_MEM_INPUT_DISPLAY_BOT+8
-
-	RTS
-
-cm_feature_music:
+cm_config_music:
 	%cm_toggle_jsr("Music", !ram_feature_music)
 
 .toggle
@@ -704,38 +679,10 @@ cm_feature_music:
 
 	RTS
 
-cm_feature_enemy_hp:
-	%cm_toggle_jsr("Enemy HP", !ram_enemy_hp_toggle)
-
-.toggle
-	%ai16()
-	LDA #$207F : STA !POS_MEM_ENEMY_HEART_GFX
-	LDX.w #!POS_ENEMY_HEARTS : STA $7EC700, X : STA $7EC702, X
-	RTS
-
-cm_feature_qw:
-	%cm_toggle_jsr("QW indicator", !ram_qw_toggle)
-
-.toggle
-	%a16()
-	LDA #$207F : STA $7EC80A
-	LDA #$207F : STA $7EC80C
-	RTS
-
-cm_feature_lanmola_cycle_count:
-	%cm_toggle_jsr("Lanmola cycs", !ram_toggle_lanmola_cycles)
-
-.toggle
-	%a8()
-	LDA #$00 : STA !ram_lanmola_cycles
-			   STA !ram_lanmola_cycles+1
-			   STA !ram_lanmola_cycles+2
-	RTS
-
-cm_feature_autoload_preset:
+cm_config_autoload_preset:
 	%cm_toggle("Death reload", !ram_autoload_preset)
 
-cm_feature_preset_category:
+cm_config_preset_category:
 	dw !CM_ACTION_CHOICE
 	dl !ram_preset_category
 	%cm_item("Preset Cat")
@@ -819,35 +766,40 @@ cm_feature_preset_category:
 ;    %cm_movie("Movie 16 (0000 bytes)", 15)
 
 ; }}}
-; COUNTERS {{{
+; HUD EXTRAS {{{
 
-cm_main_goto_counters:
-	%cm_submenu("Counters", cm_submenu_counters)
+cm_main_goto_hud:
+	%cm_submenu("HUD extras", cm_submenu_hud)
 
-cm_submenu_counters:
-	dw cm_counter_real
-	dw cm_counter_lag
-	dw cm_counter_idle
-	dw cm_counter_segment
-	dw cm_counter_xy
-	dw cm_counter_subpixels
-	dw cm_counter_misslots
+cm_submenu_hud:
+	dw cm_hud_input_display
+	dw cm_hud_real
+	dw cm_hud_lag
+	dw cm_hud_idle
+	dw cm_hud_segment
+	dw cm_hud_xy
+	dw cm_hud_subpixels
+	dw cm_hud_qw
+	dw cm_hud_lanmola_cycle_count
+	dw cm_hud_lagometer
+	dw cm_hud_enemy_hp
+	dw cm_hud_misslots
 	dw !menu_end
-	%cm_header("COUNTERS")
+	%cm_header("HUD EXTRAS")
 
-cm_counter_real:
-	%cm_toggle("Counter Room", !ram_counters_real)
+cm_hud_real:
+	%cm_toggle("Room time", !ram_counters_real)
 
-cm_counter_lag:
-	%cm_toggle("Counter Lag", !ram_counters_lag)
+cm_hud_lag:
+	%cm_toggle("Lag counter", !ram_counters_lag)
 
-cm_counter_idle:
-	%cm_toggle("Counter Idle", !ram_counters_idle)
+cm_hud_idle:
+	%cm_toggle("Idle frames", !ram_counters_idle)
 
-cm_counter_segment:
-	%cm_toggle("Counter Segm", !ram_counters_segment)
+cm_hud_segment:
+	%cm_toggle("Segment time", !ram_counters_segment)
 
-cm_counter_xy:
+cm_hud_xy:
 	dw !CM_ACTION_CHOICE
 	dl #!ram_xy_toggle
 	%cm_item("Coordinates")
@@ -856,7 +808,7 @@ cm_counter_xy:
 	%cm_item("Decimal")
 	db !list_end
 
-cm_counter_subpixels:
+cm_hud_subpixels:
 	dw !CM_ACTION_CHOICE
 	dl #!ram_subpixels_toggle
 	%cm_item("Subpixels")
@@ -865,7 +817,58 @@ cm_counter_subpixels:
 	%cm_item("Speed")
 	db !list_end
 
-cm_counter_misslots:
+cm_hud_lagometer:
+	%cm_toggle_jsr("Lagometer", !ram_lagometer_toggle)
+
+.toggle
+	%a16()
+	  LDA #$207F : STA $7EC742 : STA $7EC782 : STA $7EC7C2 : STA $7EC802
+	RTS
+
+cm_hud_input_display:
+	%cm_toggle_jsr("Input display", !ram_input_display_toggle)
+
+.toggle
+	%a16()
+	LDA #$207F
+	STA !POS_MEM_INPUT_DISPLAY_TOP+0 : STA !POS_MEM_INPUT_DISPLAY_TOP+2
+	STA !POS_MEM_INPUT_DISPLAY_TOP+4 : STA !POS_MEM_INPUT_DISPLAY_TOP+6
+	STA !POS_MEM_INPUT_DISPLAY_TOP+8 : STA !POS_MEM_INPUT_DISPLAY_BOT+0
+	STA !POS_MEM_INPUT_DISPLAY_BOT+2 : STA !POS_MEM_INPUT_DISPLAY_BOT+4
+	STA !POS_MEM_INPUT_DISPLAY_BOT+6 : STA !POS_MEM_INPUT_DISPLAY_BOT+8
+
+	RTS
+
+cm_hud_enemy_hp:
+	%cm_toggle_jsr("Enemy HP", !ram_enemy_hp_toggle)
+
+.toggle
+	%ai16()
+	LDA #$207F : STA !POS_MEM_ENEMY_HEART_GFX
+	LDX.w #!POS_ENEMY_HEARTS : STA $7EC700, X : STA $7EC702, X
+	RTS
+
+cm_hud_qw:
+	%cm_toggle_jsr("QW indicator", !ram_qw_toggle)
+
+.toggle
+	%a16()
+	LDA #$207F : STA $7EC80A
+	LDA #$207F : STA $7EC80C
+	RTS
+
+cm_hud_lanmola_cycle_count:
+	%cm_toggle_jsr("Lanmola cycs", !ram_toggle_lanmola_cycles)
+
+.toggle
+	%a8()
+	LDA #$00
+	STA !ram_lanmola_cycles
+	STA !ram_lanmola_cycles+1
+	STA !ram_lanmola_cycles+2
+	RTS
+
+cm_hud_misslots:
 	%cm_toggle("Misslots RAM", !ram_misslots_toggle)
 
 ; }}}
@@ -1634,10 +1637,10 @@ cm_rng_conveyor:
 	dl !ram_conveyor_rng
 	%cm_item("Conveyor belt")
 	%cm_item("Random")
-	%cm_item("right")
-	%cm_item("left")
-	%cm_item("down")
-	%cm_item("up")
+	%cm_item("Right")
+	%cm_item("Left")
+	%cm_item("Down")
+	%cm_item("Up")
 	db !list_end
 
 cm_rng_drops:

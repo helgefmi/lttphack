@@ -25,7 +25,7 @@ strong.lag b {
 }
 
 strong.lag b:before {
-	content: '⚠️';
+	content: "\026A0";
 }
 
 h3 {
@@ -164,13 +164,63 @@ section {
 }
 
 header {
-	background-color: #4a545f;
+	background-color: #4A545F;
+}
+
+.nav-dropdown:hover {
+	background-color: #4A545F;	
+}
+
+.nav-dropdown ul {
+	display: none;
+	position: absolute;
+	background-color: #4A545F;
+	padding: 10px 40px 10px 10px;
+	font-size: 90%;
+}
+
+.nav-dropdown li a {
+	color: rgba(255,255,255,.5);
+	text-decoration: none
+}
+
+.nav-dropdown li a:hover {
+	color: white;
+}
+
+.nav-dropdown li {
+	list-style: none;
+	padding-left: 0;
+	margin-left: 0;
+}
+
+.nav-dropdown:hover ul {
+	display: block;
 }
 
 .bg-dark a {
-	color: #a0b6ce;
+	color: #A0B6CE;
 }
 
 h2 {
 	font-size: 2.5rem;
+}
+
+ul.quietlist {
+	list-style: none;
+}
+
+sup.footnote {
+	font-size: 100%;
+	font-weight: 600;
+	font-style: italic;
+	top: -.2em;
+	left: .1em;
+}
+
+li > sup.footnote {
+	opacity: .6;
+}
+li:hover > sup.footnote {
+	opacity: 1.0
 }

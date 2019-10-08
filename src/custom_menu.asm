@@ -12,6 +12,7 @@ org $008089 : db #CM_Main>>8
 org $0080A5 : db #CM_Main>>16
 
 pullpc
+!OPTION_OFFSET = $001E
 CM_Main:
 	PHB : PHK : PLB
 
@@ -463,7 +464,7 @@ cm_draw_active_menu:
 
 .done_with_items
 	STZ $0E
-	TYA : CLC : ADC $00 : INC : INC : STA $02
+	TYA : CLC : ADC $00 : INC #2 : STA $02
 	LDX #$0186
 	JSR cm_draw_text
 
@@ -930,7 +931,7 @@ cm_draw_toggle:
 	PLX
 
 	; Set position for ON/OFF
-	TXA : CLC : ADC #$001C : TAX
+	TXA : CLC : ADC.w #!OPTION_OFFSET : TAX
 
 	%a8()
 	; set palette
@@ -1007,7 +1008,7 @@ cm_draw_toggle_bit_customtext:
 	PLX
 
 	; set position for ON/OFF
-	TXA : CLC : ADC #$001C : TAX
+	TXA : CLC : ADC.w #!OPTION_OFFSET : TAX
 
 	LDA #$0000
 	LDY #$0000
@@ -1030,7 +1031,7 @@ cm_draw_choice:
 	PLX
 
 	; set position for ON/OFF
-	TXA : CLC : ADC #$001C : TAX
+	TXA : CLC : ADC.w #!OPTION_OFFSET : TAX
 
 	LDY #$0000
 	LDA #$0000
@@ -1076,7 +1077,7 @@ cm_draw_numfield:
 	PLX
 
 	; set position for the number
-	TXA : CLC : ADC #$001C : TAX
+	TXA : CLC : ADC.w #!OPTION_OFFSET : TAX
 
 	LDA [$04] : AND #$00FF : JSL hex_to_dec
 
@@ -1131,7 +1132,7 @@ cm_draw_toggle_bit:
 	PLX
 
 	; Set position for ON/OFF
-	TXA : CLC : ADC #$001C : TAX
+	TXA : CLC : ADC.w #!OPTION_OFFSET : TAX
 
 	%a8()
 	; set palette
