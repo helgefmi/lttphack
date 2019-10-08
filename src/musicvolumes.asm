@@ -78,7 +78,7 @@ db !VOLUME_B4 ; $B4
 org $1AA279 ; <- D2279 .
 db !VOLUME_B4 ; $B4
 org $1AA29E ; <- D229E .
-db !VOLUME_DC ; $DC	
+db !VOLUME_DC ; $DC
 org $1AA2C9 ; <- D22C9 .
 db !VOLUME_C8 ; $C8
 org $1AA2DC ; <- D22DC .

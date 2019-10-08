@@ -72,20 +72,20 @@
 ; Account for different SRAM layouts
 
 if !FEATURE_SD2SNES
-    !offset = $770100
-    !statename = "State"
-    !statename2 = "State"
+	!offset = $770100
+	!statename = "State"
+	!statename2 = "State"
 else
-    !offset = $701E00
-    !statename = "Preset"
-    !statename2 = "saved preset"
+	!offset = $701E00
+	!statename = "Preset"
+	!statename2 = "saved preset"
 endif
 
 !offsetinc = 0
 macro def_sram(name, size)
-    !ram_<name> #= !offset+!offsetinc
-    !offsetinc #= !offsetinc+<size>
-    ;print "<name>: ", hex(!ram_<name>)
+	!ram_<name> #= !offset+!offsetinc
+	!offsetinc #= !offsetinc+<size>
+	;print "<name>: ", hex(!ram_<name>)
 endmacro
 
 %def_sram("sram_initialized", 2)
@@ -255,13 +255,13 @@ endmacro
 !ram_movie_hud = $7F7904 ; [0x40]
 
 if !FEATURE_SD2SNES
-    !sram_movies = $771000
-    !sram_movie_data = $771100
-    !sram_movie_data_size = $6F00
+	!sram_movies = $771000
+	!sram_movie_data = $771100
+	!sram_movie_data_size = $6F00
 else
-    !sram_movies = $703000
-    !sram_movie_data = $703200
-    !sram_movie_data_size = $4E00
+	!sram_movies = $703000
+	!sram_movie_data = $703200
+	!sram_movie_data_size = $4E00
 endif
 
 !sram_movies_length = !sram_movies+0
@@ -301,7 +301,7 @@ endif
 ; ITEM MENU
 
 !ram_item_bow = $7EF340
-    !ram_cm_item_bow = $7F76C0
+	!ram_cm_item_bow = $7F76C0
 !ram_item_boom = $7EF341
 !ram_item_hook = $7EF342
 !ram_item_bombs = $7EF343
@@ -317,27 +317,27 @@ endif
 !ram_item_net = $7EF34D
 !ram_item_book = $7EF34E
 !ram_item_bottle = $7EF34F
-    !ram_cm_item_bottle = $7F76C2
-    !ram_item_bottle_array = $7EF35C
+	!ram_cm_item_bottle = $7F76C2
+	!ram_item_bottle_array = $7EF35C
 !ram_item_somaria = $7EF350
 !ram_item_byrna = $7EF351
 !ram_item_cape = $7EF352
 !ram_item_mirror = $7EF353
-    !ram_cm_item_mirror = $7F76C1
+	!ram_cm_item_mirror = $7F76C1
 
 ; EQUIPMENT MENU
 
 !ram_equipment_boots_menu = $7EF355
-    !ram_cm_equipment_boots = $7F76C3
+	!ram_cm_equipment_boots = $7F76C3
 !ram_equipment_gloves = $7EF354
 !ram_equipment_flippers_menu = $7EF356
-    !ram_cm_equipment_flippers = $7F76C4
+	!ram_cm_equipment_flippers = $7F76C4
 !ram_equipment_moon_pearl = $7EF357
 !ram_equipment_sword = $7EF359
 !ram_equipment_shield = $7EF35A
 !ram_equipment_armor = $7EF35B
 !ram_equipment_maxhp = $7EF36C
-    !ram_cm_equipment_maxhp = $7F76C5
+	!ram_cm_equipment_maxhp = $7F76C5
 !ram_equipment_curhp = $7EF36D
 !ram_equipment_arrows_filler = $7EF377
 !ram_equipment_arrows = $7EF377
@@ -372,39 +372,39 @@ endif
 ;-------------------------
 
 macro a8()
-    SEP #$20
+	SEP #$20
 endmacro
 
 macro a16()
-    REP #$20
+	REP #$20
 endmacro
 
 macro i8()
-    SEP #$10
+	SEP #$10
 endmacro
 
 macro i16()
-    REP #$10
+	REP #$10
 endmacro
 
 macro ai8()
-    SEP #$30
+	SEP #$30
 endmacro
 
 macro ai16()
-    REP #$30
+	REP #$30
 endmacro
 
 macro ppu_off()
-    LDA #$80 : STA $2100 : STA $13
-    STZ $420C : LDA $9B : PHA : STZ $9B
-    STZ $4200
+	LDA #$80 : STA $2100 : STA $13
+	STZ $420C : LDA $9B : PHA : STZ $9B
+	STZ $4200
 endmacro
 
 macro ppu_on()
-    LDA #$A1 : STA $4200
-    LDA #$0F : STA $13 : STA $2100
-    PLA : STA $9B : STA $420C
+	LDA #$A1 : STA $4200
+	LDA #$0F : STA $13 : STA $2100
+	PLA : STA $9B : STA $420C
 endmacro
 
 ; alternative:
@@ -414,5 +414,5 @@ endmacro
 ; NOP : 2 cycles
 ; next opcode takes 1 cycle to fetch
 macro wait_14_cycles()
-    PHP : PLP : PHP : PLP
+	PHP : PLP : PHP : PLP
 endmacro

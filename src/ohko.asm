@@ -2,37 +2,37 @@ lorom
 
 
 org $00FFD7
-    db #11 ; 2mb
+	db #11 ; 2mb
 
 
 org $0697DF
-    ; x speeds
-    db  48,  44,  34,   18,   0,  -18, -34, -44
-    db -48, -44, -34,  -18,   0,   18,  34,  44
+	; x speeds
+	db  48,  44,  34,   18,   0,  -18, -34, -44
+	db -48, -44, -34,  -18,   0,   18,  34,  44
 
-    ; y speeds
-    db   0,   18,  34,  44,  48,  44,  34,   18
-    db   0,  -18, -34, -44, -48, -44, -34,  -18
+	; y speeds
+	db   0,   18,  34,  44,  48,  44,  34,   18
+	db   0,  -18, -34, -44, -48, -44, -34,  -18
 
 
 ; 09c3bf lda ($00),y
 ; 09c3c1 sta $0e20,x
 org $09C3BF
-    JSL sprite_hook_uw : NOP
+	JSL sprite_hook_uw : NOP
 
 
 ; 09c7c6 dec
 ; 09c7c7 sta $0e20,x
 org $09C7C6
-    JSL sprite_hook_ow
+	JSL sprite_hook_ow
 
 
 ; 1df66c sta $0e20,y
 ; 1df66f lda #$09
 ; 1df671 sta $0dd0,y
 org $1DF66C
-    JSL sprite_hook_dynamic
-    NOP : NOP : NOP : NOP
+	JSL sprite_hook_dynamic
+	NOP : NOP : NOP : NOP
 
 
 ; Change sprite gfx
@@ -41,25 +41,25 @@ org $1DF66C
 ; 01b64b adc #$40
 ; 01b64d sta $0aa3
 org $01B648
-    JSL hook_dng_gfx
-    NOP : NOP : NOP : NOP
+	JSL hook_dng_gfx
+	NOP : NOP : NOP : NOP
 
 
 ; 02aa0c lda $7efcc0,x
 ; 02aa10 sta $0aa3
 org $02AA0C
-    LDA #$55 : NOP : NOP
+	LDA #$55 : NOP : NOP
 
 
 org $06982A
-    ; 06982a lda $97df,y   [0697df] A:0002 X:0002 Y:0000 S:01ee D:0000 DB:06 nvMXdiZc V: 37 H:159 F:10
-    ; 06982d sta $0d50,x   [060d52] A:0030 X:0002 Y:0000 S:01ee D:0000 DB:06 nvMXdizc V: 37 H:159 F:10
-    ; 069830 lda $97ef,y   [0697ef] A:0030 X:0002 Y:0000 S:01ee D:0000 DB:06 nvMXdizc V: 37 H:168 F:10
-    ; 069833 sta $0d40,x   [060d42] A:0000 X:0002 Y:0000 S:01ee D:0000 DB:06 nvMXdiZc V: 37 H:176 F:10
-    ; JSL moldorm_speed
-    ; NOP : NOP
-    ; NOP : NOP : NOP
-    ; NOP : NOP : NOP
+	; 06982a lda $97df,y   [0697df] A:0002 X:0002 Y:0000 S:01ee D:0000 DB:06 nvMXdiZc V: 37 H:159 F:10
+	; 06982d sta $0d50,x   [060d52] A:0030 X:0002 Y:0000 S:01ee D:0000 DB:06 nvMXdizc V: 37 H:159 F:10
+	; 069830 lda $97ef,y   [0697ef] A:0030 X:0002 Y:0000 S:01ee D:0000 DB:06 nvMXdizc V: 37 H:168 F:10
+	; 069833 sta $0d40,x   [060d42] A:0000 X:0002 Y:0000 S:01ee D:0000 DB:06 nvMXdiZc V: 37 H:176 F:10
+	; JSL moldorm_speed
+	; NOP : NOP
+	; NOP : NOP : NOP
+	; NOP : NOP : NOP
 
 
 ; 06f9d7 sta $0e20,x
@@ -72,35 +72,35 @@ org $06982A
 ; 06f9e7 jsr $926e
 ; 06f9ea lda #$09
 org $06F9D7
-    JSL sprite_hook_drops
-    NOP
+	JSL sprite_hook_drops
+	NOP
 
 
 ; 05b758 lda #$0b               A:001d X:000b Y:0001 S:01e8 D:0000 DB:05 nvMXdizc V: 52 H: 71 F:42
 ; 05b75a sta $0f50,x   [050f5b] A:000b X:000b Y:0001 S:01e8 D:0000 DB:05 nvMXdizc V: 52 H: 75 F:42
 ; 05b75d rts                    A:000b X:000b Y:0001 S:01e8 D:0000 DB:05 nvMXdizc V: 52 H: 85 F:42
 org $05B758
-    JSL hook_armos
+	JSL hook_armos
 
 
 ; 05a050 dec $0ff8
 ; 05a053 lda $0ff8
 org $05A050
-    JSL hook_red_armos
-    NOP : NOP
+	JSL hook_red_armos
+	NOP : NOP
 
 
 ; 1cf640 jsl $099d04
 org $1CF640
-    JSL hook_beam
+	JSL hook_beam
 
 
 ; 1ed6f7 lda #$01
 ; 1ed6f9 sta $0da0,y
 ; LDA.b #$20 : STA $0DF0, Y
 org $1ED6F7
-    JSL hook_blueball
-    NOP : NOP : NOP : NOP
+	JSL hook_blueball
+	NOP : NOP : NOP : NOP
 
 
 ; 06982a lda $97df,y
@@ -108,72 +108,72 @@ org $1ED6F7
 ; 069830 lda $97ef,y
 ; 069833 sta $0d40,x
 org $06982A
-    JSL hook_mimics_dorm
-    NOP : NOP
-    NOP : NOP : NOP
-    NOP : NOP : NOP
+	JSL hook_mimics_dorm
+	NOP : NOP
+	NOP : NOP : NOP
+	NOP : NOP : NOP
 
 
 ; 1da1ed lda #$ce
 ; 1da1ef jsl $1df65d
 ; 1da1f3 bmi $a23b
 org $1DA1ED
-    JSL hook_blind
-    RTS
+	JSL hook_blind
+	RTS
 
 ; 06f068 lda #$04
 ; 06f06a sta $0dd0,x
 org $06F068
-    JSL hook_khold
-    NOP
+	JSL hook_khold
+	NOP
 
 
 ;1eb944 jsl $06f2b0
 org $1EB944
-    ; JSL hook_arrgi
+	; JSL hook_arrgi
 
 
 ; Nerf Ether (magic needed)
 ; db #$20, #$10, #$08
 org $07B073
-    db #$48, #$48, #$48
+	db #$48, #$48, #$48
 
 ; 1de7e3 lda $0ed0,x
 ; 1de7e6 sta $04
 org $1DE7E3
-    JSL hook_vitty
-    RTS
+	JSL hook_vitty
+	RTS
 
 ; ---------
 org $208000
 ; ---------
 
 hook_vitty:
-  PHY
-    LDY #$10
-  .loop
-    DEY : BMI .no_active
-    LDA $0E20, Y : CMP #$18 : BNE .loop
-    LDA $0DD0, Y : BNE .done
-    BRA .loop
+	PHY
+	LDY #$10
+.loop
+	DEY : BMI .no_active
+	LDA $0E20, Y : CMP #$18 : BNE .loop
+	LDA $0DD0, Y : BNE .done
+	BRA .loop
 
-  .no_active
-    LDA #$18 : STA $0E20, X
-    LDA #$08 : STA $0E50, X
-    LDA $0ED0 : DEC : STA $0ED0
-    
-  .done
-  PLY
-    RTL
+.no_active
+	LDA #$18 : STA $0E20, X
+	LDA #$08 : STA $0E50, X
+	LDA $0ED0 : DEC : STA $0ED0
+
+.done
+	PLY
+	RTL
 
 
 hook_dng_gfx:
-    LDA $A0 : CMP #$90 : BEQ .normal
-    LDA #$55 : STA $0AA3
-    RTL
-  .normal
-    LDA #$56 : STA $0AA3
-    RTL
+	LDA $A0 : CMP #$90 : BEQ .normal
+	LDA #$55 : STA $0AA3
+	RTL
+.normal
+	LDA #$56 : STA $0AA3
+	RTL
 
 
 ; 01b64b lda #$55
@@ -185,169 +185,166 @@ hook_dng_gfx:
 
 
 hook_khold:
-    LDA #$04 : STA $0DD0, X
-    PHX
-    LDX #$10
-  .loop
-    DEX : BMI .done
-    LDA $0E20, X : CMP #$18 : BNE .loop
-    LDA #$00 : STA $0DD0, X
-    BRA .loop
-  .done
-    PLX
-    RTL
+	LDA #$04 : STA $0DD0, X
+	PHX
+	LDX #$10
+.loop
+	DEX : BMI .done
+	LDA $0E20, X : CMP #$18 : BNE .loop
+	LDA #$00 : STA $0DD0, X
+	BRA .loop
+.done
+	PLX
+	RTL
 
 
 hook_blind:
-    LDA #$18 : JSL $1DF65D
-    LDA #$20 : STA $0E50, Y
-    RTL
+	LDA #$18 : JSL $1DF65D
+	LDA #$20 : STA $0E50, Y
+	RTL
 
 
 hook_mimics_dorm:
-    LDA $97DF, Y : STA $0D50, X
-    LDA $97EF, Y : STA $0D40, X
-    LDA $048E : CMP #$1B : BNE .done
+	LDA $97DF, Y : STA $0D50, X
+	LDA $97EF, Y : STA $0D40, X
+	LDA $048E : CMP #$1B : BNE .done
 
-    LDA #$00 : STA $0D50, X : STA $0D40, X
-               STA $0D60, X : STA $0D70, X
+	LDA #$00 : STA $0D50, X : STA $0D40, X
+			   STA $0D60, X : STA $0D70, X
 
-    LDA $F0 : BEQ .done
-    BIT #$01 : BNE .right
-    BIT #$02 : BNE .left
-    BIT #$04 : BNE .down
-    BIT #$08 : BNE .up
-    BRA .done
+	LDA $F0 : BEQ .done
+	BIT #$01 : BNE .right
+	BIT #$02 : BNE .left
+	BIT #$04 : BNE .down
+	BIT #$08 : BNE .up
+	BRA .done
 
-  .up
-    LDA #$40 : STA $0D50, X : BRA .done
-  .down
-    LDA #$C0 : STA $0D50, X : BRA .done
-  .left
-    LDA #$40 : STA $0D40, X : BRA .done
-  .right
-    LDA #$C0 : STA $0D40, X : BRA .done
+.up
+	LDA #$40 : STA $0D50, X : BRA .done
+.down
+	LDA #$C0 : STA $0D50, X : BRA .done
+.left
+	LDA #$40 : STA $0D40, X : BRA .done
+.right
+	LDA #$C0 : STA $0D40, X : BRA .done
 
-  .done
-    RTL
+.done
+	RTL
 
 hook_blueball:
-    LDA #$18 : STA $0E20, Y
-    LDA $EE : STA $0F20, Y
-    LDA #$10 : STA $0E50, Y
-    LDA #$00 : STA $0E60, Y
+	LDA #$18 : STA $0E20, Y
+	LDA $EE : STA $0F20, Y
+	LDA #$10 : STA $0E50, Y
+	LDA #$00 : STA $0E60, Y
 
-    RTL
+	RTL
 
 hook_beam:
-    LDA #$18 : JSL $1DF65D : BCS ++
+	LDA #$18 : JSL $1DF65D : BCS ++
 
-    LDA $22 : STA $0D10, Y
-    LDA $23 : STA $0D30, Y
+	LDA $22 : STA $0D10, Y
+	LDA $23 : STA $0D30, Y
 
-    LDA $20 : STA $0D00, Y
-    LDA $21 : STA $0D20, Y
+	LDA $20 : STA $0D00, Y
+	LDA $21 : STA $0D20, Y
 
-    LDA $EE : STA $0F20, Y
+	LDA $EE : STA $0F20, Y
 
-    LDA $2F
-    CMP #$00 : BEQ .up
-    CMP #$02 : BEQ .down
-    CMP #$04 : BEQ .left
-    CMP #$06 : BEQ .right
+	LDA $2F
+	CMP #$00 : BEQ .up
+	CMP #$02 : BEQ .down
+	CMP #$04 : BEQ .left
+	CMP #$06 : BEQ .right
 
-  .up
-    LDA $0D00, Y : SEC : SBC #$20 : STA $0D00, Y
-    LDA $0D20, Y : SBC #$00 : STA $0D20, Y
-    BRA +
-  .down
-    LDA $0D00, Y : CLC : ADC #$20 : STA $0D00, Y
-    LDA $0D20, Y : ADC #$00 : STA $0D20, Y
-    BRA +
-  .left
-    LDA $0D10, Y : SEC : SBC #$20 : STA $0D10, Y
-    LDA $0D30, Y : SBC #$00 : STA $0D30, Y
-    BRA +
-  .right
-    LDA $0D10, Y : CLC : ADC #$20 : STA $0D10, Y
-    LDA $0D30, Y : ADC #$00 : STA $0D30, Y
-    BRA +
+.up
+	LDA $0D00, Y : SEC : SBC #$20 : STA $0D00, Y
+	LDA $0D20, Y : SBC #$00 : STA $0D20, Y
+	BRA +
+.down
+	LDA $0D00, Y : CLC : ADC #$20 : STA $0D00, Y
+	LDA $0D20, Y : ADC #$00 : STA $0D20, Y
+	BRA +
+.left
+	LDA $0D10, Y : SEC : SBC #$20 : STA $0D10, Y
+	LDA $0D30, Y : SBC #$00 : STA $0D30, Y
+	BRA +
+.right
+	LDA $0D10, Y : CLC : ADC #$20 : STA $0D10, Y
+	LDA $0D30, Y : ADC #$00 : STA $0D30, Y
+	BRA +
 
-  +
-    SEP #$30
++	SEP #$30
 
 
-  ++
-    SEC : RTL
+++	SEC : RTL
 
 
 hook_red_armos:
-    DEC $0FF8
-    LDA $0FF8 : CMP #$01 : BNE +
+	DEC $0FF8
+	LDA $0FF8 : CMP #$01 : BNE +
 
-    LDA #$18 : STA $0E20 : STA $0E21 : STA $0E22 : STA $0E23 : STA $0E24
+	LDA #$18 : STA $0E20 : STA $0E21 : STA $0E22 : STA $0E23 : STA $0E24
 
-  + RTL
++	RTL
 
 hook_armos:
-    LDA #$18 : STA $0E20, X
-    RTL
+	LDA #$18 : STA $0E20, X
+	RTL
 
 
 sprite_hook_drops:
-  PHY
-  PHB : PHK : PLB
-    TAY
-    PHA : JSL $0DBA71 : AND #$07 : BNE +
-    PLA : LDA le_tbl, Y : BRA ++
-  + PLA
-  ++
-  PLB
-  PLY
-    STA $0E20, X
-    CMP #$E5
-    RTL
+	PHY
+	PHB : PHK : PLB
+	TAY
+	PHA : JSL $0DBA71 : AND #$07 : BNE +
+	PLA : LDA le_tbl, Y : BRA ++
++	PLA
+++	PLB
+	PLY
+	STA $0E20, X
+	CMP #$E5
+	RTL
 
 
 sprite_hook_dynamic:
-    CMP #$D8 : BEQ +
-    CMP #$41 : BEQ +
-  PHX : PHB : PHK : PLB
-    TAX : LDA le_tbl, X
-  PLB : PLX
-  +
-    STA $0E20, Y
-    LDA #$09 : STA $0DD0, Y
-    RTL
+	CMP #$D8 : BEQ +
+	CMP #$41 : BEQ +
+	PHX : PHB : PHK : PLB
+	TAX : LDA le_tbl, X
+	PLB : PLX
+
++	STA $0E20, Y
+	LDA #$09 : STA $0DD0, Y
+	RTL
 
 
 sprite_hook_ow:
-    DEC
-  PHX : PHB : PHK : PLB
-    TAX : LDA le_tbl, X
-  PLB : PLX
-    STA $0E20, X
-    RTL
-    
+	DEC
+	PHX : PHB : PHK : PLB
+	TAX : LDA le_tbl, X
+	PLB : PLX
+	STA $0E20, X
+	RTL
+
 
 sprite_hook_uw:
-  PHX
-    LDA ($00),y : TAX
-  PHB : PHK : PLB
-    LDA le_tbl, X
-  PLB
-  PLX
-    STA $0E20, X
-    RTL
+	PHX
+	LDA ($00),y : TAX
+	PHB : PHK : PLB
+	LDA le_tbl, X
+	PLB
+	PLX
+	STA $0E20, X
+	RTL
 
 
 ; Not used
 moldorm_speed:
-    LDA $1A : AND #$0F : STA $00
-    LDA $97DF, Y : CLC : ADC $00 : STA $0D50, X
-    LDA $1A : AND #$0F : STA $00
-    LDA $97EF, Y : CLC : ADC $00 : STA $0D40, X
-    RTL
+	LDA $1A : AND #$0F : STA $00
+	LDA $97DF, Y : CLC : ADC $00 : STA $0D50, X
+	LDA $1A : AND #$0F : STA $00
+	LDA $97EF, Y : CLC : ADC $00 : STA $0D40, X
+	RTL
 
 
 le_tbl:

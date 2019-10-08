@@ -5236,7 +5236,7 @@ dl $7EF208 : db $02 : dw $0002 ; Room $0104: Unknown (...............q)
 dl $7EF20C : db $02 : dw $F000 ; Room $0106: Unknown (.dddb...........)
 dl $7EF36C : db $02 : dw $1818 ; Health (goal)
 dl $7EF378 : db $02 : dw $F800 ; ????
-dl $7EF3D8 : db $02 : dw $4B00 ; 
+dl $7EF3D8 : db $02 : dw $4B00 ;
 dl $7EF3DC : db $02 : dw $8C01 ; Player name
 dl $7EF3E0 : db $02 : dw $AA01 ; Player name
 dl $7EF400 : db $02 : dw $FF00 ; Deaths
@@ -5280,7 +5280,7 @@ dl $7E0540 : db $02 : dw $18E6 ; Object tilemap state
 dl $7E0544 : db $02 : dw $1850 ; Object tilemap state
 dl $7E0202 : db $01 : db $00 ; Selected menu item
 dl $7E0CBB : db $01 : db $00 ; Sprite drop
-dl $7E010F : db $01 : db $00 ; 
+dl $7E010F : db $01 : db $00 ;
 dl $7E0CC7 : db $01 : db $00 ; Sprite drop
 dl $7EF051 : db $01 : db $00 ; Room $0028: Swamp Palace (Entrance Room) (................)
 dl $7E0CC9 : db $01 : db $00 ; Sprite drop

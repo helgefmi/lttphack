@@ -13,13 +13,14 @@ incsrc nmi.asm
 incsrc draw.asm
 
 if !FEATURE_HUD
-    incsrc hud.asm
+	incsrc hud.asm
 endif
 
 org $22C000
 incsrc tiles.asm
 
 org $238000
+;incsrc HDMA.asm
 incsrc init.asm
 incsrc rng.asm
 incsrc misc.asm
