@@ -8,7 +8,7 @@ incsrc defines.asm
 incsrc hexedits.asm
 
 org $208000
-incsrc gamemode.asm
+incsrc gamemode2.asm
 incsrc nmi.asm
 incsrc draw.asm
 

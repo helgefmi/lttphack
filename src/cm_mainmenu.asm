@@ -657,13 +657,15 @@ cm_submenu_config:
 	dw cm_config_music
 	dw cm_config_autoload_preset
 	dw cm_config_preset_category
+	dw cm_config_extralag
 	dw !menu_end
 	%cm_header("CONFIGURATION")
 
 cm_gameplay_rerandomize:
 	%cm_toggle("Rerandomize", !ram_rerandomize_toggle)
 
-
+cm_config_extralag:
+	%cm_numfield("Lag test", !ram_LAG, 1, 127, 1)
 
 cm_config_music:
 	%cm_toggle_jsr("Music", !ram_feature_music)

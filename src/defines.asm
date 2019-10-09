@@ -42,9 +42,13 @@
 !ram_ctrl1_word_copy = $7F7686
 
 !ram_gamemode_copy = $7F767E
-!ram_submode_copy = $7F7680
-
+!ram_submode_copy = $7F767F
 !ram_received_item_copy = $7F7688
+
+!ram_gamemode_copy = $6F
+!ram_submode_copy = $70
+!ram_received_item_copy = $71
+
 !ram_hex2dec_tmp = $7F768A
 !ram_hex2dec_first_digit = $7F768C
 !ram_hex2dec_second_digit = $7F768E
@@ -145,6 +149,8 @@ endmacro
 %def_sram("rerandomize_toggle", !ON)
 %def_sram("skip_triforce_toggle", !OFF)
 %def_sram("bonk_items_toggle", !OFF)
+
+%def_sram("LAG", 1)
 
 !lowram_oob_toggle = $037F
 !ram_eg_strength = $7E04AA

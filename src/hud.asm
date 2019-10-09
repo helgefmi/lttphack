@@ -54,7 +54,7 @@ org $0DFAAE
 org $0DFC26
 	JSR UpdateHearts_NoHook
 
-!HEART_LAG_EARLY_STOP = $08 ; stop 2 hearts early
+!HEART_LAG_EARLY_STOP = $18 ; stop 2 hearts early
 ; UpdateHearts Hijack
 org $0DFDCB
 	JSL update_hearts_hook
@@ -207,10 +207,16 @@ hud_template_hook:
 	RTL
 
 WasteTimeWithHearts:
-	NOP
+	NOP ; never remove this, it's part of vanilla cycle count
 	RTL
 
+heart_lag_extra:
+
 update_hearts_hook:
+	LDA !ram_LAG : ASL #5
+
+--	DEC : BNE --
+
 	; Enters: AI=16
 	; Keep AI=16 throughout (let subroutines change back/forth)
 	%a8()
@@ -249,13 +255,12 @@ update_hearts_hook:
 	JSR hud_draw_misslots
 
 .dont_update_misslots
-
 	LDA !ram_xy_toggle : BEQ .dont_update_xy
 
 	JSR hud_draw_xy_display
-	%a8()
 
 .dont_update_xy
+	%a8()
 	LDA !ram_lit_rooms_toggle : BEQ .dont_update_lit_rooms
 	LDA #$03 : STA $045A
 
@@ -412,7 +417,7 @@ hud_draw_xy_display:
 	LDA $22 : TAX
 	LDA $20 : TAY
 
-	LDA !ram_xy_toggle : AND #$00FF : CMP #$0001 : BEQ .hex
+	LDA !ram_xy_toggle : CMP #$0001 : BEQ .hex
 
 .dec
 	TXA : JSL hex_to_dec_a : TAX
