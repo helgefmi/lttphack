@@ -33,8 +33,8 @@ pullpc
 ; This removes file screen music, but oh well.
 music_init:
 	LDX #$00 : JSL music_setup_bank
-	LDA #$FF : STA $2140
 	%ppu_off()
+	LDA #$FF : STA $2140
 	JSL sound_loadsongbank
 	%ppu_on()
 	JSL $00893d
@@ -45,14 +45,12 @@ music_init:
 ; Both $008888 (Sound_LoadSongBank) and sound_loadsongbank below can be used for this.
 ; Enter with X=0 for Overworld music, X=1 for Underworld and X=2 for Credits.
 music_setup_bank:
-	PHB : PHK : PLB
-	LDA !ram_feature_music : ASL #4 : STA $00
+	LDA.l !ram_feature_music : ASL #4 : STA $00
 	TXA : ASL #2 : CLC : ADC $00 : TAX
 
-	LDA spc_data, X : STA $00
-	LDA spc_data+1, X : STA $01
-	LDA spc_data+2, X : STA $02
-	PLB
+	LDA.l spc_data, X : STA $00
+	LDA.l spc_data+1, X : STA $01
+	LDA.l spc_data+2, X : STA $02
 	RTL
 
 

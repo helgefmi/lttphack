@@ -48,6 +48,7 @@
 !ram_gamemode_copy = $6F
 !ram_submode_copy = $70
 !ram_received_item_copy = $71
+!ram_can_reset_timer = $8E
 
 !ram_hex2dec_tmp = $7F768A
 !ram_hex2dec_first_digit = $7F768C
@@ -197,14 +198,14 @@ endmacro
 
 !POS_COUNTERS = $36
 
-!POS_MEM_HEART_GFX = $7EC790
 !POS_HEARTS = $92
+!POS_MEM_HEART_GFX = $7EC790
 
-!POS_MEM_CONTAINER_GFX = $7EC79A
 !POS_CONTAINERS = $9C
+!POS_MEM_CONTAINER_GFX = $7EC79A
 
-!POS_MEM_ENEMY_HEART_GFX = $7EC7A2
 !POS_ENEMY_HEARTS = $A4
+!POS_MEM_ENEMY_HEART_GFX = $7EC7A2
 
 !POS_MEM_INPUT_DISPLAY_TOP = $7EC728
 !POS_MEM_INPUT_DISPLAY_BOT = $7EC768
@@ -264,7 +265,7 @@ endmacro
 !ram_movie_timer = $7E
 !ram_movie_length = $80
 !ram_movie_rng_index = $82
-!ram_movie_rng_length = $8E
+!ram_movie_rng_length = $0258
 !ram_prev_ctrl = $7F8006
 !ram_movie_framecounter = $7F8002
 !ram_movie_next_mode = $7F8004

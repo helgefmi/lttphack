@@ -30,8 +30,8 @@ gamemode_hook:
 	JSR gamemode_shortcuts_everything ; overflow flag checks the presets in here
 	BCS .skip
 
-++	%a16()
 .safeForNone ; we will exit in 16 bit A if it's not safe for anything
+++	%a16()
 	INC !lowram_room_gametime
 	JSR gamemode_transition_detection
 
@@ -84,6 +84,7 @@ gamemode_shortcuts:
 
 !IGNORE_MODULE = $FFFF
 resettimers:
+	LDA !ram_can_reset_timer : BNE updatetimers
 	LDA !lowram_room_realtime
 	STA !lowram_room_realtime_copy : STZ !lowram_room_realtime
 	LDA !lowram_room_gametime
@@ -91,7 +92,11 @@ resettimers:
 	LDA !lowram_idle_frames
 	STA !lowram_idle_frames_copy : STZ !lowram_idle_frames
 	LDA #$0000 : STA !ram_rng_counter
+	LDA #$0001 : STA !ram_can_reset_timer
 	BRA updatetimers_hud
+
+updatetimers_item:
+	STX !ram_received_item_copy
 
 updatetimers:
 	LDA !lowram_room_realtime : STA !lowram_room_realtime_copy
@@ -105,22 +110,26 @@ ignoremodule:
 	LDA $10 : STA !ram_gamemode_copy
 	RTS
 
+allowreset:
+	STZ !ram_can_reset_timer
+	LDA $10 : STA !ram_gamemode_copy
+	RTS
+
 ; enters A=16
 gamemode_transition_detection:
 	%i8()
 	LDA $10 : CMP !ram_gamemode_copy : BNE .changed
-	LDX $02D8 : CPX !ram_received_item_copy : BNE .changed
+	LDX $02D8 : CPX !ram_received_item_copy : BNE updatetimers_item
 
 	RTS
 
 .changed
-	ASL : TAY ; shift left and give to Y
-	ROR ; back to normal A
+	ASL : TAY ; shift left and give 2*module to Y
 
-
-	LDA Submodule_tables, Y : CMP !IGNORE_MODULE : BNE ignoremodule ; ignore module
+	LDA Submodule_tables, Y : CMP #!IGNORE_MODULE : BEQ ignoremodule ; ignore module
 
 	STA $00
+	LDY $11 ; get submodule
 	LDA ($00), Y ; stay in 16 bit
 	TAX ; this becomes 8 bit X so it's fine
 
@@ -130,6 +139,7 @@ gamemode_transition_detection:
 	dw ignoremodule ; this is why we stay in 16 bit, so we can store the mode
 	dw updatetimers ; these other actions can deal with bitmode themselves
 	dw resettimers
+	dw allowreset
 
 Submodule_tables:
 	dw !IGNORE_MODULE ; Intro_sub
@@ -165,11 +175,12 @@ Submodule_tables:
 !T_Nothing = 0<<1 ; Do nothing
 !T_Update = 1<<1 ; Update timers without resetting
 !T_Reset = 2<<1 ; Reset timers and update
+!T_Allow = 3<<1 ; Reset timers and update
 	PreDungeon_sub: ; $06
 		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x00, 0x01, 0x02, 0x03
 
 	Dungeon_sub: ; $07
-		db !T_Nothing, !T_Reset, !T_Reset, !T_Update ; 0x00, 0x01, 0x02, 0x03
+		db !T_Allow, !T_Reset, !T_Reset, !T_Update ; 0x00, 0x01, 0x02, 0x03
 		db !T_Update, !T_Update, !T_Reset, !T_Reset ; 0x04, 0x05, 0x06, 0x07
 		db !T_Update, !T_Update, !T_Nothing, !T_Update ; 0x08, 0x09, 0x0A, 0x0B
 		db !T_Update, !T_Update, !T_Reset, !T_Nothing ; 0x0C, 0x0D, 0x0E, 0x0F
@@ -181,7 +192,7 @@ Submodule_tables:
 		db !T_Reset, !T_Nothing, !T_Nothing ; 0x00, 0x01, 0x02
 
 	Overworld_sub: ; $09/$0B
-		db !T_Nothing, !T_Reset, !T_Nothing, !T_Nothing ; 0x00, 0x01, 0x02, 0x03
+		db !T_Allow, !T_Reset, !T_Nothing, !T_Nothing ; 0x00, 0x01, 0x02, 0x03
 		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x04, 0x05, 0x06, 0x07
 		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x08, 0x09, 0x0A, 0x0B
 		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x0C, 0x0D, 0x0E, 0x0F
@@ -201,7 +212,7 @@ Submodule_tables:
 
 	CloseSpotlight_sub: ; $0F
 	OpenSpotlight_sub: ; $10 ???
-		db !T_Nothing, !T_Nothing ; 0x00, 0x01
+		db !T_Reset, !T_Nothing ; 0x00, 0x01
 
 	HoleToDungeon_sub: ; $11
 		db !T_Reset, !T_Nothing, !T_Nothing, !T_Nothing ; 0x00, 0x01, 0x02, 0x03

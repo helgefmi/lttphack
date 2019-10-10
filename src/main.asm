@@ -8,7 +8,7 @@ incsrc defines.asm
 incsrc hexedits.asm
 
 org $208000
-incsrc gamemode2.asm
+incsrc gamemode.asm
 incsrc nmi.asm
 incsrc draw.asm
 
@@ -20,7 +20,6 @@ org $22C000
 incsrc tiles.asm
 
 org $238000
-;incsrc HDMA.asm
 incsrc init.asm
 incsrc rng.asm
 incsrc misc.asm
