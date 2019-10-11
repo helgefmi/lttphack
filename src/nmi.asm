@@ -34,23 +34,42 @@ warnpc $0089DF
 org $008C8A
 	dw NMI_UpdatePracticeHUD ; $17=0x06
 
-org $00D5C5 ; please be unused
+org $00EA79 ; seems unused
 NMI_UpdatePracticeHUD:
-	LDX $0116 : LDA $9888, X : STA $2117
-	LDA.b #!menu_dma_buffer>>16 : STA $4304
+	LDX $0116 : LDA .vram_high, X : STA $2117
+	TXA : ASL : TAX
 	REP #$20
+	LDA .size-1, X : AND #$FF00 : STA $4305
+	LDA .buffer, X : STA $4302
+
+	LDX.b #!menu_dma_buffer>>16 : STX $4304
 	LDA #$0080 : STA $2115
 	LDA #$1801 : STA $4300
-	LDA.w #!menu_dma_buffer : STA $4302
-	LDA #$0800 : STA $4305
 	LDY #$01 : STY $420B
-	TDC : STA.l !menu_dma_buffer
 	SEP #$20
 	RTS
 
-warnpc $00D60A
+	.vram_high
+		db $6C, $65
 
-org $0098AB : db $64
+	.size ; $XX00
+		dw $08, $01
+
+	.buffer
+		dw !menu_dma_buffer, !dg_dma_buffer
+
+warnpc $00EAE5
+org $00D5C5
+LoadGlitchedWindowChars:
+	LDY.b #DoorWatchGFX>>16 : STY $02
+	REP #$30
+	LDA.w #DoorWatchGFX : STA $00
+	JMP.w $00E380
+
+org $00E376
+	JSR LoadGlitchedWindowChars
+	PLB : RTL
+
 pullpc
 nmi_expand:
 	; Enters AI=16

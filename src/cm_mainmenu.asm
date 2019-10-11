@@ -786,6 +786,7 @@ cm_submenu_hud:
 	dw cm_hud_lagometer
 	dw cm_hud_enemy_hp
 	dw cm_hud_misslots
+	dw cm_hud_doorwatch
 	dw !menu_end
 	%cm_header("HUD EXTRAS")
 
@@ -872,6 +873,44 @@ cm_hud_lanmola_cycle_count:
 
 cm_hud_misslots:
 	%cm_toggle("Misslots RAM", !ram_misslots_toggle)
+
+cm_hud_doorwatch:
+	%cm_toggle_jsr("DG watch", !ram_doorwatch_toggle)
+
+.toggle
+	LDA !ram_doorwatch_toggle : BEQ ++
+	WDM
+	PHP : PHB
+	%a8()
+	%i16()
+	PEA.w (!dg_hdma>>16)&$00FF ; Pushes bank $00 then bank $7F (probably)
+	PLB ; bank of the hdma table for modifying
+
+	; Set up the HDMA table
+	LDA #$3F : STA.w !dg_hdma+0 ; for 64 scanlines
+	LDX #$0000 : STX.w !dg_hdma+1 ; Shift BG3 by 0 pixels
+
+	LDA #$20 : STA.w !dg_hdma+3 ; for 32 scanlines
+	LDX #$0100 : STX.w !dg_hdma+4 ; shift BG3 by 256 pixels
+
+	LDA #$01 : STA.w !dg_hdma+6 ; for 1 scanline
+	LDX #$0000 : STX.w !dg_hdma+7 ; shift BG3 by 0 pixels
+
+	STZ.w !dg_hdma+9 ; terminate HDMA
+
+	PLB ; bank 0, where we have register/bank $7E mirrors
+
+	; Use HDMA channel 5
+	LDA #%00000010 : STA $4350 ; direct, 1 address, 2 writes
+	LDA #$11 : STA $4351 ; BG3 h scroll
+	LDX.w #!dg_hdma : STX $4352 ; address of table
+	LDA.b #!dg_hdma>>16 : STA $4354 ; bank of table
+
+	PLB : PLP
+	RTS
+
+	LDA #$20 : TRB $9B ; shut off HDMA
+++	RTS
 
 ; }}}
 ; GAME STATE {{{

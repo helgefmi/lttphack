@@ -48,7 +48,7 @@ music_setup_bank:
 	LDA.l !ram_feature_music : ASL #4 : STA $00
 	TXA : ASL #2 : CLC : ADC $00 : TAX
 
-	LDA.l spc_data, X : STA $00
+	LDA.l spc_data+0, X : STA $00
 	LDA.l spc_data+1, X : STA $01
 	LDA.l spc_data+2, X : STA $02
 	RTL
@@ -153,8 +153,6 @@ sound_loadsongbank:
 
 	; Then the carry bit will be set
 	; And rotated into the accumulator (A = #$01)
-	; NOTE ANTITRACK'S DOC IS WRONG ABOUT THIS!!!
-	; He mistook #$0001 to be #$0100.
 	LDA #$00 : ROL A : STA $2141 : ADC #$7F
 
 	; Hopefully no one was confused.

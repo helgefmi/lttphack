@@ -27,6 +27,7 @@ incsrc idle.asm
 
 org $248000
 incsrc custom_menu.asm
+incsrc glitchedwindow.asm
 
 org $258000
 incsrc presets.asm

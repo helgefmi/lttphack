@@ -737,10 +737,10 @@ gamemode_somaria_pits:
 	LDY #$0FFE
 
 --	LDA $2000, Y : AND #$00FF ; checks tile attributes table
-	  CMP #$0020 : BEQ .ispit
-	  ;CMP #$00B0 : BCC .skip
-	  ;CMP #$00BF : BCS .skip ; range B0-BE, which are pits
-	  BRA .skip
+	CMP #$0020 : BEQ .ispit
+	;CMP #$00B0 : BCC .skip
+	;CMP #$00BF : BCS .skip ; range B0-BE, which are pits
+	BRA .skip
 
 .ispit
 	TYA : ASL : TAX

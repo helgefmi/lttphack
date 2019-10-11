@@ -51,9 +51,9 @@ CM_Init:
 	LDA #cm_mainmenu_indices : STA !ram_cm_menu_stack
 	; Scroll down
 	LDA #$0100 : STA $E4
-	LDA #$0018 : STA $EA
+	LDA #$0118 : STA $EA
 	%a8()
-
+	LDA $9B : AND #$DF : STA $9B
 	JSR cm_init_item_variables
 
 .end
@@ -355,7 +355,7 @@ cm_redraw:
 
 	; tell NMI to update tilemap
 	LDA.b #$06 : STA $17
-	LDA.b #$23 : STA $0116
+	LDA.b #!HUD_DMA : STA $0116
 
 	RTS
 
@@ -1352,7 +1352,7 @@ cm_do_ctrl_config:
 
 	%ai8()
 	LDA.b #$06 : STA $17
-	LDA.b #$23 : STA $0116
+	LDA.b #!HUD_DMA : STA $0116
 
 .next_frame
 	%ai8()

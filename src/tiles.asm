@@ -37,3 +37,6 @@ load_default_tileset:
 
 hud_table:
 	incbin ../resources/hud_gfx.bin
+
+DoorWatchGFX:
+	incbin "../resources/doorwatch.2bpp"

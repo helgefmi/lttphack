@@ -221,6 +221,7 @@ sup.footnote {
 li > sup.footnote {
 	opacity: .6;
 }
+
 li:hover > sup.footnote {
 	opacity: 1.0
 }

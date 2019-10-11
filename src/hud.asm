@@ -217,6 +217,20 @@ update_hearts_hook:
 
 --	DEC : BNE --
 
+	%ai8()
+	LDA.l !ram_doorwatch_toggle : AND $1B : LSR ; set or clear clarry
+	LDA #$20 ; HDMA bit
+	BCC .noDoorWatch
+	LDX $10 : CPX #$0E : BEQ .noDoorWatch
+	CPX #$0C : BEQ .noDoorWatch
+	TSB $9B
+	JSL UpdateGlitchedWindow
+	BRA ++
+
+.noDoorWatch
+	TRB $9B
+
+++	%i16()
 	; Enters: AI=16
 	; Keep AI=16 throughout (let subroutines change back/forth)
 	%a8()

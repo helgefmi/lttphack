@@ -1,8 +1,5 @@
-For V11
-=======
-
 Big stuff
----------
+----------
 
 - Movies
 
@@ -21,8 +18,10 @@ Big stuff
 		C = $18
 		D = $08
 
+- Refactoring gamemode (gamemode2.asm) to be more intuitive
+
 Other stuff
------------
+------------
 
 - Preset for double reddies
 
@@ -52,8 +51,17 @@ Other stuff
 
 - hey pinkus! Thanks for working on the LTTP practice hack. I have a feature request. I'm still early enough in my NMG play that i get the powder. It's annoying to have to turn on for every single preset, I imagine in the same way turning on the sanc heart was annoying. Can we get a setting to have powder on for the presets? (medium priority)
 
+- bug with presets and sq
+
+Possible toggles/options
+-------------------------
+- Follower $7EF3CC
+
+- Statue drag $02FA
+
+
 Low priority
-------------
+-------------
 - Make the menu redraw less often, just for practicality's sake and less disruptive fblank
 
 ======== MINIGAMES TODO ========

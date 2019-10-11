@@ -1,3 +1,15 @@
+; Magic words
+!menu_end = #$0000
+!list_end = #$FF
+
+!pracmenu_shortcut = #$1010
+
+!menu_dma_buffer = $7F8000 ; [0x800] reserved
+!dg_hdma = $7F8800 ; [0x800] reserved
+!dg_dma_buffer = $7F9000 ; [0x800] reserved
+!HUD_DMA = 0
+!DG_DMA = 1
+
 ; ==== RAM usage ====
 ;
 ; 7C[0x08] (84)
@@ -9,10 +21,6 @@
 ; $7F7667[0x6719] (7FDD80)
 ; $7EC900[0x1F00] (7EE800)
 ;  * 7ED000 - 7ED780 = VRAM buffer backup in custom_menu.asm
-
-!pracmenu_shortcut = #$1010
-
-!menu_dma_buffer = $7F8000 ; [0x800] reserved
 
 !lowram_room_realtime = $04CC
 !lowram_room_gametime = $04CE
@@ -130,6 +138,7 @@ endmacro
 %def_sram("secondary_counter_type", !OFF)
 %def_sram("toggle_lanmola_cycles", !HUDONLY)
 %def_sram("input_display_toggle", !HUDONLY)
+%def_sram("qw_toggle", !OFF)
 
 %def_sram("xy_toggle", !HUDONLY)
 %def_sram("subpixels_toggle", !OFF)
@@ -138,7 +147,7 @@ endmacro
 %def_sram("counters_idle", !HUDONLY)
 %def_sram("counters_segment", !HUDONLY)
 %def_sram("misslots_toggle", !OFF)
-%def_sram("qw_toggle", !OFF)
+%def_sram("doorwatch_toggle", !OFF)
 
 %def_sram("rerandomize_framecount", !OFF)
 %def_sram("rerandomize_accumulator", !OFF)
@@ -380,10 +389,6 @@ endif
 !ram_game_flags = $7EF3C6
 !ram_game_map_indicator = $7EF3C7
 !ram_capabilities = $7EF379
-
-; Magic words
-!menu_end = #$0000
-!list_end = #$FF
 
 ;-------------------------
 ; Macros
