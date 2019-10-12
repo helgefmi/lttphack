@@ -786,7 +786,7 @@ cm_submenu_hud:
 	dw cm_hud_lagometer
 	dw cm_hud_enemy_hp
 	dw cm_hud_misslots
-	dw cm_hud_doorwatch
+	;dw cm_hud_doorwatch
 	dw !menu_end
 	%cm_header("HUD EXTRAS")
 

@@ -1,4 +1,4 @@
-set version=11
+set version="11.0.0"
 cd target
 copy alttp.sfc "lttphack-%version%.sfc"
 copy alttp.sfc "lttphack-%version% SD2SNES.sfc"

@@ -54,7 +54,7 @@ org $0DFAAE
 org $0DFC26
 	JSR UpdateHearts_NoHook
 
-!HEART_LAG_EARLY_STOP = $28 ; stop 2 hearts early
+!HEART_LAG_EARLY_STOP = $18
 ; UpdateHearts Hijack
 org $0DFDCB
 	JSL update_hearts_hook

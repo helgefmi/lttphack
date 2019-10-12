@@ -64,6 +64,13 @@ incbin ../resources/spc_underworld.bin
 org !SPC_DATA_CREDITS
 incbin ../resources/spc_credits.bin
 
+;========================================================================
+; LEAVE THIS HERE
+; it's needed for calculating when certain data comes from a possibly
+; non-vanilla source, which requires knowing the last bank we write to
+;========================================================================
+EndOfPracticeROM:
+
 ; pad rom to 2mb
 org $3FFFFF
 db $FF
