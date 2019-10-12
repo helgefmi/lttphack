@@ -786,7 +786,7 @@ cm_submenu_hud:
 	dw cm_hud_lagometer
 	dw cm_hud_enemy_hp
 	dw cm_hud_misslots
-	;dw cm_hud_doorwatch
+	dw cm_hud_doorwatch
 	dw !menu_end
 	%cm_header("HUD EXTRAS")
 
@@ -879,7 +879,16 @@ cm_hud_doorwatch:
 
 .toggle
 	LDA !ram_doorwatch_toggle : BEQ ++
-	WDM
+
+	REP #$20
+	LDA #$207F
+	LDX #$40
+--	STA !dg_buffer_r0, X
+	STA !dg_buffer_r1, X
+	STA !dg_buffer_r2, X
+	STA !dg_buffer_r3, X
+	DEX : DEX : BNE --
+
 	PHP : PHB
 	%a8()
 	%i16()
@@ -887,10 +896,10 @@ cm_hud_doorwatch:
 	PLB ; bank of the hdma table for modifying
 
 	; Set up the HDMA table
-	LDA #$3F : STA.w !dg_hdma+0 ; for 64 scanlines
+	LDA #63 : STA.w !dg_hdma+0 ; for 64 scanlines
 	LDX #$0000 : STX.w !dg_hdma+1 ; Shift BG3 by 0 pixels
 
-	LDA #$20 : STA.w !dg_hdma+3 ; for 32 scanlines
+	LDA.b #32 : STA.w !dg_hdma+3 ; for 32 scanlines
 	LDX #$0100 : STX.w !dg_hdma+4 ; shift BG3 by 256 pixels
 
 	LDA #$01 : STA.w !dg_hdma+6 ; for 1 scanline

@@ -1,11 +1,5 @@
 function char(n) = $2150+n
 
-!dg_buffer_r0 #= !dg_dma_buffer+(64*0)
-!dg_buffer_r1 #= !dg_dma_buffer+(64*1)
-!dg_buffer_r2 #= !dg_dma_buffer+(64*2)
-!dg_buffer_r3 #= !dg_dma_buffer+(64*3)
-!dg_buffer_r4 #= !dg_dma_buffer+(64*4)
-
 !BROWN_PAL #= (0<<10)
 !RED_PAL #= (1<<10)
 !YELLOW_PAL #= (2<<10)
@@ -23,25 +17,10 @@ function char(n) = $2150+n
 !DESYNC = char($11)|!RED_PAL
 !HAMMER = char($12)|!BROWN_PAL
 
-
-; $20[2] Y coordinate
-; $22[2] X coordinate
-; mirrors to check sync status of: $02DC, $02DE ; $0FC2, $0FC4
-
 ; $A0[2] room ID
 ; find a place to cache original room id that only works on proper transitions?
 
 ; $A2[2] previous room
-; $A6[1] something with scrolling
-; $A7[1] ditto
-
-; $A9[1] 0 = west quadrants, 1 = east quadrants
-; $AA[1] 0 = north quadrants, 2 = south quadrants
-; guess with coordinates?
-
-; $B7[3] overlay location or something
-; $BA[2] overlay determiner or something
-; use this data to calculate chances of VRAM corruption?
 
 ; $E0[2], $E2[2], $E6[2], $E8[2] BG scrolling
 ; $0110[2] room id*3 only add if it seems to ever desync
@@ -55,10 +34,8 @@ function char(n) = $2150+n
 ; $040E room header
 
 ; $0496 number of chests * 2
-; $04BA[2] overlay stuff
 
 ; $06xx - camera scroll things?
-
 
 ; $068E[2] WEST SOMARIA
 ; $0690[2] WEST SOMARIA
@@ -67,47 +44,34 @@ function char(n) = $2150+n
 
 ; $7EC0000[5] stair destinations
 
-; # = relevant symbol
+; template for design planning
 ; 00000000001111111111222222222233
 ; 01234567890123456789012345678901
-; ..#XXXXYYYY.#.IDrrr#rrr.#.......
-; ..#NW#SW#...#HKcCCCCC DDDDQQQQ.. ; True quadrant / repaired #
-; ..#XXXXd^XXXXvXXXX....##aaaaaa##
-; ..#YYYYd^YYYYvYYYY
-; ..#XXXXYYYY#^XXvXX^YYvYY........  ; camera scroll, upper and lower high bytes
-; ...................... ; overlay, RAM/ROM icon, long address, vanilla warning
 ; ................................
+
 UpdateGlitchedWindow:
-; Room Flag icon: use gray/colored 
+
 clear_buffer:
 	REP #$20
-	LDA #$207F
-	LDX #$20
---	STA !dg_buffer_r0, X
-	STA !dg_buffer_r1, X
-	STA !dg_buffer_r2, X
-	STA !dg_buffer_r3, X
-	STA !dg_buffer_r4, X
-	DEX : DEX : BNE --
 
 print_coords:
-	LDA.w #char(0)|!RED_PAL : STA !dg_dma_buffer+4 ; XY
+	LDA.w #char(0)|!RED_PAL : STA !dg_buffer_r0+4 ; XY
 	LDX #6 : LDA $22 : JSR draw_hex_4digits_white
 	LDX #14 : LDA $20 : JSR draw_hex_4digits_yellow
 
 print_room_id:
-	LDA.w #char(1)|!RED_PAL : STA !dg_dma_buffer+28 ; IDr
-	INC : STA !dg_dma_buffer+30 ; INC for next char cheaply
-	LDA.w #!HAMMER : STA !dg_dma_buffer+38 ; hammer
+	LDA.w #char(1)|!RED_PAL : STA !dg_buffer_r0+24 ; IDr
+	INC : STA !dg_buffer_r0+26 ; INC for next char cheaply
+	LDA.w #!HAMMER : STA !dg_buffer_r0+34 ; hammer
 
-	LDX #32 : LDA $A0 : JSR draw_hex_3digits_white
+	LDX #28 : LDA $A0 : JSR draw_hex_3digits_white
 
 calc_correct_room_id:
 	LDA $21 : AND #$00FE : ASL #3 : STA $72
 	LDA $23 : AND #$00FE : LSR ; bit 0 is off, so it clears carry
 	ADC $72 : STA $72
 
-	LDX #40
+	LDX #36
 	CMP $A0 : BNE .roomdesync
 
 .roomsynced
@@ -120,7 +84,7 @@ calc_correct_room_id:
 	LDA.w #!DESYNC
 
 .doneRoom
-	STA !dg_dma_buffer+24
+	STA !dg_buffer_r0+22
 
 calc_room_flags:
 	LDX #(2*(16-1))
@@ -131,16 +95,14 @@ calc_room_flags:
 
 .flagSet
 	ORA.l .palettes, X
-+	STA !dg_dma_buffer+2+64+4, X
++	STA !dg_buffer_r1+2+4, X
 	DEX #2 : BPL --
 
 	LDA.w #char($19)|!RED_PAL : STA !dg_buffer_r1+4
 
-; HKcCCCCC DDDDQQQQ
-
 calc_quadrant:
-	LDA.w #char($14)|!BLUE_PAL : STA !dg_buffer_r1+42
-	LDA.w #!HAMMER : STA !dg_buffer_r1+46
+	LDA.w #char($14)|!BLUE_PAL : STA !dg_buffer_r0+44
+	LDA.w #!HAMMER : STA !dg_buffer_r0+48
 	LDA $A9 : LSR ; $A9 is 0 or 1
 	BCS .east
 
@@ -173,7 +135,7 @@ calc_quadrant:
 
 .doQuadrant
 	STY $72
-	STA !dg_buffer_r1+44
+	STA !dg_buffer_r0+46
 
 calc_correct_quadrant:
 	LDA #$0100 ; checking the same bit on both coordinates
@@ -210,55 +172,124 @@ calc_correct_quadrant:
 .doQuadrant
 	CPY $72 : BEQ .quadrantsSynced
 	ORA.w #!TEXT_PAL
-	STA !dg_buffer_r1+48
+	STA !dg_buffer_r0+50
 	LDA.w #!DESYNC : BRA ++
 
 .quadrantsSynced
-	STA !dg_buffer_r1+48
+	STA !dg_buffer_r0+50
 	LDA.w #!SYNCED
-++	STA !dg_buffer_r1+50
+++	STA !dg_buffer_r0+52
 
 draw_camera:
-	LDA.w #char($13)|!RED_PAL
+	LDA.w #char($13)|!GRAY_PAL ; camera icon
 	STA !dg_buffer_r2+4
 	STA !dg_buffer_r3+4
 	LDX.b #(64+64)+6 : LDA $E2 : JSR draw_hex_4digits_white
 	LDX.b #(64+64+64)+6 : LDA $E8 : JSR draw_hex_4digits_yellow
 
-	LDA.w #char(9)|!RED_PAL : STA !dg_buffer_r2+14
-	INC : STA !dg_buffer_r2+26 ; consecutive character values, so just increment
-	INC : STA !dg_buffer_r3+16
-	INC : STA !dg_buffer_r3+26
+	LDX $A6
+	LDA $0608, X : STA $72 ; cache X camera for desync check
+	LDA $060C, X : STA $74
+	CPX #$02 : BEQ .XSet2
 
-	LDX.b #(64+64)+18 : LDA $060A : JSR draw_hex_4digits_white
-	LDX.b #(64+64)+28 : LDA $060E : JSR draw_hex_4digits_white
+.XSet1
+	LDA.w #char(9)|!RED_PAL ; labels
+	STA !dg_buffer_r2+16
+	INC : STA !dg_buffer_r2+26
 
-	LDX.b #(64+64+64)+18 : LDA $0602 : JSR draw_hex_4digits_yellow
-	LDX.b #(64+64+64)+28 : LDA $0606 : JSR draw_hex_4digits_yellow
+	LDA.w #char(9)|!GRAY_PAL
+	STA !dg_buffer_r2+36
+	INC : STA !dg_buffer_r2+46
 
-	LDA $E2 : CMP $060A : BCC .xDesynced
-	; decrement to compare such that equals means carry is clear
-	DEC : CMP $060E : BCS .xDesynced
-	LDA.w #!SYNCED : BRA .drawXSync
+	LDX.b #(64+64)+18 : LDA $0608 : JSR draw_hex_4digits_white
+	LDX.b #(64+64)+28 : LDA $060C : JSR draw_hex_4digits_white
+	LDX.b #(64+64)+38 : LDA $060A : JSR draw_hex_4digits_gray
+	LDX.b #(64+64)+48 : LDA $060E : JSR draw_hex_4digits_gray
+	BRA .checkXSync
+
+.XSet2
+	LDA.w #char(9)|!GRAY_PAL ; labels
+	STA !dg_buffer_r2+16
+	INC : STA !dg_buffer_r2+26
+
+	LDA.w #char(9)|!RED_PAL
+	STA !dg_buffer_r2+36
+	INC : STA !dg_buffer_r2+46
+
+	LDX.b #(64+64)+18 : LDA $0608 : JSR draw_hex_4digits_gray
+	LDX.b #(64+64)+28 : LDA $060C : JSR draw_hex_4digits_gray
+	LDX.b #(64+64)+38 : LDA $060A : JSR draw_hex_4digits_white
+	LDX.b #(64+64)+48 : LDA $060E : JSR draw_hex_4digits_white
+
+.checkXSync
+	LDA $E2 : CMP $72 : BCC .xDesynced
+	; decrement so that equal values result in a clear carry
+	DEC : CMP $74 : BCS .xDesynced
+
+.xProbablyFine
+	LDA.w #!SYNCED
+	BRA .drawXSync
+
 .xDesynced
-	LDA.w #!DESYNC
+	LDA.w #!DESYNC 
 
 .drawXSync
 	STA !dg_buffer_r2+14
 
-	LDA $E8 : CMP $0602 : BCC .yDesynced
-	; decrement to compare such that equals means carry is clear
-	DEC : CMP $0606 : BCS .yDesynced
-	LDA.w #!SYNCED : BRA .drawYSync
+
+	LDX $A7
+	LDA $0600, X : STA $72 ; cache X camera for desync check
+	LDA $0604, X : STA $74
+	CPX #$02 : BEQ .YSet2
+
+.YSet1
+	LDA.w #char(11)|!REDYELLOW ; labels
+	STA !dg_buffer_r3+16
+	INC : STA !dg_buffer_r3+26
+
+	LDA.w #char(11)|!GRAY_PAL
+	STA !dg_buffer_r3+36
+	INC : STA !dg_buffer_r3+46
+
+	LDX.b #(64+64+64)+18 : LDA $0600 : JSR draw_hex_4digits_yellow
+	LDX.b #(64+64+64)+28 : LDA $0604 : JSR draw_hex_4digits_yellow
+	LDX.b #(64+64+64)+38 : LDA $0602 : JSR draw_hex_4digits_gray
+	LDX.b #(64+64+64)+48 : LDA $0606 : JSR draw_hex_4digits_gray
+	BRA .checkYSync
+
+.YSet2
+	LDA.w #char(11)|!GRAY_PAL ; labels
+	STA !dg_buffer_r3+16
+	INC : STA !dg_buffer_r3+26
+
+	LDA.w #char(11)|!REDYELLOW
+	STA !dg_buffer_r3+36
+	INC : STA !dg_buffer_r3+46
+
+	LDX.b #(64+64+64)+18 : LDA $0600 : JSR draw_hex_4digits_gray
+	LDX.b #(64+64+64)+28 : LDA $0604 : JSR draw_hex_4digits_gray
+	LDX.b #(64+64+64)+38 : LDA $0602 : JSR draw_hex_4digits_yellow
+	LDX.b #(64+64+64)+48 : LDA $0606 : JSR draw_hex_4digits_yellow
+
+.checkYSync
+	WDM
+	LDA $E8 : CMP $72 : BCC .yDesynced
+	; decrement so that equal values result in a clear carry
+	DEC : CMP $74 : BCS .yDesynced
+
+.yProbablyFine
+	LDA.w #!SYNCED
+	BRA .drawYSync
+
 .yDesynced
-	LDA.w #!DESYNC
+	LDA.w #!DESYNC 
 
 .drawYSync
 	STA !dg_buffer_r3+14
 
 OverlayPTR = $04E9A1
 draw_overlay:
-	LDA.w #char($18)|!GRAY_PAL : STA !dg_buffer_r2+44
+	LDA.w #char($18)|!YELLOW_PAL : STA !dg_buffer_r1+40
 
 	LDA $BA : BNE .preloaded
 
@@ -275,20 +306,18 @@ draw_overlay:
 	LDA $B7 : STA $72
 	LDA.w #0 ; char(??)
 
-!NON_VANILLA = $0000
+!NON_VANILLA = char($16)|!YELLOW_PAL
 .draw
-	STA !dg_buffer_r2+46
+	STA !dg_buffer_r1+42
 	;REP #$10
-	;LDX #$0106 : LDA $72 : JSR draw_hex_2digits_white ; this doesn't change X flag
-	;LDX #$0108 : LDA $73 : JSR draw_hex_4digits_white ; this exits i=10
+	LDX #(64+44) : LDA $74 : JSR draw_hex_2digits_white ; this doesn't change X flag
+	LDX #(64+48) : LDA $72 : JSR draw_hex_4digits_white ; this exits i=10 - might not need
 
-	LDX #(64+64)+48 : LDA $74 : JSR draw_hex_2digits_white
-	LDX #(64+64)+52 : LDA $72 : JSR draw_hex_4digits_white
 	LDA $73 : AND #$FF00
 	CMP #$7000 : BCC .notSRAM
 	CMP #$7000 : BCS .notSRAM
 	LDA.w #!NON_VANILLA
-	BRA .safetyDraw
+	BRA .drawWarning
 
 .notSRAM
 	LDA $73 : AND #$00FF ; see what page it's on
@@ -298,19 +327,17 @@ draw_overlay:
 	LDA $73 : AND #$3FFF ; account for mirroring of ROM
 	CMP #$2080 : BCC .notROM ; before bank $20 and we're okay
 	CMP.w #(EndOfPracticeROM&$FF00)+$0100 : BCS .notROM ; the last bank we *don't* use
-	LDA.w #!NON_VANILLA
-
-.safetyDraw 
-	;STA !dg_buffer_r3+60
+	LDA.w #!NON_VANILLA : BRA .drawWarning
 
 .notROM
+	LDA #$207F
+
+.drawWarning
+	STA !dg_buffer_r1+56
 
 
 trigger_update:
 	%a8()
-	LDA #$06 : STA $17
-	LDA #!DG_DMA : STA $0116
-
 	RTL
 
 !ToDo = $207F
@@ -358,6 +385,20 @@ draw_hex_4digits_yellow:
 
 	AND #$000F : ORA #$10|!P3|!REDYELLOW : STA !dg_dma_buffer+2, X
 	TYA : LSR #4 : AND #$000F : ORA #$10|!P3|!REDYELLOW : STA !dg_dma_buffer+0, X
+
+	SEP #$10
+	RTS
+
+draw_hex_4digits_gray:
+	REP #$10
+	TAY ; cache A
+	AND #$000F : ORA #$10|!P3|!GRAY_PAL : STA !dg_dma_buffer+6, X
+	TYA : LSR #4 : AND #$000F : ORA #$10|!P3|!GRAY_PAL : STA !dg_dma_buffer+4, X
+
+	TYA : XBA : TAY ; get old value back, change to high byte
+
+	AND #$000F : ORA #$10|!P3|!GRAY_PAL : STA !dg_dma_buffer+2, X
+	TYA : LSR #4 : AND #$000F : ORA #$10|!P3|!GRAY_PAL : STA !dg_dma_buffer+0, X
 
 	SEP #$10
 	RTS

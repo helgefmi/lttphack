@@ -355,7 +355,6 @@ cm_redraw:
 
 	; tell NMI to update tilemap
 	LDA.b #$06 : STA $17
-	LDA.b #!HUD_DMA : STA $0116
 
 	RTS
 
@@ -1352,7 +1351,6 @@ cm_do_ctrl_config:
 
 	%ai8()
 	LDA.b #$06 : STA $17
-	LDA.b #!HUD_DMA : STA $0116
 
 .next_frame
 	%ai8()

@@ -3,7 +3,7 @@ pushpc
 ;
 ; Code that is run once after the game has been powered on.
 
-!SRAM_VERSION = $001E
+!SRAM_VERSION = $001F
 
 ; Overrides the following:
 ; LDA.b #$81 : STA $4200

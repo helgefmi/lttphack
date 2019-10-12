@@ -19,8 +19,8 @@ LDA $1D : STA $AC : NOP
 org $008B6B
 	; 008b6b ldx $0219
 	; 008b6e stx $2116
-	;JSL nmi_hud_update
-	;NOP #2
+	JSL nmi_hud_update
+	NOP #2
 
 ; NMI HOOK
 org $0089C2
@@ -36,27 +36,18 @@ org $008C8A
 
 org $00EA79 ; seems unused
 NMI_UpdatePracticeHUD:
-	LDX $0116 : LDA .vram_high, X : STA $2117
-	TXA : ASL : TAX
 	REP #$20
-	LDA .size-1, X : AND #$FF00 : STA $4305
-	LDA .buffer, X : STA $4302
+	LDX #$80 : STX $2115
+	LDA #$6C00 : STA $2116
 
-	LDX.b #!menu_dma_buffer>>16 : STX $4304
-	LDA #$0080 : STA $2115
 	LDA #$1801 : STA $4300
-	LDY #$01 : STY $420B
+	LDA.w #!menu_dma_buffer : STA $4302
+	LDX.b #!menu_dma_buffer>>16 : STX $4304
+	LDA #$0800 : STA $4305
+
+	LDX #$01 : STX $420B
 	SEP #$20
 	RTS
-
-	.vram_high
-		db $6C, $65
-
-	.size ; $XX00
-		dw $08, $01
-
-	.buffer
-		dw !menu_dma_buffer, !dg_dma_buffer
 
 warnpc $00EAE5
 org $00D5C5
@@ -109,18 +100,29 @@ nmi_expand:
 	RTL
 
 nmi_hud_update:
-	LDX #$6360 : STX $2116
+	; Movie stuff commented out while it's not needed
+;	LDX #$6360 : STX $2116
 
-	; $7EC700 is the WRAM buffer for this data
-	LDX.w #!ram_movie_hud : STX $4302
-	LDA.b #!ram_movie_hud>>16 : STA $4304
+;	; $7EC700 is the WRAM buffer for this data
+;	LDX.w #!ram_movie_hud : STX $4302
+;	LDA.b #!ram_movie_hud>>16 : STA $4304
+;	LDX #$0040 : STX $4305 ; number of bytes to transfer is 330
+;	LDA #$01 : STA $420B ; refresh BG3 tilemap data with this transfer on channel 0
 
-	; number of bytes to transfer is 330
-	LDX #$0040 : STX $4305
+	LDA !ram_doorwatch_toggle : BEQ .noDoorWatch
+	LDA #$80 : STA $2115
+	LDX #$6500 : STX $2116
 
-	; refresh BG3 tilemap data with this transfer on channel 0
+	LDX #$1801 : STX $4300
+	LDX.w #!dg_dma_buffer : STX $4302
+	LDA.b #!dg_dma_buffer>>16 : STA $4304
+	LDX #$0100 : STX $4305
+
 	LDA #$01 : STA $420B
 
-	LDX #$6040
+.noDoorWatch
+
+	LDX $0219 ; #$6040
 	STX $2116
+
 	RTL

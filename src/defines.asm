@@ -7,8 +7,11 @@
 !menu_dma_buffer = $7F8000 ; [0x800] reserved
 !dg_hdma = $7F8800 ; [0x800] reserved
 !dg_dma_buffer = $7F9000 ; [0x800] reserved
-!HUD_DMA = 0
-!DG_DMA = 1
+!dg_buffer_r0 #= !dg_dma_buffer+(64*0)
+!dg_buffer_r1 #= !dg_dma_buffer+(64*1)
+!dg_buffer_r2 #= !dg_dma_buffer+(64*2)
+!dg_buffer_r3 #= !dg_dma_buffer+(64*3)
+!dg_buffer_r4 #= !dg_dma_buffer+(64*4)
 
 ; ==== RAM usage ====
 ;
