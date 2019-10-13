@@ -50,15 +50,11 @@ NMI_UpdatePracticeHUD:
 	RTS
 
 warnpc $00EAE5
-org $00D5C5
-LoadGlitchedWindowChars:
-	LDY.b #DoorWatchGFX>>16 : STY $02
-	REP #$30
-	LDA.w #DoorWatchGFX : STA $00
-	JMP.w $00E380
 
-org $00E376
-	JSR LoadGlitchedWindowChars
+; The time this routine takes isn't relevant
+; since it's never during game play
+org $00E36A
+	JSL LoadCustomHUDGFX
 	PLB : RTL
 
 pullpc

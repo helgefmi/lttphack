@@ -105,20 +105,37 @@ draw3_white:
 	LDA #$207F : STA $7EC702, X
 
 	LDA !ram_hex2dec_first_digit : BEQ .check_second_digit
-	ORA #$3C90 : STA $7EC700, X : BRA .draw_second_digit
+	ORA #$3C10 : STA $7EC700, X : BRA .draw_second_digit
 
 .check_second_digit
 	LDA !ram_hex2dec_second_digit : BEQ .draw_third_digit
 
 .draw_second_digit
-	LDA !ram_hex2dec_second_digit : ORA #$3C90 : STA $7EC702, X
+	LDA !ram_hex2dec_second_digit : ORA #$3C10 : STA $7EC702, X
 
 .draw_third_digit
-	LDA !ram_hex2dec_third_digit : ORA #$3C90 : STA $7EC704, X
+	LDA !ram_hex2dec_third_digit : ORA #$3C10 : STA $7EC704, X
 	RTL
 
 
 draw3_white_aligned_left:
+	; Clear "leading" 0's
+	LDA #$207F : STA $7EC702, X
+	LDA #$207F : STA $7EC704, X
+
+	LDA !ram_hex2dec_first_digit : BEQ .draw_second_digit
+	ORA #$3C10 : STA $7EC700, X
+	INX #2
+
+.draw_second_digit
+	LDA !ram_hex2dec_second_digit : ORA #$3C10 : STA $7EC700, X
+	INX #2
+
+.draw_third_digit
+	LDA !ram_hex2dec_third_digit : ORA #$3C10 : STA $7EC700, X
+	RTL
+
+draw3_white_aligned_left_lttp:
 	; Clear "leading" 0's
 	LDA #$207F : STA $7EC702, X
 	LDA #$207F : STA $7EC704, X
@@ -137,20 +154,25 @@ draw3_white_aligned_left:
 
 
 draw2_white:
+	LDA !ram_hex2dec_second_digit : ORA #$3C10 : STA $7EC700, X
+	LDA !ram_hex2dec_third_digit : ORA #$3C10 : STA $7EC702, X
+	RTL
+
+
+draw2_white_lttp:
 	LDA !ram_hex2dec_second_digit : ORA #$3C90 : STA $7EC700, X
 	LDA !ram_hex2dec_third_digit : ORA #$3C90 : STA $7EC702, X
 	RTL
 
-
 draw2_yellow:
-	LDA !ram_hex2dec_second_digit : ORA #$3490 : STA $7EC706, X
-	LDA !ram_hex2dec_third_digit : ORA #$3490 : STA $7EC708, X
+	LDA !ram_hex2dec_second_digit : ORA #$3410 : STA $7EC706, X
+	LDA !ram_hex2dec_third_digit : ORA #$3410 : STA $7EC708, X
 	RTL
 
 
 draw2_gray:
-	LDA !ram_hex2dec_second_digit : ORA #$2090 : STA $7EC70A, X
-	LDA !ram_hex2dec_third_digit : ORA #$2090 : STA $7EC70C, X
+	LDA !ram_hex2dec_second_digit : ORA #$2010 : STA $7EC70A, X
+	LDA !ram_hex2dec_third_digit : ORA #$2010 : STA $7EC70C, X
 	RTL
 
 

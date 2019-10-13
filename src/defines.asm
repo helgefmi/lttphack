@@ -163,6 +163,8 @@ endmacro
 %def_sram("skip_triforce_toggle", !OFF)
 %def_sram("bonk_items_toggle", !OFF)
 
+%def_sram("hud_font", 0)
+
 %def_sram("LAG", 1)
 
 !lowram_oob_toggle = $037F

@@ -136,6 +136,11 @@ macro what_item_is_this()
 	fillword !BLANK_TILE : fill 8
 endmacro
 
+org $0DE876 ; Japanese "PENDANTS" text
+	dw !BLANK_TILE, !BLANK_TILE, !BLANK_TILE, !BLANK_TILE, !BLANK_TILE
+
+org $0DE928 ; Japanese "CRYSTALS" text
+	dw !BLANK_TILE, !BLANK_TILE, !BLANK_TILE, !BLANK_TILE, !BLANK_TILE
 org $0DF1C9
 	rep 36 : %what_item_is_this()
 
@@ -182,8 +187,9 @@ org $0DFA07
 org $0DFA11
 	dw !EMPTY
 
-org $0DF829
-	dw $64DB, $64DA, $64EB, $64EA
+org $0DF829 ; boots location moved
+	dw $3521, $3522, $3523, $3524
+
 ; remove -LIFE- from HUD
 org $0DFEC3
 	dw !EMPTY, !EMPTY, !EMPTY, !EMPTY, !EMPTY, !EMPTY
@@ -336,7 +342,7 @@ hud_draw_hearts:
 	STA !POS_MEM_HEART_GFX
 
 	; Full hearts
-	LDA !ram_equipment_curhp : AND #$00FF : LSR #3 : JSL hex_to_dec : LDX.w #!POS_HEARTS : JSL draw2_white
+	LDA !ram_equipment_curhp : AND #$00FF : LSR #3 : JSL hex_to_dec : LDX.w #!POS_HEARTS : JSL draw2_white_lttp
 
 	; Quarters
 	LDA !ram_equipment_curhp : AND #$0007 : ORA #$3490 : STA $7EC704, X
@@ -345,7 +351,7 @@ hud_draw_hearts:
 	LDA #$24A2 : STA !POS_MEM_CONTAINER_GFX
 
 	; Container
-	LDA !ram_equipment_maxhp : AND #$00FF : LSR #3 : JSL hex_to_dec : LDX.w #!POS_CONTAINERS : JSL draw2_white
+	LDA !ram_equipment_maxhp : AND #$00FF : LSR #3 : JSL hex_to_dec : LDX.w #!POS_CONTAINERS : JSL draw2_white_lttp
 
 	RTS
 
@@ -378,7 +384,7 @@ hud_draw_enemy_hp:
 	LDA $0E50, X : AND #$00FF : BEQ .loop : CMP #$00FF : BEQ .loop
 
 	; Enemy HP should be in A.
-	JSL hex_to_dec : LDX.w #!POS_ENEMY_HEARTS : JSL draw3_white_aligned_left
+	JSL hex_to_dec : LDX.w #!POS_ENEMY_HEARTS : JSL draw3_white_aligned_left_lttp
 
 	; Enemy Heart GFX
 	LDA #$2CA0 : STA !POS_MEM_ENEMY_HEART_GFX
