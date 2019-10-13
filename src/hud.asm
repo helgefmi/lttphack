@@ -390,34 +390,100 @@ hud_draw_enemy_hp:
 	LDA #$2CA0 : STA !POS_MEM_ENEMY_HEART_GFX
 
 .end
-	RTS
+--	RTS
 
 
 hud_draw_input_display:
-	; Assumes: I=16
+	; Assumes: AI=16
 
-	LDA !ram_ctrl1 : CMP !ram_ctrl1_word_copy : BEQ .end
+	LDA !ram_ctrl1 : CMP !ram_ctrl1_word_copy : BEQ --
 
-	STA !ram_ctrl1_word_copy : TAY
-	LDX #$0000
+	STA !ram_ctrl1_word_copy
+	PHB : PHP
+	SEP #$20
+	PEA $7E7E : PLB : PLB ; bank 7E
 
--	TYA : AND.l ctrl_top_bit_table, X : BEQ +
-	LDA.l ctrl_top_gfx_table, X
-	BRA ++
-+	LDA #!EMPTY
-++	STA !POS_MEM_INPUT_DISPLAY_TOP, X
-	INX #2 : CPX.w #$000C : BNE -
+	LDY.w #$2400 ; Y will hold the current character we're using
+	LDX.w #!EMPTY ; X will hold the empty char
+	; order: rlduSsYB....RLXA
 
-	LDX #$0000
+	; Starting with the low byte
+	LSR : BCS .rDown
+	STX.w !POS_MEM_INPUT_DISPLAY_BOT+4 : BRA .lCheck
+.rDown
+	STY.w !POS_MEM_INPUT_DISPLAY_BOT+4
 
--	TYA : AND.l ctrl_bot_bit_table, X : BEQ +
-	LDA.l ctrl_bot_gfx_table, X
-	BRA ++
-+	LDA #!EMPTY
-++	STA !POS_MEM_INPUT_DISPLAY_BOT, X
-	INX #2 : CPX.w #$000C : BNE -
+.lCheck
+	INY : LSR : BCS .lDown
+	STX.w !POS_MEM_INPUT_DISPLAY_BOT+0 : BRA .dCheck
+.lDown
+	STY.w !POS_MEM_INPUT_DISPLAY_BOT+0
 
-.end
+.dCheck
+	INY : LSR : BCS .dDown
+	STX.w !POS_MEM_INPUT_DISPLAY_BOT+2 : BRA .uCheck
+.dDown
+	STY.w !POS_MEM_INPUT_DISPLAY_BOT+2
+
+.uCheck
+	INY : LSR : BCS .uDown
+	STX.w !POS_MEM_INPUT_DISPLAY_TOP+2 : BRA .startCheck
+.uDown
+	STY.w !POS_MEM_INPUT_DISPLAY_TOP+2
+
+.startCheck
+	INY : LSR : BCS .startDown
+	STX.w !POS_MEM_INPUT_DISPLAY_BOT+10 : BRA .selCheck
+.startDown
+	STY.w !POS_MEM_INPUT_DISPLAY_BOT+10
+
+.selCheck
+	INY : LSR : BCS .selDown
+	STX.w !POS_MEM_INPUT_DISPLAY_TOP+10 : BRA .YCheck
+.selDown
+	STY.w !POS_MEM_INPUT_DISPLAY_TOP+10
+
+.YCheck
+	INY : LSR : BCS .YDown
+	STX.w !POS_MEM_INPUT_DISPLAY_TOP+6 : BRA .BCheck
+.YDown
+	STY.w !POS_MEM_INPUT_DISPLAY_TOP+6
+
+
+.BCheck
+	INY : LSR : BCS .BDown
+	STX.w !POS_MEM_INPUT_DISPLAY_BOT+6 : BRA .ACheck
+.BDown
+	STY.w !POS_MEM_INPUT_DISPLAY_BOT+6
+
+	;axlr
+.ACheck
+	XBA ; switch to high byte
+	INY : ASL : BCS .lDown ; ASL now since bottom nibble is empty
+	STX.w !POS_MEM_INPUT_DISPLAY_BOT+8 : BRA .XCheck
+.ADown
+	STY.w !POS_MEM_INPUT_DISPLAY_BOT+8
+
+.XCheck
+	INY : ASL : BCS .XDown
+	STX.w !POS_MEM_INPUT_DISPLAY_TOP+8 : BRA .LCheck
+.XDown
+	STY.w !POS_MEM_INPUT_DISPLAY_TOP+8
+
+.LCheck
+	INY : ASL : BCS .LDown
+	STX.w !POS_MEM_INPUT_DISPLAY_TOP+0 : BRA .RCheck
+.LDown
+	STY.w !POS_MEM_INPUT_DISPLAY_TOP+0
+
+.RCheck
+	INY : ASL : BCS .RDown
+	STX.w !POS_MEM_INPUT_DISPLAY_TOP+4 : BRA .done
+.RDown
+	STY.w !POS_MEM_INPUT_DISPLAY_TOP+4
+
+.done
+	PLP : PLB
 	RTS
 
 
@@ -532,15 +598,6 @@ hud_set_counter_position:
 .done
 	STA !lowram_draw_tmp
 	RTS
-
-
-; This is just temprary for the misslots hack
-hud_play_error:
-	; AI=8
-	LDA #$0C : STA $012E
-	LDX $039D
-	STZ $0C4A,x
-	RTL
 
 ; L, u, R, Y, X, SL
 ctrl_top_bit_table:
