@@ -47,13 +47,23 @@ cm_config_hud_font:
 	dw !CM_ACTION_CHOICE
 	dl !ram_hud_font
 	%cm_item("HUD font")
+
 	%cm_item("Classic")
 	%cm_item("Normal")
 	%cm_item("Italic")
 	%cm_item("Mario World")
+	%cm_item("DKC")
+	%cm_item("ZAMN")
 	%cm_item("SMT")
+	%cm_item("Earthbound")
+
 	%cm_item("FF6")
+	%cm_item("Lufia 2")
 	%cm_item("Goonies 2")
+	%cm_item("Emerald")
+	%cm_item("TI-83")
+	%cm_item("Pac-Man")
+
 	db !list_end
 
 cm_config_extralag:

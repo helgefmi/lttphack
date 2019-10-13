@@ -42,10 +42,11 @@ LoadHudFont:
 	%ai8() ; expected flags from both entry points/DecompAndDirectCopy
 	RTL
 
-hud_font:
-	incbin ../resources/hud_font.2bpp
-
 hud_table:
 	incbin ../resources/hud_gfx1.2bpp
 	incbin ../resources/hud_gfx2.2bpp
 	incbin ../resources/hud_gfx3.2bpp
+
+hud_font:
+	incbin ../resources/hud_font1.2bpp
+	incbin ../resources/hud_font2.2bpp
