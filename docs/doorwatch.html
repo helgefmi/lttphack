@@ -39,11 +39,11 @@
 					<h4>Row 1</h4>
 					<dl>
 						<dt><span class="dgIcon dgCoords"></span>Coordinates</dt>
-						<dd>Displays your current X (white) and Y (yellow) coordinates, with the full 16-bit precision</dd>
+						<dd>Displays your current X (white) and Y (yellow) coordinates, with the full 16-bit precision.</dd>
 						<dt><span class="dgIcon dgSync"></span>Coordinate sync</dt>
 						<dd>Indicates the sync status of your coordinates, based on whether your actual room ID matches your calculated room ID.</dd>
 						<dt><span class="dgIcon dgRoom"></span>Actual room ID</dt>
-						<dd>Displays your current, actual room ID; i.e. the value at address <code class="wram">$A0</code><code class="size16">(2 bytes)</code></dd>
+						<dd>Displays your current, actual room ID; i.e. the value at address <code class="wram">$A0</code><code class="size16">(2 bytes)</code>.</dd>
 						<dt><span class="dgIcon dgFixed"></span>Corrected room ID</dt>
 						<dd>Displays your corrected room ID, calculated from your current coordinates. When this value is in sync with your actual room ID, it will be gray. When out of sync, it will be red.</dd>
 						<dt><span class="dgIcon dgQuad"></span>Quadrant</dt>
@@ -78,7 +78,9 @@
 					<h4>Row 2</h4>
 					<dl>
 						<dt><span class="dgIcon dgFlags"></span>Room flags</dt>
-						<dd>Displays the current room flags, based on the values at addresses <code class="wram">$0400</code>, <code class="wram">$0401</code>, <code class="wram">$0403</code>, and <code class="wram">$0408</code>.
+						<dd>
+							<p>Displays the current room flags, based on the values at addresses <code class="wram">$0401</code>, <code class="wram">$0403</code>, and <code class="wram">$0408</code>.</p>
+							<p>Inactive flags are shown in gray. Active flags will be highlighted.</p>
 							<table class="flagtable">
 								<tbody>
 									<tr>
@@ -210,7 +212,7 @@
 						<dd>
 							<p>Boundaries control the upper and lower limit of camera scroll on each axis. In other words, if the camera approaches the value from above (lower boundaries) or from below (upper boundaries), it will stop scrolling at that value.</p>
 							<p>Only one of the quadrant and tile boundary sets is active on each axis. This is determined by a number of factors, such as room layout. The set to use is stored at <code class="wram">$A6</code> for the X-axis and <code class="wram">$A7</code> for the Y-axis. When the value is <code class="value">$00</code>, that axis will use the room boundaries. When the value is <code class="value">$02</code>, that axis will use the tile boundaries</p>
-							<p>The active boundary set for each axis will have its icons and values highlighted in white or yellow, for the X- and Y-axes, respectively. The inactive boundary set for each access will have its icons and values in gray.</p>
+							<p>The active boundary set for each axis will have its icons and values highlighted in white or yellow, for the X- and Y-axes, respectively. The inactive boundary set for each axis will have its icons and values in gray.</p>
 						</dd>
 					</dl>
 					<h3>Explanation of icons</h3>
@@ -222,7 +224,7 @@
 						<dt><span class="dgIcon dgFixed"></span></dt>
 						<dd>The value that follows is a correction of the previous, based on certain presumptions.</dd>
 						<dt>White (or yellow) text, black outline</dt>
-						<dd>The value is read from memory. Yellow text indicates that the value is for the Y-axis. This is solely to distinguish is from the X-axis values more readily.</dd>
+						<dd>The value is read from memory. Yellow text indicates that the value is for the Y-axis. This is solely to distinguish the X-axis from the Y-axis values more readily.</dd>
 						<dt>White text, red outline</dt>
 						<dd>Expected value that does not match the actual value</dd>
 						<dt>Gray text</dt>

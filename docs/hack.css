@@ -235,6 +235,7 @@ span.dgIcon {
 	display: inline-block;
 	margin-right: .3em;
 	margin-left: .5px;
+	image-rendering: pixelated;
 }
 
 span.dgIcon.dgRoom {
@@ -407,6 +408,7 @@ table.flagtable th:not(:empty) {
 	padding-left: 10px;
 	background: #ECE;
 	border-right: 1px solid #D8D;
+	border-bottom: 1px solid #D8D;
 }
 
 table.flagtable td:not(:empty) {
@@ -438,4 +440,94 @@ table.flagtable td {
 
 th.dividerColumn {
 	padding: 0px 10px;
+}
+
+ul.fontList > li > span.fontName {
+	display: inline-block;
+	width: 50%;
+}
+
+ul.fontList > li > span.fontPreview {
+	display: inline-block;
+	background-image: url("fontpreviews.png");
+	background-color: #489848;
+	outline: 2px solid #489848;
+	width: 256;
+	height: 16px;
+	vertical-align: sub;
+	image-rendering: pixelated;
+}
+
+ul.fontList > li:hover > span.fontName {
+	font-weight: bold;
+}
+
+ul.fontList > li:hover > span.fontPreview {
+	transform: scale(2.0) translate(65px, 0);
+	background-color: #8080F0;
+	outline: 2px solid #8080F0;
+}
+
+span.fontPreview.font1 {
+	background-position: 0px 0px;
+}
+
+span.fontPreview.font2 {
+	background-position: 0px -16px;
+}
+
+span.fontPreview.font3 {
+	background-position: 0px -32px;
+}
+
+span.fontPreview.font4 {
+	background-position: 0px -48px;
+}
+
+span.fontPreview.font5 {
+	background-position: 0px -64px;
+}
+
+span.fontPreview.font6 {
+	background-position: 0px -80px;
+}
+
+span.fontPreview.font7 {
+	background-position: 0px -96px;
+}
+
+span.fontPreview.font8 {
+	background-position: 0px -112px;
+}
+
+span.fontPreview.font9 {
+	background-position: 0px -128px;
+}
+
+span.fontPreview.font10 {
+	background-position: 0px -144px;
+}
+
+span.fontPreview.font11 {
+	background-position: 0px -160px;
+}
+
+span.fontPreview.font12 {
+	background-position: 0px -176px;
+}
+
+span.fontPreview.font13 {
+	background-position: 0px -192px;
+}
+
+span.fontPreview.font14 {
+	background-position: 0px -208px;
+}
+
+span.fontPreview.font15 {
+	background-position: 0px -224px;
+}
+
+span.fontPreview.font16 {
+	background-position: 0px -240px;
 }

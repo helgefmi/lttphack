@@ -88,7 +88,7 @@ calc_correct_room_id:
 
 calc_room_flags:
 	LDX #(2*(16-1))
-	LDA $0400 : ORA $401 : ORA $0408 : STA $72
+	LDA $0401 : ORA $0408 : STA $72 ; not sure if I need $0400 at all?
 	LDA $0403 : STA $73
 --	LDA.l .tiles, X : LSR $72 : BCS .flagSet
 	ORA.w #!GRAY_PAL : BRA +
