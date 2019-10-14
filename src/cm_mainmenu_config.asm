@@ -61,8 +61,10 @@ cm_config_hud_font:
 	%cm_item("Lufia 2")
 	%cm_item("Goonies 2")
 	%cm_item("Emerald")
+	%cm_item("Klonoa")
 	%cm_item("TI-83")
 	%cm_item("Pac-Man")
+	%cm_item("DOOM")
 
 	db !list_end
 

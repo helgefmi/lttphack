@@ -3,6 +3,7 @@ cm_main_goto_link_state:
 	%cm_submenu("Link state", cm_submenu_link_state)
 
 cm_submenu_link_state:
+	dw cm_link_state_armed_waterwalk
 	dw cm_link_state_activate_superbunny
 	dw cm_link_state_activate_lonk
 	dw cm_link_state_set_mirrordoor
