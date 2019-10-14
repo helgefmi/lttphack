@@ -107,7 +107,7 @@ calc_quadrant:
 	BCS .east
 
 .west
-	BEQ .northwest ; $A0 is 0 or 2, and will be the only bit remaining, no matter what
+	BEQ .northwest ; $AA is 0 or 2, and will be the only bit remaining, no matter what
 
 .southwest
 	LDY #2
@@ -120,7 +120,7 @@ calc_quadrant:
 	BRA .doQuadrant
 
 .east
-	BEQ .northeast ; $A0 is 0 or 2, and will be the only bit remaining, no matter what
+	BEQ .northeast ; $AA is 0 or 2, and will be the only bit remaining, no matter what
 
 .southeast
 	LDY #1
@@ -238,7 +238,7 @@ draw_camera:
 
 
 	LDX $A7
-	LDA $0600, X : STA $72 ; cache X camera for desync check
+	LDA $0600, X : STA $72 ; cache Y camera for desync check
 	LDA $0604, X : STA $74
 	CPX #$02 : BEQ .YSet2
 
@@ -272,7 +272,6 @@ draw_camera:
 	LDX.b #(64+64+64)+48 : LDA $0606 : JSR draw_hex_4digits_yellow
 
 .checkYSync
-	WDM
 	LDA $E8 : CMP $72 : BCC .yDesynced
 	; decrement so that equal values result in a clear carry
 	DEC : CMP $74 : BCS .yDesynced
@@ -288,6 +287,9 @@ draw_camera:
 	STA !dg_buffer_r3+14
 
 OverlayPTR = $04E9A1
+!NON_VANILLA = char($16)|!YELLOW_PAL
+!CRITICAL = char($17)|!RED_PAL
+
 draw_overlay:
 	LDA.w #char($18)|!YELLOW_PAL : STA !dg_buffer_r1+40
 
@@ -298,15 +300,14 @@ draw_overlay:
 	LDA.l OverlayPTR+1, X : STA $72
 	LDA.l OverlayPTR+1, X : STA $73
 	%i8()
-	LDA.w #0 ; char(??) ; load symbol
+	LDA.w #char($1C)|!RED_PAL ; from ROM
 	BRA .draw
 
 .preloaded
 	LDA $B8 : STA $73
 	LDA $B7 : STA $72
-	LDA.w #0 ; char(??)
+	LDA.w #char($1B)|!RED_PAL ; from RAM
 
-!NON_VANILLA = char($16)|!YELLOW_PAL
 .draw
 	STA !dg_buffer_r1+42
 	;REP #$10
@@ -314,33 +315,39 @@ draw_overlay:
 	LDX #(64+48) : LDA $72 : JSR draw_hex_4digits_white ; this exits i=10 - might not need
 
 	LDA $73 : AND #$FF00
-	CMP #$7000 : BCC .notSRAM
+	CMP #$7000 : BCC .notSRAM ; check <$70 first, to avoid work ram checks
+	CMP #$7E00 : BEQ .workRAM
+	CMP #$7F00 : BEQ .workRAM
 	CMP #$7000 : BCS .notSRAM
-	LDA.w #!NON_VANILLA
+	LDA.w #!CRITICAL
 	BRA .drawWarning
 
 .notSRAM
 	LDA $73 : AND #$00FF ; see what page it's on
-	CMP #$0080 : BCC .notROM ; if it's less than page $80, we're not in ROM
-	; at least, we're not in practice hack ROM, which always has mirrored WRAM
+	CMP #$0080 : BCC .workRAM ; if it's less than page $80, we're not in ROM
 
 	LDA $73 : AND #$3FFF ; account for mirroring of ROM
-	CMP #$2080 : BCC .notROM ; before bank $20 and we're okay
-	CMP.w #(EndOfPracticeROM&$FF00)+$0100 : BCS .notROM ; the last bank we *don't* use
+	CMP #$2080 : BCC .notHacked ; before bank $20 and we're okay
+	CMP.w #(((EndOfPracticeROM>>8)&$FF00)+$0100) : BCS .notHacked ; the last bank we *don't* use
 	LDA.w #!NON_VANILLA : BRA .drawWarning
 
-.notROM
-	LDA #$207F
+; this assumes before $8000 is volatile in all banks
+; while some banks don't mirror work ram or registers
+; I think that just means the lower half is open bus
+; in which case it's as volatile as you can get
+.workRAM 
+	LDA.w #!CRITICAL : BRA .drawWarning
+
+.notHacked
+	LDA.w #!EMPTY
 
 .drawWarning
 	STA !dg_buffer_r1+56
-
 
 trigger_update:
 	%a8()
 	RTL
 
-!ToDo = $207F
 !CHEST_TILE = char($15)
 !QUAD = char($14)
 !DOOR_TILE = char($1A)

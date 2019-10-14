@@ -449,7 +449,6 @@ hud_draw_input_display:
 .YDown
 	STY.w !POS_MEM_INPUT_DISPLAY_TOP+6
 
-
 .BCheck
 	INY : LSR : BCS .BDown
 	STX.w !POS_MEM_INPUT_DISPLAY_BOT+6 : BRA .ACheck
