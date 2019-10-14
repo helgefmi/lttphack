@@ -68,7 +68,6 @@ nmi_expand:
 	LDA !disabled_layers : TRB $AB : TRB $AC
 	%a16()
 	LDA $AB : STA $212C
-	;LDA $AC : STA $212D
 
 	INC !lowram_room_realtime
 	INC !lowram_seg_frames

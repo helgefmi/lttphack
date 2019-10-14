@@ -293,7 +293,7 @@ update_hearts_hook:
 
 	LDA $0DF0 : CMP.b #$01 : BNE .lanmola2
 	LDA $0D80 : CMP.b #$01 : BNE .lanmola2
-	LDA !ram_lanmola_cycles : INC : STA !ram_lanmola_cycles
+	LDA !ram_lanmola_cycles : INC : STA !ram_lanmola_cycles+0
 
 .lanmola2
 	LDA $0DF1 : CMP.b #$01 : BNE .lanmola3
@@ -319,8 +319,6 @@ hud_draw_lanmola_cycles:
 	LDA !ram_lanmola_cycles+1 : AND #$00FF : ORA #$2090 : STA $7EC812
 	LDA !ram_lanmola_cycles+2 : AND #$00FF : ORA #$2090 : STA $7EC814
 	RTS
-
-
 
 hud_draw_hearts:
 	; Assumes: X=16
@@ -408,14 +406,14 @@ hud_draw_input_display:
 	; order: rlduSsYB....RLXA
 
 	; Starting with the low byte
-	LSR : BCS .rDown
-	STX.w !POS_MEM_INPUT_DISPLAY_BOT+4 : BRA .lCheck
+	LSR : BCS .rDown ; shift the bit into carry
+	STX.w !POS_MEM_INPUT_DISPLAY_BOT+4 : BRA .lCheck ; carry clear = store empty char
 .rDown
-	STY.w !POS_MEM_INPUT_DISPLAY_BOT+4
+	STY.w !POS_MEM_INPUT_DISPLAY_BOT+4 ; carry set = store current character
 
 .lCheck
-	INY : LSR : BCS .lDown
-	STX.w !POS_MEM_INPUT_DISPLAY_BOT+0 : BRA .dCheck
+	INY : LSR : BCS .lDown ; INY brings us to the next character in VRAM
+	STX.w !POS_MEM_INPUT_DISPLAY_BOT+0 : BRA .dCheck ; etc. etc.
 .lDown
 	STY.w !POS_MEM_INPUT_DISPLAY_BOT+0
 
@@ -455,7 +453,6 @@ hud_draw_input_display:
 .BDown
 	STY.w !POS_MEM_INPUT_DISPLAY_BOT+6
 
-	;axlr
 .ACheck
 	XBA ; switch to high byte
 	INY : ASL : BCS .lDown ; ASL now since bottom nibble is empty
@@ -484,7 +481,6 @@ hud_draw_input_display:
 .done
 	PLP : PLB
 	RTS
-
 
 hud_draw_xy_display:
 	; Assumes: I=16

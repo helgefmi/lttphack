@@ -50,3 +50,7 @@ hud_table:
 hud_font:
 	incbin ../resources/hud_font1.2bpp
 	incbin ../resources/hud_font2.2bpp
+
+cm_hud_table:
+	incbin ../resources/menu_font1.2bpp
+	incbin ../resources/menu_font2.2bpp

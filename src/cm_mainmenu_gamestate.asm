@@ -15,8 +15,6 @@ cm_submenu_game_state:
 	dw cm_game_state_progress
 	dw cm_game_state_map_indicator
 	dw cm_game_state_crystal_switch
-	dw cm_game_state_armed_eg
-	dw cm_game_state_eg_strength
 	dw !menu_end
 	%cm_header("GAME STATE")
 
@@ -24,15 +22,15 @@ cm_game_state_world:
 	dw !CM_ACTION_TOGGLE_BIT_TEXT
 	dl !ram_cm_gamestate_world
 	db $40
-	db #$24, "World", #$FF
+	%cm_item("World")
 	%cm_item("Light World")
 	%cm_item("Dark World")
 	db !list_end
 
 cm_game_state_crystal_switch:
 	dw !CM_ACTION_CHOICE_JSR
-	dw #.update_tilemap
-	dl #!ram_cm_crystal_switch
+	dw .update_tilemap
+	dl !ram_cm_crystal_switch
 	%cm_item("Switch Color")
 	%cm_item("Red")
 	%cm_item("Blue")
@@ -54,22 +52,6 @@ cm_game_state_crystal_switch:
 
 .done
 	RTS
-
-cm_game_state_armed_eg:
-	%cm_toggle_jsr("Armed EG", !ram_cm_armed_eg)
-
-.toggle
-	LDA !ram_cm_armed_eg : STA $7E047A
-	RTS
-
-cm_game_state_eg_strength:
-	dw !CM_ACTION_CHOICE
-	dl !ram_eg_strength
-	%cm_item("EG strength")
-	%cm_item("EG 0")
-	%cm_item("Strong")
-	%cm_item("Weak")
-	db !list_end
 
 cm_game_state_reset_screen:
 	%cm_jsr("Reset current room")

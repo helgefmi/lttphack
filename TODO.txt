@@ -57,8 +57,6 @@ Possible toggles/options
 -------------------------
 - Follower $7EF3CC
 
-- Statue drag $02FA
-
 
 Low priority
 -------------

@@ -35,8 +35,6 @@ function char(n) = $2150+n
 
 ; $0496 number of chests * 2
 
-; $06xx - camera scroll things?
-
 ; $068E[2] WEST SOMARIA
 ; $0690[2] WEST SOMARIA
 
@@ -286,7 +284,7 @@ draw_camera:
 .drawYSync
 	STA !dg_buffer_r3+14
 
-OverlayPTR = $04E9A1
+OverlayPTR = $04E9A0
 !NON_VANILLA = char($16)|!YELLOW_PAL
 !CRITICAL = char($17)|!RED_PAL
 
@@ -297,8 +295,8 @@ draw_overlay:
 
 	%i16()
 	LDA $04BA : ASL : CLC : ADC $04BA : TAX
-	LDA.l OverlayPTR+1, X : STA $72
 	LDA.l OverlayPTR+1, X : STA $73
+	LDA.l OverlayPTR+0, X : STA $72
 	%i8()
 	LDA.w #char($1C)|!RED_PAL ; from ROM
 	BRA .draw

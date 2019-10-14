@@ -24,10 +24,11 @@ incsrc init.asm
 incsrc rng.asm
 incsrc misc.asm
 incsrc idle.asm
+incsrc glitchedwindow.asm
 
 org $248000
 incsrc custom_menu.asm
-incsrc glitchedwindow.asm
+print pc
 
 org $258000
 incsrc presets.asm

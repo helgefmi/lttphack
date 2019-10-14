@@ -72,6 +72,7 @@ cm_mainmenu_indices:
 	dw cm_main_goto_items
 	dw cm_main_goto_equipment
 	dw cm_main_goto_game_state
+	dw cm_main_goto_link_state
 	dw cm_main_goto_gameplay
 	dw cm_main_goto_rng_control
 	dw cm_main_goto_ctrl
@@ -84,6 +85,7 @@ cm_mainmenu_indices:
 incsrc cm_mainmenu_items.asm
 incsrc cm_mainmenu_equipment.asm
 incsrc cm_mainmenu_gamestate.asm
+incsrc cm_mainmenu_linkstate.asm
 incsrc cm_mainmenu_gameplay.asm
 incsrc cm_mainmenu_rng.asm
 incsrc cm_mainmenu_controls.asm

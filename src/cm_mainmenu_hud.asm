@@ -112,12 +112,12 @@ cm_hud_doorwatch:
 
 	REP #$20
 	LDA #$207F
-	LDX #$40
+	LDX #$3E
 --	STA !dg_buffer_r0, X
 	STA !dg_buffer_r1, X
 	STA !dg_buffer_r2, X
 	STA !dg_buffer_r3, X
-	DEX : DEX : BNE --
+	DEX : DEX : BPL --
 
 	PHP : PHB
 	%a8()
