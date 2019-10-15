@@ -18,6 +18,14 @@ afterdropluck:
 org $1CF640
 	JSL swordbeams
 
+;-------------------
+; Fast moving walls
+;-------------------
+
+org $01CA66
+	JSL set_moving_wall_speed
+	RTS
+
 ;---------------------------------
 ; Visible guard search beams
 ;---------------------------------
@@ -120,3 +128,11 @@ absorbable_check:
 
 	PLA : PLA
 ++	JML absorbexit_continue
+
+set_moving_wall_speed:
+	LDA !ram_fast_moving_walls : BEQ .normal
+	LDA #$0008 : RTL
+.normal
+	LDA #$2200 : CLC : ADC $041C : STA $041C
+	ROL : AND #$0001
+	RTL

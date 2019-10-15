@@ -157,6 +157,7 @@ endmacro
 
 %def_sram("enemy_hp_toggle", !OFF)
 %def_sram("lit_rooms_toggle", !OFF)
+%def_sram("fast_moving_walls", !ON)
 %def_sram("probe_toggle", !OFF)
 %def_sram("sanctuary_heart",!OFF )
 %def_sram("rerandomize_toggle", !ON)
