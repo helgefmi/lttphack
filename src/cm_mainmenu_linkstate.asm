@@ -6,7 +6,7 @@ cm_submenu_link_state:
 	dw cm_link_state_armed_waterwalk
 	dw cm_link_state_activate_superbunny
 	dw cm_link_state_activate_lonk
-	dw cm_link_state_set_mirrordoor
+	;dw cm_link_state_set_mirrordoor
 	dw cm_link_state_finish_mirrordoor
 	dw cm_link_state_statue_drag
 	dw cm_link_state_armed_eg
@@ -47,10 +47,11 @@ nothappening:
 
 setSound:
 	STA $012E
+	STZ $012F ; no default menu sounds
 	RTS
 
 cm_link_state_set_mirrordoor:
-	%cm_jsr("Set mirrordoor")
+	%cm_jsr("Set mirror door")
 
 .routine
 	REP #$20
@@ -61,21 +62,19 @@ cm_link_state_set_mirrordoor:
 	; just copying vanilla code now
 	LDA $2F : AND #$00FF : TAX
 	LDA $20 : CLC : ADC.l $01D9B8, X : STA $C8
-	SEP #$20
-	LDA #$15 : STA $012D
-	RTS
+	BRA ++
 
 cm_link_state_finish_mirrordoor:
-	%cm_jsr("Finish mirrordoor")
+	%cm_jsr("Finish mirror door")
 .routine
 	REP #$20
 	LDA.l !ram_cm_old_gamemode : CMP #$0007 : BEQ .allow
 	CMP #$010E : BNE nothappening
-	LDA $010C : CMP #$0007 : BNE nothappening
+	LDA $010C : CMP #$1A07 : BNE nothappening
 .allow
-	; just copying vanilla code now
 	LDA #$0111 : STA $C8
-	SEP #$20
+++	SEP #$20
+	STZ $012F ; no default menu sounds
 	LDA #$15 : STA $012D
 	RTS
 

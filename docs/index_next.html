@@ -23,6 +23,7 @@
 							<li><a href="#menuItems">Items</a></li>
 							<li><a href="#menuEquipment">Equipment</a></li>
 							<li><a href="#menuGameState">Game state</a></li>
+							<li><a href="#menuLinkState">Link state</a></li>
 							<li><a href="#menuGameplay">Gameplay</a></li>
 							<li><a href="#menuRNGControl">RNG control</a></li>
 							<li><a href="#menuShortcuts">Shortcuts</a></li>
@@ -50,7 +51,7 @@
 				<div class="col-lg-8 mx-auto">
 					<h2>Download</h2>
 					<table class="table table-bordered dl-tbl romtable">
-						<caption>We are currently on version 11.0.0</caption>
+						<caption>We are currently on version 12.0.0</caption>
 						<tbody>
 							<tr>
 								<th rowspan="2">Emulator, Everdrive, SNES Classic</th>
@@ -139,6 +140,8 @@
 						<dd>Modify A-items, combat items, health, and keys</dd>
 						<dt><a href="#menuGameState">Game state</a></dt>
 						<dd>Modify game progress, status, and mode</dd>
+						<dt><a href="#menuLinkState">Link state</a></dt>
+						<dd>Modify player character attributes</dd>
 						<dt><a href="#menuGameplay">Gameplay</a></dt>
 						<dd>Feature toggles related to gameplay</dd>
 						<dt><a href="#menuRNGControl">RNG control</a></dt>
@@ -343,7 +346,7 @@
 						<dt>Skip text</dt>
 						<dd>Skips the current text box</dd>
 						<dt>Remove sprites</dt>
-						<dd>Removes all sprites, overlords, and ancillae from the screen</dd>
+						<dd>Removes all sprites, overlords, and ancillae from the screen.</dd>
 						<dt>Reset current room</dt>
 						<dd>Resets the following data of the current room:
 							<ul>
@@ -422,19 +425,47 @@
 						</dd>
 						<dt>Switch color</dt>
 						<dd>Toggle status of pegs and switches in dungeons</dd>
+
+					</dl>
+
+					<h3 id="menuGameState">Link state</h3>
+					<dl>
+						<dt>Waterwalk</dt>
+						<dd>Control the falling-in-pit address
+							<dl class="subDefinition">
+								<dt>Unarmed</dt>
+								<dd>0; Link's default state</dd>
+								<dt>Armed</dt>
+								<dd>1; armed as if waterwalk were set up by dashing from a pit.</dd>
+								<dt>Armed (2)</dt>
+								<dd>2; difficult (if not impossible) to obtain intermediate state</dd>
+								<dt>Deathholed</dt>
+								<dd>3; falling state obtained after a death hole in the underworld</dd>
+							</dl>
+						</dd>
+						<dt>Activate superbunny</dt>
+						<dd>Sets Link's general state handler to default (<code class="value">$00</code>). For safety, this will only run when Link's handler is currently set to bunny (<code class="value">$17</code>). If successful, you should hear a <i>poof</i>; otherwise, you will hear a <i>beep</i>.</dd>
+						<dt>Activate lonk</dt>
+						<dd>
+							<p>Sets Link's general state handler to bunny (<code class="value">$17</code>). For safety, this will only run when Link's handler is at its default value (<code class="value">$00</code>). If successful, you should hear <i>OOF</i>; otherwise, you will hear a <i>beep</i>.</p>
+							<p><em>Despite the labels, the Superbunny and Lonk menu options can be used to return to normal Link and normal bunny, respectively.</em></p>
+						</dd>
+						<dt>Finish mirrordoor</dt>
+						<dd>Sets the mirror door wait timer to finish after 11 frames. For safety reasons, this will only run when the Triforce door submodule is in effect. If successful, you should hear a <i>VOOMP</i>; otherwise, you will hear a <i>beep</i>.</dd>
+						<dt>Statue drag</dt>
+						<dd>Toggles the fake statue address.</dd>
 						<dt>Armed EG</dt>
 						<dd>Toggle status of EG</dd>
 						<dt>Strong EG</dt>
 						<dd class="optionList">
-							<ol>
+							<ul>
 								<li>EG 0</li>
 								<li>Strong</li>
 								<li>Weak</li>
-							</ol>
+							</ul>
 							<strong class="lag"><b>NOTE:</b> this toggle cannot overpower the strength of the current room.</strong>
 						</dd>
 					</dl>
-
 					<h3 id="menuGameplay">Gameplay</h3>
 					<dl>
 						<dt>Skip Triforce</dt>
@@ -639,7 +670,7 @@
 						<dd>Sets the volume of every track in every song to 0. The size of the SPC transfers remains the same, so this feature does not affect lag.</dd>
 						<dt>Death reload</dt>
 						<dd>Reloads the last preset upon death</dd>
-						<dt>Preset cat</dd>
+						<dt>Preset cat</dt>
 						<dd>Changes the selection of <a href="#menuPresets">presets</a></dd>
 						<dt>HUD font</dt>
 						<dd>Change the font used by HUD extras. This will not change the font for the vanilla HUD or for the HP, max HP, and enemy HP displays. <i>Hover over options for larger preview.</i>
@@ -672,6 +703,18 @@
 					<h2>Changelog</h2>
 					<h3>v12</h3>
 					<ul>
+						<li>Link state - New menu
+							<ul>
+								<li>Waterwalk</li>
+								<li>Activate superbunny</li>
+								<li>Activate Lonk</li>
+								<li>Finish mirror door</li>
+								<li>Statue drag</li>
+								<li>Armed EG<sup class="footnote">*</sup></li>
+								<li>EG strength<sup class="footnote">*</sup></li>
+							</ul>
+							<em><sup class="footnote">*</sup> Will these options ever catch a break? They keep moving around!</em>
+						</li>
 						<li>HUD extras
 							<ul>
 								<li>DG watch - fully explained <b><a href="doorwatch.html">here</a></b></li>
@@ -682,9 +725,11 @@
 								<li>HUD font - I probably won't add more than 16</li>
 							</ul>
 						</li>
+						<li>Added sound effects to the practice menu to help indicate responsiveness.</li>
 						<li>Slightly optimized input display. Hopefully lag when mashing text is a little closer to vanilla</li>
 						<li>Removed the Japanese text for "Pendants" and "Crystals", mostly to make room for new characters.</li>
 						<li>Removed the red gloves and put boots back.</li>
+					</ul>
 					<h3>v11</h3>
 					<ul>
 						<li>Under new management. General maintaining of the practice hack has been outsourced to the Americas.</li>
@@ -705,16 +750,16 @@
 						<li>Gameplay
 							<ul>
 								<li>Skip Triforce</li>
-								<li>Sanc heart<sup class="footnote">*</em></li>
+								<li>Sanc heart<sup class="footnote">*</sup></li>
 								<li>Disable beams</li>
 								<li>Visible probes</li>
-								<li>Lit rooms<sup class="footnote">*</em> - also improved to work on current room</li>
+								<li>Lit rooms<sup class="footnote">*</sup> - also improved to work on current room</li>
 								<li>See bonk items</li>
 								<li>Disable BG1</li>
 								<li>Disable BG2</li>
 								<li>OoB Mode</li>
 							</ul>
-							<em><sup class="footnote">*</em> moved from another menu</em>
+							<em><sup class="footnote">*</sup> moved from another menu</em>
 						</li>
 						<li>RNG control
 							<ul>
@@ -731,18 +776,18 @@
 						<li>HUD extras - renamed from "Counters"
 							<ul>
 								<li>Input display<sup class="footnote">‡</sup></li>
-								<li>Room time<sup class="footnote">†</em></li>
-								<li>Lag counter<sup class="footnote">†</em></li>
-								<li>Idle frames<sup class="footnote">†</em></li>
-								<li>Segment time<sup class="footnote">†</em></li>
-								<li>Lanmolas cycles<sup class="footnote">‡</em></li>
-								<li>Lagometer<sup class="footnote">‡</em></li>
-								<li>Enemy HP<sup class="footnote">‡</em></li>
+								<li>Room time<sup class="footnote">†</sup></li>
+								<li>Lag counter<sup class="footnote">†</sup></li>
+								<li>Idle frames<sup class="footnote">†</sup></li>
+								<li>Segment time<sup class="footnote">†</sup></li>
+								<li>Lanmolas cycles<sup class="footnote">‡</sup></li>
+								<li>Lagometer<sup class="footnote">‡</sup></li>
+								<li>Enemy HP<sup class="footnote">‡</sup></li>
 								<li>Misslots RAM watch</li>
 							</ul>
 							<ul class="quietlist">
-								<li><em><sup class="footnote">†</em> Option already existed, but was renamed</em></li>
-								<li><em><sup class="footnote">‡</em> Moved from "Features" menu</em></li>
+								<li><em><sup class="footnote">†</sup> Option already existed, but was renamed</em></li>
+								<li><em><sup class="footnote">‡</sup> Moved from "Features" menu</em></li>
 							</ul>
 						</li>
 						<li>Renamed "Features" menu to "Configuration"</li>

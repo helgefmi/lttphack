@@ -12,6 +12,13 @@ org $008089 : db #CM_Main>>8
 org $0080A5 : db #CM_Main>>16
 
 pullpc
+
+macro menubeep()
+	LDA #$20 : STA $012F
+	LDA #$05 : STA $012F
+	LDA #$0C : STA $012F
+endmacro
+
 !OPTION_OFFSET = $001E
 CM_Main:
 	PHB : PHK : PLB
@@ -82,7 +89,6 @@ CM_MenuDown:
 	INC $11
 	RTS
 
-
 CM_Active:
 	LDA $B0 : BEQ .in_menu
 	JSR cm_do_ctrl_config
@@ -123,6 +129,7 @@ CM_Active:
 	LDX !lowram_cm_stack_index
 	LDA !lowram_cm_cursor_stack, X : DEC #2 : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor_stack, X
 	%a8()
+	%menubeep()
 	BRA .redraw
 
 .pressed_down
@@ -130,6 +137,7 @@ CM_Active:
 	LDX !lowram_cm_stack_index
 	LDA !lowram_cm_cursor_stack, X : INC #2 : JSR cm_fix_cursor_wrap : STA !lowram_cm_cursor_stack, X
 	%a8()
+	%menubeep()
 	BRA .redraw
 
 .pressed_left
@@ -190,9 +198,9 @@ CM_Return:
 .item_menu_is_scrolled
 	%a16()
 	LDA #$FF18 : STA $EA
+	%a8()
 
 .end
-	%a8()
 	RTS
 
 ; -----------
@@ -578,6 +586,7 @@ cm_execute_toggle:
 	LDA ($00) : INC $00 : STA $04
 	%ai8()
 	LDA [$02] : EOR #$01 : STA [$02]
+	LDA #$1D : STA $012F ; magic boop
 	RTS
 
 
@@ -600,10 +609,9 @@ cm_execute_jsr:
 	%a16()
 	LDA ($00) : INC $00 : INC $00 : STA $02
 	%a8()
-
+	LDA #$25 : STA $012F ; switch sound
 	LDX #$0000
 	JSR ($0002, X)
-
 .end
 	RTS
 
@@ -612,7 +620,7 @@ cm_execute_submenu:
 	; dpad should do nothing here
 	%a8()
 	LDA $F0 : BNE .end
-
+	LDA #$24 : STA $012F
 	; Increments stack index and puts the submenu into the stack.
 	%a16()
 	LDA !lowram_cm_stack_index : INC #2 : STA !lowram_cm_stack_index : TAX
@@ -626,7 +634,7 @@ cm_execute_back:
 	; > should do nothing here
 	%a8()
 	LDA $F0 : CMP.b #$01 : BEQ .end
-
+	LDA #$24 : STA $012F
 	; Decrements the stack index.
 	%a16()
 	; make sure next time we go to a submenu, we start on the first line.
@@ -649,7 +657,7 @@ cm_execute_choice:
 	LDA ($00) : INC $00 : INC $00 : STA $02
 	LDA ($00) : INC $00 : STA $04
 	%ai8()
-
+	LDA #$1D : STA $012F ; magic boop
 	; we either increment or decrement
 	LDA $F0 : CMP #$02 : BEQ .pressed_left
 	LDA [$02] : INC : BRA .bounds_check
@@ -715,6 +723,7 @@ cm_execute_numfield:
 	; One additional INC on the max value here, for convenience later.
 	LDA ($00) : INC $00 : INC $00 : INC : STA $06
 	%ai8()
+	LDA #$1D : STA $012F ; magic boop
 
 	LDA $F0 : CMP.b #$02 : BEQ .pressed_left
 
@@ -775,6 +784,7 @@ cm_execute_toggle_bit:
 	LDA ($00) : INC $00 : STA $05
 	%ai8()
 	LDA [$02] : EOR $05 : STA [$02]
+	LDA #$1D : STA $012F ; magic boop
 	RTS
 
 
