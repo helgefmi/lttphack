@@ -119,6 +119,7 @@
 						<li>Using the third filename slot will grant you full equipment when starting a new game.</li>
 						<li>Counters shows intermediate values sometimes, like when opening a chest or when text appears.</li>
 						<li>If something weird happens, just reset your console, start a new game and use a preset to get back to where you were.</li>
+						<li>Holding <span class="snesButton snesStart">Start</span> and <span class="snesButton snesSelect">Select</span> during power on will reset all configurations to default.</li>
 						<li>Check out <a href="https://strats.alttp.run">ALttP Room Time Leaderboards</a> for optimal room times.</li>
 					</ul>
 
@@ -474,12 +475,14 @@
 						<dd>Presets will have more health, as if the Sanctuary heart were collected earlier in the run</dd>
 						<dt>Disable beams</dt>
 						<dd>The Master Sword and its upgrades will no longer fire sword beams at full health</dd>
-						<dt>Visible probes</dt>
-						<dd>Search probes used by guards, beamos, etc. will display a graphic.</dd>
+						<dt>Fast walls</dt>
+						<dd>Speeds up the moving wall cutscenes.</dd>
 						<dt>Lit rooms</dt>
 						<dd>Dark rooms will be at full brightness and visibility. This option will remove the darkness in the current room as well.</dd>
+						<dt>Visible probes</dt>
+						<dd>Search probes used by guards, beamos, etc. will display a graphic.</dd>
 						<dt>See bonk items</dt>
-						<dd>Shows bonk items on the overworld as stationary sprites</dd>
+						<dd>Shows bonk items on the overworld as stationary sprites.</dd>
 						<dt>Disable BG1</dt>
 						<dd>Disables SNES background 1 via PPU registers. Has no effect on lag.</dd>
 						<dt>Disable BG2</dt>
@@ -587,25 +590,25 @@
 					<h3 id="menuShortcuts">Shortcuts</h3>
 					<dl>
 						<dt>LTTPHack menu</dt>
-						<dd>R+Start - Opens the practice hack menu. <strong class="lag"><b>NOTE:</b> this shortcut cannot be changed.</strong></dd>
+						<dd><span class="snesButton snesR">R</span>+<span class="snesButton snesStart">Start</span> - Opens the practice hack menu. <strong class="lag"><b>NOTE:</b> this shortcut cannot be changed.</strong></dd>
 						<dt>Load last preset</dt>
 						<dd>Loads the last preset used from the preset menu</dd>
 						<dt>Save preset</dt>
 						<dt>Save state <em class="SD2SNES">(SD2SNES only)</em></dt>
 						<dd>Saves current state of the game, similar to emulator savestates. Both custom presets and states operate the same, but the SD2SNES version is implemented differently and is more powerful.</dd>
-						<dt>Save preset</dt>
+						<dt>Load saved preset</dt>
 						<dt>Load state <em class="SD2SNES">(SD2SNES only)</em></dt>
 						<dd>Loads custom savestate/preset, similar to emulator savestates. Both custom presets and states operate the same, but the SD2SNES version is implemented differently and is more powerful.</dd>
 						<dt>Reset seg timer</dt>
 						<dd>Resets the segment timer, which is not automatic like room timer.</dd>
 						<dt>Toggle OoB</dt>
-						<dd>Turns on <a href="#descOOB">out-of-bounds</a> mode</dd>
+						<dd>Turns on <a href="#descOOB">out-of-bounds</a> mode.</dd>
 						<dt>Skip text</dt>
-						<dd>Skips the current text box</dd>
+						<dd>Skips the current text box.</dd>
 						<dt>Remove sprites</dt>
-						<dd>Removes all sprites, overlords, and ancillae from the screen</dd>
+						<dd>Removes all sprites, overlords, and ancillae from the screen.</dd>
 						<dt>Fill everything</dt>
-						<dd>Maxes out equipment, rupees, items, and health</dd>
+						<dd>Maxes out equipment, rupees, items, and health.</dd>
 						<dt>VRAM repair</dt>
 						<dd>Attempts to fix important graphics registers and VRAM data that have been corrupted by door glitches.<strong class="lag"><b>WARNING:</b> If this shortcut is triggered during a text box, the text box will disappear, but the game will remain in text mode.</strong><strong class="lag"><b>WARNING:</b> this feature only repairs registers and VRAM; other areas of RAM may result in vanilla game crashes unrelated to this feature, but which are never normally encountered in vanilla.</strong></dd>
 						<dt>Show somaria pits</dt>
@@ -703,6 +706,11 @@
 					<h2>Changelog</h2>
 					<h3>v12</h3>
 					<ul>
+						<li>Gameplay
+							<ul>
+								<li>Fast moving walls - thanks Pinkus</li>
+							</ul>
+						</li>
 						<li>Link state - New menu
 							<ul>
 								<li>Waterwalk</li>

@@ -50,8 +50,9 @@ idle_endmessage:
 	INC !lowram_idle_frames
 	%a8()
 
+	ORA #$00 ; get A to trigger P flags
+
 .pressed_key
-	ORA #$FF ; get A to trigger P flags
 	RTL
 
 

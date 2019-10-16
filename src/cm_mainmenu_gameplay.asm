@@ -6,9 +6,9 @@ cm_submenu_gameplay:
 	dw cm_gameplay_skip_triforce
 	dw cm_gameplay_sanctuary
 	dw cm_gameplay_disable_beams
-	dw cm_gameplay_probes
 	dw cm_gameplay_lit_rooms
 	dw cm_gameplay_fast_moving_walls
+	dw cm_gameplay_probes
 	dw cm_gameplay_bonk_items
 	dw cm_gameplay_shutoffbg1
 	dw cm_gameplay_shutoffbg2
@@ -49,6 +49,6 @@ cm_gameplay_shutoffbg2:
 	%cm_toggle_bit("Disable BG2", !disabled_layers, #$02)
 
 cm_gameplay_oob:
-	%cm_toggle("OoB Mode", !lowram_oob_toggle)
+	%cm_toggle("OoB mode", !lowram_oob_toggle)
 
 ; }}}
