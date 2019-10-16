@@ -64,7 +64,7 @@ save_preset_data:
 	JSR save_poverty_state
 
 	%a8()
-	LDA #$A1 : STA $4200
+	LDA #$81 : STA $4200
 	LDA #$0F : STA $13 : STA $2100
 	%ai8()
 	LDA #$01 : STA !lowram_last_frame_did_saveload

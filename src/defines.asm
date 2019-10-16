@@ -433,7 +433,7 @@ macro ppu_off()
 endmacro
 
 macro ppu_on()
-	LDA #$A1 : STA $4200
+	LDA #$81 : STA $4200
 	LDA #$0F : STA $13 : STA $2100
 	PLA : STA $9B : STA $420C
 endmacro

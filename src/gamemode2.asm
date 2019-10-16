@@ -564,7 +564,7 @@ end:
 
 .songBankNotChanged
 
-	LDA #$A1 : STA $4200
+	LDA #$81 : STA $4200
 	LDA $13 : STA $2100
 	%ai8()
 	LDA #$01 : STA !lowram_last_frame_did_saveload
