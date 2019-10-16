@@ -1,4 +1,6 @@
 ; Magic words
+!SRAM_VERSION = $0020
+
 !menu_end = #$0000
 !list_end = #$FF
 
@@ -181,7 +183,7 @@ endmacro
 !lowram_cm_stack_index = $0658
 !ram_cm_last_frame_input = $7F76C6
 !ram_cm_input_timer = $7F76C8
-!ram_cm_opened_menu_maunally = $7F7702
+!ram_cm_opened_menu_maunally = $7F7724
 
 !ram_cm_old_crystal_switch = $7F76CE
 
@@ -269,7 +271,7 @@ endmacro
 !ram_preset_type = $04E2
 !ram_preset_destination = $7F7900
 !ram_preset_end_of_sram_state = $7F7902
-!ram_preset_spotlight_timer = $7F7720
+!ram_preset_spotlight_timer = $7F7722
 
 ;-------------------------
 ; MOVIE

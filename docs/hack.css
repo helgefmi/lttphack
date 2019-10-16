@@ -210,6 +210,11 @@ ul.quietlist {
 	list-style: none;
 }
 
+ul.footlist {
+	font-size: 95%;
+	font-style: italic;
+}
+
 sup.footnote {
 	font-size: 100%;
 	font-weight: 600;

@@ -14,7 +14,7 @@ LoadCustomHUDGFX:
 	%a16()
 	%i8()
 	LDX #$80 : STX $2115
-	LDA #$7000 : STA $2116 ; VRAM address (E000 in vram)
+	LDA #$7000 : STA $2116 ; VRAM address ($E000 in vram)
 	LDA #$1801 : STA $4300 ; word, normal increment, destination $2118
 	LDA.w #hud_table : STA $4302 ; Source offset
 	LDX.b #hud_table>>16 : STX $4304 ; Source bank

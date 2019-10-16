@@ -1,9 +1,5 @@
 pushpc
-; INIT
-;
 ; Code that is run once after the game has been powered on.
-
-!SRAM_VERSION = $0020
 
 ; Overrides the following:
 ; LDA.b #$81 : STA $4200
@@ -28,7 +24,7 @@ init_expand:
 	LDY #$10 ; reading 16 bits
 --	LDA $4016 ; if the last bit is on, carry will be set, otherwise, it won't; A is still 1
 	LSR
-	ROL $00 : ROL $01 ; roll carry
+	ROL $00 : ROL $01 ; roll carry from A and then from $00
 	DEY : BNE -- ; decrement
 
 	%a16()

@@ -14,17 +14,26 @@ pushpc
 
 ; FloorIndicator quick RTL
 ;
-; This can mess with the HUD, removing parts of it.
+; This can mess with the HUD, removing parts of it
+; just replacing the STA with LDA so we can keep vanilla lag
+org $0AFD48
+	LDA $7EC7F2 : INC
+	LDA $7EC834 : INC
+	LDA $7EC832
+	LDA #$250F : LDA $7EC7F4
 
-org $0AFD2C
-	SEP #$30
-	RTL
+org $0AFD9F
+	LDA $7EC7F2, X
 
+org $0AFDDA6
+	LDA $7EC832, X
 
-; FloorIndicator.noIndicator quick RTL
-org $0AFDB0
-	SEP #$30
-	RTL
+; probably leave the INC $16 in
+org $0AFDB5
+	LDA $7EC7F2
+	LDA $7EC832
+	LDA $7EC7F4
+	LDA $7EC834
 
 ; -------------
 ; HUD TEMPLATE
@@ -50,6 +59,20 @@ org $0DFAAE
 ;
 ; Overriding the following:
 ; $0DFC26:  20 CB FD  JSR HandleHearts
+
+org $0DF195 ; remove heart refill animation
+	; vanilla op: STA [$00], Y
+	; we have to replace 2 bytes and use 6 cycles
+	; contents of accumulator don't matter here
+	; while a useless set of ops like XBA : XBA
+	; would work, they don't take the super minute
+	; difference in memory access speeds into account
+	; changing the STA to an LDA does, and it will do it
+	; perfectly
+	LDA [$00], Y 
+
+org $0DF19C ; ditto above
+	LDA [$00], Y
 
 org $0DFC26
 	JSR UpdateHearts_NoHook
@@ -139,7 +162,7 @@ endmacro
 org $0DE876 ; Japanese "PENDANTS" text
 	dw !BLANK_TILE, !BLANK_TILE, !BLANK_TILE, !BLANK_TILE, !BLANK_TILE
 
-org $0DE928 ; Japanese "CRYSTALS" text
+org $0DE92A ; Japanese "CRYSTALS" text
 	dw !BLANK_TILE, !BLANK_TILE, !BLANK_TILE, !BLANK_TILE, !BLANK_TILE
 org $0DF1C9
 	rep 36 : %what_item_is_this()
@@ -203,12 +226,7 @@ hud_template_hook:
 
 	%a16()
 	JSL draw_counters
-
-	LDA !ram_qw_toggle : BEQ .dont_update_qw
-	JSR hud_draw_qw
-
-.dont_update_qw
-	SEP #$30
+	%a8()
 	INC $16
 	RTL
 
@@ -249,6 +267,7 @@ update_hearts_hook:
 	LDA !ram_qw_toggle : BEQ .dont_update_qw
 	LDA $E2 : CMP !ram_qw_last_scroll : BEQ .dont_update_qw
 	STA !ram_qw_last_scroll
+	JSR hud_draw_qw
 
 .dont_update_qw
 
@@ -355,7 +374,7 @@ hud_draw_hearts:
 
 
 hud_draw_qw:
-	LDA $E2 : AND.b #$0006 : CMP.b #$0006 : BEQ .is_qw
+	LDA $E2 : AND.w #$0006 : CMP.w #$0006 : BEQ .is_qw
 
 	LDA #!EMPTY : STA $7EC80A
 	LDA #!EMPTY : STA $7EC80C
