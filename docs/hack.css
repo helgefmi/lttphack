@@ -1,3 +1,8 @@
+:target{
+	padding-top: 54px;
+	margin-top: -54px;
+}
+
 table.romtable th {
 	width: 25%;
 	vertical-align: middle;
@@ -29,7 +34,6 @@ strong.lag b:before {
 }
 
 h3 {
-	margin-top: 20px;
 	border-bottom: 2px solid #505050;
 }
 
@@ -146,17 +150,20 @@ span.morewarped::selection {
 }
 
 header {
-	padding: 154px 0 100px;
+	padding: 120px 0 55px;
 }
 
 @media (min-width: 992px) {
 	header {
-		padding: 156px 0 100px;
+		padding: 120px 0 55x;
 	}
 }
 
+div.headerTitle {
+	font-size: 3.2rem;
+}
 section {
-	padding: 150px 0;
+	padding: 50px 0;
 }
 
 .dl-tbl th {
@@ -540,4 +547,19 @@ span.fontPreview.font16 {
 span.snesButton {
 	font-weight: 600;
 	font-variant: small-caps;
+}
+
+span.releaseDate {
+	font-variant: small-caps;
+	font-size: 70%;
+}
+
+a.headerLink {
+	font-size: 60%;
+	vertical-align: super;
+	opacity: .5;
+}
+
+a.headerLink:hover {
+	opacity: 1.0;
 }

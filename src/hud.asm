@@ -77,7 +77,7 @@ org $0DF19C ; ditto above
 org $0DFC26
 	JSR UpdateHearts_NoHook
 
-!HEART_LAG_EARLY_STOP = $18
+!HEART_LAG_EARLY_STOP = $28
 ; UpdateHearts Hijack
 org $0DFDCB
 	JSL update_hearts_hook
@@ -359,7 +359,8 @@ hud_draw_hearts:
 	STA !POS_MEM_HEART_GFX
 
 	; Full hearts
-	LDA !ram_equipment_curhp : AND #$00FF : LSR #3 : JSL hex_to_dec : LDX.w #!POS_HEARTS : JSL draw2_white_lttp
+	LDA !ram_equipment_curhp : AND #$00FF : LSR #3 : JSL hex_to_dec
+	LDX.w #!POS_HEARTS : JSL draw2_white_lttp
 
 	; Quarters
 	LDA !ram_equipment_curhp : AND #$0007 : ORA #$3490 : STA $7EC704, X
@@ -368,7 +369,8 @@ hud_draw_hearts:
 	LDA #$24A2 : STA !POS_MEM_CONTAINER_GFX
 
 	; Container
-	LDA !ram_equipment_maxhp : AND #$00FF : LSR #3 : JSL hex_to_dec : LDX.w #!POS_CONTAINERS : JSL draw2_white_lttp
+	LDA !ram_equipment_maxhp : AND #$00FF : LSR #3 : JSL hex_to_dec
+	LDX.w #!POS_CONTAINERS : JSL draw2_white_lttp
 
 	RTS
 
@@ -390,7 +392,8 @@ hud_draw_enemy_hp:
 	; Assumes: I=16
 	; Draw over Enemy Heart stuff in case theres no enemies
 	LDA #!EMPTY : STA !POS_MEM_ENEMY_HEART_GFX
-	LDX.w #!POS_ENEMY_HEARTS : STA $7EC700, X : STA $7EC702, X : STA $7EC704, X
+	LDX.w #!POS_ENEMY_HEARTS
+	STA $7EC700, X : STA $7EC702, X : STA $7EC704, X
 
 	LDX #$FFFF
 
@@ -400,7 +403,7 @@ hud_draw_enemy_hp:
 	LDA $0E60, X : AND #$0040 : BNE .loop
 	LDA $0E50, X : AND #$00FF : BEQ .loop : CMP #$00FF : BEQ .loop
 
-	; Enemy HP should be in A.
+	; Enemy HP should be in A
 	JSL hex_to_dec : LDX.w #!POS_ENEMY_HEARTS : JSL draw3_white_aligned_left_lttp
 
 	; Enemy Heart GFX
@@ -409,10 +412,9 @@ hud_draw_enemy_hp:
 .end
 --	RTS
 
-
+; It's long, but really, it's just an expanded loop
 hud_draw_input_display:
 	; Assumes: AI=16
-
 	LDA !ram_ctrl1 : CMP !ram_ctrl1_word_copy : BEQ --
 
 	STA !ram_ctrl1_word_copy
@@ -510,9 +512,8 @@ hud_draw_xy_display:
 	ADC !ram_counters_lag
 	ADC !ram_counters_idle
 	ADC !ram_counters_segment
-	%a16()
-	AND.w #$00FF
-	TAX : JSR hud_set_counter_position
+
+	JSR hud_set_counter_position
 
 	LDA $22 : TAX
 	LDA $20 : TAY
@@ -538,9 +539,8 @@ hud_draw_subpixels:
 	ADC !ram_counters_idle
 	ADC !ram_counters_segment
 	ADC !ram_xy_toggle
-	%a16()
-	AND.w #$00FF
-	TAX : JSR hud_set_counter_position
+
+	JSR hud_set_counter_position
 
 	LDA !ram_subpixels_toggle : AND #$00FF : CMP #$0002 : BEQ .speed
 
@@ -586,9 +586,7 @@ hud_draw_misslots:
 .dont_update_colors
 	CPY.w #$000A : BNE .loop
 
-
 	; Hook timer
-
 	LDX.w #$00D0
 	LDY.w #$0000
 
@@ -600,27 +598,12 @@ hud_draw_misslots:
 
 	RTS
 
-
+; enters A=8; leaves A=16
 hud_set_counter_position:
-	LDA.w #!POS_COUNTERS-2
+	REP #$20
+	AND #$00FF ; I think we should always shift, just to keep cycles consistent
+	ASL #6 ; multiply by 64
+	ADC.w #!POS_COUNTERS-2 ; carry is already clear from the ASL
 
-	CPX #$0000 : BEQ .done
-
-.loop
-	CLC : ADC #$0040 : DEX : BNE .loop
-
-.done
 	STA !lowram_draw_tmp
 	RTS
-
-; L, u, R, Y, X, SL
-ctrl_top_bit_table:
-	dw #$2000, #$0008, #$1000, #$0040, #$4000, #$0020
-ctrl_top_gfx_table:
-	dw #$2404, #$2406, #$2405, #$2403, #$2402, #$240A
-
-; l, d, r, B, A, ST
-ctrl_bot_bit_table:
-	dw #$0002, #$0004, #$0001, #$0080, #$8000, #$0010
-ctrl_bot_gfx_table:
-	dw #$2409, #$2407, #$2408, #$2401, #$2400, #$240B
