@@ -51,12 +51,15 @@ Other stuff
 
 - hey pinkus! Thanks for working on the LTTP practice hack. I have a feature request. I'm still early enough in my NMG play that i get the powder. It's annoying to have to turn on for every single preset, I imagine in the same way turning on the sanc heart was annoying. Can we get a setting to have powder on for the presets? (medium priority)
 
-- bug with presets and sq
+- bug with presets and sq (something to do with mountain, I don't even remember)
+
+- YBA lua like shortcut for collision mapping
+
+- Rework menu numbers to be +/- 10/5 on L/R and +/- 1 on <>
 
 Possible toggles/options
 -------------------------
 - Follower $7EF3CC
-
 
 Low priority
 -------------

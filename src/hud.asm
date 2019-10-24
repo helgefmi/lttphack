@@ -25,7 +25,7 @@ org $0AFD48
 org $0AFD9F
 	LDA $7EC7F2, X
 
-org $0AFDDA6
+org $0AFDA6
 	LDA $7EC832, X
 
 ; probably leave the INC $16 in
