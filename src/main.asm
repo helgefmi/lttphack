@@ -2,10 +2,11 @@ lorom
 
 !FEATURE_HUD ?= 1
 !FEATURE_SD2SNES ?= 1
-!VERSION ?= "11 ALEPH 1"
+!VERSION ?= "ALEPH 1"
 
 incsrc defines.asm
 incsrc hexedits.asm
+;incsrc linkoam.asm
 
 org $208000
 incsrc gamemode.asm

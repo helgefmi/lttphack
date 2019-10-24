@@ -1,10 +1,12 @@
 ; Magic words
-!SRAM_VERSION = $0020
+!SRAM_VERSION = $0021
 
 !menu_end = #$0000
 !list_end = #$FF
 
 !pracmenu_shortcut = #$1010
+
+!EMPTY = $207F
 
 !menu_dma_buffer = $7F8000 ; [0x800] reserved
 !dg_hdma = $7F8800 ; [0x800] reserved
@@ -22,6 +24,7 @@
 ; AB[0x02]
 ; B6[0x01]
 ; 7A[0x01]
+; 7C[0x02]
 ; 04CB[0x25] (04F0)
 ; $7F7667[0x6719] (7FDD80)
 ; $7EC900[0x1F00] (7EE800)
@@ -194,6 +197,11 @@ endmacro
 ;-------------------------
 ; Transition detection
 ;-------------------------
+!ram_linkOAMpos = $7C
+
+;-------------------------
+; Transition detection
+;-------------------------
 
 !TD_RESET = $00
 !TD_SHOW = $01
@@ -278,7 +286,7 @@ endmacro
 ;-------------------------
 
 !ram_movie_mode = $7F8000
-!ram_movie_index = $7C
+!ram_movie_index = $0000
 !ram_movie_timer = $7E
 !ram_movie_length = $80
 !ram_movie_rng_index = $82

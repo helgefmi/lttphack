@@ -62,6 +62,10 @@ Low priority
 -------------
 - Make the menu redraw less often, just for practicality's sake and less disruptive fblank
 
+- TT palette transparency problems: JSL.l $02FD68 sets to not transparent, find similar routine; it's in bank0E in US though
+
+- Swamp door in hundo preset
+
 ======== MINIGAMES TODO ========
 
 - Mini games (menu)

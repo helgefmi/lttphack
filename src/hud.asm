@@ -151,7 +151,6 @@ UpdateHearts_NoHook:
 
 !QMARK = $212A
 !BLANK_TILE = $24F5
-!EMPTY = $207F
 
 macro what_item_is_this()
 	fillword !BLANK_TILE : fill 16

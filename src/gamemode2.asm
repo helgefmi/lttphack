@@ -84,7 +84,8 @@ gamemode_shortcuts:
 
 !IGNORE_MODULE = $FFFF
 resettimers:
-	LDA !ram_can_reset_timer : BNE updatetimers
+	;LDA !ram_can_reset_timer : BNE updatetimers
+	LDA !ram_can_reset_timer : BNE ignoremodule
 	LDA !lowram_room_realtime
 	STA !lowram_room_realtime_copy : STZ !lowram_room_realtime
 	LDA !lowram_room_gametime
@@ -105,6 +106,7 @@ updatetimers:
 
 .hud
 	JSL draw_counters
+	LDA #$0001 : TSB $16
 
 ignoremodule:
 	LDA $10 : STA !ram_gamemode_copy
@@ -212,7 +214,7 @@ Submodule_tables:
 
 	CloseSpotlight_sub: ; $0F
 	OpenSpotlight_sub: ; $10 ???
-		db !T_Reset, !T_Nothing ; 0x00, 0x01
+		db !T_Reset, !T_Reset ; 0x00, 0x01
 
 	HoleToDungeon_sub: ; $11
 		db !T_Reset, !T_Nothing, !T_Nothing, !T_Nothing ; 0x00, 0x01, 0x02, 0x03

@@ -15,6 +15,10 @@ org $008174
 LDA $1C : STA $AB : NOP
 LDA $1D : STA $AC : NOP
 
+;org $0081A0 ; save camera correction for NMI expansion
+;	BRA + ; save time during NMI
+;org $0081B8 : +
+
 ; HUD update hook
 org $008B6B
 	; 008b6b ldx $0219
@@ -61,8 +65,41 @@ pullpc
 nmi_expand:
 	; Enters AI=16
 	%a8()
-
 	INC !lowram_nmi_counter
+
+;	; Camera lock fix
+;	LDA #$01 : BEQ .vanillaCamera
+;
+;	REP #$10 ; necessary?
+;	LDX !ram_linkOAMpos
+;	LDA $0803+4, X ; bit8 of X coord
+;	AND #$01 : XBA ; store for later
+;	LDA $0800+4, X ; low byte of X coord
+;
+;	REP #$20 : SEC
+;	SBC.w #134 ; default link to x=134
+;	STA $00 : SEC
+;	LDA $20 : SBC #$005E : CLC : ADC $00
+;
+;	SEP #$21 ; set carry
+;	STA $2110 : XBA : STA $2110
+;
+;	REP #$20
+;	LDA $0801+4, X : AND #$00FF
+;	SBC.w #102 : STA $00 : SEC
+;	LDA $22 : SBC #$0086 : CLC : ADC $00
+;	SEP #$21 ; set carry
+;	STA $210F : XBA : STA $210F
+;	SEP #$20
+;
+;	BRA .counters
+;.vanillaCamera
+;	LDA $011E : STA $210F
+;	LDA $011F : STA $210F
+;	LDA $0122 : STA $2110
+;	LDA $0123 : STA $2110
+
+.counters
 	LDA !lowram_last_frame_did_saveload : BNE .dont_update_counters
 
 	LDA !disabled_layers : TRB $AB : TRB $AC
@@ -87,7 +124,6 @@ nmi_expand:
 
 .end
 	%a8()
-
 	RTL
 
 .dont_update_counters
