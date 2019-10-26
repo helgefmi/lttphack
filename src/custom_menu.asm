@@ -14,9 +14,13 @@ org $0080A5 : db #CM_Main>>16
 pullpc
 
 macro menubeep()
-	LDA #$20 : STA $012F
-	LDA #$05 : STA $012F
 	LDA #$0C : STA $012F
+endmacro
+
+macro set_menu_icon(icon)
+	LDA.w #($3000|<icon>)
+	ORA $0C
+	STA.l !menu_dma_buffer-2, X
 endmacro
 
 !OPTION_OFFSET = $001E
@@ -143,9 +147,12 @@ CM_Active:
 .pressed_left
 .pressed_right
 .pressed_a
-.pressed_x
-	JSR cm_execute_cursor
+	STZ $72
+--	JSR cm_execute_cursor
 	BRA .redraw
+
+.pressed_x
+	LDA #$01 : STA $72 : BRA --
 
 .pressed_b
 	%ai16()
@@ -233,12 +240,6 @@ cm_init_item_variables:
 	; Mirror
 	LDA !ram_item_mirror : LSR : STA !ram_cm_item_mirror
 
-	; Boots
-	LDA !ram_equipment_boots_menu : STA !ram_cm_equipment_boots
-
-	; Flippers
-	LDA !ram_equipment_flippers_menu : STA !ram_cm_equipment_flippers
-
 	; MaxHP
 	LDA !ram_equipment_maxhp
 	LSR #3 : DEC #3
@@ -282,7 +283,6 @@ cm_get_pressed_button:
 	TAY
 	%ai8()
 	RTS
-
 
 cm_clear_stack:
 	; Assumes I=8
@@ -491,6 +491,9 @@ cm_draw_text:
 	INY : BRA .loop
 
 .end
+	LDA $0E : BIT #$10 : BNE ++
+	AND #$FB
+++	STA $0D : STZ $0C
 	%a16()
 	RTS
 
@@ -585,8 +588,15 @@ cm_execute_toggle:
 	LDA ($00) : INC $00 : INC $00 : STA $02
 	LDA ($00) : INC $00 : STA $04
 	%ai8()
-	LDA [$02] : EOR #$01 : STA [$02]
+	LDA $72 : BNE .zero
+.toggle
+	LDA [$02] : EOR #$01 : BRA ++
+.zero
+	LDA [$02] : AND #$FE
+++	STA [$02]
+	PHA
 	LDA #$1D : STA $012F ; magic boop
+	PLA
 	RTS
 
 
@@ -609,9 +619,9 @@ cm_execute_jsr:
 	%a16()
 	LDA ($00) : INC $00 : INC $00 : STA $02
 	%a8()
-	LDA #$25 : STA $012F ; switch sound
 	LDX #$0000
 	JSR ($0002, X)
+	LDA #$25 : STA $012F ; switch sound
 .end
 	RTS
 
@@ -659,6 +669,7 @@ cm_execute_choice:
 	%ai8()
 	LDA #$1D : STA $012F ; magic boop
 	; we either increment or decrement
+	LDA $72 : BNE .set_to_zero
 	LDA $F0 : CMP #$02 : BEQ .pressed_left
 	LDA [$02] : INC : BRA .bounds_check
 
@@ -725,6 +736,7 @@ cm_execute_numfield:
 	%ai8()
 	LDA #$1D : STA $012F ; magic boop
 
+	LDA $72 : BNE .set_to_min
 	LDA $F0 : CMP.b #$02 : BEQ .pressed_left
 
 	LDA [$02] : CLC : ADC $07
@@ -849,7 +861,6 @@ cm_execute_submenu_variable:
 .end
 	RTS
 
-
 cm_execute_movie:
 	LDA #$0000
 	LDX #$0000
@@ -931,10 +942,10 @@ cm_draw_toggle:
 	LDA ($02) : INC $02 : STA $06
 
 	; Draw the text first (since it uses A)
-	%item_index_to_vram_index()
-	PHX
+	%item_index_to_vram_index() : PHX
 	JSR cm_draw_text
 	PLX
+	%set_menu_icon($4B)
 
 	; Set position for ON/OFF
 	TXA : CLC : ADC.w #!OPTION_OFFSET : TAX
@@ -978,18 +989,22 @@ cm_draw_jsr:
 	INC $02 : INC $02
 
 	; draw text normally
-	%item_index_to_vram_index()
+	%item_index_to_vram_index() : PHX
 	JSR cm_draw_text
+	PLX
+	%set_menu_icon($4A)
 	RTS
 
 
 cm_draw_submenu:
 	INC $02 : INC $02 ; skip submenu address
 
+.from_var
 	; draw text normally
-	%item_index_to_vram_index()
+	%item_index_to_vram_index() : PHX
 	JSR cm_draw_text
-
+	PLX
+	%set_menu_icon($49)
 	RTS
 
 
@@ -1008,10 +1023,10 @@ cm_draw_toggle_bit_customtext:
 	LDA ($02) : INC $02 : STA $07
 
 	; Draw the text first (since it uses A)
-	%item_index_to_vram_index()
-	PHX
+	%item_index_to_vram_index() : PHX
 	JSR cm_draw_text
 	PLX
+	%set_menu_icon($4B)
 
 	; set position for ON/OFF
 	TXA : CLC : ADC.w #!OPTION_OFFSET : TAX
@@ -1035,6 +1050,7 @@ cm_draw_choice:
 	PHX
 	JSR cm_draw_text
 	PLX
+	%set_menu_icon($4C)
 
 	; set position for ON/OFF
 	TXA : CLC : ADC.w #!OPTION_OFFSET : TAX
@@ -1081,6 +1097,7 @@ cm_draw_numfield:
 	PHX
 	JSR cm_draw_text
 	PLX
+	%set_menu_icon($4D)
 
 	; set position for the number
 	TXA : CLC : ADC.w #!OPTION_OFFSET : TAX
@@ -1115,12 +1132,14 @@ cm_draw_numfield:
 
 	RTS
 
-
 cm_draw_preset:
 	%a16()
 	INC $02 : INC $02
-	%item_index_to_vram_index()
+	%item_index_to_vram_index() : PHX
 	JSR cm_draw_text
+	PLX
+	%set_menu_icon($4E)
+
 	RTS
 
 
@@ -1132,12 +1151,12 @@ cm_draw_toggle_bit:
 	LDA ($02) : INC $02 : STA $07
 
 	; Draw the text first (since it uses A)
-	%item_index_to_vram_index()
-	PHX
+	%item_index_to_vram_index() : PHX
 	JSR cm_draw_text
 	PLX
+	%set_menu_icon($4B)
 
-	; Set position for ON/OFF
+	; set position for ON/OFF
 	TXA : CLC : ADC.w #!OPTION_OFFSET : TAX
 
 	%a8()
@@ -1196,10 +1215,7 @@ cm_draw_submenu_variable:
 	; skip submenu pointers
 	LDA $02 : CLC : ADC $04 : STA $02
 
-	%item_index_to_vram_index()
-	JSR cm_draw_text
-
-	RTS
+	JMP cm_draw_submenu_from_var
 
 
 cm_draw_movie: RTS

@@ -587,8 +587,8 @@ gamemode_fill_everything:
 	STA !ram_item_somaria
 	STA !ram_item_byrna
 	STA !ram_item_cape
-	STA !ram_equipment_boots_menu
-	STA !ram_equipment_flippers_menu
+	STA !ram_equipment_boots
+	STA !ram_equipment_flippers
 	STA !ram_equipment_moon_pearl
 	STA !ram_equipment_half_magic
 

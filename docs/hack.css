@@ -9,6 +9,21 @@ table.romtable th {
 	text-align: right;
 }
 
+table.ctrltable th {
+	vertical-align: middle;
+	text-align: center;
+	background-color: #F0F0F0;
+}
+
+table.ctrltable th,
+table.ctrltable td {
+	padding: 2px 10px;
+}
+
+table.ctrltable td {
+	font-size: 90%;
+}
+table.ctrltable caption,
 table.romtable caption {
 	caption-side: top;
 	text-align: center;
@@ -35,6 +50,10 @@ strong.lag b:before {
 
 h3 {
 	border-bottom: 2px solid #505050;
+}
+
+h4 {
+	font-size: 1.45rem;
 }
 
 div.center {
@@ -375,6 +394,41 @@ span.dgIcon.dgYtop {
 
 span.dgIcon.dgYbottom {
 	background-position: -192px 0px;
+}
+
+span.menuIcon {
+	background-image: url("menuicons.png");
+	outline: 2px solid #282828;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	margin-right: .3em;
+	margin-left: .5px;
+	image-rendering: pixelated;
+}
+
+span.menuIcon.menuSubmenu {
+	background-position: 0px 0px
+}
+
+span.menuIcon.menuCommand {
+	background-position: -16px 0px
+}
+
+span.menuIcon.menuToggle {
+	background-position: -32px 0px
+}
+
+span.menuIcon.menuSelection {
+	background-position: -48px 0px
+}
+
+span.menuIcon.menuNumfield {
+	background-position: -64px 0px
+}
+
+span.menuIcon.menuPreset {
+	background-position: -80px 0px
 }
 
 code.size16 {

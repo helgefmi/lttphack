@@ -164,7 +164,100 @@
 						<dd>Configuration toggles related to meta-operation</dd>
 					</dl>
 
-					
+					<h4>Menu controls</h4>
+					<table class="table table-bordered dl-tbl ctrltable">
+						<tbody>
+							<tr>
+								<th>Button</th>
+								<th>When</th>
+								<th>Action</th>
+							</tr>
+							<tr>
+								<th><span class="snesButton snesR">R</span>+<span class="snesButton snesStart">Start</span></th>
+								<td>Game play</td>
+								<td>Open practice menu</td>
+							</tr>
+							<tr>
+								<th><span class="snesButton snesStart">Start</span></th>
+								<td>In practice menu</td>
+								<td>Close practice menu (while in practice menu)</td>
+							</tr>
+							<tr>
+								<th rowspan="4"><span class="snesButton snesA">A</span></th>
+								<td>Submenu option</td>
+								<td>Open submenu</td>
+							</tr>
+							<tr>
+								<td>Toggle option</td>
+								<td>Toggle item</td>
+							</tr>
+							<tr>
+								<td>List option</td>
+								<td>Next selection</td>
+							</tr>
+							<tr>
+								<td>Command option</td>
+								<td>Activate command</td>
+							</tr>
+							<tr>
+								<th rowspan="2"><span class="snesButton snesB">B</span></th>
+								<td>Main menu</td>
+								<td>Move to top</td>
+							</tr>
+							<tr>
+								<td>Submenu</td>
+								<td>Return to previous menu</td>
+							</tr>
+							<tr>
+								<th rowspan="2"><span class="snesButton snesDPAD">&lt; &gt;</span></th>
+								<td>Toggle option</td>
+								<td>Toggle item</td>
+							</tr>
+							<tr>
+								<td>List option</td>
+								<td>Previous/Next selection</td>
+							</tr>
+							<tr>
+								<th><span class="snesButton DPAD">^ v</span></th>
+								<td>Practice menu</td>
+								<td>Move cursor</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<h4>Menu legend</h4>
+					<table class="table table-bordered dl-tbl ctrltable">
+						<tbody>
+							<tr>
+								<th>Icon</th>
+								<th>Meaning</th>
+							</tr>
+							<tr>
+								<th><span class="menuIcon menuSubmenu"></span></th>
+								<td>Opens a submenu</td>
+							</tr>
+							<tr>
+								<th><span class="menuIcon menuCommand"></span></th>
+								<td>Runs an immediate command</td>
+							</tr>
+							<tr>
+								<th><span class="menuIcon menuToggle"></span></th>
+								<td>Toggles an option between YES and NO</td>
+							</tr>
+							<tr>
+								<th><span class="menuIcon menuSelection"></span></th>
+								<td>Sets from a selection of choices</td>
+							</tr>
+							<tr>
+								<th><span class="menuIcon menuNumfield"></span></th>
+								<td>Sets a numerical value</td>
+							</tr>
+							<tr>
+								<th><span class="menuIcon menuPreset"></span></th>
+								<td>Loads a preset</td>
+							</tr>
+						</tbody>
+					</table>
 					<h3 id="menuPresets">Presets</h3>
 					<dl class="inlineDefinition dinkylist">
 						<dt>NMG</dt>
@@ -655,7 +748,7 @@
 							</dl>
 						</dd>
 						<dt>QW indicator</dt>
-						<dd>Displays an icon on the HUD when the current camera will produce a quickwarp. <strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
+						<dd>Displays an icon on the HUD when the current camera will produce a quickwarp.</dd>
 						<dt>Lanmola cycs</dt>
 						<dd>Displays a counter for the cycle count of the three Lanmolas individually.</dd>
 						<dt>Lagometer</dt>
@@ -672,7 +765,6 @@
 						<dd>RAM watch geared towards door glitches (see <a href="doorwatch.html">this page</a>).
 						</dd>
 					</dl>
-
 
 					<h3 id="menuConfiguration">Configuration</h3>
 					<dl>
@@ -716,6 +808,18 @@
 					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/12.0.0">v12</a> <span class="releaseDate">24 Oct 2019</span></h3>
 					<ul>
 						<li>Updated the Emerald font.</li>
+						<li>Menu improvements
+							<ul>
+								<li>Added icons to menu items indicating what they do.</li>
+								<li>You can now use <span class="snesButton snesX">X</span> to clear menu options.</li>
+								<li>Documented all these features on the site.</li>
+							</ul>
+						</li>
+						<li>Bug fixes
+							<ul>
+								<li>Fixed graphical/memory issue with the Mirror toggle.</li>
+							</ul>
+						</li>
 					</ul>
 					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/12.0.0">v12</a> <span class="releaseDate">24 Oct 2019</span></h3>
 					<ul>

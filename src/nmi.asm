@@ -71,32 +71,22 @@ nmi_expand:
 ;	LDA #$01 : BEQ .vanillaCamera
 ;
 ;	REP #$10 ; necessary?
-;	LDX !ram_linkOAMpos
-;	LDA $0803+4, X ; bit8 of X coord
-;	AND #$01 : XBA ; store for later
-;	LDA $0800+4, X ; low byte of X coord
-;
-;	REP #$20 : SEC
-;	SBC.w #134 ; default link to x=134
-;	STA $00 : SEC
-;	LDA $20 : SBC #$005E : CLC : ADC $00
-;
-;	SEP #$21 ; set carry
-;	STA $2110 : XBA : STA $2110
 ;
 ;	REP #$20
-;	LDA $0801+4, X : AND #$00FF
-;	SBC.w #102 : STA $00 : SEC
-;	LDA $22 : SBC #$0086 : CLC : ADC $00
+;	LDA $22 : SEC : SBC.w #126
 ;	SEP #$21 ; set carry
 ;	STA $210F : XBA : STA $210F
-;	SEP #$20
+;
+;	REP #$20
+;	LDA $20 : SBC.w #126
+;	SEP #$21 ; set carry
+;	STA $2110 : XBA : STA $2110
 ;
 ;	BRA .counters
 ;.vanillaCamera
 ;	LDA $011E : STA $210F
 ;	LDA $011F : STA $210F
-;	LDA $0122 : STA $2110
+;++	LDA $0122 : STA $2110
 ;	LDA $0123 : STA $2110
 
 .counters

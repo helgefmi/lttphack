@@ -1,5 +1,5 @@
 ; Magic words
-!SRAM_VERSION = $0021
+!SRAM_VERSION = $0022
 
 !menu_end = #$0000
 !list_end = #$FF
@@ -16,6 +16,13 @@
 !dg_buffer_r2 #= !dg_dma_buffer+(64*2)
 !dg_buffer_r3 #= !dg_dma_buffer+(64*3)
 !dg_buffer_r4 #= !dg_dma_buffer+(64*4)
+
+!offsetWA = $7F7680
+!offsetincWA = 0
+macro def_wramA(name, size)
+	!ram_<name> #= !offsetWA+!offsetincWA
+	!offsetincWA #= !offsetincWA+<size>
+endmacro
 
 ; ==== RAM usage ====
 ;
@@ -54,41 +61,42 @@
 
 ; AXLR|....|BYSlSt|udlr
 !ram_ctrl1 = $04E4
-!ram_ctrl1_filtered = $7F7684
-!ram_ctrl1_word_copy = $7F7686
+%def_wramA("ctrl1_filtered", 2)
+%def_wramA("ctrl1_word_copy", 2)
 
-!ram_gamemode_copy = $7F767E
-!ram_submode_copy = $7F767F
-!ram_received_item_copy = $7F7688
+%def_wramA("gamemode_copy", 2)
+%def_wramA("submode_copy", 2)
+%def_wramA("received_item_copy", 2)
 
 !ram_gamemode_copy = $6F
 !ram_submode_copy = $70
 !ram_received_item_copy = $71
 !ram_can_reset_timer = $8E
 
-!ram_hex2dec_tmp = $7F768A
-!ram_hex2dec_first_digit = $7F768C
-!ram_hex2dec_second_digit = $7F768E
-!ram_hex2dec_third_digit = $7F7690
+%def_wramA("hex2dec_tmp", 2)
+%def_wramA("hex2dec_first_digit", 2)
+%def_wramA("hex2dec_second_digit", 2)
+%def_wramA("hex2dec_third_digit", 2)
 
-!ram_qw_last_scroll = $7F76A2
-!ram_lanmola_cycles = $7F7700 ; 3 bytes
-!ram_rng_counter = $7F7704
-!ram_pokey_rng = $7F7706
-!ram_agahnim_rng = $7F7708
-!ram_helmasaur_rng = $7F770A
-!ram_ganon_warp_location_rng = $7F770C
-!ram_ganon_warp_rng = $7F770E
-!ram_eyegore_rng = $7F7712
-!ram_arrghus_rng = $7F7714
-!ram_turtles_rng = $7F7716
-!ram_cannonballs_rng = $7F7718
-!ram_soldiers_rng = $7F771A
-!ram_lanmola_rng = $7F771C
-!ram_conveyor_rng = $7F771E
-!ram_drop_rng = $7F7720
+%def_wramA("qw_last_scroll", 2)
+%def_wramA("lanmola_cycles", 2) ; 3 bytes
+%def_wramA("lanmola_cycles3", 2)
+%def_wramA("rng_counter", 2)
+%def_wramA("pokey_rng", 2)
+%def_wramA("agahnim_rng", 2)
+%def_wramA("helmasaur_rng", 2)
+%def_wramA("ganon_warp_location_rng", 2)
+%def_wramA("ganon_warp_rng", 2)
+%def_wramA("eyegore_rng", 2)
+%def_wramA("arrghus_rng", 2)
+%def_wramA("turtles_rng", 2)
+%def_wramA("cannonballs_rng", 2)
+%def_wramA("soldiers_rng", 2)
+%def_wramA("lanmola_rng", 2)
+%def_wramA("conveyor_rng", 2)
+%def_wramA("drop_rng", 2)
 
-!ram_ctrl_last_input = $7F7710
+%def_wramA("ctrl_last_input", 2)
 
 ; Account for different SRAM layouts
 
@@ -162,7 +170,7 @@ endmacro
 
 %def_sram("enemy_hp_toggle", !OFF)
 %def_sram("lit_rooms_toggle", !OFF)
-%def_sram("fast_moving_walls", !ON)
+%def_sram("fast_moving_walls", !OFF)
 %def_sram("probe_toggle", !OFF)
 %def_sram("sanctuary_heart",!OFF )
 %def_sram("rerandomize_toggle", !ON)
@@ -176,19 +184,20 @@ endmacro
 !lowram_oob_toggle = $037F
 !ram_eg_strength = $7E04AA
 
-!ram_debug = $7F7777
-!ram_debug2 = $7F7779
+%def_wramA("debug", 2)
+%def_wramA("debug2", 2)
 
-!ram_cm_old_gamemode = $7F76A0
-!ram_cm_old_submode = $7F76A1
-!ram_cm_menu_stack = $7F76B0 ; 0x10
+%def_wramA("cm_old_gamemode", 1)
+%def_wramA("cm_old_submode", 1)
+
+%def_wramA("cm_menu_stack", $10) ; 0x10
 !lowram_cm_cursor_stack = $0648 ; 0x10
 !lowram_cm_stack_index = $0658
-!ram_cm_last_frame_input = $7F76C6
-!ram_cm_input_timer = $7F76C8
-!ram_cm_opened_menu_maunally = $7F7724
+%def_wramA("cm_last_frame_input", 2)
+%def_wramA("cm_input_timer", 2)
+%def_wramA("cm_opened_menu_maunally", 2)
 
-!ram_cm_old_crystal_switch = $7F76CE
+%def_wramA("cm_old_crystal_switch", 2)
 
 !sram_ss_dma_buffer = $770000
 !sram_old_music_bank = $770080
@@ -254,11 +263,11 @@ endmacro
 !CM_ACTION_MOVIE = #$18
 !CM_ACTION_TOGGLE_BIT_TEXT = #$1A
 
-!ram_react_counter = $7F76CA
-!ram_react_frames = $7F76CC
+%def_wramA("react_counter", 2)
+%def_wramA("react_frames", 2)
 
-!ram_mash_counter = $7F76D0
-!ram_mash_inputs = $7F76D2
+%def_wramA("mash_counter", 2)
+%def_wramA("mash_inputs", 2)
 
 
 ;-------------------------
@@ -277,9 +286,9 @@ endmacro
 !PRESET_DUNGEON = #$02
 
 !ram_preset_type = $04E2
-!ram_preset_destination = $7F7900
-!ram_preset_end_of_sram_state = $7F7902
-!ram_preset_spotlight_timer = $7F7722
+%def_wramA("preset_destination", 2)
+%def_wramA("preset_end_of_sram_state", 2)
+%def_wramA("preset_spotlight_timer", 2)
 
 ;-------------------------
 ; MOVIE
@@ -295,7 +304,7 @@ endmacro
 !ram_movie_framecounter = $7F8002
 !ram_movie_next_mode = $7F8004
 !ram_movie = $7F8020
-!ram_movie_hud = $7F7904 ; [0x40]
+%def_wramA("movie_hud", $40) ; [0x40]
 
 if !FEATURE_SD2SNES
 	!sram_movies = $771000
@@ -344,7 +353,7 @@ endif
 ; ITEM MENU
 
 !ram_item_bow = $7EF340
-	!ram_cm_item_bow = $7F76C0
+	%def_wramA("cm_item_bow", 1)
 !ram_item_boom = $7EF341
 !ram_item_hook = $7EF342
 !ram_item_bombs = $7EF343
@@ -360,27 +369,25 @@ endif
 !ram_item_net = $7EF34D
 !ram_item_book = $7EF34E
 !ram_item_bottle = $7EF34F
-	!ram_cm_item_bottle = $7F76C2
+	%def_wramA("cm_item_bottle", 1)
 	!ram_item_bottle_array = $7EF35C
 !ram_item_somaria = $7EF350
 !ram_item_byrna = $7EF351
 !ram_item_cape = $7EF352
 !ram_item_mirror = $7EF353
-	!ram_cm_item_mirror = $7F76C1
+	%def_wramA("cm_item_mirror", 1)
 
 ; EQUIPMENT MENU
 
-!ram_equipment_boots_menu = $7EF355
-	!ram_cm_equipment_boots = $7F76C3
+!ram_equipment_boots = $7EF355
 !ram_equipment_gloves = $7EF354
-!ram_equipment_flippers_menu = $7EF356
-	!ram_cm_equipment_flippers = $7F76C4
+!ram_equipment_flippers = $7EF356
 !ram_equipment_moon_pearl = $7EF357
 !ram_equipment_sword = $7EF359
 !ram_equipment_shield = $7EF35A
 !ram_equipment_armor = $7EF35B
 !ram_equipment_maxhp = $7EF36C
-	!ram_cm_equipment_maxhp = $7F76C5
+	%def_wramA("cm_equipment_maxhp", 1)
 !ram_equipment_curhp = $7EF36D
 !ram_equipment_arrows_filler = $7EF377
 !ram_equipment_arrows = $7EF377
@@ -392,7 +399,6 @@ endif
 
 !ram_cm_gamestate_world = $7EF3CA
 
-!ram_cm_armed_eg = $7EF380
 !ram_cm_crystal_switch = $7EF384
 
 !ram_game_big_keys_1 = $7EF366

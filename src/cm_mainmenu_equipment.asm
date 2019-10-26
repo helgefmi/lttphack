@@ -29,22 +29,17 @@ cm_submenu_equipment:
 	%cm_header("EQUIPMENT")
 
 cm_equipment_boots:
-	%cm_toggle_jsr("Boots", !ram_cm_equipment_boots)
+	%cm_toggle_jsr("Boots", !ram_equipment_boots)
 
 .toggle
-	CMP #$00 : BEQ .set_no_boots
-
-	LDA #$04 : ORA !ram_capabilities : STA !ram_capabilities
-	LDA #$01 : STA !ram_equipment_boots_menu
-
-	 BRA .end
-
-.set_no_boots
-
-	LDA !ram_capabilities : AND #$FB : STA !ram_capabilities
-	LDA #$00 : STA !ram_equipment_boots_menu
-
-.end
+	STA !ram_equipment_boots
+	LSR ; set carry based on having boots
+	LDA !ram_capabilities : AND #$FB
+	BCC .no_boots
+.yes_boots
+	ORA #$04
+.no_boots
+	STA !ram_capabilities
 	RTS
 
 cm_equipment_gloves:
@@ -57,22 +52,17 @@ cm_equipment_gloves:
 	db !list_end
 
 cm_equipment_flippers:
-	%cm_toggle_jsr("Flippers", !ram_cm_equipment_flippers)
+	%cm_toggle_jsr("Flippers", !ram_equipment_flippers)
 
 .toggle
-	CMP #$00 : BEQ .set_no_flippers
-
-	LDA #$02 : ORA !ram_capabilities : STA !ram_capabilities
-	LDA #$01 : STA !ram_equipment_flippers_menu
-
-	 BRA .end
-
-.set_no_flippers
-
-	LDA !ram_capabilities : AND #$FD : STA !ram_capabilities
-	LDA #$00 : STA !ram_equipment_flippers_menu
-
-.end
+	STA !ram_equipment_flippers
+	LSR ; set carry based on having flippers
+	LDA !ram_capabilities : AND #$FD
+	BCC .no_flips
+.yes_flips
+	ORA #$02
+.no_flips
+	STA !ram_capabilities
 	RTS
 
 cm_equipment_moon_pearl:
