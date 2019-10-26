@@ -621,6 +621,7 @@ cm_execute_jsr:
 	%a8()
 	LDX #$0000
 	JSR ($0002, X)
+	%a8()
 	LDA #$25 : STA $012F ; switch sound
 .end
 	RTS

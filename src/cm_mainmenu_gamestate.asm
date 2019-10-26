@@ -191,7 +191,7 @@ supertile_dungeons:
 	dw !CV, !CV, !CV, !CV, !CV, !CV, !CV, !CV
 
 reset_dungeon:
-	PHB : PHK : PLB
+	PHB : PHK : PLB : PHP
 	%ai16()
 	AND #$00FF
 	STA $00
@@ -213,7 +213,7 @@ reset_dungeon:
 	CMP $00 : BNE ++
 	STZ $0400 : STZ $0402 : STZ $0408
 
-++	PLB : RTS
+++	PLP : PLB : RTS
 
 cm_game_state_progress:
 	dw !CM_ACTION_CHOICE
