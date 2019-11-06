@@ -475,7 +475,7 @@ hud_draw_input_display:
 
 .ACheck
 	XBA ; switch to high byte
-	INY : ASL : BCS .lDown ; ASL now since bottom nibble is empty
+	INY : ASL : BCS .ADown ; ASL now since bottom nibble is empty
 	STX.w !POS_MEM_INPUT_DISPLAY_BOT+8 : BRA .XCheck
 .ADown
 	STY.w !POS_MEM_INPUT_DISPLAY_BOT+8

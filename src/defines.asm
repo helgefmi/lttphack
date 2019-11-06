@@ -230,7 +230,7 @@ endmacro
 ; HUD
 ;-------------------------
 
-!POS_COUNTERS = $36
+!POS_COUNTERS = $34
 
 !POS_HEARTS = $92
 !POS_MEM_HEART_GFX = $7EC790
