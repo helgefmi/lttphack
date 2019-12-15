@@ -221,8 +221,6 @@ pullpc
 ; Hud Template Hook
 hud_template_hook:
 	; Makes sure to redraw hearts.
-	STZ !lowram_last_frame_hearts
-
 	%a16()
 	JSL draw_counters
 	%a8()
@@ -253,15 +251,11 @@ update_hearts_hook:
 .noDoorWatch
 	TRB $9B
 
-++	%i16()
+++	%ai16()
 	; Enters: AI=16
 	; Keep AI=16 throughout (let subroutines change back/forth)
-	%a8()
-	LDA !ram_equipment_curhp : CMP !lowram_last_frame_hearts : BEQ .dont_update_hearts
-	STA !lowram_last_frame_hearts
-	%a16()
 	JSR hud_draw_hearts
-.dont_update_hearts
+
 	%a16()
 	LDA !ram_qw_toggle : BEQ .dont_update_qw
 	LDA $E2 : CMP !ram_qw_last_scroll : BEQ .dont_update_qw
@@ -364,8 +358,24 @@ hud_draw_hearts:
 	; Quarters
 	LDA !ram_equipment_curhp : AND #$0007 : ORA #$3490 : STA $7EC704, X
 
+	; Heart lag spinner
+	LDA $1A : AND #$000C
+	XBA : ASL #4
+	ORA #$253F
+	TAY
+	LDA.l !ram_heartlag_spinner : BEQ ++
+	TYA
+	STA !POS_MEM_HEARTLAG
+	BRA +
+
+++	; 9 cycles from STA long and BRA
+	; -1 cycle from taking the BEQ branch
+	; so let's waste 8 cycles
+	TYA
+	ORA (1,S), Y ; this is for Lui; 8 cycles in m=16
+
 	; Container gfx
-	LDA #$24A2 : STA !POS_MEM_CONTAINER_GFX
++	LDA #$24A2 : STA !POS_MEM_CONTAINER_GFX
 
 	; Container
 	LDA !ram_equipment_maxhp : AND #$00FF : LSR #3 : JSL hex_to_dec

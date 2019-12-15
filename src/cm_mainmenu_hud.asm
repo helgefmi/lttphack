@@ -7,6 +7,7 @@ cm_submenu_hud:
 	dw cm_hud_input_display
 	dw cm_hud_real
 	dw cm_hud_lag
+	dw cm_hud_heartlag
 	dw cm_hud_idle
 	dw cm_hud_segment
 	dw cm_hud_xy
@@ -25,6 +26,15 @@ cm_hud_real:
 
 cm_hud_lag:
 	%cm_toggle("Lag counter", !ram_counters_lag)
+
+cm_hud_heartlag:
+	%cm_toggle_jsr("Heart lag", !ram_heartlag_spinner)
+
+.toggle
+	%a16()
+	LDA #$207F
+	STA !POS_MEM_HEARTLAG
+	RTS
 
 cm_hud_idle:
 	%cm_toggle("Idle frames", !ram_counters_idle)

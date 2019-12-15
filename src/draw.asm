@@ -14,7 +14,7 @@ draw_counters:
 
 	INX #4
 	LDA !lowram_room_realtime_copy : SEC : SBC !lowram_room_gametime_copy
-	JSL hex_to_dec : JSL draw3_white
+	JSL hex_to_dec : JSL draw3_red
 	TXA : CLC : ADC #$003C : TAX
 
 .do_idle
@@ -98,6 +98,23 @@ draw_coordinates_2:
 	TYA : LSR #4 : AND #$000F : ORA #$3410 : STA $7EC708, X
 	RTL
 
+draw3_red:
+	; Clear leading 0's
+	LDA #$207F : STA $7EC700, X
+	LDA #$207F : STA $7EC702, X
+
+	LDA !ram_hex2dec_first_digit : BEQ .check_second_digit
+	ORA #$3810 : STA $7EC700, X : BRA .draw_second_digit
+
+.check_second_digit
+	LDA !ram_hex2dec_second_digit : BEQ .draw_third_digit
+
+.draw_second_digit
+	LDA !ram_hex2dec_second_digit : ORA #$3810 : STA $7EC702, X
+
+.draw_third_digit
+	LDA !ram_hex2dec_third_digit : ORA #$3810 : STA $7EC704, X
+	RTL
 
 draw3_white:
 	; Clear leading 0's
@@ -116,7 +133,6 @@ draw3_white:
 .draw_third_digit
 	LDA !ram_hex2dec_third_digit : ORA #$3C10 : STA $7EC704, X
 	RTL
-
 
 draw3_white_aligned_left:
 	; Clear "leading" 0's

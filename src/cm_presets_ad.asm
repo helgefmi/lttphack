@@ -146,7 +146,7 @@ cm_ad_east_armos:
 ; PALACE OF DARKNESS
 
 cm_ad_presets_goto_pod:
-	%cm_submenu("Palace of Darness", cm_ad_presets_pod)
+	%cm_submenu("Palace of Darkness", cm_ad_presets_pod)
 
 cm_ad_presets_pod:
 	dw cm_ad_pod_outside_ep

@@ -47,7 +47,6 @@ endmacro
 !lowram_room_gametime_copy = $04D8
 
 !lowram_last_frame_did_saveload = $04DA
-!lowram_last_frame_hearts = $04DB
 !lowram_draw_tmp = $04DC
 !lowram_draw_tmp2 = $04DE
 !lowram_draw_tmp3 = $04E0
@@ -162,6 +161,7 @@ endmacro
 %def_sram("counters_lag", !HUDONLY)
 %def_sram("counters_idle", !HUDONLY)
 %def_sram("counters_segment", !HUDONLY)
+%def_sram("heartlag_spinner", !HUDONLY)
 %def_sram("misslots_toggle", !OFF)
 %def_sram("doorwatch_toggle", !OFF)
 
@@ -182,7 +182,7 @@ endmacro
 %def_sram("LAG", 1)
 
 !lowram_oob_toggle = $037F
-!ram_eg_strength = $7E04AA
+!ram_eg_strength = $7E044A
 
 %def_wramA("debug", 2)
 %def_wramA("debug2", 2)
@@ -234,6 +234,8 @@ endmacro
 
 !POS_HEARTS = $92
 !POS_MEM_HEART_GFX = $7EC790
+
+!POS_MEM_HEARTLAG = $7EC798
 
 !POS_CONTAINERS = $9C
 !POS_MEM_CONTAINER_GFX = $7EC79A
