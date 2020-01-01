@@ -20,26 +20,36 @@ Big stuff
 
 - Refactoring gamemode (gamemode2.asm) to be more intuitive
 
+- Rewrite presets
+
+- Lua script in bizhawk for lag
+
 - IRQ causes lag when preset loaded from crystal cutscene (should be an easy fix)
 
-- "if you start a preset from first SW preset and play out the whole dungeon, you sometimes end up with a small key befire bomb jump"
+- "if you start a preset from first SW preset and play out the whole dungeon, you sometimes end up with a small key [before] bomb jump"
 
 - pad time for fast walls to make up for speed
+
+X? camera shake variable reset when loading presets
+
+- ad khold preset is hard to move around in
 
 Other stuff
 ------------
 
+- vitty first eye rng control
+
+- deadrock rng control?
+
 - Preset for double reddies
 
-- Show kill counter for Agahnim 2
+- Show cycle counter for Agahnim 2
 
 - Feature: Disable text? Like rando.
 
 - Faster travel speed via shortcut
 
 - Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances the game one frame. Would be good for clip learning. Maybe stop timer during this.
-
-- Show sprite hitboxes in general?
 
 - Show intermediate room time in more places (bonk, walk up stairs)
 

@@ -15,6 +15,7 @@ endmacro
 
 gamemode_hook:
 	PHB : PHK : PLB
+	JSL draw_counters
 	JSR check_mode_safety
 	BEQ .safeForNone
 	BVS .safeForAll
@@ -86,12 +87,16 @@ gamemode_shortcuts:
 resettimers:
 	;LDA !ram_can_reset_timer : BNE updatetimers
 	LDA !ram_can_reset_timer : BNE ignoremodule
-	LDA !lowram_room_realtime
-	STA !lowram_room_realtime_copy : STZ !lowram_room_realtime
-	LDA !lowram_room_gametime
-	STA !lowram_room_gametime_copy : STZ !lowram_room_gametime
-	LDA !lowram_idle_frames
-	STA !lowram_idle_frames_copy : STZ !lowram_idle_frames
+	LDA !room_time_F : STA !room_time_F_disp : STZ !room_time_F
+	LDA !room_time_S : STA !room_time_S_disp : STZ !room_time_S
+
+	LDA !seg_time_F : STA !seg_time_F_disp : STZ !seg_time_F
+	LDA !seg_time_S : STA !seg_time_S_disp : STZ !seg_time_S
+	LDA !seg_time_M : STA !seg_time_M_disp : STZ !seg_time_M
+
+	LDA !lag_frames : STA !lag_frames_disp : STZ !lag_frames
+	LDA !idle_frames : STA !idle_frames_disp : STZ !idle_frames
+
 	LDA #$0000 : STA !ram_rng_counter
 	LDA #$0001 : STA !ram_can_reset_timer
 	BRA updatetimers_hud
@@ -100,12 +105,18 @@ updatetimers_item:
 	STX !ram_received_item_copy
 
 updatetimers:
-	LDA !lowram_room_realtime : STA !lowram_room_realtime_copy
-	LDA !lowram_room_gametime : STA !lowram_room_gametime_copy
-	LDA !lowram_idle_frames : STA !lowram_idle_frames_copy
+	LDA !room_time_F : STA !room_time_F_disp
+	LDA !room_time_S : STA !room_time_S_disp
+
+	LDA !seg_time_F : STA !seg_time_F_disp
+	LDA !seg_time_S : STA !seg_time_S_disp
+	LDA !seg_time_M : STA !seg_time_M_disp
+
+	LDA !lag_frames : STA !lag_frames_disp
+	LDA !idle_frames : STA !idle_frames_disp
 
 .hud
-	JSL draw_counters
+	;JSL draw_counters
 	LDA #$0001 : TSB $16
 
 ignoremodule:
@@ -617,8 +628,8 @@ gamemode_fill_everything:
 	STA !ram_item_somaria
 	STA !ram_item_byrna
 	STA !ram_item_cape
-	STA !ram_equipment_boots_menu
-	STA !ram_equipment_flippers_menu
+	STA !ram_equipment_boots
+	STA !ram_equipment_flippers
 	STA !ram_equipment_moon_pearl
 	STA !ram_equipment_half_magic
 

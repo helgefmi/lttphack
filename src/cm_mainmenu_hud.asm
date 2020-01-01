@@ -11,8 +11,9 @@ cm_submenu_hud:
 	dw cm_hud_idle
 	dw cm_hud_segment
 	dw cm_hud_xy
-	dw cm_hud_subpixels
+	;dw cm_hud_subpixels
 	dw cm_hud_qw
+	dw cm_hud_ramwatch
 	dw cm_hud_lanmola_cycle_count
 	dw cm_hud_lagometer
 	dw cm_hud_enemy_hp
@@ -51,14 +52,14 @@ cm_hud_xy:
 	%cm_item("Decimal")
 	db !list_end
 
-cm_hud_subpixels:
-	dw !CM_ACTION_CHOICE
-	dl #!ram_subpixels_toggle
-	%cm_item("Subpixels")
-	%cm_item("No")
-	%cm_item("Subpixels")
-	%cm_item("Speed")
-	db !list_end
+;cm_hud_subpixels:
+;	dw !CM_ACTION_CHOICE
+;	dl #!ram_subpixels_toggle
+;	%cm_item("Subpixels")
+;	%cm_item("No")
+;	%cm_item("Subpixels")
+;	%cm_item("Speed")
+;	db !list_end
 
 cm_hud_lagometer:
 	%cm_toggle_jsr("Lagometer", !ram_lagometer_toggle)
@@ -99,6 +100,16 @@ cm_hud_qw:
 	LDA #$207F : STA $7EC80A
 	LDA #$207F : STA $7EC80C
 	RTS
+
+cm_hud_ramwatch:
+	dw !CM_ACTION_CHOICE
+	dl !ram_extra_ram_watch
+	%cm_item("RAM watch")
+	%cm_item("Off")
+	%cm_item("Subpixels")
+	%cm_item("Spooky altit")
+	%cm_item("Arc variable")
+	db !list_end
 
 cm_hud_lanmola_cycle_count:
 	%cm_toggle_jsr("Lanmola cycs", !ram_toggle_lanmola_cycles)

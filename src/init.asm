@@ -7,6 +7,8 @@ org $00802F
 	JSL init_hook
 	NOP
 
+org $00FFD5 : db $30 ; fast rom
+
 pullpc
 init_hook:
 	LDA #$81 : STA $4200
@@ -15,6 +17,7 @@ init_hook:
 	RTL
 
 init_expand:
+	LDA #$01 : STA $420D ; enable fast rom
 	; enters AI=8
 	; If user holds Start+Select, we reinitialize.
 	; we need some manual joypad reading
@@ -29,8 +32,11 @@ init_expand:
 
 	%a16()
 	LDA $00
-	AND #$FF00 : CMP #$3000 : BEQ .reinitialize
+	AND #$FF00 : CMP #$3000 : BNE .noforcereset
+	JSR init_initialize_all
+	BRA .sram_initialized
 
+.noforcereset
 	LDA !ram_sram_initialized : CMP #!SRAM_VERSION : BEQ .sram_initialized
 
 .reinitialize
@@ -44,6 +50,9 @@ init_expand:
 .done
 	JSL music_init
 	RTL
+
+init_initialize_all:
+	!PERM_INIT
 
 init_initialize:
 	!INIT_ASSEMBLY

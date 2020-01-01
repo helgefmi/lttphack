@@ -8,53 +8,54 @@ incsrc defines.asm
 incsrc hexedits.asm
 ;incsrc linkoam.asm
 
-org $208000
-incsrc gamemode.asm
+org $A08000
+incsrc gamemode2.asm
 incsrc nmi.asm
-incsrc draw.asm
+;incsrc draw.asm
+incsrc hudextras3.asm
 
 if !FEATURE_HUD
-	incsrc hud.asm
+	incsrc hud2.asm
 endif
 
-org $22C000
+org $A28000
 incsrc tiles.asm
 
-org $238000
+org $A38000
 incsrc init.asm
 incsrc rng.asm
 incsrc misc.asm
 incsrc idle.asm
 incsrc glitchedwindow.asm
 
-org $248000
+org $A48000
 incsrc custom_menu.asm
 print pc
 
-org $258000
+org $A58000
 incsrc presets.asm
 
-org $268000
+org $A68000
 incsrc poverty_states.asm
 
-org $278000
+org $A78000
 incsrc music.asm
 
-org $288000
+org $A88000
 incsrc movie.asm
 
 ; ---- data ----
 
-org $308000
+org $B08000
 incsrc preset_data_nmg.asm
 
-org $318000
+org $B18000
 incsrc preset_data_hundo.asm
 
-org $328000
+org $B28000
 incsrc preset_data_low.asm
 
-org $338000
+org $B38000
 incsrc preset_data_ad.asm
 
 org !SPC_DATA_OVERWORLD

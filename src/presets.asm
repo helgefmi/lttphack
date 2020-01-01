@@ -159,6 +159,10 @@ preset_deinit_current_state:
 	STZ $1ADF
 	STZ $1AEF
 
+	; clears camera shake offsets
+	STZ $011A : STZ $011B
+	STZ $011C : STZ $011D
+
 	LDA !ram_cm_old_gamemode : CMP #$0E : BNE .not_message_module
 	LDA !ram_cm_old_submode : CMP #$02 : BNE .not_message_module
 

@@ -8,7 +8,6 @@ cm_submenu_config:
 	dw cm_config_autoload_preset
 	dw cm_config_preset_category
 	dw cm_config_hud_font
-	dw cm_config_extralag
 	dw !menu_end
 	%cm_header("CONFIGURATION")
 
@@ -36,6 +35,7 @@ cm_config_preset_category:
 	dw !CM_ACTION_CHOICE
 	dl !ram_preset_category
 	%cm_item("Preset cat")
+
 	%cm_item("NMG")
 	%cm_item("Hundo")
 	%cm_item("Low")
@@ -68,6 +68,4 @@ cm_config_hud_font:
 
 	db !list_end
 
-cm_config_extralag:
-	%cm_numfield("Lag test", !ram_LAG, 1, 127, 1)
 ; }}}

@@ -20,7 +20,7 @@ gamemode_hook:
 	JSR gamemode_lagometer
 
 .done
-	RTL
+	JML draw_counters
 
 .skip_gamemode
 	%ai8()
@@ -200,7 +200,6 @@ gamemode_transition_detection:
 	LDA !lowram_room_realtime : STA !lowram_room_realtime_copy
 	LDA !lowram_room_gametime : STA !lowram_room_gametime_copy
 	LDA !lowram_idle_frames : STA !lowram_idle_frames_copy
-	JSL draw_counters
 	%a8()
 
 	RTS
@@ -211,11 +210,9 @@ gamemode_transition_detection:
 	LDA !lowram_room_gametime : STA !lowram_room_gametime_copy : STZ !lowram_room_gametime
 	LDA !lowram_idle_frames : STA !lowram_idle_frames_copy : STZ !lowram_idle_frames
 	LDA #$0000 : STA !ram_rng_counter
-	JSL draw_counters
 	%a8()
 
 	RTS
-
 
 gamemode_safe_to_change_mode:
 	; Used to decide if we can use the Custom Menu, Poverty Save/Load or Load last preset.

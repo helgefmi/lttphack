@@ -238,7 +238,6 @@ hex_to_dec:
 
 	RTL
 
-
 hex_to_dec_a:
 	; Enters A=16
 	; Leaves A=16
@@ -248,33 +247,4 @@ hex_to_dec_a:
 	ORA !ram_hex2dec_third_digit
 	RTL
 
-; scratch space cycle golf test
-;	REP #$20 : LDA.w #0299
-;	STZ !ram_hex2dec_first_digit
-;	STZ !ram_hex2dec_second_digit
-;	STZ !ram_hex2dec_third_digit
-;	STA !HEX_BUFFER ; cache value
-;
-;	AND #$000F ; get low 4 bits
-;	SEP #$28 ; set M=8 and Decimal flag
-;	CLC ; clear carry
-;	ADC #$00 ; add 0, we now have decimal digits in upper and lower nibble
-;
-;	AND #$0F ; get just bottom nibble for digit
-;	STA !ram_hex2dec_third_digit
-;
-;	REP #$28 ; M=16 and Decimal off
-;
-;	LDA !HEX_BUFFER : CMP.w #100 : BCC ++ ; <100
-;	SBC.w #100
-;	INC !ram_hex2dec_first_digit
-;
-;	CMP.w #100 : BCC ++ ; <200
-;	SBC.w #100
-;	INC !ram_hex2dec_first_digit
-;
-;++	SEP #$21 ; 8bit mode and clear carry
-;--	SBC #10 : BCC ++
-;	INC !ram_hex2dec_second_digit
-;	BRA --
-;++	REP #$20
+

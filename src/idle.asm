@@ -31,13 +31,18 @@ org $0DE0E2
 
 pullpc
 
+macro inc_idle()
+	REP #$21
+	SED
+	LDA !idle_frames : ADC #$0001 : STA !idle_frames
+	CLD
+	SEP #$20
+endmacro
+
 idle_waitkey:
 	; LDA $F4 from entry point
 	ORA $F6 : AND #$C0 : BNE .pressed_key 
-
-	%a16()
-	INC !lowram_idle_frames
-	%a8()
+	%inc_idle()
 
 .pressed_key
 	RTL
@@ -46,11 +51,9 @@ idle_waitkey:
 idle_endmessage:
 	LDA $F4 : ORA $F6 : BNE .pressed_key
 
-	%a16()
-	INC !lowram_idle_frames
-	%a8()
-
-	ORA #$00 ; get A to trigger P flags
+	PHP
+	%inc_idle()
+	PLP
 
 .pressed_key
 	RTL
@@ -59,9 +62,9 @@ idle_endmessage:
 idle_menu:
 	LDA $F4 : BNE .pressed_key
 
-	%a16()
-	INC !lowram_idle_frames
-	%a8()
+	%inc_idle()
+
+	LDA $F4
 
 .pressed_key
 	AND #$10

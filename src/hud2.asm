@@ -4,9 +4,6 @@ pushpc
 ; Takes care of drawing the following:
 ; - Link's hearts and container
 ; - Enemy's hearts
-; - Input display
-; - Quick Warp Indicator
-; - X/Y Coordinates
 
 ; ----------------
 ; FLOOR INDICATOR
@@ -77,7 +74,7 @@ org $0DF19C ; ditto above
 org $0DFC26
 	JSR UpdateHearts_NoHook
 
-!HEART_LAG_EARLY_STOP = $28
+!HEART_LAG_EARLY_STOP = $19
 ; UpdateHearts Hijack
 org $0DFDCB
 	JSL update_hearts_hook
@@ -221,8 +218,6 @@ pullpc
 ; Hud Template Hook
 hud_template_hook:
 	; Makes sure to redraw hearts.
-	%a16()
-	JSL draw_counters
 	%a8()
 	INC $16
 	RTL
@@ -254,41 +249,17 @@ update_hearts_hook:
 	JSR hud_draw_hearts
 
 	%a16()
-	LDA !ram_qw_toggle : BEQ .dont_update_qw
-	LDA $E2 : CMP !ram_qw_last_scroll : BEQ .dont_update_qw
-	STA !ram_qw_last_scroll
-	JSR hud_draw_qw
-
-.dont_update_qw
-
 	LDA !ram_enemy_hp_toggle : BEQ .dont_draw_enemy_hp
 
 	JSR hud_draw_enemy_hp
 
 .dont_draw_enemy_hp
 
-	LDA !ram_input_display_toggle : BEQ .dont_update_input_display
-
-	JSR hud_draw_input_display
-
-.dont_update_input_display
-
-	LDA !ram_subpixels_toggle : BEQ .dont_update_subpixels
-
-	JSR hud_draw_subpixels
-
-.dont_update_subpixels
-
 	LDA !ram_misslots_toggle : BEQ .dont_update_misslots
 
 	JSR hud_draw_misslots
 
 .dont_update_misslots
-	LDA !ram_xy_toggle : BEQ .dont_update_xy
-
-	JSR hud_draw_xy_display
-
-.dont_update_xy
 	%a8()
 	LDA !ram_lit_rooms_toggle : BEQ .dont_update_lit_rooms
 	LDA #$03 : STA $045A
@@ -375,20 +346,6 @@ hud_draw_hearts:
 
 	RTS
 
-
-hud_draw_qw:
-	LDA $E2 : AND.w #$0006 : CMP.w #$0006 : BEQ .is_qw
-
-	LDA #!EMPTY : STA $7EC80A
-	LDA #!EMPTY : STA $7EC80C
-	RTS
-
-.is_qw
-	LDA #$340C : STA $7EC80A
-	LDA #$340D : STA $7EC80C
-	RTS
-
-
 hud_draw_enemy_hp:
 	; Assumes: I=16
 	; Draw over Enemy Heart stuff in case theres no enemies
@@ -412,149 +369,6 @@ hud_draw_enemy_hp:
 
 .end
 --	RTS
-
-; It's long, but really, it's just an expanded loop
-hud_draw_input_display:
-	; Assumes: AI=16
-	LDA !ram_ctrl1 : CMP !ram_ctrl1_word_copy : BEQ --
-
-	STA !ram_ctrl1_word_copy
-	PHB : PHP
-	SEP #$20
-	PEA $7E7E : PLB : PLB ; bank 7E
-
-	LDY.w #$2400 ; Y will hold the current character we're using
-	LDX.w #!EMPTY ; X will hold the empty char
-	; order: rlduSsYB....RLXA
-
-	; Starting with the low byte
-	LSR : BCS .rDown ; shift the bit into carry
-	STX.w !POS_MEM_INPUT_DISPLAY_BOT+4 : BRA .lCheck ; carry clear = store empty char
-.rDown
-	STY.w !POS_MEM_INPUT_DISPLAY_BOT+4 ; carry set = store current character
-
-.lCheck
-	INY : LSR : BCS .lDown ; INY brings us to the next character in VRAM
-	STX.w !POS_MEM_INPUT_DISPLAY_BOT+0 : BRA .dCheck ; etc. etc.
-.lDown
-	STY.w !POS_MEM_INPUT_DISPLAY_BOT+0
-
-.dCheck
-	INY : LSR : BCS .dDown
-	STX.w !POS_MEM_INPUT_DISPLAY_BOT+2 : BRA .uCheck
-.dDown
-	STY.w !POS_MEM_INPUT_DISPLAY_BOT+2
-
-.uCheck
-	INY : LSR : BCS .uDown
-	STX.w !POS_MEM_INPUT_DISPLAY_TOP+2 : BRA .startCheck
-.uDown
-	STY.w !POS_MEM_INPUT_DISPLAY_TOP+2
-
-.startCheck
-	INY : LSR : BCS .startDown
-	STX.w !POS_MEM_INPUT_DISPLAY_BOT+10 : BRA .selCheck
-.startDown
-	STY.w !POS_MEM_INPUT_DISPLAY_BOT+10
-
-.selCheck
-	INY : LSR : BCS .selDown
-	STX.w !POS_MEM_INPUT_DISPLAY_TOP+10 : BRA .YCheck
-.selDown
-	STY.w !POS_MEM_INPUT_DISPLAY_TOP+10
-
-.YCheck
-	INY : LSR : BCS .YDown
-	STX.w !POS_MEM_INPUT_DISPLAY_TOP+6 : BRA .BCheck
-.YDown
-	STY.w !POS_MEM_INPUT_DISPLAY_TOP+6
-
-.BCheck
-	INY : LSR : BCS .BDown
-	STX.w !POS_MEM_INPUT_DISPLAY_BOT+6 : BRA .ACheck
-.BDown
-	STY.w !POS_MEM_INPUT_DISPLAY_BOT+6
-
-.ACheck
-	XBA ; switch to high byte
-	INY : ASL : BCS .ADown ; ASL now since bottom nibble is empty
-	STX.w !POS_MEM_INPUT_DISPLAY_BOT+8 : BRA .XCheck
-.ADown
-	STY.w !POS_MEM_INPUT_DISPLAY_BOT+8
-
-.XCheck
-	INY : ASL : BCS .XDown
-	STX.w !POS_MEM_INPUT_DISPLAY_TOP+8 : BRA .LCheck
-.XDown
-	STY.w !POS_MEM_INPUT_DISPLAY_TOP+8
-
-.LCheck
-	INY : ASL : BCS .LDown
-	STX.w !POS_MEM_INPUT_DISPLAY_TOP+0 : BRA .RCheck
-.LDown
-	STY.w !POS_MEM_INPUT_DISPLAY_TOP+0
-
-.RCheck
-	INY : ASL : BCS .RDown
-	STX.w !POS_MEM_INPUT_DISPLAY_TOP+4 : BRA .done
-.RDown
-	STY.w !POS_MEM_INPUT_DISPLAY_TOP+4
-
-.done
-	PLP : PLB
-	RTS
-
-hud_draw_xy_display:
-	; Assumes: I=16
-	%a8()
-	LDA #$00
-	CLC
-	ADC !ram_counters_real
-	ADC !ram_counters_lag
-	ADC !ram_counters_idle
-	ADC !ram_counters_segment
-
-	JSR hud_set_counter_position
-
-	LDA $22 : TAX
-	LDA $20 : TAY
-
-	LDA !ram_xy_toggle : CMP #$0001 : BEQ .hex
-
-.dec
-	TXA : JSL hex_to_dec_a : TAX
-	TYA : JSL hex_to_dec_a : TAY
-
-.hex
-	JSL draw_coordinates_3
-	RTS
-
-
-hud_draw_subpixels:
-	; Assumes: I=16
-	%a8()
-	LDA #$00
-	CLC
-	ADC !ram_counters_real
-	ADC !ram_counters_lag
-	ADC !ram_counters_idle
-	ADC !ram_counters_segment
-	ADC !ram_xy_toggle
-
-	JSR hud_set_counter_position
-
-	LDA !ram_subpixels_toggle : AND #$00FF : CMP #$0002 : BEQ .speed
-
-.subpix
-	LDA $2A
-	JSL draw_xy_single
-	RTS
-
-.speed
-	LDA $27
-	JSL draw_xy_single
-	RTS
-
 
 hud_draw_misslots:
 
@@ -597,14 +411,4 @@ hud_draw_misslots:
 	INX #4
 	INY : CPY.w #$0004 : BNE .loop_2
 
-	RTS
-
-; enters A=8; leaves A=16
-hud_set_counter_position:
-	REP #$20
-	AND #$00FF ; I think we should always shift, just to keep cycles consistent
-	ASL #6 ; multiply by 64
-	ADC.w #!POS_COUNTERS-2 ; carry is already clear from the ASL
-
-	STA !lowram_draw_tmp
 	RTS

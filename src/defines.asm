@@ -17,6 +17,16 @@
 !dg_buffer_r3 #= !dg_dma_buffer+(64*3)
 !dg_buffer_r4 #= !dg_dma_buffer+(64*4)
 
+!NUMBER_OF_COUNTERS = 6
+!HUD_EXTRAS_BUFFER = $7ED000
+!POS_MEM_INPUT_DISPLAY_TOP #= !HUD_EXTRAS_BUFFER+((!NUMBER_OF_COUNTERS+1)*16)
+!POS_MEM_INPUT_DISPLAY_BOT #= !POS_MEM_INPUT_DISPLAY_TOP+12
+
+!EXTRAS_SIZE #= 12+(!NUMBER_OF_COUNTERS*16)
+
+!POS_MEM_INPUT_DISPLAY_TOP = $7EC728
+!POS_MEM_INPUT_DISPLAY_BOT = $7EC768
+
 !offsetWA = $7F7680
 !offsetincWA = 0
 macro def_wramA(name, size)
@@ -37,6 +47,29 @@ endmacro
 ; $7EC900[0x1F00] (7EE800)
 ;  * 7ED000 - 7ED780 = VRAM buffer backup in custom_menu.asm
 
+; timers BCD
+!room_time_F = $0230 ; [0x2]
+!room_time_S = $0232 ; [0x2]
+
+!room_time_F_disp = $0234 ; [0x2]
+!room_time_S_disp = $0236 ; [0x02]
+
+!lag_frames = $0238 ; [0x02]
+!lag_frames_disp = $024A ; [0x02]
+
+!idle_frames = $024C ; [0x02]
+!idle_frames_disp = $024E ; [0x02]
+
+!seg_time_F = $0250 ; [0x02]
+!seg_time_S = $0252 ; [0x02]
+!seg_time_M = $0254 ; [0x02]
+
+!seg_time_F_disp = $0256 ; [0x02]
+!seg_time_S_disp = $0258 ; [0x02]
+!seg_time_M_disp = $025A ; [0x02]
+
+
+; old stuff
 !lowram_room_realtime = $04CC
 !lowram_room_gametime = $04CE
 !lowram_seg_frames = $04D0
@@ -127,46 +160,66 @@ macro def_sram(name, default)
 	!offsetinc #= !offsetinc+2
 endmacro
 
+macro def_perm_sram(name, default)
+	!ram_<name> #= !offset+!offsetinc
+	!newval := "LDA.w #<default> : STA.l !ram_<name>"
+
+	if defined("PERM_INIT")
+		!PERM_INIT := "!PERM_INIT : !newval"
+	else
+		!PERM_INIT := "!newval"
+	endif
+
+	!offsetinc #= !offsetinc+2
+endmacro
+
 %def_sram("sram_initialized", !OFF)
 
-%def_sram("ctrl_prachack_menu", $1010)
-%def_sram("ctrl_load_last_preset", $20A0)
-%def_sram("ctrl_replay_last_movie", $3020)
-%def_sram("ctrl_save_state", $1060)
-%def_sram("ctrl_load_state", $2060)
-%def_sram("ctrl_toggle_oob", !OFF)
-%def_sram("ctrl_skip_text", !OFF)
-%def_sram("ctrl_disable_sprites", !OFF)
-%def_sram("ctrl_reset_segment_timer", !OFF)
-%def_sram("ctrl_fill_everything", !OFF)
-%def_sram("ctrl_fix_vram", !OFF)
-%def_sram("ctrl_somaria_pits", !OFF)
+; permanent SRAM that works across versions
+; DO NOT CHANGE THE ORDER OF THESE
+%def_perm_sram("ctrl_prachack_menu", $1010)
+%def_perm_sram("ctrl_load_last_preset", $20A0)
+%def_perm_sram("ctrl_replay_last_movie", $3020)
+%def_perm_sram("ctrl_save_state", $1060)
+%def_perm_sram("ctrl_load_state", $2060)
+%def_perm_sram("ctrl_toggle_oob", !OFF)
+%def_perm_sram("ctrl_skip_text", !OFF)
+%def_perm_sram("ctrl_disable_sprites", !OFF)
+%def_perm_sram("ctrl_reset_segment_timer", !OFF)
+%def_perm_sram("ctrl_fill_everything", !OFF)
+%def_perm_sram("ctrl_fix_vram", !OFF)
+%def_perm_sram("ctrl_somaria_pits", !OFF)
+%def_perm_sram("preset_category", $0000)
+%def_perm_sram("hud_font", 0)
+%def_perm_sram("feature_music", !ON)
+
+
+; Non permanent SRAM
+; these can be moved around
+%def_sram("input_display_toggle", !HUDONLY)
+%def_sram("qw_toggle", !OFF)
 
 %def_sram("can_load_pss", !OFF)
 %def_sram("previous_preset_destination", !OFF)
 %def_sram("previous_preset_type", !OFF)
-%def_sram("preset_category", $0000)
 %def_sram("autoload_preset", !OFF)
 
-%def_sram("feature_music", !ON)
 %def_sram("lagometer_toggle", !OFF)
 %def_sram("secondary_counter_type", !OFF)
 %def_sram("toggle_lanmola_cycles", !HUDONLY)
-%def_sram("input_display_toggle", !HUDONLY)
-%def_sram("qw_toggle", !OFF)
 
 %def_sram("xy_toggle", !HUDONLY)
-%def_sram("subpixels_toggle", !OFF)
 %def_sram("counters_real", !HUDONLY)
 %def_sram("counters_lag", !HUDONLY)
 %def_sram("counters_idle", !HUDONLY)
 %def_sram("counters_segment", !HUDONLY)
 %def_sram("heartlag_spinner", !HUDONLY)
+%def_sram("extra_ram_watch", !OFF)
 %def_sram("misslots_toggle", !OFF)
 %def_sram("doorwatch_toggle", !OFF)
 
-%def_sram("rerandomize_framecount", !OFF)
-%def_sram("rerandomize_accumulator", !OFF)
+%def_sram("rerandomize_framecount", 0)
+%def_sram("rerandomize_accumulator", 0)
 
 %def_sram("enemy_hp_toggle", !OFF)
 %def_sram("lit_rooms_toggle", !OFF)
@@ -176,10 +229,6 @@ endmacro
 %def_sram("rerandomize_toggle", !ON)
 %def_sram("skip_triforce_toggle", !OFF)
 %def_sram("bonk_items_toggle", !OFF)
-
-%def_sram("hud_font", 0)
-
-%def_sram("LAG", 1)
 
 !lowram_oob_toggle = $037F
 !ram_eg_strength = $7E044A
@@ -242,9 +291,6 @@ endmacro
 
 !POS_ENEMY_HEARTS = $A4
 !POS_MEM_ENEMY_HEART_GFX = $7EC7A2
-
-!POS_MEM_INPUT_DISPLAY_TOP = $7EC728
-!POS_MEM_INPUT_DISPLAY_BOT = $7EC768
 
 ;-------------------------
 ; Custom menu
@@ -454,12 +500,10 @@ macro ppu_on()
 	PLA : STA $9B : STA $420C
 endmacro
 
-; alternative:
-; PHD : 4 cycles
-; PLD : 5 cycles
-; NOP : 2 cycles
-; NOP : 2 cycles
+; 13 cycles
 ; next opcode takes 1 cycle to fetch
+; that makes 14
 macro wait_14_cycles()
-	PHP : PLP : PHP : PLP
+	NOP : PHD : PLD : NOP
+	NOP ; I think it needs to be 15+1 for 16?
 endmacro

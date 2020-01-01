@@ -92,7 +92,7 @@
 						
 					</table>
 					<p>
-						<strong>SD2SNES</strong> is the only SNES system that supports 256kb SRAM. This makes it possible to have in-game save states, so that feature is only turned on for the SD2SNES variants. These will not work on emulators, Everdrive etc.
+						<strong>SD2SNES</strong> is the only SNES system that supports 256kb SRAM. This makes it possible to have in-game save states. These will not work on emulators, Everdrive etc.
 					</p>
 
 					<p>
@@ -198,6 +198,11 @@
 							<tr>
 								<td>Command option</td>
 								<td>Activate command</td>
+							</tr>
+							<tr>
+								<th><span class="snesButton snesB">X</span></th>
+								<td>Most options</td>
+								<td>Clear selection</td>
 							</tr>
 							<tr>
 								<th rowspan="2"><span class="snesButton snesB">B</span></th>
@@ -574,9 +579,9 @@
 						<dt>Skip Triforce</dt>
 						<dd>Transitioning north from Ganon's Room will behave like a normal screen transition, allowing consistent and reliable room times for the fight.</dd>
 						<dt>Sanc heart</dt>
-						<dd>Presets will have more health, as if the Sanctuary heart were collected earlier in the run</dd>
+						<dd>Presets will have more health, as if the Sanctuary heart were collected earlier in the run.</dd>
 						<dt>Disable beams</dt>
-						<dd>The Master Sword and its upgrades will no longer fire sword beams at full health</dd>
+						<dd>The Master Sword and its upgrades will no longer fire sword beams at full health.</dd>
 						<dt>Fast walls</dt>
 						<dd>Speeds up the moving wall cutscenes.</dd>
 						<dt>Lit rooms</dt>
@@ -738,13 +743,15 @@
 								<dd>Not as good as HEX.<strong class="lag"><b>WARNING:</b> decimal display can be laggy.</strong></dd>
 							</dl>
 						</dd>
-						<dt>Subpixels</dt>
+						<dt>RAM watch</dt>
 						<dd>
 							<dl class="subDefinition">
 								<dt>Subpixels</dt>
 								<dd>Displays current subpixel remainder (Hexadecimal)</dd>
-								<dt>Speed</dt>
-								<dd>Displays current subpixel speed (Hexadecimal)</dd>
+								<dt>Spooky altit</dt>
+								<dd>Ancilla height for slot 4</dd>
+								<dt>Arc variable</dt>
+								<dd>Overlord value used by Armos Knights and Ganon for circles.</dd>
 							</dl>
 						</dd>
 						<dt>QW indicator</dt>
@@ -805,7 +812,34 @@
 			<div class="row">
 				<div class="col-lg-8 mx-auto">
 					<h2>Changelog</h2>
-					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/12.0.0">v12.1</a> <span class="releaseDate">26 Oct 2019</span></h3>
+					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/23.0.0">v13</a> <span class="releaseDate">?? ??? 2020</span></h3>
+					<ul>
+						<li>Cycle Control™ - made a number of features' lag contribution consistent, even when they're disabled.
+							<ul>The following features have Cycle Control™:
+								<li>Input display</li>
+								<li>Room timer</li>
+								<li>Lag timer</li>
+								<li>Idle frames</li>
+								<li>Segment timer</li>
+								<li>Coordinates</li>
+								<li>Quick warp indicator</li>
+							</ul>
+						</li>
+						<li>HUD Extras:
+							<ul>
+								<li>Removed subpixels</li>
+								<li>New arbitrary RAM watch with the following options:
+									<ul>
+										<li>Subpixels</li>
+										<li>Spooky altitude</li>
+										<li>Arc variable</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<li>The lag counter is now red, to distinguish it from idle frames and to make it scary looking.</li>
+					</ul>
+					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/12.1.0">v12.1</a> <span class="releaseDate">26 Oct 2019</span></h3>
 					<ul>
 						<li>Updated the Emerald font.</li>
 						<li>Menu improvements
