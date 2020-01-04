@@ -32,6 +32,10 @@ org $1D91E3
 	; 1d91e3 jsl $0dba71
 	JSL rng_ganon_warp
 
+; vitreous first eye
+org $1DE5E4
+	JSL choose_vitty_eye
+
 ; Eyegore
 org $1EC89C
 	;1ec89c jsl $0dba71
@@ -279,7 +283,7 @@ rng_lanmola_2:
 	JSL !RandomNumGen
 	RTL
 
-; == Conveyor Belt ==
+; Conveyor Belt
 rng_conveyor_belt:
 	LDA !ram_conveyor_rng : BEQ .random
 	DEC
@@ -288,3 +292,15 @@ rng_conveyor_belt:
 .random
 	JSL !RandomNumGen
 	RTL
+
+; Vitreous
+choose_vitty_eye:
+	LDA !ram_vitreous_rng : BEQ .vanilla
+	LDA $0E70, X : BNE .vanilla
+	LDA #$01 : STA $0E70, X
+	LDA !ram_vitreous_rng
+	DEC
+	RTL
+
+.vanilla
+	JML !RandomNumGen

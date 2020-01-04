@@ -163,6 +163,8 @@ preset_deinit_current_state:
 	STZ $011A : STZ $011B
 	STZ $011C : STZ $011D
 
+	LDA #$81 : STA $4200 ; disable IRQ
+
 	LDA !ram_cm_old_gamemode : CMP #$0E : BNE .not_message_module
 	LDA !ram_cm_old_submode : CMP #$02 : BNE .not_message_module
 
@@ -640,6 +642,7 @@ preset_did_we_load_preset:
 	LDA !ram_preset_spotlight_timer : BEQ .not_preset
 	DEC : STA !ram_preset_spotlight_timer : BEQ .done
 	STA $2100 : STA $13
+	SEC
 	RTL
 
 .done
@@ -682,7 +685,6 @@ preset_spotlight_open_hook:
 	JSL $00F290
 	INC $B0
 	RTL
-
 
 preset_start_ptrs:
 	dw sram_nmg_esc_bed

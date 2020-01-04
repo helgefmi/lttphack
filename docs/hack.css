@@ -23,6 +23,13 @@ table.ctrltable td {
 table.ctrltable td {
 	font-size: 90%;
 }
+
+table.ctrltable.iconstable tr:not(:first-child) th,
+table.ctrltable.iconstable tr:not(:first-child) th+td,
+table.ctrltable.iconstable tr:not(:first-child) th+td+td {
+	border-top: 3px solid #DEE2E6;
+}
+
 table.ctrltable caption,
 table.romtable caption {
 	caption-side: top;

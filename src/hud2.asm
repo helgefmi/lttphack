@@ -304,8 +304,8 @@ hud_draw_hearts:
 	; Assumes: X=16
 
 	; Check if we have full hp
-	%a8()
-	LDA !ram_equipment_maxhp : SEC : SBC !ram_equipment_curhp : CMP.b #$04
+	SEP #$21
+	LDA !ram_equipment_maxhp : SBC !ram_equipment_curhp : CMP.b #$04
 
 	%a16()
 	LDA #$24A0 ; keep cycles similar
@@ -316,10 +316,11 @@ hud_draw_hearts:
 
 	; Full hearts
 	LDA !ram_equipment_curhp : AND #$00FF : LSR #3 : JSL hex_to_dec
-	LDX.w #!POS_HEARTS : JSL draw2_white_lttp
+	LDA !ram_hex2dec_second_digit : ORA #$3C90 : STA $7EC700+!POS_HEARTS
+	LDA !ram_hex2dec_third_digit : ORA #$3C90 : STA $7EC702+!POS_HEARTS
 
 	; Quarters
-	LDA !ram_equipment_curhp : AND #$0007 : ORA #$3490 : STA $7EC704, X
+	LDA !ram_equipment_curhp : AND #$0007 : ORA #$3490 : STA $7EC704+!POS_HEARTS
 
 	; Heart lag spinner
 	LDA $1A : AND #$000C
@@ -342,7 +343,9 @@ hud_draw_hearts:
 
 	; Container
 	LDA !ram_equipment_maxhp : AND #$00FF : LSR #3 : JSL hex_to_dec
-	LDX.w #!POS_CONTAINERS : JSL draw2_white_lttp
+
+	LDA !ram_hex2dec_second_digit : ORA #$3C90 : STA $7EC700+!POS_CONTAINERS
+	LDA !ram_hex2dec_third_digit : ORA #$3C90 : STA $7EC702+!POS_CONTAINERS
 
 	RTS
 
@@ -350,17 +353,21 @@ hud_draw_enemy_hp:
 	; Assumes: I=16
 	; Draw over Enemy Heart stuff in case theres no enemies
 	LDA #!EMPTY : STA !POS_MEM_ENEMY_HEART_GFX
-	LDX.w #!POS_ENEMY_HEARTS
-	STA $7EC700, X : STA $7EC702, X : STA $7EC704, X
+	STA $7EC700+!POS_ENEMY_HEARTS
+	STA $7EC702+!POS_ENEMY_HEARTS
+	STA $7EC704+!POS_ENEMY_HEARTS
 
-	LDX #$FFFF
+	SEP #$30
+	LDX #$FF
 
-.loop
-	INX : CPX #$0010 : BEQ .end
-	LDA $0DD0, X : AND #$00FF : CMP #$0009 : BNE .loop
-	LDA $0E60, X : AND #$0040 : BNE .loop
-	LDA $0E50, X : AND #$00FF : BEQ .loop : CMP #$00FF : BEQ .loop
+--	INX : CPX #$10 : BEQ .end
+	LDA $0DD0, X : CMP #$09 : BEQ ++
+	CMP #$0B : BNE --
+++	BIT $0E60, X : BVC --
 
+	LDA $0E50, X
+	REP #$30
+	AND #$00FF
 	; Enemy HP should be in A
 	JSL hex_to_dec : LDX.w #!POS_ENEMY_HEARTS : JSL draw3_white_aligned_left_lttp
 
@@ -384,7 +391,6 @@ hud_draw_misslots:
 
 
 	; Slots
-
 	LDX.w #$0102
 	LDY.w #$0000
 	LDA #$3C10 : STA !lowram_draw_tmp
@@ -397,6 +403,7 @@ hud_draw_misslots:
 	INY
 	CPY.w #$0005 : BNE .dont_update_colors
 	LDA #$2010 : STA !lowram_draw_tmp
+	; LDX.w #$182
 
 .dont_update_colors
 	CPY.w #$000A : BNE .loop

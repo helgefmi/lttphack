@@ -1,5 +1,5 @@
 ; Magic words
-!SRAM_VERSION = $0022
+!SRAM_VERSION = $0023
 
 !menu_end = #$0000
 !list_end = #$FF
@@ -127,6 +127,7 @@ endmacro
 %def_wramA("lanmola_rng", 2)
 %def_wramA("conveyor_rng", 2)
 %def_wramA("drop_rng", 2)
+%def_wramA("vitreous_rng", 2)
 
 %def_wramA("ctrl_last_input", 2)
 

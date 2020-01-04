@@ -8,6 +8,7 @@ cm_submenu_rng_control:
 	dw cm_rng_pokey
 	dw cm_rng_agahnim
 	dw cm_rng_helmasaur
+	dw cm_rng_vitreous
 	dw cm_rng_ganon_warp
 	dw cm_rng_ganon_warp_location
 	dw cm_rng_eyegore
@@ -310,6 +311,22 @@ cm_rng_drops:
 	%cm_item("Vanilla")
 	%cm_item("Always")
 	%cm_item("Never")
+	db !list_end
+
+cm_rng_vitreous:
+	dw !CM_ACTION_CHOICE
+	dl !ram_vitreous_rng
+	%cm_item("First Vitty")
+	%cm_item("Random")
+	%cm_item("Slot 5")
+	%cm_item("Slot 6")
+	%cm_item("Slot 7")
+	%cm_item("Slot 8")
+	%cm_item("Slot 9")
+	%cm_item("Slot A")
+	%cm_item("Slot B")
+	%cm_item("Slot C")
+	%cm_item("Slot D")
 	db !list_end
 
 ; }}}

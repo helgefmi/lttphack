@@ -35,7 +35,7 @@ CM_Main:
 
 CM_Local:
 	; For all these local $11 indexed subroutines:
-	; Enters: AI=8.
+	; Enters: AI=8
 	; Leave with: AI=8
 
 	LDA $11
@@ -113,9 +113,10 @@ CM_Active:
 	CMP.b #$80 : BEQ .pressed_b
 
 	; F6 = AXLR | ....
-	TYA : AND $F6
-	CMP.b #$80 : BEQ .pressed_a
-	CMP.b #$40 : BEQ .pressed_x
+	TYA : BIT $F6
+	BVS .pressed_x
+	BMI .pressed_a
+	AND $F2 : AND #$30 : BNE .pressed_LR
 
 	; Did not press anything
 	BRA .done
@@ -147,6 +148,7 @@ CM_Active:
 .pressed_left
 .pressed_right
 .pressed_a
+.pressed_LR
 	STZ $72
 --	JSR cm_execute_cursor
 	BRA .redraw
@@ -630,7 +632,7 @@ cm_execute_jsr:
 cm_execute_submenu:
 	; dpad should do nothing here
 	%a8()
-	LDA $F0 : BNE .end
+	LDA $F6 : BPL .end
 	LDA #$24 : STA $012F
 	; Increments stack index and puts the submenu into the stack.
 	%a16()
@@ -662,7 +664,6 @@ cm_execute_back:
 .end
 	RTS
 
-
 cm_execute_choice:
 	%a16()
 	LDA ($00) : INC $00 : INC $00 : STA $02
@@ -672,6 +673,11 @@ cm_execute_choice:
 	; we either increment or decrement
 	LDA $72 : BNE .set_to_zero
 	LDA $F0 : CMP #$02 : BEQ .pressed_left
+	CMP #$01 : BEQ .pressed_right
+	%ai8()
+	RTS
+
+.pressed_right
 	LDA [$02] : INC : BRA .bounds_check
 
 .pressed_left
@@ -738,20 +744,35 @@ cm_execute_numfield:
 	LDA #$1D : STA $012F ; magic boop
 
 	LDA $72 : BNE .set_to_min
-	LDA $F0 : CMP.b #$02 : BEQ .pressed_left
+	LDA $F0 : AND #$03
+	ORA $F2 : AND #$33
+		BIT #$01 : BNE .pressed_right
+		BIT #$02 : BNE .pressed_left
+		BIT #$10 : BNE .pressed_R_shoulder
+		BIT #$20 : BNE .pressed_L_shoulder
+	BRA .end
 
+.pressed_R_shoulder
 	LDA [$02] : CLC : ADC $07
+	CMP $06 : BCS .set_to_max
+	BRA ++
 
+.pressed_right
+	LDA [$02] : CLC : ADC #$01
 	CMP $06 : BCS .set_to_min
 
-	STA [$02] : BRA .end
+++	STA [$02] : BRA .end
+
+.pressed_L_shoulder
+	LDA [$02] : SEC : SBC $07
+	CMP $05 : BMI .set_to_min : BCC .set_to_min
+	BRA ++
 
 .pressed_left
-	LDA [$02] : SEC : SBC $07
-
+	LDA [$02] : SEC : SBC #$01
 	CMP $05 : BMI .set_to_max : BCC .set_to_max
 
-	STA [$02] : BRA .end
+++	STA [$02] : BRA .end
 
 .set_to_min
 	LDA $05 : STA [$02] : CLC : BRA .end
@@ -1103,7 +1124,9 @@ cm_draw_numfield:
 	; set position for the number
 	TXA : CLC : ADC.w #!OPTION_OFFSET : TAX
 
+	PHX
 	LDA [$04] : AND #$00FF : JSL hex_to_dec
+	PLX
 
 	; Clear out the area (black tile)
 	LDA #$24F5

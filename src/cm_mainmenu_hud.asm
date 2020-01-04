@@ -23,10 +23,10 @@ cm_submenu_hud:
 	%cm_header("HUD EXTRAS")
 
 cm_hud_real:
-	%cm_toggle("Room time", !ram_counters_real)
+	%cm_toggle_jsr("Room time", !ram_counters_real)
 
 cm_hud_lag:
-	%cm_toggle("Lag counter", !ram_counters_lag)
+	%cm_toggle_jsr("Lag counter", !ram_counters_lag)
 
 cm_hud_heartlag:
 	%cm_toggle_jsr("Heart lag", !ram_heartlag_spinner)
@@ -38,19 +38,21 @@ cm_hud_heartlag:
 	RTS
 
 cm_hud_idle:
-	%cm_toggle("Idle frames", !ram_counters_idle)
+	%cm_toggle_jsr("Idle frames", !ram_counters_idle)
 
 cm_hud_segment:
-	%cm_toggle("Segment time", !ram_counters_segment)
+	%cm_toggle_jsr("Segment time", !ram_counters_segment)
 
 cm_hud_xy:
-	dw !CM_ACTION_CHOICE
-	dl #!ram_xy_toggle
-	%cm_item("Coordinates")
-	%cm_item("No")
-	%cm_item("Hexadecimal")
-	%cm_item("Decimal")
-	db !list_end
+	%cm_toggle_jsr("Coordinates", !ram_xy_toggle)
+
+;	dw !CM_ACTION_CHOICE
+;	dl !ram_xy_toggle
+;	%cm_item("Coordinates")
+;	%cm_item("No")
+;	%cm_item("Hexadecimal")
+;	%cm_item("Decimal")
+;	db !list_end
 
 ;cm_hud_subpixels:
 ;	dw !CM_ACTION_CHOICE
@@ -66,7 +68,7 @@ cm_hud_lagometer:
 
 .toggle
 	%a16()
-	  LDA #$207F : STA $7EC742 : STA $7EC782 : STA $7EC7C2 : STA $7EC802
+	LDA #$207F : STA $7EC742 : STA $7EC782 : STA $7EC7C2 : STA $7EC802
 	RTS
 
 cm_hud_input_display:
@@ -102,7 +104,8 @@ cm_hud_qw:
 	RTS
 
 cm_hud_ramwatch:
-	dw !CM_ACTION_CHOICE
+	dw !CM_ACTION_CHOICE_JSR
+	dw #.toggle
 	dl !ram_extra_ram_watch
 	%cm_item("RAM watch")
 	%cm_item("Off")
@@ -171,5 +174,27 @@ cm_hud_doorwatch:
 
 	LDA #$20 : TRB $9B ; shut off HDMA
 ++	RTS
+
+; these all do the same thing: empty the counters
+cm_hud_real_toggle:
+cm_hud_lag_toggle:
+cm_hud_idle_toggle:
+cm_hud_segment_toggle:
+cm_hud_xy_toggle:
+cm_hud_ramwatch_toggle:
+	PHP
+	WDM
+	%ai16()
+	LDA #$207F
+	LDX.w #12
+--	STA $7EC732+(0*64), X
+	STA $7EC732+(1*64), X
+	STA $7EC732+(2*64), X
+	STA $7EC732+(3*64), X
+	STA $7EC732+(4*64), X
+	DEX #2 : BPL --
+
+	PLP
+	RTS
 
 ; }}}

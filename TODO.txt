@@ -37,6 +37,8 @@ X? camera shake variable reset when loading presets
 Other stuff
 ------------
 
+- cm_clear_buffer -> wram dma
+
 - vitty first eye rng control
 
 - deadrock rng control?
@@ -74,6 +76,8 @@ Other stuff
 - Rework menu numbers to be +/- 10/5 on L/R and +/- 1 on <>
 
 - item menu removes qw icon???
+
+- frame count cache on counter updates? add to ram watch?
 
 Possible toggles/options
 -------------------------

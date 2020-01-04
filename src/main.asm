@@ -12,7 +12,7 @@ org $A08000
 incsrc gamemode2.asm
 incsrc nmi.asm
 ;incsrc draw.asm
-incsrc hudextras3.asm
+incsrc hudextras4.asm
 
 if !FEATURE_HUD
 	incsrc hud2.asm

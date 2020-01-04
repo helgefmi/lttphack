@@ -1,3 +1,8 @@
+
+pushpc
+org $0AFE25 : STA $7EC7EA, X
+org $0AFE2C : STA $7EC82A, X
+pullpc
 ; Line 0 never transfers, can be used for dummy writes
 ; Using macros instead of routines is stupid, yes
 ; but we really need to save as many cycles as we can
@@ -236,7 +241,6 @@ endmacro
 hex_to_hex_lol: ; this exists purely to keep coords even
 
 hex_to_dec:
-	PHP
 	REP #$10
 	ASL : TAX
 	LDA.l hex_to_dec_fast_table, X
@@ -245,7 +249,6 @@ hex_to_dec:
 	TYA : AND #$F0 : LSR #4 : STA !ram_hex2dec_second_digit
 	XBA : AND #$0F : STA !ram_hex2dec_first_digit
 	REP #$20 : TYA
-	PLP
 	RTL
 
 macro hex_to_dec_fast()
@@ -447,51 +450,49 @@ draw_counters:
 hud_draw_input_display:
 	LDA !ram_ctrl1
 
-	SEP #$20
-	REP #$10
-	; basically: this bank | bank $7E
-	PEA.w ((hud_draw_input_display>>8)&$FF00)|$807E
-	PLB ; proper bank
+	STA $72 ; dpad
+	AND #$000F : ORA #$2970 : STA !POS_MEM_INPUT_DISPLAY_BOT+2
 
-	; Y will hold the current input character
-	LDY.w #$2400
+	; need buttons in this order: xbya
+	SEP #$30
+	LDA $72+0 : AND #$C0 : LSR #5 : STA $74 ; b and y in place
+	LDA $72+1 : AND #$40 : LSR #3 : ORA $74 ; ; x in place
+	; this ASL takes care of one for figuring out LR inputs
+	ASL $73 : ADC #$70 ; a in place
 
-	LDX.w #!EMPTY ; X will hold the empty character always
+	; #$70 is the character offset we want
+	; top byte contains $29 from doing dpad, which is what we want
+	REP #$20
+	STA !POS_MEM_INPUT_DISPLAY_BOT+6
 
-	; order: rlduSsYB....RLXA
-	; Starting with the low byte
+	; start and select
+	LDA $72 : AND #$0030 : LSR #4 : ORA #$2800
+	STA !POS_MEM_INPUT_DISPLAY_BOT+4
 
-	; special macro to not increment Y
-	%add_input_character_afirst(4, "BOT") ; dpad right
-	%add_input_character_a(0, "BOT") ; dpad left
-	%add_input_character_a(2, "BOT") ; dpad down
-	%add_input_character_a(2, "TOP") ; dpad up
+	; L and R
+	ASL $72 : ASL $72 ; L into carry and remember where R is
+	LDA #$2804 : ADC #$0000 : STA !POS_MEM_INPUT_DISPLAY_TOP+2
 
-	%add_input_character_a(10, "BOT") ; start
-	%add_input_character_a(10, "TOP") ; select
-	%add_input_character_a(6, "TOP") ; Y
-	%add_input_character_a(6, "BOT") ; B
+	ASL $72 ; R into carry
+	LDA #$2804 : ADC #$0000 : STA !POS_MEM_INPUT_DISPLAY_TOP+6
 
-++	XBA ; switch to high byte
-	%add_input_character_b(8, "BOT") ; A
-	%add_input_character_b(8, "TOP") ; X
-	%add_input_character_b(0, "TOP") ; L shoulder
-	%add_input_character_b(4, "TOP") ; R shoulder
-
-++	PLB ; get this bank back
+	; old input display was 206 cycles
+	; new is 133ish?
 
 ;-----------------------------------------------------------------
 ; Other
 ;-----------------------------------------------------------------
 draw_quickwarp: ; cycle controlled
-	SEP #$30 ; M=8 for just this is 1 cycle faster lol
+	SEP #$30 ; M=8 for just this is few cycles faster
+	LDA !ram_qw_toggle : LSR ; shift toggle into carry
 	LDA $E2 : AND #$06 ; this tests the bits for camera
 	ORA $1B ; make QW only display in overworld, where $1B = 0
+	ROL ; roll carry flag into bottom bit
 	; if we're on a quick warp on the overworld
-	; then we'll have $06
+	; then we'll have $0D
 	; if the camera matches but we're in the overworld
-	; then we'll have $07, and it will fail
-	CMP #$06
+	; then we'll have $0F, and it will fail
+	CMP #$0D ; 6 shifted left once and with a carry flag in bottom bit
 	REP #$20 ; faster because it removes an AND #$00FF to get rid of leakage
 
 	BEQ .qw
@@ -499,7 +500,7 @@ draw_quickwarp: ; cycle controlled
 .notqw
 	LDA #!EMPTY ; 3
 	STA $7EC80A ; 6
-	STA $7EC80A ; 6
+	STA $7EC80C ; 6
 	; this will always be non zero, so we get an extra cycle for branch taken
 	BNE ++ ; 3
 	; 18 cycles total
