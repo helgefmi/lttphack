@@ -26,11 +26,15 @@ org $0AFDA6
 	LDA $7EC832, X
 
 ; probably leave the INC $16 in
-org $0AFDB5
-	LDA $7EC7F2
-	LDA $7EC832
-	LDA $7EC7F4
-	LDA $7EC834
+org $0AFDB5 ; change clear location of the timer
+	STA $7EC7EA
+	STA $7EC7EC
+	STA $7EC82A
+	STA $7EC82C
+
+; Super Bomb/Dig Timers
+org $0AFE25 : STA $7EC7EA, X
+org $0AFE2C : STA $7EC82A, X
 
 ; -------------
 ; HUD TEMPLATE
@@ -380,7 +384,7 @@ hud_draw_enemy_hp:
 hud_draw_misslots:
 
 	; Search index / EG (03A4)
-
+	REP #$30
 	LDX.w #$00C8
 	LDA $03C4 : LSR #4 : AND #$000F : ORA #$3010 : STA $7EC708, X
 	LDA $03C4 : AND #$000F : ORA #$3010 : STA $7EC70A, X

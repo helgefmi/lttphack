@@ -825,9 +825,12 @@ cm_execute_toggle_bit:
 cm_execute_ctrl_shortcut:
 	; < and > should do nothing here
 	%a8()
-	LDA $F0 : CMP #$01 : BEQ .end
-			  CMP #$02 : BEQ .end
 
+	; check if we pressed X or A
+	BIT $F6 : BMI .continue
+	BVC .end
+
+.continue
 	%a16()
 	LDA ($00) : STA $35 : INC $00 : INC $00
 	LDA ($00) : STA $37 : INC $00
@@ -835,7 +838,7 @@ cm_execute_ctrl_shortcut:
 
 	%a8()
 
-	LDA $F6 : CMP #$40 : BEQ .reset_shortcut
+	BIT $F6 : BVS .reset_shortcut
 
 	INC $B0
 	STZ $0200
@@ -843,7 +846,6 @@ cm_execute_ctrl_shortcut:
 
 .reset_shortcut
 	%a16()
-
 
 	LDA #$0000 : STA [$35]
 

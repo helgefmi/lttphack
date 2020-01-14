@@ -34,7 +34,6 @@ gamemode_hook:
 .safeForNone ; we will exit in 16 bit A if it's not safe for anything
 ++	%a16()
 	INC !lowram_room_gametime
-	JSR gamemode_transition_detection
 
 	%ai8()
 	PLB
@@ -59,8 +58,8 @@ gamemode_shortcuts:
 .everything
 	LDA !ram_ctrl1_filtered : ORA !ram_ctrl1_filtered+1 : BEQ -
 	%a16()
-
-	BMI !notVerySafe
+	;TAY
+	BMI !notVerySafe ; TODO this doesn't work, dumbass
 
 	%test_shortcut(!pracmenu_shortcut, gamemode_custom_menu, 1)
 
@@ -81,172 +80,8 @@ gamemode_shortcuts:
 	%test_shortcut(!ram_ctrl_disable_sprites, gamemode_disable_sprites, 0)
 ;	%test_shortcut(!ram_ctrl_replay_last_movie, gamemode_replay_last_movie, 1)
 
-+	CLC : RTS
-
-!IGNORE_MODULE = $FFFF
-resettimers:
-	;LDA !ram_can_reset_timer : BNE updatetimers
-	LDA !ram_can_reset_timer : BNE ignoremodule
-	LDA !room_time_F : STA !room_time_F_disp : STZ !room_time_F
-	LDA !room_time_S : STA !room_time_S_disp : STZ !room_time_S
-
-	LDA !seg_time_F : STA !seg_time_F_disp : STZ !seg_time_F
-	LDA !seg_time_S : STA !seg_time_S_disp : STZ !seg_time_S
-	LDA !seg_time_M : STA !seg_time_M_disp : STZ !seg_time_M
-
-	LDA !lag_frames : STA !lag_frames_disp : STZ !lag_frames
-	LDA !idle_frames : STA !idle_frames_disp : STZ !idle_frames
-
-	LDA #$0000 : STA !ram_rng_counter
-	LDA #$0001 : STA !ram_can_reset_timer
-	BRA updatetimers_hud
-
-updatetimers_item:
-	STX !ram_received_item_copy
-
-updatetimers:
-	LDA !room_time_F : STA !room_time_F_disp
-	LDA !room_time_S : STA !room_time_S_disp
-
-	LDA !seg_time_F : STA !seg_time_F_disp
-	LDA !seg_time_S : STA !seg_time_S_disp
-	LDA !seg_time_M : STA !seg_time_M_disp
-
-	LDA !lag_frames : STA !lag_frames_disp
-	LDA !idle_frames : STA !idle_frames_disp
-
-.hud
-	;JSL draw_counters
-	LDA #$0001 : TSB $16
-
-ignoremodule:
-	LDA $10 : STA !ram_gamemode_copy
-	RTS
-
-allowreset:
-	STZ !ram_can_reset_timer
-	LDA $10 : STA !ram_gamemode_copy
-	RTS
-
-; enters A=16
-gamemode_transition_detection:
-	%i8()
-	LDA $10 : CMP !ram_gamemode_copy : BNE .changed
-	LDX $02D8 : CPX !ram_received_item_copy : BNE updatetimers_item
-
-	RTS
-
-.changed
-	ASL : TAY ; shift left and give 2*module to Y
-
-	LDA Submodule_tables, Y : CMP #!IGNORE_MODULE : BEQ ignoremodule ; ignore module
-
-	STA $00
-	LDY $11 ; get submodule
-	LDA ($00), Y ; stay in 16 bit
-	TAX ; this becomes 8 bit X so it's fine
-
-	JMP (.actions, X)
-
-.actions
-	dw ignoremodule ; this is why we stay in 16 bit, so we can store the mode
-	dw updatetimers ; these other actions can deal with bitmode themselves
-	dw resettimers
-	dw allowreset
-
-Submodule_tables:
-	dw !IGNORE_MODULE ; Intro_sub
-	dw !IGNORE_MODULE ; SelectFile_sub
-	dw !IGNORE_MODULE ; CopyFile_sub
-	dw !IGNORE_MODULE ; EraseFile_sub
-	dw !IGNORE_MODULE ; NamePlayer_sub
-	dw !IGNORE_MODULE ; LoadFile_sub
-	dw !IGNORE_MODULE ; PreDungeon_sub
-	dw Dungeon_sub
-	dw PreOverworld_sub
-	dw Overworld_sub
-	dw PreOverworld_sub
-	dw Overworld_sub
-	dw !IGNORE_MODULE ; Custom menu
-	dw !IGNORE_MODULE ; Unknown1_sub
-	dw Messaging_sub
-	dw CloseSpotlight_sub
-	dw OpenSpotlight_sub
-	dw HoleToDungeon_sub
-	dw !IGNORE_MODULE ; Death_sub
-	dw !IGNORE_MODULE ; BossVictory_sub
-	dw !IGNORE_MODULE ; Attract_sub
-	dw !IGNORE_MODULE ; Mirror_sub
-	dw Victory_sub
-	dw Quit_sub
-	dw !IGNORE_MODULE ; GanonEmerges_sub
-	dw !IGNORE_MODULE ; TriforceRoom_sub
-	dw !IGNORE_MODULE ; EndSequence_sub
-	dw !IGNORE_MODULE ; LocationMenu_sub
-
-; How to behave on modules, pre shifted for address jumps
-!T_Nothing = 0<<1 ; Do nothing
-!T_Update = 1<<1 ; Update timers without resetting
-!T_Reset = 2<<1 ; Reset timers and update
-!T_Allow = 3<<1 ; Reset timers and update
-	PreDungeon_sub: ; $06
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x00, 0x01, 0x02, 0x03
-
-	Dungeon_sub: ; $07
-		db !T_Allow, !T_Reset, !T_Reset, !T_Update ; 0x00, 0x01, 0x02, 0x03
-		db !T_Update, !T_Update, !T_Reset, !T_Reset ; 0x04, 0x05, 0x06, 0x07
-		db !T_Update, !T_Update, !T_Nothing, !T_Update ; 0x08, 0x09, 0x0A, 0x0B
-		db !T_Update, !T_Update, !T_Reset, !T_Nothing ; 0x0C, 0x0D, 0x0E, 0x0F
-		db !T_Update, !T_Update, !T_Reset, !T_Reset ; 0x10, 0x11, 0x12, 0x13
-		db !T_Nothing, !T_Reset, !T_Nothing, !T_Nothing ; 0x14, 0x15, 0x16, 0x17
-		db !T_Nothing, !T_Nothing, !T_Update ; 0x18, 0x19, 0x1A
-
-	PreOverworld_sub: ; $08/$0A
-		db !T_Reset, !T_Nothing, !T_Nothing ; 0x00, 0x01, 0x02
-
-	Overworld_sub: ; $09/$0B
-		db !T_Allow, !T_Reset, !T_Nothing, !T_Nothing ; 0x00, 0x01, 0x02, 0x03
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x04, 0x05, 0x06, 0x07
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x08, 0x09, 0x0A, 0x0B
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x0C, 0x0D, 0x0E, 0x0F
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x10, 0x11, 0x12, 0x13
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Reset ; 0x14, 0x15, 0x16, 0x17
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x18, 0x19, 0x1A, 0x1B
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x1C, 0x1D, 0x1E, 0x1F
-		db !T_Update, !T_Nothing, !T_Nothing, !T_Nothing ; 0x20, 0x21, 0x22, 0x23
-		db !T_Reset, !T_Nothing, !T_Nothing, !T_Nothing ; 0x24, 0x25, 0x26, 0x27
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Update ; 0x28, 0x29, 0x2A, 0x2B
-		db !T_Update, !T_Update, !T_Reset, !T_Nothing ; 0x2C, 0x2D, 0x2E, 0x2F
-
-	Messaging_sub: ; $0E
-		db !T_Nothing, !T_Update, !T_Update, !T_Update ; 0x00, 0x01, 0x02, 0x03
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x04, 0x05, 0x06, 0x07
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Update ; 0x08, 0x09, 0x0A, 0x0B
-
-	CloseSpotlight_sub: ; $0F
-	OpenSpotlight_sub: ; $10 ???
-		db !T_Reset, !T_Reset ; 0x00, 0x01
-
-	HoleToDungeon_sub: ; $11
-		db !T_Reset, !T_Nothing, !T_Nothing, !T_Nothing ; 0x00, 0x01, 0x02, 0x03
-		db !T_Nothing, !T_Nothing ; 0x04, 0x05
-
-	Victory_sub: ; $16
-	Quit_sub: ; $17
-
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x00, 0x01, 0x02, 0x03
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x04, 0x05, 0x06, 0x07
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x08, 0x09, 0x0A, 0x0B
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x0C, 0x0D, 0x0E, 0x0F
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x10, 0x11, 0x12, 0x13
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x14, 0x15, 0x16, 0x17
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x18, 0x19, 0x1A, 0x1B
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x1C, 0x1D, 0x1E, 0x1F
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x20, 0x21, 0x22, 0x23
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x24, 0x25, 0x26, 0x27
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x28, 0x29, 0x2A, 0x2B
-		db !T_Nothing, !T_Nothing, !T_Nothing, !T_Nothing ; 0x2C, 0x2D, 0x2E, 0x2F
-
++	CLC
+--	RTS
 
 ; return values in P
 !SOME_SAFE = $8080 ; some presets are not always safe = negative flag
@@ -354,7 +189,7 @@ gamemode_custom_menu:
 
 ; Load previous preset
 gamemode_load_previous_preset:
-	%a8()
+	%ai8()
 
 	; Loading during text mode make the text stay or the item menu to bug
 	LDA $10 : CMP #$0E : BEQ .no_load_preset
@@ -597,18 +432,12 @@ gamemode_oob:
 gamemode_skip_text:
 	%a8()
 	LDA #$04 : STA $1CD4
-
-.done
-	%a8()
 	RTS
 
 
 gamemode_disable_sprites:
 	%a8()
 	JSL !Sprite_DisableAll
-
-.done
-	%a8()
 	RTS
 
 
@@ -696,6 +525,7 @@ gamemode_reset_segment_timer:
 
 gamemode_fix_vram:
 	%a16()
+	%i16()
 	LDA #$0280 : STA $2100
 	LDA #$0313 : STA $2107
 	LDA #$0063 : STA $2109 ; zeros out unused bg4
@@ -759,7 +589,7 @@ fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics - pc: $56F19
 ; wrapper because of push and pull logic
 ; need this to make it safe and ultimately fix INIDISP ($13)
 gamemode_somaria_pits_wrapper:
-	%a8()
+	%ai8()
 	LDA $1B : BEQ ++ ; don't do this outdoors
 
 	LDA #$80 : STA $13 : STA $2100 ; keep fblank on while we do stuff

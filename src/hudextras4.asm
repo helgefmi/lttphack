@@ -1,8 +1,3 @@
-
-pushpc
-org $0AFE25 : STA $7EC7EA, X
-org $0AFE2C : STA $7EC82A, X
-pullpc
 ; Line 0 never transfers, can be used for dummy writes
 ; Using macros instead of routines is stupid, yes
 ; but we really need to save as many cycles as we can

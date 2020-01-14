@@ -34,6 +34,10 @@ X? camera shake variable reset when loading presets
 
 - ad khold preset is hard to move around in
 
+- update timer on:
+	bonk
+	key get
+
 Other stuff
 ------------
 
@@ -52,8 +56,6 @@ Other stuff
 - Faster travel speed via shortcut
 
 - Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances the game one frame. Would be good for clip learning. Maybe stop timer during this.
-
-- Show intermediate room time in more places (bonk, walk up stairs)
 
 - See if I can make the menu prettier (let users change color?)
 

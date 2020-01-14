@@ -50,23 +50,19 @@ endmacro
 ; timers BCD
 !room_time_F = $0230 ; [0x2]
 !room_time_S = $0232 ; [0x2]
+!lag_frames = $0234 ; [0x2]
+!idle_frames = $0236 ; [0x2]
+!seg_time_F = $0238 ; [0x2]
+!seg_time_S = $023A ; [0x2]
+!seg_time_M = $023C ; [0x2]
 
-!room_time_F_disp = $0234 ; [0x2]
-!room_time_S_disp = $0236 ; [0x02]
-
-!lag_frames = $0238 ; [0x02]
-!lag_frames_disp = $024A ; [0x02]
-
-!idle_frames = $024C ; [0x02]
-!idle_frames_disp = $024E ; [0x02]
-
-!seg_time_F = $0250 ; [0x02]
-!seg_time_S = $0252 ; [0x02]
-!seg_time_M = $0254 ; [0x02]
-
-!seg_time_F_disp = $0256 ; [0x02]
-!seg_time_S_disp = $0258 ; [0x02]
-!seg_time_M_disp = $025A ; [0x02]
+!room_time_F_disp = $0240 ; [0x2]
+!room_time_S_disp = $0242 ; [0x2]
+!lag_frames_disp = $0244 ; [0x2]
+!idle_frames_disp = $0246 ; [0x2]
+!seg_time_F_disp = $0248 ; [0x2]
+!seg_time_S_disp = $024A ; [0x2]
+!seg_time_M_disp = $024C ; [0x2]
 
 
 ; old stuff
@@ -104,6 +100,7 @@ endmacro
 !ram_submode_copy = $70
 !ram_received_item_copy = $71
 !ram_can_reset_timer = $8E
+!timer_allowed = !ram_can_reset_timer
 
 %def_wramA("hex2dec_tmp", 2)
 %def_wramA("hex2dec_first_digit", 2)
@@ -193,7 +190,6 @@ endmacro
 %def_perm_sram("preset_category", $0000)
 %def_perm_sram("hud_font", 0)
 %def_perm_sram("feature_music", !ON)
-
 
 ; Non permanent SRAM
 ; these can be moved around

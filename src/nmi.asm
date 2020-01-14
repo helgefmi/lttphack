@@ -1,4 +1,31 @@
 pushpc
+;======================================================================================
+; Improves the speed of OAM clearing by 2 scanlines; credit: MathOnNapkins
+; Has no effect on anything
+; But it gives us consistent improvements to account for practice hack lag
+;======================================================================================
+org $00841E ; ClearOamBuffer
+	PHP : REP #$10
+
+	; first half
+	LDX #$8001 : STX $4300
+	LDX #$0801 : STX $2181 : STZ $2183
+
+	LDX.w #OAM_Cleaner : STX $4302
+	LDA.b #OAM_Cleaner>>16 : STA $4304
+	LDX #$0080 : STX $4305
+	LDA #$01 : STA $420B
+
+	; second half
+	LDX.w #OAM_Cleaner : STX $4302
+	LDX #$0901 : STX $2181
+	LDX #$0080 : STX $4305
+
+	STA $420B
+
+	PLP : RTS
+warnpc $008489
+
 ; NMI
 ;
 ; Expands the NMI (code run at the end of each frame)
@@ -148,6 +175,7 @@ nmi_expand:
 
 .dont_update_counters
 	CLD
+	JSR dotimers
 	SEP #$30
 	STZ !lowram_last_frame_did_saveload
 	RTL
@@ -268,3 +296,28 @@ nmi_hud_update:
 	STX $420C
 
 	RTL
+
+;===========================================
+; OAM cleaner optimization
+;===========================================
+macro OAMVClear(pos)
+	db $F0, <pos>+$05, $F0, <pos>+$09, $F0, <pos>+$0D, $F0, <pos>+$11
+endmacro
+
+OAM_Cleaner:
+	%OAMVClear($00)
+	%OAMVClear($10)
+	%OAMVClear($20)
+	%OAMVClear($30)
+	%OAMVClear($40)
+	%OAMVClear($50)
+	%OAMVClear($60)
+	%OAMVClear($70)
+	%OAMVClear($80)
+	%OAMVClear($90)
+	%OAMVClear($A0)
+	%OAMVClear($B0)
+	%OAMVClear($C0)
+	%OAMVClear($D0)
+	%OAMVClear($E0)
+	%OAMVClear($F0)

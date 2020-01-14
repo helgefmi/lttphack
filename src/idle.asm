@@ -5,7 +5,7 @@ org $0EFB90
 	; 0efb93 ora $00f6
 	; 0efb96 and #$c0
 	; 0efb98 beq $fba6
-	LDA $F4 ; vanilla pointless used address; dp is better
+	LDA $F4 ; vanilla pointlessly used address; dp is better
 	JSL idle_waitkey ; now we have an easy 4 bytes here for the JSL
 
 
@@ -41,9 +41,9 @@ endmacro
 
 idle_waitkey:
 	; LDA $F4 from entry point
-	ORA $F6 : AND #$C0 : BNE .pressed_key 
+	ORA $F6 : AND #$C0 : BNE .pressed_key
 	%inc_idle()
-
+	LDA $F4 : ORA $F6 : AND #$C0 
 .pressed_key
 	RTL
 
@@ -51,9 +51,8 @@ idle_waitkey:
 idle_endmessage:
 	LDA $F4 : ORA $F6 : BNE .pressed_key
 
-	PHP
 	%inc_idle()
-	PLP
+	LDA $F4 : ORA $F6
 
 .pressed_key
 	RTL
@@ -63,7 +62,6 @@ idle_menu:
 	LDA $F4 : BNE .pressed_key
 
 	%inc_idle()
-
 	LDA $F4
 
 .pressed_key

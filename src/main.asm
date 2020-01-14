@@ -11,6 +11,7 @@ incsrc hexedits.asm
 org $A08000
 incsrc gamemode2.asm
 incsrc nmi.asm
+incsrc timers.asm
 ;incsrc draw.asm
 incsrc hudextras4.asm
 
@@ -30,7 +31,7 @@ incsrc glitchedwindow.asm
 
 org $A48000
 incsrc custom_menu.asm
-print pc
+print "Custom menu size: ", pc
 
 org $A58000
 incsrc presets.asm

@@ -7,8 +7,6 @@ org $00802F
 	JSL init_hook
 	NOP
 
-org $00FFD5 : db $30 ; fast rom
-
 pullpc
 init_hook:
 	LDA #$81 : STA $4200
@@ -32,7 +30,10 @@ init_expand:
 
 	%a16()
 	LDA $00
-	AND #$FF00 : CMP #$3000 : BNE .noforcereset
+	AND #$FF00 : CMP #$3000 : BEQ .forcereset
+	LDA !ram_ctrl_prachack_menu : CMP #$1010 : BEQ .noforcereset
+
+.forcereset
 	JSR init_initialize_all
 	BRA .sram_initialized
 

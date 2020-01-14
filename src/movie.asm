@@ -19,23 +19,26 @@ org $0083D1
 ;    RTL
 
 pullpc
+; $00 and $01 aren't necessary anymore
+; but i'm leaving them in just in case those addresses
+; come up in some glitch related to controller input being there
 movie_readjoypads: ; simplify while movies are gone
 	STZ $4016
 
-	LDA $4218 : STA $00
-	LDA $4219 : STA $01
+;	LDA $4218 : STA $00 : STA $F2 : TAY
+	LDA $4219 : XBA : LDA $4218 : STA $00 : STA $F2 : TAY
+	STA !ram_ctrl1+1
+	EOR $FA : AND $F2
+	STA $F6 : STY $FA
+	STA !ram_ctrl1_filtered+1
 
-	LDA $00 : STA $F2 : TAY
+;	LDA $4219 : STA $01 : STA $F0 : TAY
+	XBA : STA $01 : STA $F0 : TAY
+	STA !ram_ctrl1+0
+	EOR $F8 : AND $F0
+	STA $F4 : STY $F8
+	STA !ram_ctrl1_filtered+0
 
-	EOR $FA : AND $F2 : STA $F6 : STY $FA
-
-	LDA $01 : STA $F0 : TAY
-	EOR $F8 : AND $F0 : STA $F4 : STY $F8
-
-	LDA $F0 : STA !ram_ctrl1
-	LDA $F2 : STA !ram_ctrl1+1
-	LDA $F4 : STA !ram_ctrl1_filtered
-	LDA $F6 : STA !ram_ctrl1_filtered+1
 RTL
 
 ;---------------
