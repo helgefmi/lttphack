@@ -31,15 +31,12 @@ warnpc $008489
 ; Expands the NMI (code run at the end of each frame)
 
 ; NMI hook
-org $0080D4
+org $0080D5
 	; 0080D1 LDA #$0000
 	; 0080D4 TCD
 	; 0080D5 PHK
 	; 0080D6 PLB
 	; 0080D7 SEP #$30
-	;JSR nmi_hook
-
-org $0080D5
 	JSL nmi_expand
 
 org $008174
@@ -57,11 +54,12 @@ org $008B6B
 	;JSL nmi_hud_update
 	;NOP #2
 
-org $008220
+;org $008220
+org $00821B
 	; LDA $9B
 	; STA $420C
-	;JSL nmi_hud_update
-	;NOP
+	JSL nmi_hud_update
+	NOP
 
 ; NMI HOOK
 org $0089C2
@@ -119,7 +117,7 @@ nmi_expand:
 .update_counters
 	; if $12 = 1, then we weren't done with game code
 	; that means we're in a lag frame
-	LDA $12 : LSR
+	LDA $12 : STA !lag_cache : LSR
 
 	REP #$20
 	LDA !lag_frames : ADC #$0000 ; carry set from $12 being 1
@@ -180,64 +178,6 @@ nmi_expand:
 	STZ !lowram_last_frame_did_saveload
 	RTL
 
-nmi_expand2:
-	; Enters AI=16
-	%a8()
-	INC !lowram_nmi_counter
-
-;	; Camera lock fix
-;	LDA #$01 : BEQ .vanillaCamera
-;
-;	REP #$10 ; necessary?
-;
-;	REP #$20
-;	LDA $22 : SEC : SBC.w #126
-;	SEP #$21 ; set carry
-;	STA $210F : XBA : STA $210F
-;
-;	REP #$20
-;	LDA $20 : SBC.w #126
-;	SEP #$21 ; set carry
-;	STA $2110 : XBA : STA $2110
-;
-;	BRA .counters
-;.vanillaCamera
-;	LDA $011E : STA $210F
-;	LDA $011F : STA $210F
-;++	LDA $0122 : STA $2110
-;	LDA $0123 : STA $2110
-
-.counters
-	LDA !lowram_last_frame_did_saveload : BNE .dont_update_counters
-
-	LDA !disabled_layers : TRB $AB : TRB $AC
-	%a16()
-	LDA $AB : STA $212C
-
-	INC !lowram_room_realtime
-	INC !lowram_seg_frames
-
-	; Check if frames == 60
-	LDA.w #60
-	CMP !lowram_seg_frames : BNE .end
-
-	; If so, reset frames and +1 secs
-	STZ !lowram_seg_frames : INC !lowram_seg_seconds
-
-	; Check if secs == 60
-	CMP !lowram_seg_seconds : BNE .end
-
-	; If so, reset secs and +1 mins.
-	STZ !lowram_seg_seconds : INC !lowram_seg_minutes
-
-.end
-	%a8()
-	RTL
-
-.dont_update_counters
-	STZ !lowram_last_frame_did_saveload
-	RTL
-
 nmi_hud_update:
 	; Movie stuff commented out while it's not needed
 ;	LDX #$6360 : STX $2116
@@ -249,34 +189,11 @@ nmi_hud_update:
 ;	LDA #$01 : STA $420B ; refresh BG3 tilemap data with this transfer on channel 0
 	REP #$21 ; carry only needs clearing once
 	SEP #$10
-	LDA #$1801 : STA $4300
-	LDX #$80 : STX $2115
-	; A bus address can stay the same, as its incremented internally
-	; and it doesn't change unless we tell it to otherwise
-	; everything we're writing is consecutive
-	LDA.w #!HUD_EXTRAS_BUFFER+16 : STA $4302
-	LDX.b #!HUD_EXTRAS_BUFFER>>16 : STX $4304
-	LDA.w #$0010 : STA $4305
-	TAX
-	; top byte will remain 0 while we write 16 each time
 
-	LDA.w #$C0AE>>1 ; vram write for counters
-	STA $2116
-	LDY #$01 : STY $420B
-
-	ADC.w #$0020 : STA $2116 : STX $4305 : STY $420B
-	ADC.w #$0020 : STA $2116 : STX $4305 : STY $420B
-	ADC.w #$0020 : STA $2116 : STX $4305 : STY $420B
-	ADC.w #$0020 : STA $2116 : STX $4305 : STY $420B
-
-	; input display
-	LDX.b #12
-	LDA.w #$C0A6>>1 : STA $2116 : STX $4305 : STY $420B
-	LDA.w #$C0E6>>1 : STA $2116 : STX $4305 : STY $420B
-
+	LDX !lag_cache : BNE .dontbreakthings
 	LDA !ram_doorwatch_toggle
 	TAX
-	BRA .noDoorWatch
+	BEQ .noDoorWatch
 	LDX #$80 : STX $2115
 	LDA #$6500 : STA $2116
 
@@ -285,15 +202,18 @@ nmi_hud_update:
 	LDX.b #!dg_dma_buffer>>16 : STX $4304
 	LDA #$0100 : STA $4305
 
-	STY $420B
+	LDY #$01 : STY $420B
 
 .noDoorWatch
+	; force heartlag update
+	LDX !do_heart_lag : BEQ .dontbreakthings
+	LDA #$C118>>1 : STA $2116
+	LDA.l !POS_MEM_HEARTLAG : STA $2118
+	STZ !do_heart_lag
 
-	;LDA $0219 ; #$6040
-	;STX $2116
-
-	LDX $9B
-	STX $420C
+.dontbreakthings
+	LDX $13
+	STX $2100
 
 	RTL
 

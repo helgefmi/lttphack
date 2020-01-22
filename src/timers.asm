@@ -1,18 +1,5 @@
 pushpc
-org $05FC83 ; bonk key
-	JSL UpdateOnKey
 
-org $06D192 ; normal key
-	JSL UpdateOnKey
-
-org $078FFB
-	JSL UpdateOnBonk
-
-org $07999D
-	PHB
-	JSL UpdateOnReceiveItem
-
-; hooks updates instead of watched
 ; Underworld
 org $02B917 : JSL UpdateOnUWTransition
 org $01C411 : JSL UpdateOnUWStairs
@@ -25,6 +12,13 @@ org $07D127 : JSL UpdateOnWarpTile
 org $07BC9A : JSL UpdateOnIntraroomStairs
 org $01D2C0 : JSL UpdateOnBombableWallUW
 org $01D2DE : JSL UpdateOnBombableFloor
+org $01CA56 : JSL UpdateOnMovingWallStart : NOP
+org $01C927 : JSL UpdateOnMovingWallEndPodMire
+org $01C9DB : JSL UpdateOnMovingWallEndDesert
+
+; This causes some double triggers, but always on the same frame
+; so it should be fine
+org $01C3A7 : JSL UpdateOnInterRoomStairs
 
 org $09969E : STZ $0380 ; just changes order of operations for the STZ
 JSL UpdateOnExplodingWall ; so that this can replace STZ dp LDA dp
@@ -33,7 +27,7 @@ JSL UpdateOnExplodingWall ; so that this can replace STZ dp LDA dp
 org $02A9BA : JSL UpdateOnOWTransition
 org $1BBD73 : JSL UpdateOnOWUWTransition
 org $05AFC6 : JSL UpdateOnOWMirror
-org $07A983 : JSL UpdateOnOWMirror
+org $07A995 : JSL UpdateOnOWMirror2
 org $0794DB : JSL UpdateOnOWPitTransition
 org $04E8CF : JSL UpdateOnOWToSpecial
 org $04E968 : JSL UpdateOnSpecialToOW
@@ -45,6 +39,10 @@ org $028818 : JSL UpdateOnItemMenu
 org $0DDFD3 : JSL UpdateOnItemMenuClose
 org $0EF27C : JSL UpdateOnExitingText
 org $1CFD7E : JSL UpdateOnEnteringMessaging
+org $05FC83 : JSL UpdateOnKey ; bonk key
+org $06D192 : JSL UpdateOnKey ; normal key
+org $078FFB : JSL UpdateOnBonk
+org $07999D : PHB : JSL UpdateOnReceiveItem
 
 !reset = $42
 !update = $02
@@ -110,6 +108,10 @@ UpdateOnIntraroomStairs:
 	LDA #$07 : STA $10
 	RTL
 
+UpdateOnInterRoomStairs:
+	%reset_timer()
+	JML $02B861
+
 UpdateOnBombableWallUW:
 	%update_timer()
 	LDA #$09 : STA $11
@@ -127,6 +129,48 @@ UpdateOnExplodingWall:
 	LDA $EE
 	RTL
 
+UpdateOnMovingWallStart:
+	%update_timer()
+	LDA #$01 : STA $02E4
+	RTL
+
+; mire/pod: 1704->17
+
+UpdateOnMovingWallEndPodMire:
+	LDA.l !ram_fast_moving_walls : BEQ .slowwalls
+	SED
+	CLC
+	LDA !room_time_F : ADC.w #$47
+	CMP.w #$60 : BCC ++
+	SBC.w #$60
+++	STA !room_time_F
+	LDA !room_time_S : ADC.w #$16
+	STA !room_time_S
+	CLD
+
+.slowwalls
+	LDY #$02 : STY !timer_allowed
+	LDY #$00 : STY $AE, X
+	RTL
+
+; desert: 918->10
+UpdateOnMovingWallEndDesert:
+	LDA.l !ram_fast_moving_walls : BEQ .slowwalls
+	SED
+	CLC
+	LDA !room_time_F : ADC.w #$08
+	CMP.w #$60 : BCC ++
+	SBC.w #$60
+++	STA !room_time_F
+	LDA !room_time_S : ADC.w #$09
+	STA !room_time_S
+	CLD
+
+.slowwalls
+	LDY #$02 : STY !timer_allowed
+	LDY #$00 : STY $AE, X
+	RTL
+
 ; Overworld updates
 UpdateOnOWUWTransition:
 	%reset_timer()
@@ -141,6 +185,11 @@ UpdateOnOWTransition:
 UpdateOnOWMirror:
 	%reset_timer()
 	LDA #$23 : STA $11
+	RTL
+
+UpdateOnOWMirror2:
+	%reset_timer()
+	LDA #$14 : STA $5D
 	RTL
 
 UpdateOnOWPitTransition:

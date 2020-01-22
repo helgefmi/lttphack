@@ -353,7 +353,6 @@ cm_transfer_tileset:
 ; ---------
 ; Draw
 ; ---------
-
 cm_redraw:
 	; Assumes A=8 I=8
 	JSR cm_clear_buffer
@@ -364,7 +363,6 @@ cm_redraw:
 	LDA.b #$06 : STA $17
 
 	RTS
-
 
 cm_draw_background_gfx:
 	%a8()
@@ -428,7 +426,6 @@ cm_draw_background_gfx:
 	PLB
 	RTS
 
-
 cm_draw_active_menu:
 	; Enters: AI=8
 	; Leave with: AI=8
@@ -476,7 +473,6 @@ cm_draw_active_menu:
 
 	%ai8()
 	RTS
-
 
 cm_draw_text:
 	; Assumes I=16
@@ -541,7 +537,6 @@ cm_fix_cursor_wrap:
 	%ai8()
 	RTS
 
-
 cm_execute_cursor:
 	; Enters AI=8
 	; Leave with AI=8
@@ -566,7 +561,6 @@ cm_execute_cursor:
 
 cm_execute_action_table:
 	; Subroutines for executing an action when the user selects a menu item.
-	;
 	; Enters: AI=8
 	; Can mess with whatever it wants.
 	dw cm_execute_toggle
@@ -584,7 +578,6 @@ cm_execute_action_table:
 	dw cm_execute_movie
 	dw cm_execute_toggle_bit
 
-
 cm_execute_toggle:
 	; Will only toggle the first bit.
 	LDA ($00) : INC $00 : INC $00 : STA $02
@@ -601,7 +594,6 @@ cm_execute_toggle:
 	PLA
 	RTS
 
-
 cm_execute_toggle_jsr:
 	LDA ($00) : INC $00 : INC $00 : STA $06
 	JSR cm_execute_toggle
@@ -610,13 +602,10 @@ cm_execute_toggle_jsr:
 	LDX.b #$00 : JSR ($0006, X)
 	RTS
 
-
 cm_execute_jsr:
 	; < and > should do nothing here
 	%a8()
-	LDA $F0
-	CMP #$01 : BEQ .end
-	CMP #$02 : BEQ .end
+	BIT $F2 : BPL .end
 
 	%a16()
 	LDA ($00) : INC $00 : INC $00 : STA $02
@@ -628,9 +617,7 @@ cm_execute_jsr:
 .end
 	RTS
 
-
 cm_execute_submenu:
-	; dpad should do nothing here
 	%a8()
 	LDA $F6 : BPL .end
 	LDA #$24 : STA $012F
@@ -642,11 +629,10 @@ cm_execute_submenu:
 .end
 	RTS
 
-
 cm_execute_back:
 	; > should do nothing here
 	%a8()
-	LDA $F0 : CMP.b #$01 : BEQ .end
+	BIT $F0 : BPL .end
 	LDA #$24 : STA $012F
 	; Decrements the stack index.
 	%a16()
@@ -669,12 +655,11 @@ cm_execute_choice:
 	LDA ($00) : INC $00 : INC $00 : STA $02
 	LDA ($00) : INC $00 : STA $04
 	%ai8()
-	LDA #$1D : STA $012F ; magic boop
-	; we either increment or decrement
 	LDA $72 : BNE .set_to_zero
-	LDA $F0 : CMP #$02 : BEQ .pressed_left
+	LDA $F0
+	CMP #$02 : BEQ .pressed_left
 	CMP #$01 : BEQ .pressed_right
-	%ai8()
+	LDA $F6 : CMP #$80 : BEQ .pressed_right
 	RTS
 
 .pressed_right
@@ -719,8 +704,8 @@ cm_execute_choice:
 .end
 	%ai8()
 	STA [$02]
+	LDA #$1D : STA $012F ; magic boop
 	RTS
-
 
 cm_execute_choice_jsr:
 	LDA ($00) : INC $00 : INC $00 : STA $08
@@ -729,19 +714,18 @@ cm_execute_choice_jsr:
 	JSR ($0008, X)
 	RTS
 
-
 cm_execute_numfield:
-	; Puts: memory address in $02[0x3]
-	;       min in $05[0x1]
-	;       max in $06[0x1]
-	;       increment value in $07[0x1]
+	; Puts:
+	; memory address in $02[0x3]
+	; min in $05[0x1]
+	; max in $06[0x1]
+	; increment value in $07[0x1]
 	%a16()
 	LDA ($00) : INC $00 : INC $00 : STA $02
 	LDA ($00) : INC $00 : INC $00 : STA $04
 	; One additional INC on the max value here, for convenience later.
 	LDA ($00) : INC $00 : INC $00 : INC : STA $06
 	%ai8()
-	LDA #$1D : STA $012F ; magic boop
 
 	LDA $72 : BNE .set_to_min
 	LDA $F0 : AND #$03
@@ -750,7 +734,7 @@ cm_execute_numfield:
 		BIT #$02 : BNE .pressed_left
 		BIT #$10 : BNE .pressed_R_shoulder
 		BIT #$20 : BNE .pressed_L_shoulder
-	BRA .end
+	BRA .quit
 
 .pressed_R_shoulder
 	LDA [$02] : CLC : ADC $07
@@ -781,9 +765,10 @@ cm_execute_numfield:
 	LDA $06 : DEC : STA [$02] : CLC
 
 .end
+	LDA #$1D : STA $012F ; magic boop
+.quit
 	%ai16()
 	RTS
-
 
 cm_execute_preset:
 	LDA $F0 : BNE .end
@@ -809,7 +794,6 @@ cm_preset_data_banks:
 	db sram_low_esc_bed>>16
 	db sram_ad_esc_links_bed>>16
 
-
 cm_execute_toggle_bit:
 	; Load the address
 	LDA ($00) : INC $00 : INC $00 : STA $02
@@ -821,13 +805,13 @@ cm_execute_toggle_bit:
 	LDA #$1D : STA $012F ; magic boop
 	RTS
 
-
 cm_execute_ctrl_shortcut:
 	; < and > should do nothing here
 	%a8()
 
 	; check if we pressed X or A
-	BIT $F6 : BMI .continue
+	BIT $F6
+	BMI .continue
 	BVC .end
 
 .continue
@@ -837,7 +821,6 @@ cm_execute_ctrl_shortcut:
 	LDA #!ram_ctrl_prachack_menu : CMP $35 : BEQ .end
 
 	%a8()
-
 	BIT $F6 : BVS .reset_shortcut
 
 	INC $B0
@@ -852,7 +835,6 @@ cm_execute_ctrl_shortcut:
 .end
 	%a16()
 	RTS
-
 
 cm_execute_submenu_variable:
 	; dpad should do nothing here

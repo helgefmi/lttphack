@@ -267,9 +267,9 @@ gamemode_safe_to_change_mode:
 	db !unsafe ; 0x0C - Custom Menu
 	db !safe ; 0x0D - Blank Screen
 	db !safe ; 0x0E - Text Mode/Item Screen/Map
-	db !unsafe ; 0x0F - Closing Spotlight
-	db !unsafe ; 0x10 - Opening Spotlight
-	db !unsafe ; 0x11 - Happens when you fall into a hole from the OW.
+	db !safe ; 0x0F - Closing Spotlight
+	db !safe ; 0x10 - Opening Spotlight
+	db !safe ; 0x11 - Happens when you fall into a hole from the OW.
 	db !unsafe ; 0x12 - Death Mode
 	db !safe ; 0x13 - Boss Victory Mode (refills stats)
 	db !unsafe ; 0x14 - Attract Mode

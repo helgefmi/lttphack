@@ -650,6 +650,7 @@ preset_did_we_load_preset:
 
 	LDA $010C : STA $10
 	STZ $11
+	LDA #$41 : STA !timer_allowed
 	LDA #$80 : STA $2100 : STA $13
 	LDA #$08 : STA !ram_preset_spotlight_timer
 	SEC : RTL

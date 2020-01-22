@@ -51,18 +51,18 @@
 				<div class="col-lg-8 mx-auto">
 					<h2>Download</h2>
 					<table class="table table-bordered dl-tbl romtable">
-						<caption>We are currently on version 12.1.1</caption>
+						<caption>We are currently on version 13.0.0</caption>
 						<tbody>
 							<tr>
 								<th rowspan="2">Emulator, Everdrive, SNES Classic</th>
 								<td>
-									<a href="https://drive.google.com/open?id=1aPT5YCtVXMmC4s0iMo0J9vpb4aN4EFYM">
+									<a href="https://drive.google.com/open?id=1-l2HUSrYMH5BvH3FSbRPZfYzOeZOry1x">
 									Custom HUD
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<a href="https://drive.google.com/open?id=1lsPkhaMtbnfafHW89PjDQVq4Tv5QUlIk">
+									<a href="https://drive.google.com/open?id=13cg40P-6aGFc3FZxEVb9Awj6rC7vDup1">
 									Vanilla HUD
 								</td>
 							</tr>
@@ -70,21 +70,27 @@
 							<tr>
 								<th rowspan="2">SD2SNES</th>
 								<td>
-									<a href="https://drive.google.com/open?id=1-lKNvbuRU2Hq77DYbxCwflL4hn2ybTTC">
+									<a href="https://drive.google.com/open?id=1pv9uzO5puZevRwYfU-2rgve7CBJo4l1U">
 									Custom HUD
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<a href="https://drive.google.com/open?id=1gOFQKNztYeZPjhzOL4pV-Mqr3tVoYR9e">
+									<a href="https://drive.google.com/open?id=1_a0ZflnRToH4vrHEioU2gcLjyG3BjjDW">
 									Vanilla HUD
 								</td>
 							</tr>
 							<tr>
-								<th>Debug</th>
+								<th rowspan="2">Debug</th>
 								<td>
 									<a href="https://drive.google.com/open?id=1LkDbOgE7JDmWsB3ZZO-p8TIHkBKrHcAQ">
-									Unstable
+									Unstable for Emulators</a>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<a href="https://drive.google.com/open?id=1K_hwU1pEmZoXFRl5ffX8rx39slBjC3fb">
+									Unstable for SD2SNES</a>
 								</td>
 							</tr>
 						</tbody>
@@ -92,7 +98,7 @@
 						
 					</table>
 					<p>
-						<strong>SD2SNES</strong> is the only SNES system that supports 256kb SRAM. This makes it possible to have in-game save states, so that feature is only turned on for the SD2SNES variants. These will not work on emulators, Everdrive etc.
+						<strong>SD2SNES</strong> is the only SNES system that supports 256kb SRAM. This makes it possible to have in-game save states. These will not work on emulators, Everdrive etc.
 					</p>
 
 					<p>
@@ -131,10 +137,8 @@
 
 					<h4 id="IKnowAboutItAlready">Known issues <a href="#IKnowAboutItAlready" class="headerLink">(link)</a></h4>
 					<ul>
-						<li>Super bomb and digging game timers overlap HUD counters and don't disappear properly.</li>
 						<li>The lit rooms toggle may hide BG1 when switched indoors.</li>
 						<li>Lag from mosaics can be very inaccurate.</li>
-						<li>The HUD may require an extra nudge to update after toggling practice features.</li>
 						<li>Thieves' Town Hellway and the Agahnim fights may cause issues with transparency and palettes.</li>
 					</ul>
 					<div class="center">
@@ -165,7 +169,7 @@
 					</dl>
 
 					<h4>Menu controls</h4>
-					<table class="table table-bordered dl-tbl ctrltable">
+					<table class="table table-bordered dl-tbl ctrltable iconstable">
 						<tbody>
 							<tr>
 								<th>Button</th>
@@ -200,6 +204,11 @@
 								<td>Activate command</td>
 							</tr>
 							<tr>
+								<th><span class="snesButton snesB">X</span></th>
+								<td>Most options</td>
+								<td>Clear selection</td>
+							</tr>
+							<tr>
 								<th rowspan="2"><span class="snesButton snesB">B</span></th>
 								<td>Main menu</td>
 								<td>Move to top</td>
@@ -209,13 +218,21 @@
 								<td>Return to previous menu</td>
 							</tr>
 							<tr>
-								<th rowspan="2"><span class="snesButton snesDPAD">&lt; &gt;</span></th>
+								<th rowspan="1"><span class="snesButton snesL">L</span> <span class="snesButton snesR">R</span></th>
+								<td>Num field</td>
+								<td>Increment/Decrement by larger amounts; no wrapping.</td>
+							</tr>
+							<tr>
+								<th rowspan="3"><span class="snesButton snesDPAD">&lt; &gt;</span></th>
 								<td>Toggle option</td>
 								<td>Toggle item</td>
 							</tr>
 							<tr>
 								<td>List option</td>
 								<td>Previous/Next selection</td>
+							<tr>
+								<td>Num field</td>
+								<td>Increment/Decrement by 1</td>
 							</tr>
 							<tr>
 								<th><span class="snesButton DPAD">^ v</span></th>
@@ -574,9 +591,9 @@
 						<dt>Skip Triforce</dt>
 						<dd>Transitioning north from Ganon's Room will behave like a normal screen transition, allowing consistent and reliable room times for the fight.</dd>
 						<dt>Sanc heart</dt>
-						<dd>Presets will have more health, as if the Sanctuary heart were collected earlier in the run</dd>
+						<dd>Presets will have more health, as if the Sanctuary heart were collected earlier in the run.</dd>
 						<dt>Disable beams</dt>
-						<dd>The Master Sword and its upgrades will no longer fire sword beams at full health</dd>
+						<dd>The Master Sword and its upgrades will no longer fire sword beams at full health.</dd>
 						<dt>Fast walls</dt>
 						<dd>Speeds up the moving wall cutscenes.</dd>
 						<dt>Lit rooms</dt>
@@ -688,7 +705,25 @@
 								<li>Down</li>
 							</ol>
 						</dd>
+						<dt>First Vitty</dt>
+						<dd class="optionList">
+							<ol>
+								<li>Random</li>
+								<li>Slot 5</li>
+								<li>Slot 6</li>
+								<li>Slot 7</li>
+								<li>Slot 8</li>
+								<li>Slot 9</li>
+								<li>Slot A</li>
+								<li>Slot B</li>
+								<li>Slot C</li>
+								<li>Slot D</li>
+							</ol>
+						</dd>
 					</dl>
+					<div class="center">
+						<img src="vitreouseyes.png"width="288">
+					</div>
 					<h3 id="menuShortcuts">Shortcuts</h3>
 					<dl>
 						<dt>LTTPHack menu</dt>
@@ -725,26 +760,23 @@
 						<dd>Time spent on the current screen, starting from the beginning of the last transition.</dd>
 						<dt>Lag counter</dt>
 						<dd>Count of lag frames on the current screen, starting from the beginning of the last transition.</dd>
+						<dt>Heart lag</dt>
+						<dd>Animated spinning square that indicates there is heart lag present.</dd>
 						<dt>Idle frames</dt>
 						<dd>Count of frames with no relevant input, starting from the beginning of the last transition.</dd>
 						<dt>Segment time</dt>
 						<dd>Time spent since the beginning of the last segment timer reset.</dd>
 						<dt>Coordinates</dt>
-						<dd>Absolute position of Link (X,Y)
-							<dl class="subDefinition">
-								<dt>Hexadecimal</dt>
-								<dd>12-bit precision</dd>
-								<dt>Decimal</dt>
-								<dd>Not as good as HEX.<strong class="lag"><b>WARNING:</b> decimal display can be laggy.</strong></dd>
-							</dl>
-						</dd>
-						<dt>Subpixels</dt>
+						<dd>Absolute position of Link (X,Y)	</dd>
+						<dt>RAM watch</dt>
 						<dd>
 							<dl class="subDefinition">
 								<dt>Subpixels</dt>
 								<dd>Displays current subpixel remainder (Hexadecimal)</dd>
-								<dt>Speed</dt>
-								<dd>Displays current subpixel speed (Hexadecimal)</dd>
+								<dt>Spooky altit</dt>
+								<dd>Ancilla height for slot 4</dd>
+								<dt>Arc variable</dt>
+								<dd>Overlord value used by Armos Knights and Ganon for circles.</dd>
 							</dl>
 						</dd>
 						<dt>QW indicator</dt>
@@ -762,8 +794,7 @@
 							</div>
 						</dd>
 						<dt>DG watch</dt>
-						<dd>RAM watch geared towards door glitches (see <a href="doorwatch.html">this page</a>).
-						</dd>
+						<dd>RAM watch geared towards door glitches (see <a href="doorwatch.html">this page</a>).<strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
 					</dl>
 
 					<h3 id="menuConfiguration">Configuration</h3>
@@ -805,9 +836,61 @@
 			<div class="row">
 				<div class="col-lg-8 mx-auto">
 					<h2>Changelog</h2>
-					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/12.1.1">v12.1.1</a> <span class="releaseDate">6 Nov 2019</span></h3>
+					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.0.0">v13</a> <span class="releaseDate">22 Jan 2020</span></h3>
 					<ul>
-						<li>Moved counters 1 tile to the left for CRTs. This update was for BluntBunny. Only BluntBunny may use this update.</li>
+						<li>Several features have been adjusted to persist across practice hack updates (assuming you use the same file name). Please hold <span class="snesButton snesStart">Start</span>+<span class="snesButton snesSelect">Select</span> on power-on the first time you use this update.</li>
+						<li>Cycle Control™ - made a number of features' lag contribution consistent, even when they're disabled.
+							<ul>The following features have Cycle Control™:
+								<li>Input display</li>
+								<li>Room timer</li>
+								<li>Lag timer</li>
+								<li>Idle frames</li>
+								<li>Segment timer</li>
+								<li>Coordinates</li>
+								<li>Quick warp indicator</li>
+							</ul>
+						</li>
+						<li>HUD Extras:
+							<ul>
+								<li>New arbitrary RAM watch with the following options:
+									<ul>
+										<li>Subpixels</li>
+										<li>Spooky altitude</li>
+										<li>Arc variable</li>
+									</ul>
+								</li>
+								<li>Deleted subpixels in favor of the above</li>
+								<li>Heart lag spinner. If it's animated, there's heart lag.</li>
+							</ul>
+						</li>
+						<li>RNG control:
+							<ul>
+								<li>First Vitreous eyeball charge (slot positions shown in image with the option's description above)</li>
+							</ul>
+						</li>
+						<li>Timer improvements
+							<ul>
+							<li>The lag counter is now red, to distinguish it from idle frames and to make it scary looking.</li>
+								<li>Fast moving walls will now add in the difference they saved to room times.</li>
+							</ul>
+							<ul>New triggers:
+								<li>Getting keys</li>
+								<li>Bonking</li>
+								<li>Chest appearing</li>
+								<li>Bombing stuff</li>
+								<li>Moving walls start/end</li>
+							</ul>
+						</li>
+						<li>Sleek new input display that looks like a controller. Also way more efficient.</li>
+						<li>Digging game and Super Bomb timers are added back, just below the input display.</li>
+						<li>Bonking, etc. no longer leave weird camera offsets after preset loading.</li>
+						<li>Enemy HP display is more efficient in finding enemies, but also less picky.</li>
+						<li>Saved a few cycles on health display.</li>
+						<li>New icons for things in the practice menu.</li>
+						<li>When dealing with number field options, the d-pad now changes all values by 1. <span class="snesButton snesL">L</span> and <span class="snesButton snesR">R</span> can be used to cycle through larger amounts.</li>
+						<li>Removed the debug lag setting, since no one bothered with it.</li>
+						<li>Temporarily removed decimal coordinates.</li>
+						<li>Added SD2SNES debug version to site.</li>
 					</ul>
 					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/12.1.0">v12.1</a> <span class="releaseDate">26 Oct 2019</span></h3>
 					<ul>
@@ -821,8 +904,7 @@
 						</li>
 						<li>Bug fixes
 							<ul>
-								<li>Fixed issue with certain toggles not working at all.</li>
-								<li>Fixed issue with game crashes from menu commands.</li>
+								<li>Fixed graphical/memory issue with the Mirror toggle.</li>
 							</ul>
 						</li>
 					</ul>

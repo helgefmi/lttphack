@@ -64,6 +64,8 @@ endmacro
 !seg_time_S_disp = $024A ; [0x2]
 !seg_time_M_disp = $024C ; [0x2]
 
+!lag_cache = $04CC
+!do_heart_lag = $04CE
 
 ; old stuff
 !lowram_room_realtime = $04CC
@@ -210,7 +212,7 @@ endmacro
 %def_sram("counters_lag", !HUDONLY)
 %def_sram("counters_idle", !HUDONLY)
 %def_sram("counters_segment", !HUDONLY)
-%def_sram("heartlag_spinner", !HUDONLY)
+%def_sram("heartlag_spinner", !OFF)
 %def_sram("extra_ram_watch", !OFF)
 %def_sram("misslots_toggle", !OFF)
 %def_sram("doorwatch_toggle", !OFF)

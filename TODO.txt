@@ -11,15 +11,6 @@ Big stuff
 
 - Mashing & Pumping mini-game
 
-- Fix lag:
-	debug hacks:
-		A = $10
-		B = $00
-		C = $18
-		D = $08
-
-- Refactoring gamemode (gamemode2.asm) to be more intuitive
-
 - Rewrite presets
 
 - Lua script in bizhawk for lag
@@ -28,22 +19,12 @@ Big stuff
 
 - "if you start a preset from first SW preset and play out the whole dungeon, you sometimes end up with a small key [before] bomb jump"
 
-- pad time for fast walls to make up for speed
-
-X? camera shake variable reset when loading presets
-
 - ad khold preset is hard to move around in
-
-- update timer on:
-	bonk
-	key get
 
 Other stuff
 ------------
 
 - cm_clear_buffer -> wram dma
-
-- vitty first eye rng control
 
 - deadrock rng control?
 
@@ -75,10 +56,6 @@ Other stuff
 
 - YBA lua like shortcut for collision mapping
 
-- Rework menu numbers to be +/- 10/5 on L/R and +/- 1 on <>
-
-- item menu removes qw icon???
-
 - frame count cache on counter updates? add to ram watch?
 
 Possible toggles/options
@@ -91,7 +68,7 @@ Low priority
 
 - TT palette transparency problems: JSL.l $02FD68 sets to not transparent, find similar routine; it's in bank0E in US though
 
-- Swamp door in hundo preset
+- first swamp door in hundo preset
 
 ======== MINIGAMES TODO ========
 

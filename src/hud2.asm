@@ -344,6 +344,7 @@ hud_draw_hearts:
 
 	; Container gfx
 +	LDA #$24A2 : STA !POS_MEM_CONTAINER_GFX
+	LDA #$0101 : STA !do_heart_lag
 
 	; Container
 	LDA !ram_equipment_maxhp : AND #$00FF : LSR #3 : JSL hex_to_dec
