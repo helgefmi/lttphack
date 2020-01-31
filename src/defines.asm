@@ -1,5 +1,5 @@
 ; Magic words
-!SRAM_VERSION = $0023
+!SRAM_VERSION = $0024
 
 !menu_end = #$0000
 !list_end = #$FF
@@ -68,14 +68,7 @@ endmacro
 !do_heart_lag = $04CE
 
 ; old stuff
-!lowram_room_realtime = $04CC
-!lowram_room_gametime = $04CE
-!lowram_seg_frames = $04D0
-!lowram_seg_minutes = $04D2
-!lowram_seg_seconds = $04D4
-
-!lowram_room_realtime_copy = $04D6
-!lowram_room_gametime_copy = $04D8
+!lowram_room_gametime = $04CC
 
 !lowram_last_frame_did_saveload = $04DA
 !lowram_draw_tmp = $04DC

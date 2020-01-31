@@ -580,17 +580,11 @@ preset_reset_state_after_loading:
 
 preset_reset_counters:
 	%a16()
-	STZ !lowram_room_realtime
-	STZ !lowram_room_gametime
-	STZ !lowram_seg_frames
-	STZ !lowram_seg_seconds
-	STZ !lowram_seg_minutes
-	STZ !lowram_idle_frames
 	LDA #$0000
 	STA !ram_lanmola_cycles
 	%a8()
+	LDA #$41 : STA !timer_allowed
 	STA !ram_lanmola_cycles+2
-	%a8()
 	RTS
 
 
@@ -650,7 +644,6 @@ preset_did_we_load_preset:
 
 	LDA $010C : STA $10
 	STZ $11
-	LDA #$41 : STA !timer_allowed
 	LDA #$80 : STA $2100 : STA $13
 	LDA #$08 : STA !ram_preset_spotlight_timer
 	SEC : RTL

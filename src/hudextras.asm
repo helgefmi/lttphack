@@ -1,347 +1,135 @@
-; Plan: 8 lines of 16 bytes each
 ; Line 0 never transfers, can be used for dummy writes
+; Using macros instead of routines is stupid, yes
+; but we really need to save as many cycles as we can
 
 !CURRENT_ROW = $0A
 
-!NUMBER_OF_COUNTERS = 6
+!white = $3C10
+!yellow = $3410
+!red = $3810
+!gray = $2010
 
-macro add_input_character_a(pos, topbottom)
-++	INY ; next character
-	%add_input_character_afirst(<pos>, <topbottom>)
+!HUD_EXTRAS_BUFFER = $7EC700
+
+; shouldn't actually need to clear every frame
+; only when counters are messed with
+macro draw_all_three(address, color, Xoff)
+;first_digit
+	LDA <address>+1 : AND #$000F
+	ORA.w #<color>
+	STA !HUD_EXTRAS_BUFFER+10+<Xoff>, X
+
+;second_digit
+	LDA <address>+0 : AND #$00F0
+	LSR #4
+	ORA.w #<color>
+	STA !HUD_EXTRAS_BUFFER+12+<Xoff>, X
+
+;third_digit
+	LDA <address>+0
+	AND #$000F
+	ORA.w #<color>
+	STA !HUD_EXTRAS_BUFFER+14+<Xoff>, X
 endmacro
 
-macro add_input_character_afirst(pos, topbottom)
-	LSR ; shift bit into carry
-	; cycle control here
-	BCS ?inputheld
+macro draw_all_two(address, color, Xoff)
+;second_digit
+	LDA <address>
+	LSR #4
+	ORA.w #<color>
+	STA !HUD_EXTRAS_BUFFER+12+<Xoff>, X
 
-?inputnotheld:
-	STX.w !POS_MEM_INPUT_DISPLAY_<topbottom>+<pos> ; 5
-	NOP ; 2
-	BRA ++ ; 2
-	; 9 cycles total
-
-?inputheld: ; 1 for branch taken
-	STY.w !POS_MEM_INPUT_DISPLAY_<topbottom>+<pos> ; 5
-	REP #$00 ; 3
-	; 9 cycles total
+;third_digit
+	LDA <address>
+	AND #$000F
+	ORA.w #<color>
+	STA !HUD_EXTRAS_BUFFER+14+<Xoff>, X
 endmacro
 
-; this one goes backwards, since the bottom nibble is all 0
-macro add_input_character_b(pos, topbottom)
-++	INY ; next character
-	ASL ; shift bit into carry
-	; cycle control here
-	BCS ?inputheld
+macro draw_three(address, color, Xoff)
+	SEP #$21
+	LDA <address>+1
+	ADC.b #$7E ; overflow set if 2 or 3 digits; carry is set for fewer cycles
 
-?inputnotheld:
-	STX.w !POS_MEM_INPUT_DISPLAY_<topbottom>+<pos> ; 5
-	NOP ; 2
-	BRA ++ ; 2
-	; 9 cycles total
-
-?inputheld: ; 1 for branch taken
-	STY.w !POS_MEM_INPUT_DISPLAY_<topbottom>+<pos> ; 5
-	REP #$00 ; 3
-	; 9 cycles total
-endmacro
-
-draw_counters:
-	WDM
-	PHP
-	PHB : PHK : PLB
-	%a16()
-	%i8()
-
-	; clean this up, 3 goddamn scanlines
-	LDA #$207F
-	LDX.b #!NUMBER_OF_COUNTERS*16
---	STA.l !HUD_EXTRAS_BUFFER+16, X ; clear everything except the dummy row
-	DEX : DEX : BNE --
-
-	LDA #$0001 : STA !CURRENT_ROW ; start at 1 so that 0 can be a dummy write
-
-.roomtime
-	LDA !ram_counters_real : JSR update_counter_line
-
-	LDA !lowram_room_realtime_copy
-	STA $4204
-	LDY #60 : STY $4206
-	%wait_14_cycles()
-	LDA $4214 : STA !lowram_draw_tmp
-	LDA $4216 : STA !lowram_draw_tmp2
-	
-	LDA !lowram_draw_tmp2 : JSR hex_to_dec_fast : JSR draw_all_two_yellow
-	DEX #4 ; to make it match new position
-	LDA !lowram_draw_tmp : JSR hex_to_dec_fast : JSR draw_three_white
-
-.lagtime
-	LDA !ram_counters_lag : JSR update_counter_line
-
-	;LDA !lag_frames_copy : JSL hex_to_dex
-	LDA !lowram_room_realtime_copy : SEC : SBC !lowram_room_gametime_copy
-	JSR hex_to_dec_fast
-	JSR draw_three_red
-
-.idletime
-	LDA !ram_counters_idle : JSR update_counter_line
-
-	LDA !lowram_idle_frames_copy : JSR hex_to_dec_fast : JSR draw_three_white
-
-.segmenttime
-	LDA !ram_counters_segment : JSR update_counter_line
-
-	LDA !lowram_seg_frames : JSR hex_to_dec_fast : JSR draw_all_two_gray
-	DEX #4
-	LDA !lowram_seg_seconds : JSR hex_to_dec_fast : JSR draw_all_two_yellow
-	DEX #4
-	LDA !lowram_seg_minutes : JSR hex_to_dec_fast : JSR draw_three_white
-
-.coordinates
-	LDA !ram_xy_toggle : JSR update_counter_line
-	LDA $20 : JSR set_coords : JSR draw_all_three_yellow
-	DEX #6
-	LDA $22 : JSR set_coords : JSR draw_all_three_white
-
-.subpixels
-	LDA !ram_subpixels_toggle : JSR update_counter_line
-	LDA $2A : JSR set_2_coords : JSR draw_all_two_yellow
-	DEX #4
-	LDA $2B : JSR set_2_coords : JSR draw_all_two_white 
-
-;-----------------------------------------------------------------
-; Input display stuff
-;-----------------------------------------------------------------
-; this will always write to its buffer, but
-; NMI will be cycle controlled to not always draw this on bg3
-; the rest of the time it will just draw all blanks
-
-hud_draw_input_display:
-	LDA !ram_ctrl1
-
-	PHP
-	SEP #$20
-	REP #$10
-	; basically: this bank | bank $7E
-	PEA.w ((hud_draw_input_display>>8)&$FF00)|$807E
-	PLB ; proper bank
-
-	; Y will hold the current input character
-	LDY.w #$2400
-
-	LDX.w #!EMPTY ; X will hold the empty character always
-
-	; order: rlduSsYB....RLXA
-	; Starting with the low byte
-
-	; special macro to not increment Y
-	%add_input_character_afirst(4, "BOT") ; dpad right
-	%add_input_character_a(0, "BOT") ; dpad left
-	%add_input_character_a(2, "BOT") ; dpad down
-	%add_input_character_a(2, "TOP") ; dpad up
-
-	%add_input_character_a(10, "BOT") ; start
-	%add_input_character_a(10, "TOP") ; select
-	%add_input_character_a(6, "TOP") ; Y
-	%add_input_character_a(6, "BOT") ; B
-
-++	XBA ; switch to high byte
-	%add_input_character_b(8, "BOT") ; A
-	%add_input_character_b(8, "TOP") ; X
-	%add_input_character_b(0, "TOP") ; L shoulder
-	%add_input_character_b(4, "TOP") ; R shoulder
-
-++	PLB ; get this bank back
-	PLP
-
-;-----------------------------------------------------------------
-; Other
-;-----------------------------------------------------------------
-draw_quickwarp: ; cycle controlled
-	SEP #$20 ; M=8 for just this is 1 cycle faster lol
-	LDA $E2 : AND #$06 ; this tests the bits for camera
-	ORA $1B ; make QW only display in overworld, where $1B = 0
-	; if we're on a quick warp on the overworld
-	; then we'll have $06
-	; if the camera matches but we're in the overworld
-	; then we'll have $07, and it will fail
-	CMP #$06
-	REP #$20 ; faster because it removes an AND #$00FF to get rid of leakage
-
-	BEQ .qw
-
-.notqw
-	LDA #!EMPTY ; 3
-	STA $7EC80A ; 6
-	STA $7EC80A ; 6
-	; this will always be non zero, so we get an extra cycle for branch taken
-	BNE ++ ; 3
-	; 18 cycles total
-
-.qw ; 1 for branch
-	LDA #$340C ; 3
-	STA $7EC80A ; 6
-	INC ; 2
-	STA $7EC80C ; 6
-	; 18 cycles total
-
-++
-
-done_extras:
-	PLB : PLP
-	RTL
-
-set_coords:
-	SEP #$20
-	TAY : AND #$0F : STA !ram_hex2dec_third_digit
-	TYA : LSR #4 : AND #$0F : STA !ram_hex2dec_second_digit
-	XBA : AND #$0F : STA !ram_hex2dec_first_digit
+	LDA <address>
+	AND #$F0
+	ORA <address>+1
+	CMP.b #1 ; carry set if 2 or 3 digits
 	REP #$20
-	RTS
+?templabel:
+?.first_digit
+	LDA <address>+1 : AND #$000F
+	BVC ?..blank
 
-set_2_coords:
-	SEP #$20
-	TAY : AND #$0F : STA !ram_hex2dec_third_digit
-	TYA : LSR #4 : AND #$0F : STA !ram_hex2dec_second_digit
-	REP #$20
-	RTS
+?..draw
+	ORA.w #<color> ; 3 cycles
+	BNE ?..continue ; 3 cycles
+	; 6 cycles total
 
-draw_all:
-.three
-..white
-	PEA $3C10
-	BRA .first_digit
+?..blank ; 1 for branch
+	NOP ; 2 cycles
+	LDA #$207F ; 3 cycles
+	; 6 cycles total
 
-..yellow
-	PEA $3410
-	BRA .first_digit
-
-..red
-	PEA $3810
-	BRA .first_digit
-
-..gray
-	PEA $2010
-	BRA .first_digit
-
-.two
-..white
-	PEA $3C10
-	BRA .second_digit
-
-..yellow
-	PEA $3410
-	BRA .second_digit
-
-..red
-	PEA $3810
-	BRA .second_digit
-
-..gray
-	PEA $2010
-	BRA .second_digit
-
-.first_digit
-	LDA !ram_hex2dec_first_digit
-	ORA 1,S
-	STA !HUD_EXTRAS_BUFFER+10, X
-
-.second_digit
-	LDA !ram_hex2dec_second_digit
-	ORA 1,S
-	STA !HUD_EXTRAS_BUFFER+12, X
-
-.third_digit
-	LDA !ram_hex2dec_third_digit
-	ORA 1,S
-	STA !HUD_EXTRAS_BUFFER+14, X
-
-	PLA ; remove the color
-	RTS
-
-draw:
-.three
-..white
-	PEA $3C10
-	BRA .draw3
-
-..yellow
-	PEA $3410
-	BRA .draw3
-
-..red
-	PEA $3810
-	BRA .draw3
-
-..gray
-	PEA $2010
-	BRA .draw3
-
-.two
-..white
-	PEA $3C10
-	BRA .draw2
-
-..yellow
-	PEA $3410
-	BRA .draw2
-
-..red
-	PEA $3810
-	BRA .draw2
-
-..gray
-	PEA $2010
-	BRA .draw2
-
-.draw3
-	JSR calc_number_of_digits
-	BRA .first_digit
-
-.draw2
-	JSR calc_number_of_digits
-	BRA .second_digit
+?..continue
+	STA !HUD_EXTRAS_BUFFER+10+<Xoff>, X
 
 	; match cycles
-.first_digit
-	LDA !ram_hex2dec_first_digit
-	BVC ..blank
+?.second_digit
+	LDA <address> : AND #$00F0
+	BCC ?..blank
 
-..draw
-	ORA 1,S ; 5 cycles
-	BRA ..continue ; 2 cycles
-	; 7 cycles total
+	; can't LSR first or we lose carry flag
+?..draw
+	LSR #4 ; 8 cycles
+	ORA.w #<color> ; 3 cycles
+	BNE ?..continue ; 3 cycles
+	; 14 cycles total
 
-..blank ; 1 for branch
-	ORA #$207F ; 3 cycles ; this is okay because $09 is the max to ORA
-	REP #$00 ; 3 cycles
-	; 7 cycles total
-..continue
-	STA !HUD_EXTRAS_BUFFER+10, X
+?..blank ; 1 for branch
+	NOP ; 2 cycles
+	NOP #4 ; 8 cycles
+	LDA #$207F ; 3 cycles
+	; 14 cycles total
 
+?..continue
+	STA !HUD_EXTRAS_BUFFER+12+<Xoff>, X
+
+?.third_digit
+	LDA <address>
+	AND #$000F
+	ORA.w #<color> : STA !HUD_EXTRAS_BUFFER+14+<Xoff>, X
+endmacro
+
+macro draw_two(address, color, Xoff)
+	LDA <address> : AND #$00F0
+	CMP.w #1
+?templabel:
 	; match cycles
-.second_digit
-	LDA !ram_hex2dec_second_digit
-	BCC ..blank
+?.second_digit
+	BCC ?..blank
 
-..draw
-	ORA 1,S ; 5 cycles
-	BRA ..continue ; 2 cycles
-	; 7 cycles total
+	; can't LSR first or we lose carry flag
+?..draw
+	LSR #4 ; 8 cycles
+	ORA.w #<color> ; 3 cycles
+	BNE ?..continue ; 3 cycles
+	; 14 cycles total
 
-..blank ; 1 for branch
-	ORA #$207F ; 3 cycles ; this is okay because $09 is the max to ORA
-	REP #$00 ; 3 cycles
-	; 7 cycles total
-..continue
-	STA !HUD_EXTRAS_BUFFER+12, X
+?..blank ; 1 for branch
+	NOP #4 ; 8 cycles
+	NOP ; 2 cycles
+	LDA #$207F ; 3 cycles
+	; 14 cycles total
 
-.third_digit
-	LDA !ram_hex2dec_third_digit
-	ORA 1,S : STA !HUD_EXTRAS_BUFFER+14, X
+?..continue
+	STA !HUD_EXTRAS_BUFFER+12+<Xoff>, X
 
-	PLA ; remove the color
-	RTS
+?.third_digit
+	LDA <address>
+	AND #$000F
+	ORA.w #<color> : STA !HUD_EXTRAS_BUFFER+14+<Xoff>, X
+endmacro
 
 draw2_white_lttp:
 	LDA !ram_hex2dec_second_digit : ORA #$3C90 : STA $7EC700, X
@@ -365,78 +153,113 @@ draw3_white_aligned_left_lttp:
 	LDA !ram_hex2dec_third_digit : ORA #$3C90 : STA $7EC700, X
 	RTL
 
-; cycle controlled to always be the same
-calc_number_of_digits:
-	SEP #$21
-	LDA !ram_hex2dec_first_digit
-	ADC.b #$7E ; overflow set if 2 or 3 digits; carry is set for fewer cycles
-
-	LDA !ram_hex2dec_second_digit
-	ORA !ram_hex2dec_first_digit
-	CMP.b #1 ; carry set if 2 or 3 digits
-	REP #$20
-	RTS
-
-calc_number_of_digits_old:
-	SEP #$20
-	STZ $08
-	LDA !ram_hex2dec_first_digit : CMP.b #$01 ; set carry if non 0
-	ROL $08 ; $08 = 1 if 3 digits
-	ORA !ram_hex2dec_second_digit : CMP.b #$01 ; carry set if 2 or 3 digits 
-	LDA.b #1 : ADC $08 ; adds 0, 1, or 2, based on number of digits
-	TAY
-	LDA .flags, Y
-	STA $09
-	BIT $09 ; set these flags
-	REP #$20
-	RTS
-
-.flags
-	db %00000000
-	db %00000000 ; no flags = 1 digit
-	db %10000000 ; carry = 2 digits
-	db %11000000 ; overflow = 3 digits
-
-update_counter_line:
+macro update_counter_line()
+	SEP #$10
 	LSR ; A will hold whether or not this counter is active
-	BCC .dummywrite ; if clear, load 0 to X for a dummy write
+	BCC ++ ; if clear, load 0 to X for a dummy write
 
 	; need to match cycles here
-.normalwrite
+;.normalwrite
 	LDX !CURRENT_ROW ; 3
 	TXA ; 2
-	BRA .continue ; 2
+	BRA + ; 2
 	; 7 total
 
-.dummywrite ; 1 for branch taken
+++ ; 1 for branch taken
 	LDA !CURRENT_ROW ; 4
 	LDX #$00 ; 2
 	; 7 total
 
-.continue
++
 	ADC.w #$0000 : STA !CURRENT_ROW ; if carry was clear, this won't increment
 
-	TXA : ASL #4 : TAX ; multiply X by 16
-	RTS
+	;TXA : ASL #4 : TAX ; multiply X by 16
+	;TXA : DEC : ASL #6; multiply X by 64
+	;REP #$11
+	;ADC #$0030
+	;TAX
+	TXA : ASL : TAY
+	REP #$10
+	LDX counter_line, Y 
+
+endmacro
+
+counter_line:
+	dw $0200 ; to write to nowhere useful
+	dw 0<<6+$2E
+	dw 1<<6+$2E
+	dw 2<<6+$2E
+	dw 3<<6+$2E
+	dw 4<<6+$2E
+
+macro add_input_character_a(pos, topbottom)
+++	INY ; next character
+	%add_input_character_afirst(<pos>, <topbottom>)
+endmacro
+
+macro add_input_character_afirst(pos, topbottom)
+	LSR ; shift bit into carry
+	; cycle control here
+	BCS ?inputheld
+
+?inputnotheld:
+	STX.w (!POS_MEM_INPUT_DISPLAY_<topbottom>)+<pos> ; 5
+	NOP ; 2
+	BRA ++ ; 2
+	; 9 cycles total
+
+?inputheld: ; 1 for branch taken
+	STY.w (!POS_MEM_INPUT_DISPLAY_<topbottom>)+<pos> ; 5
+	REP #$00 ; 3
+	; 9 cycles total
+endmacro
+
+; this one goes backwards, since the bottom nibble is all 0
+macro add_input_character_b(pos, topbottom)
+++	INY ; next character
+	ASL ; shift bit into carry
+	; cycle control here
+	BCS ?inputheld
+
+?inputnotheld:
+	STX.w !POS_MEM_INPUT_DISPLAY_<topbottom>+<pos> ; 5
+	NOP ; 2
+	BRA ++ ; 2
+	; 9 cycles total
+
+?inputheld: ; 1 for branch taken
+	STY.w !POS_MEM_INPUT_DISPLAY_<topbottom>+<pos> ; 5
+	REP #$00 ; 3
+	; 9 cycles total
+endmacro
 
 hex_to_hex_lol: ; this exists purely to keep coords even
 
 hex_to_dec:
+	REP #$10
+	ASL : TAX
+	LDA.l hex_to_dec_fast_table, X
+	SEP #$20 ; slightly faster overall to use this
+	TAY : AND #$0F : STA !ram_hex2dec_third_digit
+	TYA : AND #$F0 : LSR #4 : STA !ram_hex2dec_second_digit
+	XBA : AND #$0F : STA !ram_hex2dec_first_digit
+	REP #$20 : TYA
 	RTL
-hex_to_dec_fast:
+
+macro hex_to_dec_fast()
 	PHP
 	REP #$10
 	ASL : TAY
-	LDA.w .table, Y
+	LDA.w hex_to_dec_fast_table, Y
 	SEP #$20 ; slightly faster overall to use this
 	TAY : AND #$0F : STA !ram_hex2dec_third_digit
 	TYA : AND #$F0 : LSR #4 : STA !ram_hex2dec_second_digit
 	XBA : AND #$0F : STA !ram_hex2dec_first_digit
 	REP #$20 : TYA
 	PLP
-	RTS
+endmacro
 
-.table
+hex_to_dec_fast_table:
 	dw $000, $001, $002, $003, $004, $005, $006, $007, $008, $009
 	dw $010, $011, $012, $013, $014, $015, $016, $017, $018, $019
 	dw $020, $021, $022, $023, $024, $025, $026, $027, $028, $029
@@ -538,3 +361,240 @@ hex_to_dec_fast:
 	dw $980, $981, $982, $983, $984, $985, $986, $987, $988, $989
 	dw $990, $991, $992, $993, $994, $995, $996, $997, $998, $999
 
+empty_char_dma: ; can't use 1 word, since DMA won't increment
+	fillword !EMPTY : fill !EXTRAS_SIZE
+
+draw_counters:
+	PHP
+	PHB : PHK : PLB
+	%a16()
+	%i8()
+	; counters will never decrease, so I think this is fine
+	;STZ $2182 ; to be bank $7E
+	;LDA.w #!HUD_EXTRAS_BUFFER+16 : STA $2181
+	;LDY.b #empty_char_dma>>16 : STY $4304 ; source bank
+	;LDA.w #empty_char_dma : STA $4302 ; source address
+	;LDA #$8000 : STA $4300
+	;LDA.w #!EXTRAS_SIZE : STA $4305
+	;LDY #$01 : STY $420B
+
+	LDA #$0001 : STA !CURRENT_ROW ; start at 1 so that 0 can be a dummy write
+
+.roomtime
+	LDA !ram_counters_real : %update_counter_line()
+	%draw_all_two(!room_time_F_disp, !yellow, 0)
+	%draw_three(!room_time_S_disp, !white, -4)
+
+.lagtime
+	LDA !ram_counters_lag : %update_counter_line()
+	%draw_three(!lag_frames_disp, !red, 0)
+
+.idletime
+	LDA !ram_counters_idle : %update_counter_line()
+	%draw_three(!idle_frames_disp, !white, 0)
+
+.segmenttime
+	LDA !ram_counters_segment : %update_counter_line()
+	%draw_all_two(!seg_time_F_disp, !gray, 0)
+	%draw_all_two(!seg_time_S_disp, !yellow, -4)
+	%draw_three(!seg_time_M_disp, !white, -8)
+
+.coordinates
+	LDA !ram_xy_toggle : %update_counter_line()
+	; can't macro this, since 1 byte for each part
+
+	; Y coord
+;first_digit
+	LDA $21 : AND #$000F
+	ORA.w #!yellow
+	STA !HUD_EXTRAS_BUFFER+10, X
+
+;second_digit
+	LDA $20 : AND #$00F0 : LSR #4
+	ORA.w #!yellow
+	STA !HUD_EXTRAS_BUFFER+12, X
+
+;third_digit
+	LDA $20 : AND #$000F
+	ORA.w #!yellow
+	STA !HUD_EXTRAS_BUFFER+14, X
+
+
+	; X coord
+;first_digit
+	LDA $23 : AND #$000F
+	ORA.w #!white
+	STA !HUD_EXTRAS_BUFFER+04, X
+
+;second_digit
+	LDA $22 : AND #$00F0 : LSR #4
+	ORA.w #!white
+	STA !HUD_EXTRAS_BUFFER+06, X
+
+;third_digit
+	LDA $22 : AND #$000F
+	ORA.w #!white
+	STA !HUD_EXTRAS_BUFFER+08, X
+
+;-----------------------------------------------------------------
+; Input display stuff
+;-----------------------------------------------------------------
+; this will always write to its buffer, but
+; NMI will be cycle controlled to not always draw this on bg3
+; the rest of the time it will just draw all blanks
+hud_draw_input_display:
+	LDA !ram_ctrl1
+
+	STA $72 ; dpad
+	AND #$000F : ORA #$2970 : STA !POS_MEM_INPUT_DISPLAY_BOT+2
+
+	; need buttons in this order: xbya
+	SEP #$30
+	LDA $72+0 : AND #$C0 : LSR #5 : STA $74 ; b and y in place
+	LDA $72+1 : AND #$40 : LSR #3 : ORA $74 ; ; x in place
+	; this ASL takes care of one for figuring out LR inputs
+	ASL $73 : ADC #$70 ; a in place
+
+	; #$70 is the character offset we want
+	; top byte contains $29 from doing dpad, which is what we want
+	REP #$20
+	STA !POS_MEM_INPUT_DISPLAY_BOT+6
+
+	; start and select
+	LDA $72 : AND #$0030 : LSR #4 : ORA #$2800
+	STA !POS_MEM_INPUT_DISPLAY_BOT+4
+
+	; L and R
+	ASL $72 : ASL $72 ; L into carry and remember where R is
+	LDA #$2804 : ADC #$0000 : STA !POS_MEM_INPUT_DISPLAY_TOP+2
+
+	ASL $72 ; R into carry
+	LDA #$2804 : ADC #$0000 : STA !POS_MEM_INPUT_DISPLAY_TOP+6
+
+	; old input display was 206 cycles
+	; new is 133ish?
+
+;-----------------------------------------------------------------
+; Other
+;-----------------------------------------------------------------
+draw_quickwarp: ; cycle controlled
+	SEP #$30 ; M=8 for just this is few cycles faster
+	LDA !ram_qw_toggle : LSR ; shift toggle into carry
+	LDA $E2 : AND #$06 ; this tests the bits for camera
+	ORA $1B ; make QW only display in overworld, where $1B = 0
+	ROL ; roll carry flag into bottom bit
+	; if we're on a quick warp on the overworld
+	; then we'll have $0D
+	; if the camera matches but we're in the overworld
+	; then we'll have $0F, and it will fail
+	CMP #$0D ; 6 shifted left once and with a carry flag in bottom bit
+	REP #$20 ; faster because it removes an AND #$00FF to get rid of leakage
+
+	BEQ .qw
+
+.notqw
+	LDA #!EMPTY ; 3
+	STA $7EC80A ; 6
+	STA $7EC80C ; 6
+	; this will always be non zero, so we get an extra cycle for branch taken
+	BNE ++ ; 3
+	; 18 cycles total
+
+.qw ; 1 for branch
+	LDA #$340C ; 3
+	STA $7EC80A ; 6
+	INC ; 2
+	STA $7EC80C ; 6
+	; 18 cycles total
+
+++	; Naked label. Avert your eyes.
+
+;-----------------------------------------------------------------
+;-----------------------------------------------------------------
+; END OF CYCLE CONTROLLED EXTRAS
+;-----------------------------------------------------------------
+;-----------------------------------------------------------------
+
+extra_ram:
+	LDA !ram_extra_ram_watch : BEQ .nowatch
+	LDA #$0001 : %update_counter_line()
+	CPX.w #(5<<6+$2E) : BCS .nowatch ; line 6 is too many
+	LDA !ram_extra_ram_watch : ASL : TAY
+	LDA extra_ram_watch_routines, Y
+	PEA.w .return-1 ; so we can RTS back
+	PHA ; push the location of the routine
+	RTS
+.return
+
+.nowatch ; Oh no! The nudists are everywhere
+done_extras:
+	PLB : PLP
+	RTL
+
+extra_ram_watch_routines:
+	dw .nothing-1
+	dw .subpixels-1
+	dw .spooky-1
+	dw .arc-1
+
+.subpixels
+	; can't macro this, since 1 byte addresses
+; first digit
+	LDA $2A : AND #$000F
+	ORA.w #!yellow
+	STA !HUD_EXTRAS_BUFFER+14, X
+
+; second digit
+	LDA $2A : AND #$00F0 : LSR #4
+	ORA.w #!yellow
+	STA !HUD_EXTRAS_BUFFER+12, X
+
+; first digit
+	LDA $2B : AND #$000F
+	ORA.w #!white
+	STA !HUD_EXTRAS_BUFFER+10, X
+
+; second digit
+	LDA $2B : AND #$00F0 : LSR #4
+	ORA.w #!white
+	STA !HUD_EXTRAS_BUFFER+08, X
+
+.nothing
+	RTS
+
+.spooky
+; first digit
+	LDA $02A2 : AND #$000F
+	ORA.w #!white
+	STA !HUD_EXTRAS_BUFFER+14, X
+
+; second digit
+	LDA $02A2 : AND #$00F0 : LSR #4
+	ORA.w #!white
+	STA !HUD_EXTRAS_BUFFER+12, X
+	RTS
+
+.arc
+	LDA $0B08 : TAY
+
+; fourth digit
+	AND #$000F
+	ORA.w #!white
+	STA !HUD_EXTRAS_BUFFER+14, X
+
+; third digit
+	TYA : AND #$00F0 : LSR #4
+	ORA.w #!white
+	STA !HUD_EXTRAS_BUFFER+12, X
+
+; second digit
+	TYA : XBA : AND #$000F
+	ORA.w #!white
+	STA !HUD_EXTRAS_BUFFER+10, X
+
+; first digit
+	TYA : XBA : AND #$00F0 : LSR #4
+	ORA.w #!white
+	STA !HUD_EXTRAS_BUFFER+8, X
+
+	RTS

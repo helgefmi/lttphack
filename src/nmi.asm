@@ -209,9 +209,9 @@ nmi_hud_update:
 	LDX !do_heart_lag : BEQ .dontbreakthings
 	LDA #$C118>>1 : STA $2116
 	LDA.l !POS_MEM_HEARTLAG : STA $2118
-	STZ !do_heart_lag
 
 .dontbreakthings
+	STZ !do_heart_lag
 	LDX $13
 	STX $2100
 

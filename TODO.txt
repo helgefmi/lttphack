@@ -21,6 +21,10 @@ Big stuff
 
 - ad khold preset is hard to move around in
 
+- input display on text??
+
+- death causes savestate with death reload off
+
 Other stuff
 ------------
 

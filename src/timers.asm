@@ -272,10 +272,6 @@ dotimers:
 	STZ !room_time_F+2
 	STZ !room_time_F+4
 	STZ !room_time_F+6
-	STZ !room_time_F+8
-	STZ !room_time_F+10
-	STZ !room_time_F+12
-	STZ !room_time_F+14
 
 .dontreset
 .dontupdateorreset

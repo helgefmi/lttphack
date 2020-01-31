@@ -6,17 +6,15 @@ lorom
 
 incsrc defines.asm
 incsrc hexedits.asm
-;incsrc linkoam.asm
 
 org $A08000
-incsrc gamemode2.asm
+incsrc gamemode.asm
 incsrc nmi.asm
 incsrc timers.asm
-;incsrc draw.asm
-incsrc hudextras4.asm
+incsrc hudextras.asm
 
 if !FEATURE_HUD
-	incsrc hud2.asm
+	incsrc hud.asm
 endif
 
 org $A28000

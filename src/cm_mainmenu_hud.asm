@@ -118,11 +118,12 @@ cm_hud_lanmola_cycle_count:
 	%cm_toggle_jsr("Lanmola cycs", !ram_toggle_lanmola_cycles)
 
 .toggle
-	%a8()
-	LDA #$00
+	%a16()
+	LDA #$0000
 	STA !ram_lanmola_cycles
-	STA !ram_lanmola_cycles+1
 	STA !ram_lanmola_cycles+2
+	STA !ram_lanmola_cycles+4
+	%a8()
 	RTS
 
 cm_hud_misslots:

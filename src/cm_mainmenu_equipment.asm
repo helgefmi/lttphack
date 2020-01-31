@@ -167,6 +167,7 @@ cm_equipment_maxhp:
 	db !list_end
 
 .set_maxhp
+	LDA !ram_cm_equipment_maxhp
 	INC #3
 	ASL #3
 	; Need to fill HP to get immediate effect

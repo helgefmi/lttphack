@@ -1,308 +1,196 @@
 pushpc
-; Game Mode Hijack
-org $008056
+org $008056 ; Game Mode Hijack
 	JSL gamemode_hook
 pullpc
 
-gamemode_hook:
-	PHB : PHK : PLB
-	JSR gamemode_shortcuts : BCS .skip_gamemode
-
-	%a16() : INC !lowram_room_gametime : %a8()
-
-	JSR gamemode_transition_detection
-
-	%ai8()
-	PLB
-	JSL $0080B5 ; GameModes
-
-	LDA !ram_lagometer_toggle : BEQ .done
-	JSR gamemode_lagometer
-
-.done
-	JML draw_counters
-
-.skip_gamemode
-	%ai8()
-	PLB
-	RTL
-
-macro test_shortcut(shortcut, func, continue)
-+	LDA.w !ram_ctrl1 : AND.l <shortcut> : CMP.l <shortcut> : BNE +
+macro test_shortcut(shortcut, func, leavecarry)
++	LDA.w !ram_ctrl1 : AND <shortcut> : CMP <shortcut> : BNE +
 	AND.l !ram_ctrl1_filtered : BEQ +
 	JSR.w <func>
-	if equal(<continue>, 0)
+	if equal(<leavecarry>, 0)
 		CLC
 	endif
 	RTS
 endmacro
 
+gamemode_hook:
+	PHB : PHK : PLB
+	JSR check_mode_safety
+	BEQ .safeForNone
+	BVS .safeForAll
+	BMI .safeForSome
+;	BNE .pracMenu
+
+.pracMenu
+	JSR gamemode_shortcuts_practiceMenu
+	BRA ++
+
+.safeForSome
+.safeForAll
+	JSR gamemode_shortcuts_everything ; overflow flag checks the presets in here
+	BCS .skip
+
+.safeForNone ; we will exit in 16 bit A if it's not safe for anything
+++	%a16()
+	INC !lowram_room_gametime
+
+	%ai8()
+	PLB
+	JSL $0080B5 ; GameMode
+
+	JSL draw_counters
+	LDA !ram_lagometer_toggle : BEQ .done
+	JSR gamemode_lagometer
+.done
+	RTL
+
+.skip
+	%ai8()
+	PLB : RTL
+
+
+!notVerySafe = select(!FEATURE_SD2SNES, .SD2SNESBranch, .OtherBranch)
 gamemode_shortcuts:
-	LDA $10 : CMP #$0C : BNE .not_setting_new_inputs
-	LDA $B0 : BEQ .not_setting_new_inputs
-	CLC : RTS
+.practiceMenu
+	LDA $B0 : BEQ !notVerySafe
+-	CLC : RTS
 
-.not_setting_new_inputs
+.everything
+	TAY
+	LDA !ram_ctrl1_filtered : ORA !ram_ctrl1_filtered+1 : BEQ -
+	TYA
 	%a16()
-	LDA !ram_ctrl1_filtered : BNE +
+	BMI !notVerySafe
 
-	%a8()
-	CLC : RTS
+	%test_shortcut(!pracmenu_shortcut, gamemode_custom_menu, 1)
 
+.SD2SNESBranch
+	;------------------------------
+	%test_shortcut(!ram_ctrl_load_last_preset, gamemode_load_previous_preset, 1)
 	%test_shortcut(!ram_ctrl_save_state, gamemode_savestate_save, 1)
 	%test_shortcut(!ram_ctrl_load_state, gamemode_savestate_load, 1)
-	%test_shortcut(!pracmenu_shortcut, gamemode_custom_menu, 1)
-	%test_shortcut(!ram_ctrl_load_last_preset, gamemode_load_previous_preset, 1)
 
-;	%test_shortcut(!ram_ctrl_replay_last_movie, gamemode_replay_last_movie, 1)
-
+.OtherBranch
+	;------------------------------
+	%test_shortcut(!ram_ctrl_reset_segment_timer, gamemode_reset_segment_timer, 0)
+	%test_shortcut(!ram_ctrl_somaria_pits, gamemode_somaria_pits_wrapper, 0)
+	%test_shortcut(!ram_ctrl_fix_vram, gamemode_fix_vram, 0)
+	%test_shortcut(!ram_ctrl_fill_everything, gamemode_fill_everything, 0)
 	%test_shortcut(!ram_ctrl_toggle_oob, gamemode_oob, 0)
 	%test_shortcut(!ram_ctrl_skip_text, gamemode_skip_text, 0)
 	%test_shortcut(!ram_ctrl_disable_sprites, gamemode_disable_sprites, 0)
-	%test_shortcut(!ram_ctrl_fill_everything, gamemode_fill_everything, 0)
-	%test_shortcut(!ram_ctrl_reset_segment_timer, gamemode_reset_segment_timer, 0)
-	%test_shortcut(!ram_ctrl_fix_vram, gamemode_fix_vram, 0)
-	%test_shortcut(!ram_ctrl_somaria_pits, gamemode_somaria_pits_wrapper, 0)
+;	%test_shortcut(!ram_ctrl_replay_last_movie, gamemode_replay_last_movie, 1)
 
-+	CLC : RTS
++	CLC
+--	RTS
 
+; return values in P
+!SOME_SAFE = $8080 ; some presets are not always safe = negative flag
 
-; Transition detection
+!ALL_SAFE = $4040 ; everything is safe = overflow flag
+!NONE_SAFE = $0000 ; all modes unsafe = zero flag
+; zero flag off = practice menu special
 
-gamemode_transition_detection:
-	%ai8()
-	LDA $10 : CMP !ram_gamemode_copy : BNE .gamemode_changed
-	LDA $11 : CMP !ram_submode_copy : BNE .submode_changed
-	LDA $02D8 : CMP !ram_received_item_copy : BNE .new_item_received
-
+check_mode_safety:
+	LDA $10 : CMP #$0C : BNE .notCustomMenu
+	CLV ; clear overflow
+	LDA #$01 ; make sure N/Z flags are not set
+.neverSafe
 	RTS
 
-.new_item_received
-	LDA $02D8 : STA !ram_received_item_copy
-	JSR .show_counters
-	BRA .done
+.notCustomMenu
+	ASL : TAX ; get index
+	REP #%11100010 ; clear NVMZ for checks and for 16 bit accum
+	LDA Module_safety, X
+	BEQ .neverSafe ; staying in 16 bit A is fine here
 
-.gamemode_changed
-	LDX #$FA
+	STA $00
+	LDY $11 ; get submodule
 
--	INX #6
-	LDA .gamemode_table, X
-	CMP #$FF : BEQ .done
-	CMP !ram_gamemode_copy : BNE -
-	LDA $10 : AND .gamemode_table+1, X : CMP .gamemode_table+2, X : BNE -
-	LDA $11 : AND .gamemode_table+3, X : CMP .gamemode_table+4, X : BNE -
-
-	LDA .gamemode_table+5, X
-	BRA .transition_detected
-
-.submode_changed
-	LDX #$FD
-
--	INX #3
-	LDA .submode_table, X
-	CMP #$FF : BEQ .done
-	CMP !ram_gamemode_copy : BNE -
-	LDA .submode_table+1, X : CMP $11 : BNE -
-
-	LDA .submode_table+2, X
-
-.transition_detected
-	CMP #!TD_RESET : BEQ .reset
-	JSR .show_counters
-	BRA .done
-
-.reset
-	JSR .reset_counters
-
-.done
-	; Persist new game mode/submode.
-	LDA $10 : STA !ram_gamemode_copy
-	LDA $11 : STA !ram_submode_copy
-	RTS
-
-.gamemode_table:
-	; Format:
-	; 1. Previous $10
-	; 2. AND operand for $10
-	; 3. CMP operand for $10
-	; 4-5. Same but for $11
-	; 6. Action to take
-
-	; Game start
-	db $01, $00, $00, $00, $00 : db #!TD_RESET
-	; Dungeon -> Text mode
-	db $07, $FF, $0E, $00, $00 : db #!TD_SHOW
-	; Dungeon -> Overworld
-	db $07, $FF, $0F, $00, $00 : db #!TD_RESET
-	; Dungeon -> Wall Master (Fall into Hole too?)
-	db $07, $FF, $11, $00, $00 : db #!TD_RESET
-	; Dungeon -> Magic Mirror
-	db $07, $FF, $15, $00, $00 : db #!TD_RESET
-	; Overworld (normal) -> Overworld (special)
-	db $09, $FF, $0B, $00, $00 : db #!TD_RESET
-	; Overworld (special) -> Overworld (normal)
-	db $0B, $FF, $09, $00, $00 : db #!TD_RESET
-	; Overworld -> Dungeon
-	db $09, $FF, $0F, $00, $00 : db #!TD_RESET
-	db $0B, $FF, $0F, $00, $00 : db #!TD_RESET
-	; Overworld -> Fall in Hole
-	db $09, $FF, $11, $00, $00 : db #!TD_RESET
-	db $0B, $FF, $11, $00, $00 : db #!TD_RESET
-	; Overworld -> Text mode
-	db $09, $FF, $0E, $FF, $0A : db #!TD_RESET
-	db $0B, $FF, $0E, $FF, $0A : db #!TD_RESET
-	; Overworld -> Flute menu
-	db $09, $FF, $0E, $00, $00 : db #!TD_SHOW
-	db $0B, $FF, $0E, $00, $00 : db #!TD_SHOW
-	; Victory screen (LW?) -> Overworld
-	db $13, $FF, $08, $00, $00 : db #!TD_RESET
-	; Victory screen (DW?) -> Overworld
-	db $16, $FF, $08, $00, $00 : db #!TD_RESET
-
-	db $FF
-
-.submode_table:
-	; Format:
-	; 1. Current $10
-	; 2. CMP operand for $11
-	; 3. Action to take
-	; Dungeon: Subtile transition
-	db $07, $01, #!TD_RESET
-	; Dungeon: Supertile transition
-	db $07, $02, #!TD_RESET
-	; Dungeon: Upwards transition
-	db $07, $06, #!TD_RESET
-	; Dungeon: Downwards transition
-	db $07, $07, #!TD_RESET
-	; Dungeon: Subtile staircase (up)
-	db $07, $12, #!TD_RESET
-	; Dungeon: Subtile staircase (down)
-	db $07, $13, #!TD_RESET
-	; Dungeon: Spiral staircase
-	db $07, $0E, #!TD_RESET
-	; Dungeon: Warping to another room
-	db $07, $15, #!TD_RESET
-	; Dungeon: Magic Mirror
-	db $07, $19, #!TD_RESET
-	; Overworld: Normal transition
-	db $09, $01, #!TD_RESET
-	; Overworld: Transition into Dark Woods
-	db $09, $0D, #!TD_RESET
-	; Overworld: Magic Mirror
-	db $09, $23, #!TD_RESET
-	; Overworld: Whirlpool
-	db $09, $2E, #!TD_RESET
-
-	db $FF
-
-.show_counters
-	%a16()
-	LDA !lowram_room_realtime : STA !lowram_room_realtime_copy
-	LDA !lowram_room_gametime : STA !lowram_room_gametime_copy
-	LDA !lowram_idle_frames : STA !lowram_idle_frames_copy
 	%a8()
+	LDA ($00), Y ; get safety level of submodule
+	STA $00 ; put it in $00
+	LDA $7EC011 : BEQ .safe ; check mosaics
 
+	LDA.b #!SOME_SAFE ; not safe
 	RTS
 
-.reset_counters
-	%a16()
-	LDA !lowram_room_realtime : STA !lowram_room_realtime_copy : STZ !lowram_room_realtime
-	LDA !lowram_room_gametime : STA !lowram_room_gametime_copy : STZ !lowram_room_gametime
-	LDA !lowram_idle_frames : STA !lowram_idle_frames_copy : STZ !lowram_idle_frames
-	LDA #$0000 : STA !ram_rng_counter
-	%a8()
-
+.safe
+	LDA $00 : BIT $00 ; bit test to set NVZ
 	RTS
 
-gamemode_safe_to_change_mode:
-	; Used to decide if we can use the Custom Menu, Poverty Save/Load or Load last preset.
-	%ai8()
-	PHB : PHK : PLB
-	LDX $10 : LDA .unsafe_gamemodes, X : BNE .not_safe
-	CPX #$07 : BNE .not_dungeon
+Module_safety:
+	dw !SOME_SAFE ; Intro_safety
+	dw !SOME_SAFE ; SelectFile_safety
+	dw !SOME_SAFE ; CopyFile_safety
+	dw !SOME_SAFE ; EraseFile_safety
+	dw !SOME_SAFE ; NamePlayer_safety
+	dw !SOME_SAFE ; LoadFile_safety
+	dw !SOME_SAFE ; PreDungeon_safety
+	dw Dungeon_safety
+	dw !SOME_SAFE ; PreOverworld_safety
+	dw Overworld_safety
+	dw !SOME_SAFE ; PreOverworld_safety
+	dw Overworld_safety
+	dw !SOME_SAFE ; CustomMenu_safety ; unsafe, but custom behavior
+	dw !SOME_SAFE ; Unknown1_safety
+	dw Messaging_safety
+	dw !SOME_SAFE ; CloseSpotlight_safety
+	dw !SOME_SAFE ; OpenSpotlight_safety
+	dw !SOME_SAFE ; HoleToDungeon_safety
+	dw !SOME_SAFE ; Death_safety
+	dw !ALL_SAFE ; BossVictory_safety
+	dw !SOME_SAFE ; Attract_safety
+	dw !ALL_SAFE ; Mirror_safety
+	dw !ALL_SAFE ; Victory_safety
+	dw !SOME_SAFE ; Quit_safety
+	dw !ALL_SAFE ; GanonEmerges_safety
+	dw !SOME_SAFE ; TriforceRoom_safety
+	dw !SOME_SAFE ;  EndSequence_safety
+	dw !SOME_SAFE ; LocationMenu_safety
 
-	LDA $11 : CMP #$06 : BEQ .not_safe ; Upwards floor transition
-			  CMP #$07 : BEQ .not_safe ; Downward floor transition
-			  CMP #$12 : BEQ .not_safe ; Subtile staircase (up)
-			  CMP #$13 : BEQ .not_safe ; Subtile staircase (down)
-			  CMP #$0E : BEQ .not_safe ; Spiral staircase
-			  CMP #$0F : BEQ .not_safe ; Enter underworld spotlight effect
+; How to behave on modules, pre shifted for address jumps
 
-.not_dungeon
-	CPX #$09 : BNE .not_overworld
-	LDA $11 : CMP #$23 : BEQ .not_safe ; Mirror transition
+	Dungeon_safety: ; $07
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x00, 0x01, 0x02, 0x03
+		db !ALL_SAFE, !ALL_SAFE, !SOME_SAFE, !SOME_SAFE ; 0x04, 0x05, 0x06, 0x07
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x08, 0x09, 0x0A, 0x0B
+		db !ALL_SAFE, !ALL_SAFE, !SOME_SAFE, !SOME_SAFE ; 0x0C, 0x0D, 0x0E, 0x0F
+		db !ALL_SAFE, !ALL_SAFE, !SOME_SAFE, !SOME_SAFE ; 0x10, 0x11, 0x12, 0x13
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x14, 0x15, 0x16, 0x17
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x18, 0x19, 0x1A
 
-.not_overworld
-	CPX #$0E : BNE .not_messaging
-	LDA $11 : CMP #$03 : BEQ .not_safe ; Dungeon map
-			  CMP #$07 : BEQ .not_safe ; Overworld map
-			  CMP #$09 : BEQ .not_safe ; Flute map
+	Overworld_safety: ; $09/$0B
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x00, 0x01, 0x02, 0x03
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x04, 0x05, 0x06, 0x07
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x08, 0x09, 0x0A, 0x0B
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x0C, 0x0D, 0x0E, 0x0F
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x10, 0x11, 0x12, 0x13
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x14, 0x15, 0x16, 0x17
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x18, 0x19, 0x1A, 0x1B
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x1C, 0x1D, 0x1E, 0x1F
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !SOME_SAFE; 0x20, 0x21, 0x22, 0x23
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x24, 0x25, 0x26, 0x27
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x28, 0x29, 0x2A, 0x2B
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x2C, 0x2D, 0x2E, 0x2F
 
-.not_messaging
-	; Don't allow custom menu during mosaic effects
-	LDA $7EC011 : BNE .not_safe
-
-	PLB
-	SEC : RTS
-
-.not_safe
-	PLB
-	CLC : RTS
-
-!safe = 0
-!unsafe = 1
-.unsafe_gamemodes
-	db !unsafe ; 0x00 - Triforce / Zelda startup screens
-	db !unsafe ; 0x01 - File Select screen
-	db !unsafe ; 0x02 - Copy Player Mode
-	db !unsafe ; 0x03 - Erase Player Mode
-	db !unsafe ; 0x04 - Name Player Mode
-	db !unsafe ; 0x05 - Loading Game Mode
-	db !unsafe ; 0x06 - Pre Dungeon Mode
-	db !safe ; 0x07 - Dungeon Mode
-	db !unsafe ; 0x08 - Pre Overworld Mode
-	db !safe ; 0x09 - Overworld Mode
-	db !safe ; 0x0A - Pre Overworld Mode (special overworld)
-	db !safe ; 0x0B - Overworld Mode (special overworld)
-	db !unsafe ; 0x0C - Custom Menu
-	db !safe ; 0x0D - Blank Screen
-	db !safe ; 0x0E - Text Mode/Item Screen/Map
-	db !safe ; 0x0F - Closing Spotlight
-	db !safe ; 0x10 - Opening Spotlight
-	db !safe ; 0x11 - Happens when you fall into a hole from the OW.
-	db !unsafe ; 0x12 - Death Mode
-	db !safe ; 0x13 - Boss Victory Mode (refills stats)
-	db !unsafe ; 0x14 - Attract Mode
-	db !safe ; 0x15 - Module for Magic Mirror
-	db !safe ; 0x16 - Module for refilling stats after boss.
-	db !unsafe ; 0x17 - Quitting mode (save and quit)
-	db !safe ; 0x18 - Ganon exits from Agahnim's body. Chase Mode.
-	db !unsafe ; 0x19 - Triforce Room scene
-	db !unsafe ; 0x1A - End sequence
-	db !unsafe ; 0x1B - Screen to select where to start from (House, sanctuary, etc.)
-
+	Messaging_safety: ; $0E
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !NONE_SAFE ; 0x00, 0x01, 0x02, 0x03
+		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !NONE_SAFE ; 0x04, 0x05, 0x06, 0x07
+		db !ALL_SAFE, !NONE_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x08, 0x09, 0x0A, 0x0B
 
 ; Custom Menu
 gamemode_custom_menu:
-	%a8()
-	JSR gamemode_safe_to_change_mode : BCC .no_custom_menu
-
 	LDA $10 : STA !ram_cm_old_gamemode
-	LDA $11 : STA !ram_cm_old_submode
 
-	LDA #$0C : STA $10
-	STZ $11
+	LDA #$000C : STA $10
 
 	SEC : RTS
-
-.no_custom_menu
-	CLC : RTS
 
 
 ; Load previous preset
 gamemode_load_previous_preset:
-	%a8()
-	JSR gamemode_safe_to_change_mode : BCC .no_load_preset
+	%ai8()
 
 	; Loading during text mode make the text stay or the item menu to bug
 	LDA $10 : CMP #$0E : BEQ .no_load_preset
@@ -317,7 +205,6 @@ gamemode_load_previous_preset:
 	SEC : RTS
 
 .no_load_preset
-	%a8()
 	CLC : RTS
 
 ; Replay last movie
@@ -369,18 +256,14 @@ else
 	; make sure we're not on a screen transition or falling down
 	LDA $0126 : AND #$00FF : ORA $0410 : BNE .skip
 	LDA $5B : AND #$00FF : CMP #$0002 : BCS .skip
-	JSR gamemode_safe_to_change_mode : BCC .skip
-	BRA .continue
-
-.skip
-	%ai8()
-	CLC : RTS
-
-.continue
 	%a8()
 	JSL save_preset_data
 	%ai8()
 	SEC : RTS
+
+.skip
+	%ai8()
+	CLC : RTS
 
 endif
 
@@ -447,10 +330,7 @@ if !FEATURE_SD2SNES
 	JMP end
 
 else
-
 	%a8()
-	JSR gamemode_safe_to_change_mode : BCC .no_load
-
 	; Loading during text mode makes the text stay or the item menu to bug
 	LDA $10 : CMP #$0E : BEQ .no_load
 
@@ -553,18 +433,12 @@ gamemode_oob:
 gamemode_skip_text:
 	%a8()
 	LDA #$04 : STA $1CD4
-
-.done
-	%a8()
 	RTS
 
 
 gamemode_disable_sprites:
 	%a8()
 	JSL !Sprite_DisableAll
-
-.done
-	%a8()
 	RTS
 
 
@@ -642,9 +516,9 @@ gamemode_fill_everything:
 
 gamemode_reset_segment_timer:
 	%a16()
-	STZ !lowram_seg_frames
-	STZ !lowram_seg_seconds
-	STZ !lowram_seg_minutes
+	STZ !seg_time_F
+	STZ !seg_time_S
+	STZ !seg_time_M
 
 .done
 	%a8()
@@ -652,6 +526,7 @@ gamemode_reset_segment_timer:
 
 gamemode_fix_vram:
 	%a16()
+	%i16()
 	LDA #$0280 : STA $2100
 	LDA #$0313 : STA $2107
 	LDA #$0063 : STA $2109 ; zeros out unused bg4
@@ -715,7 +590,7 @@ fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics - pc: $56F19
 ; wrapper because of push and pull logic
 ; need this to make it safe and ultimately fix INIDISP ($13)
 gamemode_somaria_pits_wrapper:
-	%a8()
+	%ai8()
 	LDA $1B : BEQ ++ ; don't do this outdoors
 
 	LDA #$80 : STA $13 : STA $2100 ; keep fblank on while we do stuff
