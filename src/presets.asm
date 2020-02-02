@@ -583,8 +583,8 @@ preset_reset_counters:
 	LDA #$0000
 	STA !ram_lanmola_cycles
 	%a8()
-	LDA #$41 : STA !timer_allowed
 	STA !ram_lanmola_cycles+2
+	LDA #$41 : STA !timer_allowed
 	RTS
 
 
