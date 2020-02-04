@@ -164,45 +164,52 @@ org $0DE876 ; Japanese "PENDANTS" text
 
 org $0DE92A ; Japanese "CRYSTALS" text
 	dw !BLANK_TILE, !BLANK_TILE, !BLANK_TILE, !BLANK_TILE, !BLANK_TILE
+
 org $0DF1C9
 	rep 36 : %what_item_is_this()
 
 ; these clean up the messy menu tiles in the DO section
+!MENU_D = $2482
+!MENU_O = $2483
+!QMARKW = $252F
 org $0DF96B
 	dw !BLANK_TILE
 
 org $0DF951
 	fillword !BLANK_TILE : fill 12
-	fillword !QMARK : fill 8
+	dw !MENU_D, !MENU_O, !MENU_D, !MENU_O
+	;fillword !QMARK : fill 8
 
 org $0DF965
 	fillword !BLANK_TILE : fill 12
-	fillword !QMARK : fill 8
+	dw !MENU_D, !MENU_O, !MENU_D, !MENU_O
+	;fillword !QMARK : fill 8
 
 org $0DF979
 	fillword !BLANK_TILE : fill 12
-	fillword !QMARK : fill 8
+	dw !MENU_D, !MENU_O, !MENU_D, !MENU_O
+	;fillword !QMARK : fill 8
 
 org $0DF99B
-	dw !QMARK, !QMARK
+	dw !MENU_D, !MENU_O
 
 org $0DF9AF
-	dw !QMARK, !QMARK, !QMARK
+	dw !MENU_D, !MENU_O, !QMARKW
 
 org $0DF9CD
 	dw !BLANK_TILE
 
 org $0DF9D3
-	dw !QMARK, !QMARK, !QMARK, !QMARK
+	dw !MENU_D, !MENU_O, !MENU_D, !MENU_O
 
 org $0DF9E9
-	dw !QMARK, !QMARK, !QMARK
+	dw !MENU_D, !MENU_O, !QMARKW
 
 org $0DF9F7
 	dw !BLANK_TILE
 
 org $0DF9FD
-	dw !QMARK, !QMARK, !QMARK
+	dw !MENU_D, !MENU_O, !QMARKW
 
 org $0DFA07
 	dw !EMPTY
@@ -299,9 +306,9 @@ update_hearts_hook:
 
 
 hud_draw_lanmola_cycles:
-	LDA !ram_lanmola_cycles+0 : AND #$00FF : ORA #$2090 : STA $7EC810
-	LDA !ram_lanmola_cycles+1 : AND #$00FF : ORA #$2090 : STA $7EC812
-	LDA !ram_lanmola_cycles+2 : AND #$00FF : ORA #$2090 : STA $7EC814
+	LDA !ram_lanmola_cycles+0 : AND #$00FF : ORA #$2010 : STA $7EC810
+	LDA !ram_lanmola_cycles+1 : AND #$00FF : ORA #$2010 : STA $7EC812
+	LDA !ram_lanmola_cycles+2 : AND #$00FF : ORA #$2010 : STA $7EC814
 	RTS
 
 hud_draw_hearts:

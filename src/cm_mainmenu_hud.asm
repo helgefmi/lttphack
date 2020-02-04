@@ -11,7 +11,6 @@ cm_submenu_hud:
 	dw cm_hud_idle
 	dw cm_hud_segment
 	dw cm_hud_xy
-	;dw cm_hud_subpixels
 	dw cm_hud_qw
 	dw cm_hud_ramwatch
 	dw cm_hud_lanmola_cycle_count
@@ -72,7 +71,14 @@ cm_hud_lagometer:
 	RTS
 
 cm_hud_input_display:
-	%cm_toggle_jsr("Input display", !ram_input_display_toggle)
+	dw !CM_ACTION_CHOICE_JSR
+	dw .toggle
+	dl !ram_input_display
+	%cm_item("Input display")
+	%cm_item("Off")
+	%cm_item("Graphical")
+	%cm_item("Characters")
+	db !list_end
 
 .toggle
 	%a16()

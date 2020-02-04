@@ -73,7 +73,7 @@ cm_equipment_half_magic:
 
 cm_equipment_sword:
 	dw !CM_ACTION_CHOICE_JSR
-	dw #.toggle_sword
+	dw .toggle_sword
 	dl !ram_equipment_sword
 	%cm_item("Sword")
 	%cm_item("No")
@@ -90,7 +90,7 @@ cm_equipment_sword:
 
 cm_equipment_shield:
 	dw !CM_ACTION_CHOICE_JSR
-	dw #.toggle_shield
+	dw .toggle_shield
 	dl !ram_equipment_shield
 	%cm_item("Shield")
 	%cm_item("No")

@@ -54,3 +54,22 @@ org $0CDB79
 	NOP : NOP : NOP : NOP   ; AF D9 03 70   LDA $7003D9
 	NOP : NOP : NOP         ; C9 01 00      CMP #$0001
 	NOP : NOP               ; D0 18         BNE $0CDC49
+
+macro file_select_text(n)
+pushtable
+table ../resources/fileselecttop.tbl
+	org $0CDDF0 : fillword $0188 : fill 52
+	org $0CDDF0 : dw "<n>"
+
+table ../resources/fileselectbot.tbl
+	org $0CDE2C : fillword $0188 : fill 52
+	org $0CDE2C : dw "<n>"
+pulltable
+endmacro
+
+!VERSIONTEXT = "v"
+if stringsequal("!VERSION", "DEBUG")
+	!VERSIONTEXT = ""
+endif
+!VERSIONTEXT += !VERSION
+%file_select_text("PRACTICE HACK !VERSIONTEXT")

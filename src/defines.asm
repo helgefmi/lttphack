@@ -188,7 +188,7 @@ endmacro
 
 ; Non permanent SRAM
 ; these can be moved around
-%def_sram("input_display_toggle", !HUDONLY)
+%def_sram("input_display", !HUDONLY)
 %def_sram("qw_toggle", !OFF)
 
 %def_sram("can_load_pss", !OFF)

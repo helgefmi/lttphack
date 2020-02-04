@@ -33,6 +33,7 @@ org $04E8CF : JSL UpdateOnOWToSpecial
 org $04E968 : JSL UpdateOnSpecialToOW
 org $1EEED8 : JSL UpdateOnWhirlPool
 org $1BC209 : JSL UpdateOnBombableWallOW
+org $08E06A : JSL UpdateOnFlute
 
 ; Messaging
 org $028818 : JSL UpdateOnItemMenu
@@ -209,6 +210,11 @@ UpdateOnSpecialToOW:
 UpdateOnWhirlPool:
 	%reset_timer()
 	LDA #$2E : STA $11
+	RTL
+
+UpdateOnFlute:
+	%reset_timer()
+	LDA #$0A : STA $11
 	RTL
 
 ; Messaging updates

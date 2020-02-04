@@ -5,6 +5,7 @@
 !CURRENT_ROW = $0A
 
 !white = $3C10
+!blue = $2C10
 !yellow = $3410
 !red = $3810
 !gray = $2010
@@ -192,47 +193,6 @@ counter_line:
 	dw 3<<6+$2E
 	dw 4<<6+$2E
 
-macro add_input_character_a(pos, topbottom)
-++	INY ; next character
-	%add_input_character_afirst(<pos>, <topbottom>)
-endmacro
-
-macro add_input_character_afirst(pos, topbottom)
-	LSR ; shift bit into carry
-	; cycle control here
-	BCS ?inputheld
-
-?inputnotheld:
-	STX.w (!POS_MEM_INPUT_DISPLAY_<topbottom>)+<pos> ; 5
-	NOP ; 2
-	BRA ++ ; 2
-	; 9 cycles total
-
-?inputheld: ; 1 for branch taken
-	STY.w (!POS_MEM_INPUT_DISPLAY_<topbottom>)+<pos> ; 5
-	REP #$00 ; 3
-	; 9 cycles total
-endmacro
-
-; this one goes backwards, since the bottom nibble is all 0
-macro add_input_character_b(pos, topbottom)
-++	INY ; next character
-	ASL ; shift bit into carry
-	; cycle control here
-	BCS ?inputheld
-
-?inputnotheld:
-	STX.w !POS_MEM_INPUT_DISPLAY_<topbottom>+<pos> ; 5
-	NOP ; 2
-	BRA ++ ; 2
-	; 9 cycles total
-
-?inputheld: ; 1 for branch taken
-	STY.w !POS_MEM_INPUT_DISPLAY_<topbottom>+<pos> ; 5
-	REP #$00 ; 3
-	; 9 cycles total
-endmacro
-
 hex_to_hex_lol: ; this exists purely to keep coords even
 
 hex_to_dec:
@@ -394,7 +354,10 @@ draw_counters:
 	%draw_three(!idle_frames_disp, !white, 0)
 
 .segmenttime
-	LDA !ram_counters_segment : %update_counter_line()
+	LDA !ram_counters_segment : BNE .doseg
+	JMP .coordinates
+.doseg
+	%update_counter_line()
 	%draw_all_two(!seg_time_F_disp, !gray, 0)
 	%draw_all_two(!seg_time_S_disp, !yellow, -4)
 	%draw_three(!seg_time_M_disp, !white, -8)
@@ -419,7 +382,6 @@ draw_counters:
 	ORA.w #!yellow
 	STA !HUD_EXTRAS_BUFFER+14, X
 
-
 	; X coord
 ;first_digit
 	LDA $23 : AND #$000F
@@ -443,36 +405,10 @@ draw_counters:
 ; NMI will be cycle controlled to not always draw this on bg3
 ; the rest of the time it will just draw all blanks
 hud_draw_input_display:
+	LDA !ram_input_display : ASL : TAX
 	LDA !ram_ctrl1
 
-	STA $72 ; dpad
-	AND #$000F : ORA #$2970 : STA !POS_MEM_INPUT_DISPLAY_BOT+2
-
-	; need buttons in this order: xbya
-	SEP #$30
-	LDA $72+0 : AND #$C0 : LSR #5 : STA $74 ; b and y in place
-	LDA $72+1 : AND #$40 : LSR #3 : ORA $74 ; ; x in place
-	; this ASL takes care of one for figuring out LR inputs
-	ASL $73 : ADC #$70 ; a in place
-
-	; #$70 is the character offset we want
-	; top byte contains $29 from doing dpad, which is what we want
-	REP #$20
-	STA !POS_MEM_INPUT_DISPLAY_BOT+6
-
-	; start and select
-	LDA $72 : AND #$0030 : LSR #4 : ORA #$2800
-	STA !POS_MEM_INPUT_DISPLAY_BOT+4
-
-	; L and R
-	ASL $72 : ASL $72 ; L into carry and remember where R is
-	LDA #$2804 : ADC #$0000 : STA !POS_MEM_INPUT_DISPLAY_TOP+2
-
-	ASL $72 ; R into carry
-	LDA #$2804 : ADC #$0000 : STA !POS_MEM_INPUT_DISPLAY_TOP+6
-
-	; old input display was 206 cycles
-	; new is 133ish?
+	JSR (.options, X)
 
 ;-----------------------------------------------------------------
 ; Other
@@ -485,7 +421,7 @@ draw_quickwarp: ; cycle controlled
 	ROL ; roll carry flag into bottom bit
 	; if we're on a quick warp on the overworld
 	; then we'll have $0D
-	; if the camera matches but we're in the overworld
+	; if the camera matches but we're in the underworld
 	; then we'll have $0F, and it will fail
 	CMP #$0D ; 6 shifted left once and with a carry flag in bottom bit
 	REP #$20 ; faster because it removes an AND #$00FF to get rid of leakage
@@ -530,6 +466,137 @@ extra_ram:
 done_extras:
 	PLB : PLP
 	RTL
+
+macro add_input_character_a(pos, topbottom)
+++	INY ; next character
+	%add_input_character_afirst(<pos>, <topbottom>)
+endmacro
+
+macro add_input_character_afirst(pos, topbottom)
+	LSR ; shift bit into carry
+	; cycle control here
+	BCS ?inputheld
+
+?inputnotheld:
+	STX.w (!POS_MEM_INPUT_DISPLAY_<topbottom>)+<pos> ; 5
+	NOP ; 2
+	BRA ++ ; 2
+	; 9 cycles total
+
+?inputheld: ; 1 for branch taken
+	STY.w (!POS_MEM_INPUT_DISPLAY_<topbottom>)+<pos> ; 5
+	REP #$00 ; 3
+	; 9 cycles total
+endmacro
+
+; this one goes backwards, since the bottom nibble is all 0
+macro add_input_character_b(pos, topbottom)
+++	INY ; next character
+	ASL ; shift bit into carry
+	; cycle control here
+	BCS ?inputheld
+
+?inputnotheld:
+	STX.w !POS_MEM_INPUT_DISPLAY_<topbottom>+<pos> ; 5
+	NOP ; 2
+	BRA ++ ; 2
+	; 9 cycles total
+
+?inputheld: ; 1 for branch taken
+	STY.w !POS_MEM_INPUT_DISPLAY_<topbottom>+<pos> ; 5
+	REP #$00 ; 3
+	; 9 cycles total
+endmacro
+
+hud_draw_input_display_options:
+	dw .off
+	dw .cool
+	dw .lame
+
+.off
+	STA $72
+	AND #$000F : ORA #$2D70 : LDA !POS_MEM_INPUT_DISPLAY_BOT+2
+	SEP #$30
+	LDA $72+0 : AND #$C0 : LSR #5 : STA $74
+	LDA $72+1 : AND #$40 : LSR #3 : ORA $74
+	ASL $73 : ADC #$70 ; a in place
+	REP #$20
+	LDA !POS_MEM_INPUT_DISPLAY_BOT+6
+	LDA $72 : AND #$0030 : LSR #4 : ORA #$2C00
+	LDA !POS_MEM_INPUT_DISPLAY_BOT+4
+	ASL $72 : ASL $72
+	LDA #$2C04 : ADC #$0000 : LDA !POS_MEM_INPUT_DISPLAY_TOP+2
+	ASL $72
+	LDA #$6C04 : ADC #$0000 : LDA !POS_MEM_INPUT_DISPLAY_TOP+6
+	LDA #$2C06 : LDA !POS_MEM_INPUT_DISPLAY_TOP+4
+	RTS
+
+.cool
+	STA $72 ; dpad
+	AND #$000F : ORA #$2D70 : STA !POS_MEM_INPUT_DISPLAY_BOT+2
+
+	; need buttons in this order: xbya
+	SEP #$30
+	LDA $72+0 : AND #$C0 : LSR #5 : STA $74 ; b and y in place
+	LDA $72+1 : AND #$40 : LSR #3 : ORA $74 ; ; x in place
+	; this ASL takes care of one for figuring out LR inputs
+	ASL $73 : ADC #$70 ; a in place
+
+	; #$70 is the character offset we want
+	; top byte contains $29 from doing dpad, which is what we want
+	REP #$20
+	STA !POS_MEM_INPUT_DISPLAY_BOT+6
+
+	; start and select
+	LDA $72 : AND #$0030 : LSR #4 : ORA #$2C00
+	STA !POS_MEM_INPUT_DISPLAY_BOT+4
+
+	; L and R
+	ASL $72 : ASL $72 ; L into carry and remember where R is
+	LDA #$2C04 : ADC #$0000 : STA !POS_MEM_INPUT_DISPLAY_TOP+2
+
+	ASL $72 ; R into carry
+	LDA #$6C04 : ADC #$0000 : STA !POS_MEM_INPUT_DISPLAY_TOP+6
+
+	LDA #$2C06 : STA  !POS_MEM_INPUT_DISPLAY_TOP+4
+	; old input display was 206 cycles
+	; new is 133ish?
+	RTS
+
+.lame
+	SEP #$20
+	REP #$10
+	; basically: this bank | bank $7E
+	PEA.w ((hud_draw_input_display>>8)&$FF00)|$807E
+	PLB ; proper bank
+
+	; Y will hold the current input character
+	LDY.w #$2400
+
+	LDX.w #!EMPTY ; X will hold the empty character always
+
+	; order: rlduSsYB....RLXA
+	; Starting with the low byte
+
+	; special macro to not increment Y
+	%add_input_character_afirst(4, "BOT") ; dpad right
+	%add_input_character_a(0, "BOT") ; dpad left
+	%add_input_character_a(2, "BOT") ; dpad down
+	%add_input_character_a(2, "TOP") ; dpad up
+
+	%add_input_character_a(10, "BOT") ; start
+	%add_input_character_a(10, "TOP") ; select
+	%add_input_character_a(6, "TOP") ; Y
+	%add_input_character_a(6, "BOT") ; B
+
+++	XBA ; switch to high byte
+	%add_input_character_b(8, "BOT") ; A
+	%add_input_character_b(8, "TOP") ; X
+	%add_input_character_b(0, "TOP") ; L shoulder
+	%add_input_character_b(4, "TOP") ; R shoulder
+
+++	PLB ; get this bank back
+	RTS
 
 extra_ram_watch_routines:
 	dw .nothing-1

@@ -13,6 +13,8 @@ load_default_tileset:
 LoadCustomHUDGFX:
 	%a16()
 	%i8()
+	LDY #$01 ; dma channel 0
+
 	LDX #$80 : STX $2115
 	LDA #$7000 : STA $2116 ; VRAM address ($E000 in vram)
 	LDA #$1801 : STA $4300 ; word, normal increment, destination $2118
@@ -20,7 +22,7 @@ LoadCustomHUDGFX:
 	LDX.b #hud_table>>16 : STX $4304 ; Source bank
 	LDA #$1800 : STA $4305 ; Size (0x800 = 1 sheet)
 
-	LDX #$01 : STX $420B ; initiate DMA (channel 1)
+	STY $420B ; initiate DMA (channel 1)
 
 	; next, load the font
 LoadHudFont:
@@ -37,8 +39,21 @@ LoadHudFont:
 	LDX.b #hud_font>>16 : STX $4304
 	LDA #$0100 : STA $4305
 
-	LDX #$01 : STX $420B
+	STY $420B
 
+LoadHudInputDisplay:
+	LDA !ram_input_display : AND #$0002 : BEQ CustomCharsDone
+	LDX #$80 : STX $2115
+	LDA #$7000 : STA $2116
+	LDA #$1801 : STA $4300
+	LDA #hud_inputchars : STA $4302
+	LDX.b #hud_inputchars>>16 : STX $4304
+	; we're writing 12 2BPP tiles to VRAM
+	LDA.w 12*64*2 : STA $4305
+
+	STY $420B
+
+CustomCharsDone:
 	%ai8() ; expected flags from both entry points/DecompAndDirectCopy
 	RTL
 
@@ -54,3 +69,6 @@ hud_font:
 cm_hud_table:
 	incbin ../resources/menu_font1.2bpp
 	incbin ../resources/menu_font2.2bpp
+
+hud_inputchars:
+	incbin ../resources/inputchars.2bpp

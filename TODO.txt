@@ -1,5 +1,16 @@
+Huge stuff
+----------
+
+- Change item menu ???? to say "Do" in A-items section
+
+- Make lanmo counter use nonvanilla font so that a BAD lanmo is possible
+
 Big stuff
 ----------
+
+- Need hook for flute
+
+- Different controller displays i guess
 
 - Movies
 
