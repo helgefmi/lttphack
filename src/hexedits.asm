@@ -36,7 +36,6 @@ org $00803B
 org $008044
 	LDA $F7 : AND.b #$00
 
-
 ; == BAGE CHEAT CODE ==
 ;
 ; Make it so saving on third filename slot gives you

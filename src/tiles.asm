@@ -26,14 +26,13 @@ LoadCustomHUDGFX:
 
 	; next, load the font
 LoadHudFont:
-	LDX #$80 : STX $2115
 	LDA #$7080 : STA $2116
 	LDA #$1801 : STA $4300
 	; we're writing 16 2BPP tiles to VRAM
 	; so 16*64*2 = 2048 bits, or 256 bytes
 	; AKA 0x100 bytes
 	; since the offset is a multiple of 256,
-	; we can just swap the nibbles and
+	; we can just swap the bytes and
 	; add them in as the offset
 	LDA !ram_hud_font : XBA : CLC : ADC.w #hud_font : STA $4302
 	LDX.b #hud_font>>16 : STX $4304
@@ -43,13 +42,12 @@ LoadHudFont:
 
 LoadHudInputDisplay:
 	LDA !ram_input_display : AND #$0002 : BEQ CustomCharsDone
-	LDX #$80 : STX $2115
 	LDA #$7000 : STA $2116
 	LDA #$1801 : STA $4300
 	LDA #hud_inputchars : STA $4302
 	LDX.b #hud_inputchars>>16 : STX $4304
 	; we're writing 12 2BPP tiles to VRAM
-	LDA.w 12*64*2 : STA $4305
+	LDA.w 12*8*2 : STA $4305
 
 	STY $420B
 

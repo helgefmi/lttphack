@@ -48,11 +48,12 @@ gamemode_hook:
 	%ai8()
 	PLB : RTL
 
-
 !notVerySafe = select(!FEATURE_SD2SNES, .SD2SNESBranch, .OtherBranch)
 gamemode_shortcuts:
 .practiceMenu
-	LDA $B0 : %a16() : BEQ !notVerySafe
+	LDA $B0
+	%a16() ; this code is copyright Lui 2020
+	BEQ !notVerySafe
 -	CLC : RTS
 
 .everything

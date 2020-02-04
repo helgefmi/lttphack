@@ -51,7 +51,7 @@
 				<div class="col-lg-8 mx-auto">
 					<h2>Download</h2>
 					<table class="table table-bordered dl-tbl romtable">
-						<caption>We are currently on version 13.0.1</caption>
+						<caption>We are currently on version 13.0.2</caption>
 						<tbody>
 							<tr>
 								<th rowspan="2">Emulator, Everdrive, SNES Classic</th>
@@ -128,6 +128,9 @@
 						<li>Holding <span class="snesButton snesStart">Start</span> and <span class="snesButton snesSelect">Select</span> during power on will reset all configurations to default.</li>
 						<li>Check out <a href="https://strats.alttp.run">ALttP Room Time Leaderboards</a> for optimal room times.</li>
 					</ul>
+
+					<h4>Cycle Control</h4>
+					<p>Cycle Control is a protocol of various options that are considered to be core features. This means that they are carefully coded to be extremely efficient and to always take up the same amount of CPU time, regardless of what they are doing each frame, or whether they are enabled or not. Features not under Cycle Control are not accounted for when lag adjustments are made to be in line with vanilla.</p>
 
 					<h4 id="lagNotes">Notes about lag <a href="#lagNotes" class="headerLink">(link)</a></h4>
 					<ul>
@@ -836,7 +839,18 @@
 			<div class="row">
 				<div class="col-lg-8 mx-auto">
 					<h2>Changelog</h2>
-					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.0.1">v13</a> <span class="releaseDate">2= Feb 2020</span></h3>
+					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.0.2">v13.0.2</a> <span class="releaseDate">?? Feb 2020</span></h3>
+					<ul>
+						<li>Old versions of the practice hack are no longer archived on GDrive. All future versions will point to the save file, without the version in its name.</li>
+						<li>Added versioning and custom title to the file select screen.</li>
+						<li>Added an explanation of Cycle Control to the site.</li>
+						<li>The input display can now be shut off or changed to the old version. When off, it will still use its normal CPU time, as it is a core feature and part of Cycle Control. The old input display is laggier, and that will not be fixed. Nor can it be.</li>
+						<li>The segment timer has been downgraded to an optional feature and is no longer part of Cycle Control.</li>
+						<li>Experimenting with a background on input display for more visibility in certain places.</li>
+						<li>Lui fixed weird savestate on death behavior.</li>
+						<li>Fluting now resets the timer.</li>
+					</ul>
+					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.0.1">v13.0.1</a> <span class="releaseDate">2 Feb 2020</span></h3>
 					<ul>Bug fixes:
 						<li>Setting health works properly again.</li>
 						<li>Health refills no longer flash the HUD.</li>
