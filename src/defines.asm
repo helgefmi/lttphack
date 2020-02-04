@@ -204,7 +204,7 @@ endmacro
 %def_sram("counters_real", !HUDONLY)
 %def_sram("counters_lag", !HUDONLY)
 %def_sram("counters_idle", !HUDONLY)
-%def_sram("counters_segment", !HUDONLY)
+%def_sram("counters_segment", !OFF)
 %def_sram("heartlag_spinner", !OFF)
 %def_sram("extra_ram_watch", !OFF)
 %def_sram("misslots_toggle", !OFF)
