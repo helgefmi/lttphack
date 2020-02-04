@@ -52,7 +52,7 @@ gamemode_hook:
 !notVerySafe = select(!FEATURE_SD2SNES, .SD2SNESBranch, .OtherBranch)
 gamemode_shortcuts:
 .practiceMenu
-	LDA $B0 : BEQ !notVerySafe
+	LDA $B0 : %a16() : BEQ !notVerySafe
 -	CLC : RTS
 
 .everything
