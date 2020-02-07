@@ -5168,6 +5168,8 @@ dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
 dl $7E010E : db $02 : dw $0030 ; Dungeon entrance index
+dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E0303 : db $01 : db $03 ; Selected menu item
 .after
 
 sram_ad_hera_entrance:
@@ -5835,6 +5837,8 @@ dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
 dl $7FE0FA : db $01 : db $00 ; Overworld $BD persistent: UNKNOWN
 dl $7FDFCB : db $01 : db $F3 ; Overworld $25 persistent: Octorok Area
 dl $7E010E : db $01 : db $33 ; Dungeon entrance index
+dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E0303 : db $01 : db $03 ; Selected menu item
 .after
 
 sram_ad_desert_bridge_hammerdash:
@@ -5892,6 +5896,8 @@ dl $7EC16A : db $02 : dw $0000 ; Underworld exit cache
 dl $7EC16E : db $02 : dw $0000 ; Underworld exit cache
 dl $7FE16E : db $01 : db $00 ; Room $F7 persistent: Empty Clone Room
 dl $7E010E : db $02 : dw $0000 ; Dungeon entrance index
+dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E0303 : db $01 : db $03 ; Selected menu item
 .after
 
 sram_ad_desert_swamp_warp:
@@ -6768,16 +6774,16 @@ dl $7EF3CA : db $02 : dw $0000 ; LW/DW
 dl $7EF3FE : db $02 : dw $0100 ; Deaths
 dl $7EF4FE : db $02 : dw $04F0 ; Inverse checksum
 dl $7E029F : db $01 : db $16 ; Arc variable
-dl $7E0303 : db $01 : db $01 ; Selected menu item
 dl $7FDFF9 : db $01 : db $00 ; Room $3C persistent: Cave
 dl $7E0540 : db $02 : dw $0920 ; Object tilemap state
 dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
-dl $7E0202 : db $01 : db $04 ; Selected menu item
 dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
 dl $7FDFDA : db $01 : db $00 ; Room $2D persistent: Empty Clone Room
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
 dl $7FE01B : db $01 : db $00 ; Room $4D persistent: Ganon's Tower (Moldorm Room)
 dl $7E010E : db $02 : dw $0030 ; Dungeon entrance index
+dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E0303 : db $01 : db $03 ; Selected menu item
 .after
 
 sram_ad_trock_tr_climb:
@@ -6938,6 +6944,8 @@ dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
 dl $7E010E : db $02 : dw $0030 ; Dungeon entrance index
+dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E0303 : db $01 : db $03 ; Selected menu item
 .after
 
 sram_ad_gtower_entrance:
