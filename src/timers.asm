@@ -248,7 +248,7 @@ UpdateOnReceiveItem:
 	RTL
 
 ; !timer_allowed bitfield:
-; 7 - timer has already updated
+; 7 - timers have been set and are awaiing a hud update
 ; 6 - reset timer
 ; 5
 ; 4
@@ -280,14 +280,8 @@ dotimers:
 	STZ !room_time_F+6
 
 .dontreset
-.dontupdateorreset
 	SEP #$30
-	LDA !timer_allowed : BIT #$02 : BNE ++
-	ORA #$80 : STA !timer_allowed : BRA +
-
-++	STZ !timer_allowed
-
-+	LDA #$01 : TSB $16
+	LDA #$80 : STA !timer_allowed
 
 .donothing
 	RTS

@@ -131,7 +131,7 @@ cm_equipment_fill_rupees:
 .routine
 	%a16()
 	; Sets 999 rupees.
-	LDA #$03E7 : STA $7EF360
+	LDA #$03E7 : STA $7EF360 : STA $7EF362
 	RTS
 
 cm_equipment_fill_hearts:

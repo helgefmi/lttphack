@@ -340,7 +340,11 @@ draw_counters:
 
 	LDA #$0001 : STA !CURRENT_ROW ; start at 1 so that 0 can be a dummy write
 
+	LDA !timer_allowed : BIT #$0080 : BNE .roomtime
+	JMP .calccoordposition
+
 .roomtime
+	AND #$FF7F : STA !timer_allowed
 	LDA !ram_counters_real : %update_counter_line()
 	%draw_all_two(!room_time_F_disp, !yellow, 0)
 	%draw_three(!room_time_S_disp, !white, -4)
@@ -356,11 +360,20 @@ draw_counters:
 .segmenttime
 	LDA !ram_counters_segment : BNE .doseg
 	JMP .coordinates
+
 .doseg
 	%update_counter_line()
 	%draw_all_two(!seg_time_F_disp, !gray, 0)
 	%draw_all_two(!seg_time_S_disp, !yellow, -4)
 	%draw_three(!seg_time_M_disp, !white, -8)
+	BRA .coordinates
+.calccoordposition
+	CLC : LDA #$0001
+	ADC !ram_counters_real
+	ADC !ram_counters_lag
+	ADC !ram_counters_idle
+	ADC !ram_counters_segment
+	STA !CURRENT_ROW
 
 .coordinates
 	LDA !ram_xy_toggle : %update_counter_line()
