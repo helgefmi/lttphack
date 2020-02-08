@@ -1,5 +1,5 @@
 ; Magic words
-!SRAM_VERSION = $0024
+!SRAM_VERSION = $0025
 
 !menu_end = #$0000
 !list_end = #$FF
@@ -7,6 +7,8 @@
 !pracmenu_shortcut = #$1010
 
 !EMPTY = $207F
+!QMARK = $212A
+!BLANK_TILE = $24F5
 
 !menu_dma_buffer = $7F8000 ; [0x800] reserved
 !dg_hdma = $7F8800 ; [0x800] reserved
@@ -185,10 +187,50 @@ endmacro
 %def_perm_sram("preset_category", $0000)
 %def_perm_sram("hud_font", 0)
 %def_perm_sram("feature_music", !ON)
+%def_perm_sram("input_display", !HUDONLY)
+
+; Placeholders for future SRAM
+; this way, future updates will end up in one of these
+; instead of say, a preset thing
+%def_sram("PLACEHOLDER_0", 0)
+%def_sram("PLACEHOLDER_1", 0)
+%def_sram("PLACEHOLDER_2", 0)
+%def_sram("PLACEHOLDER_3", 0)
+%def_sram("PLACEHOLDER_4", 0)
+%def_sram("PLACEHOLDER_5", 0)
+%def_sram("PLACEHOLDER_6", 0)
+%def_sram("PLACEHOLDER_7", 0)
+%def_sram("PLACEHOLDER_8", 0)
+%def_sram("PLACEHOLDER_9", 0)
+%def_sram("PLACEHOLDER_A", 0)
+%def_sram("PLACEHOLDER_B", 0)
+%def_sram("PLACEHOLDER_C", 0)
+%def_sram("PLACEHOLDER_D", 0)
+%def_sram("PLACEHOLDER_E", 0)
+%def_sram("PLACEHOLDER_F", 0)
+%def_sram("PLACEHOLDER_G", 0)
+%def_sram("PLACEHOLDER_H", 0)
+%def_sram("PLACEHOLDER_I", 0)
+%def_sram("PLACEHOLDER_J", 0)
+%def_sram("PLACEHOLDER_K", 0)
+%def_sram("PLACEHOLDER_L", 0)
+%def_sram("PLACEHOLDER_M", 0)
+%def_sram("PLACEHOLDER_N", 0)
+%def_sram("PLACEHOLDER_O", 0)
+%def_sram("PLACEHOLDER_P", 0)
+%def_sram("PLACEHOLDER_Q", 0)
+%def_sram("PLACEHOLDER_R", 0)
+%def_sram("PLACEHOLDER_S", 0)
+%def_sram("PLACEHOLDER_T", 0)
+%def_sram("PLACEHOLDER_U", 0)
+%def_sram("PLACEHOLDER_V", 0)
+%def_sram("PLACEHOLDER_W", 0)
+%def_sram("PLACEHOLDER_X", 0)
+%def_sram("PLACEHOLDER_Y", 0)
+%def_sram("PLACEHOLDER_Z", 0)
 
 ; Non permanent SRAM
 ; these can be moved around
-%def_sram("input_display", !HUDONLY)
 %def_sram("qw_toggle", !OFF)
 
 %def_sram("can_load_pss", !OFF)

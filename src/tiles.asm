@@ -47,7 +47,7 @@ LoadHudInputDisplay:
 	LDA #hud_inputchars : STA $4302
 	LDX.b #hud_inputchars>>16 : STX $4304
 	; we're writing 12 2BPP tiles to VRAM
-	LDA.w 12*8*2 : STA $4305
+	LDA.w #12*8*2 : STA $4305
 
 	STY $420B
 

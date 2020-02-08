@@ -77,7 +77,7 @@ cm_hud_input_display:
 	%cm_item("Input display")
 	%cm_item("Off")
 	%cm_item("Graphical")
-	%cm_item("Characters")
+	%cm_item("Classic")
 	db !list_end
 
 .toggle
@@ -118,6 +118,7 @@ cm_hud_ramwatch:
 	%cm_item("Subpixels")
 	%cm_item("Spooky altit")
 	%cm_item("Arc variable")
+	%cm_item("Icebreaker")
 	db !list_end
 
 cm_hud_lanmola_cycle_count:
@@ -190,7 +191,6 @@ cm_hud_segment_toggle:
 cm_hud_xy_toggle:
 cm_hud_ramwatch_toggle:
 	PHP
-	WDM
 	%ai16()
 	LDA #$207F
 	LDX.w #12

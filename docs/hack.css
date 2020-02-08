@@ -140,6 +140,18 @@ em.SD2SNES {
 	display:inline-block;
 }
 
+sup.cc-badge {
+	font-weight:bold;
+	font-family:consolas;
+	color:red;
+	display: inline-block;
+	text-shadow: 0px 0px 1px black;
+}
+
+sup.cc-badge::first-letter {
+	color: blue;
+}
+
 p.warped {
 	transform: skewX(45deg) rotate(-3deg) translateY(-19px);
 	font-family: impact;

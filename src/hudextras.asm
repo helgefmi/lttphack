@@ -616,6 +616,16 @@ extra_ram_watch_routines:
 	dw .subpixels-1
 	dw .spooky-1
 	dw .arc-1
+	dw .icebreaker-1
+
+.icebreaker
+	LDA $6C : AND #$00FF : BEQ ..nodoor
+	LDA.w #$216A : BRA ++
+
+..nodoor
+	LDA.w #!EMPTY
+
+++	STA !HUD_EXTRAS_BUFFER+06, X
 
 .subpixels
 	; can't macro this, since 1 byte addresses

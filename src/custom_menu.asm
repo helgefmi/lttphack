@@ -90,6 +90,7 @@ CM_DrawMenu:
 
 
 CM_MenuDown:
+	LDA #$80 : STA !timer_allowed
 	INC $11
 	RTS
 

@@ -51,18 +51,18 @@
 				<div class="col-lg-8 mx-auto">
 					<h2>Download</h2>
 					<table class="table table-bordered dl-tbl romtable">
-						<caption>We are currently on version 13.0.1</caption>
+						<caption>We are currently on version 13.1.0</caption>
 						<tbody>
 							<tr>
 								<th rowspan="2">Emulator, Everdrive, SNES Classic</th>
 								<td>
-									<a href="https://drive.google.com/open?id=1O3TvabrcJzj-f1v8EcBi5zzJqAMWrrnh">
+									<a href="https://drive.google.com/open?id=1LAlAyvgATxuY8PGePEktfa-dZZtPcXu3">
 									Custom HUD
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<a href="https://drive.google.com/open?id=1pFqO_pg2S9z0EnKkNOVhkRoD7xJfbfru">
+									<a href="https://drive.google.com/open?id=1_CA3xotHitiByZX5lFvsJzVn0kFalCrZ">
 									Vanilla HUD
 								</td>
 							</tr>
@@ -70,13 +70,13 @@
 							<tr>
 								<th rowspan="2">SD2SNES</th>
 								<td>
-									<a href="https://drive.google.com/open?id=1LiG99efgnCCTECO1nGPbQromVUXtnv0t">
+									<a href="https://drive.google.com/open?id=1-PACc9Tp-NtQNowyDhl4R3p5uAn0oQc7">
 									Custom HUD
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<a href="https://drive.google.com/open?id=1KuYoQpTYhm52MhcLX5ujO8fGGCfnp5x_">
+									<a href="https://drive.google.com/open?id=178ph2bKgWQ-S6p0ap2_QzkPxE057RnWE">
 									Vanilla HUD
 								</td>
 							</tr>
@@ -129,6 +129,10 @@
 						<li>Check out <a href="https://strats.alttp.run">ALttP Room Time Leaderboards</a> for optimal room times.</li>
 					</ul>
 
+					<h4>Cycle Control</h4>
+					<p>Cycle Control is a protocol used for various options that are considered to be core features. This means that they are carefully coded to be extremely efficient and to always take up the same amount of CPU time, regardless of what they are doing each frame, or whether they are enabled or not. Features not under Cycle Control are not accounted for when lag adjustments are made to be in line with vanilla.</p>
+
+					<p>Features part of Cycle Control will be marked with this badge: <sup class="cc-badge">CC</sup>.</p>
 					<h4 id="lagNotes">Notes about lag <a href="#lagNotes" class="headerLink">(link)</a></h4>
 					<ul>
 						<li>Lag is not exactly the same as original cart, but it tries to compensate for that.</li>
@@ -754,19 +758,28 @@
 
 					<h3 id="menuHUD">HUD extras</h3>
 					<dl>
-						<dt>Input display</dt>
-						<dd>Visual indication of every button registered each frame.</dd>
-						<dt>Room time</dt>
+						<dt>Input display<sup class="cc-badge">CC</sup></dt>
+						<dd>Visual indication of every button registered each frame.
+							<dl class="subDefinition">
+								<dt>Off</dt>
+								<dd>No input display, but still contributes towards CPU time.</dd>
+								<dt>Graphical</dt>
+								<dd>Rectangle buttons arranged like a controller.</dd>
+								<dt>Classic</dt>
+								<dd>Original character display. About 50% laggier than graphical.</dd>
+							</dl>
+						</dd>
+						<dt>Room time<sup class="cc-badge">CC</sup></dt>
 						<dd>Time spent on the current screen, starting from the beginning of the last transition.</dd>
-						<dt>Lag counter</dt>
+						<dt>Lag counter<sup class="cc-badge">CC</sup></dt>
 						<dd>Count of lag frames on the current screen, starting from the beginning of the last transition.</dd>
-						<dt>Heart lag</dt>
+						<dt>Heart lag<sup class="cc-badge">CC</sup></dt>
 						<dd>Animated spinning square that indicates there is heart lag present.</dd>
-						<dt>Idle frames</dt>
+						<dt>Idle frames<sup class="cc-badge">CC</sup></dt>
 						<dd>Count of frames with no relevant input, starting from the beginning of the last transition.</dd>
 						<dt>Segment time</dt>
 						<dd>Time spent since the beginning of the last segment timer reset.</dd>
-						<dt>Coordinates</dt>
+						<dt>Coordinates<sup class="cc-badge">CC</sup></dt>
 						<dd>Absolute position of Link (X,Y)	</dd>
 						<dt>RAM watch</dt>
 						<dd>
@@ -779,7 +792,7 @@
 								<dd>Overlord value used by Armos Knights and Ganon for circles.</dd>
 							</dl>
 						</dd>
-						<dt>QW indicator</dt>
+						<dt>QW indicator<sup class="cc-badge">CC</sup></dt>
 						<dd>Displays an icon on the HUD when the current camera will produce a quickwarp.</dd>
 						<dt>Lanmola cycs</dt>
 						<dd>Displays a counter for the cycle count of the three Lanmolas individually.</dd>
@@ -836,7 +849,22 @@
 			<div class="row">
 				<div class="col-lg-8 mx-auto">
 					<h2>Changelog</h2>
-					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.0.1">v13</a> <span class="releaseDate">2= Feb 2020</span></h3>
+					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.1.0">v13.1.0</a> <span class="releaseDate">8 Feb 2020</span></h3>
+					<ul>
+						<li>Old versions of the practice hack are no longer archived on GDrive. All future versions will point to the same file, without the version in its name.</li>
+						<li>Added versioning and custom title to the file select screen.</li>
+						<li>Added an explanation of Cycle Control to the site.</li>
+						<li>Input display has been made to be persistent across multiple versions.</li>
+						<li>The input display can now be shut off or changed to the old version. When off, it will still use its normal CPU time, as it is a core feature and part of Cycle Control. The old input display is laggier, and that will not be fixed. Nor can it be.</li>
+						<li>The segment timer has been downgraded to an optional feature and is no longer part of Cycle Control.</li>
+						<li>Fill rupees now applies immediately. No more ching cha ching.</li>
+						<li>Experimenting with a background on input display for more visibility in certain places.</li>
+						<li>Lui fixed weird savestate on death behavior.</li>
+						<li>Lui also fixed the dumb bow stuff in AD presets.</li>
+						<li>Fluting now resets the timer.</li>
+						<li>Moved some code so that Vanilla HUD variants can enjoy cleaner menu characters.</li>
+					</ul>
+					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.0.1">v13.0.1</a> <span class="releaseDate">2 Feb 2020</span></h3>
 					<ul>Bug fixes:
 						<li>Setting health works properly again.</li>
 						<li>Health refills no longer flash the HUD.</li>
