@@ -1,0 +1,36 @@
+{
+    "name": "LTTPHack",
+    "version": "13.1.0",
+    "base": {
+        "name": "A Link to the Past (J) 1.0",
+        "crc": "3322effc"
+    },
+    "configurations" : [
+        {
+            "id": "platform",
+            "name": "Platform",
+            "options": [
+                { "id": "emulator", "name": "Emulator, Everdrive, SNES Classic" },
+                { "id": "sd2snes", "name": "SD2SNES"}
+            ]
+        },
+        {
+            "id": "type",
+            "name": "Type",
+            "options": [
+                { "id": "customhud", "name": "Custom HUD" },
+                { "id": "vanillahud", "name": "Vanilla HUD" },
+                { "id": "debug", "name": "Debug (Unstable)" }
+            ]
+        }
+    ],
+    "patches": [
+        { "platform": "emulator", "type": "customhud", "file": "patcher/files/emulator-customhud.bps"},
+        { "platform": "emulator", "type": "vanillahud", "file": "patcher/files/emulator-vanillahud.bps"},
+        { "platform": "emulator", "type": "debug", "file": "patcher/files/emulator-debug.bps"},
+
+        { "platform": "sd2snes", "type": "customhud", "file": "patcher/files/sd2snes-customhud.bps"},
+        { "platform": "sd2snes", "type": "vanillahud", "file": "patcher/files/sd2snes-vanillahud.bps"},
+        { "platform": "sd2snes", "type": "debug", "file": "patcher/files/sd2snes-debug.bps"}
+    ]
+}
