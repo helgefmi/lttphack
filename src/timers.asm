@@ -45,6 +45,8 @@ org $06D192 : JSL UpdateOnKey ; normal key
 org $078FFB : JSL UpdateOnBonk
 org $07999D : PHB : JSL UpdateOnReceiveItem
 
+org $0DFA90 : PHB : JSL StupidMVN : NOP
+
 !reset = $42
 !update = $02
 pullpc
@@ -56,6 +58,12 @@ endmacro
 macro reset_timer()
 	LDA #$41 : STA !timer_allowed
 endmacro
+
+StupidMVN:
+	LDA #$80 : TSB !timer_allowed
+	REP #$30
+	LDA #$0149
+	RTL
 
 ; Underworld updates
 UpdateOnUWTransition:

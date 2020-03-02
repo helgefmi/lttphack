@@ -1,16 +1,9 @@
-Huge stuff
-----------
-
-- Change item menu ???? to say "Do" in A-items section
-
-- Make lanmo counter use nonvanilla font so that a BAD lanmo is possible
-
 Big stuff
 ----------
 
-- Need hook for flute
+- fill everything in menu
 
-- Different controller displays i guess
+- need to trigger updates more to let things works (like after transitions)
 
 - Movies
 
@@ -32,9 +25,9 @@ Big stuff
 
 - ad khold preset is hard to move around in
 
-- input display on text??
+- slot 0 misslot ram missing???
 
-- death causes savestate with death reload off
+- input display on text??
 
 Other stuff
 ------------
@@ -53,10 +46,6 @@ Other stuff
 
 - Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances the game one frame. Would be good for clip learning. Maybe stop timer during this.
 
-- See if I can make the menu prettier (let users change color?)
-
-- Colorblind options?
-
 - Frame counter for actions, like swinging your sword, throwing boomerang, enemy movement startup times. Startup/active/recovery.
 
 - Room frame counts that show frame-pixel movement tallies. Would basically be to contrast how many nudge/slowdown/movement frames were lost that is pulled away from room overall time count and lag frames.
@@ -65,13 +54,11 @@ Other stuff
 
 - A way to change/preset your antennae value for spoopy inputs presently lengthy. To easily engage in mirerod entanglements.
 
-- hey pinkus! Thanks for working on the LTTP practice hack. I have a feature request. I'm still early enough in my NMG play that i get the powder. It's annoying to have to turn on for every single preset, I imagine in the same way turning on the sanc heart was annoying. Can we get a setting to have powder on for the presets? (medium priority)
+- powder/mushroom setting like sanc heart
 
 - loading presets after sq shows wrong menu item
 
 - YBA lua like shortcut for collision mapping
-
-- frame count cache on counter updates? add to ram watch?
 
 Possible toggles/options
 -------------------------
