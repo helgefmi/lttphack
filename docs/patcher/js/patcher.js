@@ -88,7 +88,7 @@ Vue.component('file-uploader', {
             }
 
             let crc = crc32(fileData);
-            if(crc.toString(16) !== this.manifest.base.crc) {
+            if(crc.toString(16).toUpperCase() !== this.manifest.base.crc.toUpperCase()) {
                 alert("The select file's checksum does not match the expected value, try with another file.");
                 return;
             }
