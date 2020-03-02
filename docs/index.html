@@ -2,7 +2,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>LTTPHack - A practice romhack for ALttP speedrunners</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">		
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="hack.css">
 </head>
@@ -50,53 +50,13 @@
 			<div class="row">
 				<div class="col-lg-8 mx-auto">
 					<h2>Download</h2>
-					<table class="table table-bordered dl-tbl romtable">
-						<caption>We are currently on version 13.1.0</caption>
-						<tbody>
-							<tr>
-								<th rowspan="2">Emulator, Everdrive, SNES Classic</th>
-								<td>
-									<a href="https://drive.google.com/open?id=1LAlAyvgATxuY8PGePEktfa-dZZtPcXu3">
-									Custom HUD
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<a href="https://drive.google.com/open?id=1_CA3xotHitiByZX5lFvsJzVn0kFalCrZ">
-									Vanilla HUD
-								</td>
-							</tr>
-
-							<tr>
-								<th rowspan="2">SD2SNES</th>
-								<td>
-									<a href="https://drive.google.com/open?id=1-PACc9Tp-NtQNowyDhl4R3p5uAn0oQc7">
-									Custom HUD
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<a href="https://drive.google.com/open?id=178ph2bKgWQ-S6p0ap2_QzkPxE057RnWE">
-									Vanilla HUD
-								</td>
-							</tr>
-							<tr>
-								<th rowspan="2">Debug</th>
-								<td>
-									<a href="https://drive.google.com/open?id=1LkDbOgE7JDmWsB3ZZO-p8TIHkBKrHcAQ">
-									Unstable for Emulators</a>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<a href="https://drive.google.com/open?id=1K_hwU1pEmZoXFRl5ffX8rx39slBjC3fb">
-									Unstable for SD2SNES</a>
-								</td>
-							</tr>
-						</tbody>
-						<caption>Pick the correct ROM for your system. SD2SNES ROMs will not work on other carts or emulators.</caption>
-						
-					</table>
+					<div class="row justify-content-md-center">
+						<!-- Create a patcher app instance -->
+						<div id="patcher-app" class="col-md-12" >
+							<!-- Create the patcher component pointing to a specific patch manifest -->
+							<patcher id="prachack" manifest-path="patcher/manifest.json" />
+						</div>
+					</div>					
 					<p>
 						<strong>SD2SNES</strong> is the only SNES system that supports 256kb SRAM. This makes it possible to have in-game save states. These will not work on emulators, Everdrive etc.
 					</p>
@@ -1220,6 +1180,18 @@
 	<script async="" src="https://www.google-analytics.com/analytics.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+	<!-- Scripts for the JS patcher -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.8.4/babel.min.js"></script>
+    <script src="https://cdn.polyfill.io/v2/polyfill.js?features=fetch"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/localforage@1.7.3/dist/localforage.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.2/dist/FileSaver.min.js"></script>
+	<script type="text/babel" data-presets="env" src="patcher/js/patcher.js"></script>
+	<script type="text/babel" data-presets="env, typescript" src="patcher/js/bps.ts"></script>
+	<!-- // Scripts for the JS patcher -->
+
 	<script type="text/javascript">
 		(function($) {
 			$('a.js-scroll-trigger[href*="#"]:not([href="#"])').click(function() {
