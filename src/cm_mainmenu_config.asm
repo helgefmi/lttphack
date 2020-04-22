@@ -18,13 +18,11 @@ cm_config_music:
 	%cm_toggle_jsr("Music", !ram_feature_music)
 
 .toggle
-	JSL music_reload
+	LDA.l !ram_feature_music : BNE ++
+	JSL mute_music
+	RTS
 
-	LDA $0130 : CMP #$FF : BEQ .muted
-
-	STA $012C : STZ $0133
-
-.muted
+++	JSL unmute_music
 
 	RTS
 

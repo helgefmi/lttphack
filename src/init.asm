@@ -49,7 +49,6 @@ init_expand:
 	STZ !lowram_oob_toggle
 
 .done
-	JSL music_init
 	RTL
 
 init_initialize_all:

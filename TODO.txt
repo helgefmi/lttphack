@@ -1,6 +1,8 @@
 Big stuff
 ----------
 
+- merge misslot watch into dg watch window
+
 - fill everything in menu
 
 - need to trigger updates more to let things works (like after transitions)
@@ -31,6 +33,10 @@ Big stuff
 
 Other stuff
 ------------
+
+- preset randomizer
+
+- multiple rng support?
 
 - cm_clear_buffer -> wram dma
 

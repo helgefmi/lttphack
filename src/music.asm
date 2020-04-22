@@ -1,175 +1,22 @@
-pushpc
-; Overworld music data
-; Overwrites:
-; LDA #$F5 : STA $00
-; LDA #$9E : STA $01
-; LDA #$1A : STA $02
-org $008913
-	LDX #$00 : JSL music_setup_bank
-	NOP #6
-
-
-; Underworld music data
-; Overwrites:
-; LDA #$00 : STA $00
-; LDA #$80 : STA $01
-; LDA #$1B
-org $008925
-	LDX #$01 : JSL music_setup_bank
-	NOP #4
-
-
-; Ending credits music data
-; Overwrites:
-; LDA #$80 : STA $00
-; LDA #$D3 : STA $01
-; LDA #$1A
-org $008931
-	LDX #$02 : JSL music_setup_bank
-	NOP #4
-
-pullpc
 ; Used when turning on the console, so sound is correctly unmuted after selecting a file.
 ; This removes file screen music, but oh well.
-music_init:
-	LDX #$00 : JSL music_setup_bank
-	%ppu_off()
-	LDA #$FF : STA $2140
-	JSL sound_loadsongbank
-	%ppu_on()
-	JSL $00893d
-	RTL
-
-
-; Sets up $00-03 with the address of the songbank to be loaded.
-; Both $008888 (Sound_LoadSongBank) and sound_loadsongbank below can be used for this.
-; Enter with X=0 for Overworld music, X=1 for Underworld and X=2 for Credits.
-music_setup_bank:
-	LDA.l !ram_feature_music : ASL #4 : STA $00
-	TXA : ASL #2 : CLC : ADC $00 : TAX
-
-	LDA.l spc_data+0, X : STA $00
-	LDA.l spc_data+1, X : STA $01
-	LDA.l spc_data+2, X : STA $02
-	RTL
-
-
 music_reload:
-	%ai8()
-	LDA $1B : TAX : JSL music_setup_bank
-
+	SEP #$30
 	SEI
-
 	STZ $4200
 	STZ $420C
-
+	STZ $0136
 	LDA #$FF : STA $2140
 
-	JSL sound_loadsongbank
+	LDA $1B : BEQ .indoors
+	JSL $008925
+	BRA ++
+.indoors
+	JSL $008913
 
-	CLI
-
+++	LDA #$81 : STA $4200
 	LDA $1B : STA $0136
-
-	LDA #$81 : STA $4200
-
 	RTL
-
-
-; Taken from MoN's disassembly. It originated from Bank 0, which I can't JSR to from here.
-;
-; Loads SPC with data
-sound_loadsongbank:
-	PHP
-	%ai16()
-
-	LDY #$0000
-	LDA #$BBAA
-
-.loop
-	; // Wait for the SPC to initialize to #$AABB
-	CMP $2140 : BNE .loop
-
-	%a8()
-	LDA #$CC
-	BRA .setup_transfer
-
-.begin_transfer
-
-	LDA [$00], Y
-	INY
-	XBA
-	LDA #$00
-	BRA .write_zero_byte
-
-.continue_transfer
-	XBA
-	LDA [$00], Y ; Load the data byte to transmit.
-	INY
-
-	; Are we at the end of a bank?
-	CPY.w #$8000 : BNE .not_bank_end ; If not, then branch forward.
-
-	LDY.w #$0000 ; Otherwise, increment the bank of the address at [$00]
-
-	INC $02
-
-.not_bank_end
-
-	XBA
-
-.wait_for_zero
-	; Wait for $2140 to be #$00 (we're in 8bit mode)
-	CMP $2140 : BNE .wait_for_zero
-
-	INC A ; Increment the byte count
-
-.write_zero_byte
-	REP #$20
-
-	; Ends up storing the byte count to $2140 and the
-	STA $2140
-
-	SEP #$20 ; data byte to $2141. (Data byte represented as **)
-
-	DEX : BNE .continue_transfer
-
-.synchronize
-	; We ran out of bytes to transfer.
-	; But we still need to synchronize.
-	CMP $2140 : BNE .synchronize
-
-.no_zero ; At this point $2140 = #$01
-	; Add four to the byte count
-	ADC #$03 : BEQ .no_zero ; (But Don't let A be zero!)
-
-.setup_transfer
-	PHA
-	REP #$20
-	LDA [$00], Y : INY #2 : TAX ; Number of bytes to transmit to the SPC.
-	LDA [$00], Y : INY #2 : STA $2142 ; Location in memory to map the data to.
-	SEP #$20
-	CPX.w #$0001 ; If the number of bytes left to transfer > 0...
-
-	; Then the carry bit will be set
-	; And rotated into the accumulator (A = #$01)
-	LDA #$00 : ROL A : STA $2141 : ADC #$7F
-
-	; Hopefully no one was confused.
-	PLA
-	STA $2140
-
-.transfer_init_wait
-
-	; Initially, a 0xCC byte will be sent to initialize
-	; The transfer.
-	; If A was #$01 earlier...
-	CMP $2140 : BNE .transfer_init_wait : BVS .begin_transfer
-
-	STZ $2140 : STZ $2141 : STZ $2142 : STZ $2143
-	PLP
-	RTL
-
 
 music_overworld_track:
 	LDA !ram_preset_type : BNE .loadedPreset
@@ -297,16 +144,95 @@ music_overworld_track:
 	SEC
 	RTL
 
+; incsrc "musicvolumes.asm"
+mute_music:
+	PHP : SEP #$30
+	LDA.b #MutedInstruments>>0 : STA $00
+	LDA.b #MutedInstruments>>8 : STA $01
+	BRA DoMusic
 
-spc_data:
-	dl $1A9EF5 : db $00 ; overworld
-	dl $1B8000 : db $00 ; underworld
-	dl $1AD380 : db $00 ; credits
-	dl $000000 : db $00 ; unused
+unmute_music:
+	PHP : SEP #$30
+	LDA.b #UnmutedInstruments>>0 : STA $00
+	LDA.b #UnmutedInstruments>>8 : STA $01
+	BRA DoMusic
 
-	dl !SPC_DATA_OVERWORLD : db $00
-	dl !SPC_DATA_UNDERWORLD : db $00
-	dl !SPC_DATA_CREDITS : db $00
-	dl $000000 : db $00 ; unused
+DoMusic:
+	SEI
+	STZ $4200
+	STZ $420C
+	LDA #$FF : STA $2140
+	LDA.b #DoMusic>>16
+	JSL $00891D ; load song bank
 
-incsrc "musicvolumes.asm"
+	SEP #$30
+	LDA #$81 : STA $4200
+	LDA $0133 : STA $012C
+	PLP
+	RTL
+
+UnmutedInstruments:
+	dw .end-.start, $3D00
+
+.start
+	db $00, $FF, $E0, $B8, $04, $70
+	db $01, $FF, $E0, $B8, $07, $90
+	db $02, $FF, $E0, $B8, $09, $C0
+	db $03, $FF, $E0, $B8, $04, $00
+	db $04, $FF, $E0, $B8, $04, $00
+	db $05, $FF, $E0, $B8, $04, $70
+	db $06, $FF, $E0, $B8, $04, $70
+	db $07, $FF, $E0, $B8, $04, $70
+	db $08, $FF, $E0, $B8, $07, $A0
+	db $09, $8F, $E9, $B8, $01, $E0
+	db $0A, $8A, $E9, $B8, $01, $E0
+	db $0B, $FF, $E0, $B8, $03, $00
+	db $0C, $FF, $E0, $B8, $03, $A0
+	db $0D, $FF, $E0, $B8, $01, $00
+	db $0E, $FF, $EF, $B8, $0E, $A0
+	db $0F, $FF, $EF, $B8, $06, $00
+	db $10, $FF, $E0, $B8, $03, $D0
+	db $11, $8F, $E0, $B8, $03, $00
+	db $12, $8F, $E0, $B8, $06, $F0
+	db $13, $FD, $E0, $B8, $07, $A0
+	db $14, $FF, $E0, $B8, $07, $A0
+	db $15, $FF, $E0, $B8, $03, $D0
+	db $16, $8F, $E0, $B8, $03, $00
+	db $17, $FF, $E0, $B8, $02, $C0
+	db $18, $FE, $8F, $B8, $06, $F0
+
+.end
+	dw $0000, $0800
+
+MutedInstruments:
+	dw .end-.start, $3D00
+
+.start
+	db $00, $00, $00, $B8, $04, $70
+	db $01, $00, $00, $B8, $07, $90
+	db $02, $00, $00, $B8, $09, $C0
+	db $03, $00, $00, $B8, $04, $00
+	db $04, $00, $00, $B8, $04, $00
+	db $05, $00, $00, $B8, $04, $70
+	db $06, $FF, $E0, $B8, $04, $70 ; mirror uses this, leave unmuted
+	db $07, $00, $00, $B8, $04, $70
+	db $08, $00, $00, $B8, $07, $A0
+	db $09, $00, $00, $B8, $01, $E0
+	db $0A, $00, $00, $B8, $01, $E0
+	db $0B, $00, $00, $B8, $03, $00
+	db $0C, $00, $00, $B8, $03, $A0
+	db $0D, $00, $00, $B8, $01, $00
+	db $0E, $00, $00, $B8, $0E, $A0
+	db $0F, $00, $00, $B8, $06, $00
+	db $10, $00, $00, $B8, $03, $D0
+	db $11, $00, $00, $B8, $03, $00
+	db $12, $00, $00, $B8, $06, $F0
+	db $13, $00, $00, $B8, $07, $A0
+	db $14, $00, $00, $B8, $07, $A0
+	db $15, $00, $00, $B8, $03, $D0
+	db $16, $00, $00, $B8, $03, $00
+	db $17, $00, $00, $B8, $02, $C0
+	db $18, $00, $00, $B8, $06, $F0
+
+.end
+	dw $0000, $0800
