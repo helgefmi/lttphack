@@ -51,26 +51,6 @@ org $1EB2A6
 	;1eb2a6 jsl $0dba71
 	JSL rng_turtles
 
-; Cannonballs
-org $0580D6
-	;0580d6 txa
-	;0580d7 asl
-	;0580d8 asl
-	;0580d9 clc
-	;0580da adc $1a
-	;0580dc and #$1f
-	JSL rng_cannonballs
-	NOP #2
-
-; Soldiers
-org $05C500
-	;05c500 txa
-	;05c501 eor $1a
-	;05c503 and #$1f
-	;05c505 bne $c531
-	JSL rng_soldiers
-	NOP
-
 ; Lanmola
 ; 05a3f4 jsl $0dba71
 ; 05a3f8 and #$07
@@ -236,31 +216,6 @@ rng_turtles:
 
 .random
 	JSL !RandomNumGen
-	RTL
-
-; == Cannonballs ==
-
-rng_cannonballs:
-	LDA !ram_cannonballs_rng : BEQ .random
-	TXA : CLC : ADC !ram_cannonballs_rng : DEC
-	CLC : ADC !lowram_room_gametime
-	RTL
-
-.random
-	TXA : ASL #2 : CLC : ADC $1A
-	RTL
-
-; == Soldiers ==
-
-rng_soldiers:
-	LDA !ram_soldiers_rng : BEQ .random
-	TXA : CLC : ADC !ram_soldiers_rng : DEC
-	EOR !lowram_room_gametime
-	AND #$1F
-	RTL
-
-.random
-	TXA : EOR $1A : AND #$1F
 	RTL
 
 ; == Lanmola ==

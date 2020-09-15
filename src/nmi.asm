@@ -191,9 +191,11 @@ nmi_hud_update:
 	SEP #$10
 
 	LDX !lag_cache : BNE .dontbreakthings
-	LDA !ram_doorwatch_toggle
+	LDA.l !ram_superwatch : ASL
 	TAX
-	BEQ .noDoorWatch
+	JMP (.routines, X)
+
+.doorwatch
 	LDX #$80 : STX $2115
 	LDA #$6500 : STA $2116
 
@@ -204,7 +206,7 @@ nmi_hud_update:
 
 	LDY #$01 : STY $420B
 
-.noDoorWatch
+.nowatch
 	; force heartlag update
 	LDX !do_heart_lag : BEQ .dontbreakthings
 	LDA #$C118>>1 : STA $2116
@@ -216,6 +218,61 @@ nmi_hud_update:
 	STX $2100
 
 	RTL
+
+.ancillawatch
+	LDX $10
+	CPX #$06 : BCC .nowatch
+	CPX #$19 : BCS .nowatch
+	CPX #$12 : BEQ .nowatch
+	CPX #$14 : BEQ .nowatch
+
+	LDX #$80 : STX $2115
+	LDY #$01
+	LDA #$1801 : STA $4300
+	LDA.w #!dg_dma_buffer : STA $4302
+	LDX.b #!dg_dma_buffer>>16 : STX $4304
+
+	LDA #$C202>>1 : STA $2116
+	LDA #$0010 : STA $4305
+	STY $420B
+
+macro draw_ancilla_row(n)
+	LDA #($C202+(64*<n>))>>1 : STA $2116
+	LDA #$0010 : STA $4305
+	STY $420B
+
+	;LDA #($C22E+(64*<n>))>>1 : STA $2116
+	;LDA #$0010 : STA $4305
+	;STY $420B
+endmacro
+
+	;%draw_ancilla_row(1)
+	%draw_ancilla_row(2)
+	%draw_ancilla_row(3)
+	%draw_ancilla_row(4)
+	%draw_ancilla_row(5)
+	%draw_ancilla_row(6)
+	;%draw_ancilla_row(7)
+	%draw_ancilla_row(8)
+	%draw_ancilla_row(9)
+	%draw_ancilla_row(10)
+	%draw_ancilla_row(11)
+	%draw_ancilla_row(12)
+	;%draw_ancilla_row(13)
+	;%draw_ancilla_row(14)
+	;%draw_ancilla_row(15)
+	;%draw_ancilla_row(16)
+	;%draw_ancilla_row(17)
+	;%draw_ancilla_row(18)
+	;%draw_ancilla_row(19)
+	;%draw_ancilla_row(20)
+
+	JMP .nowatch
+
+.routines
+	dw .nowatch
+	dw .ancillawatch
+	dw .doorwatch
 
 ;===========================================
 ; OAM cleaner optimization

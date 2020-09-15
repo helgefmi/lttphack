@@ -8,6 +8,7 @@ cm_submenu_link_state:
 	dw cm_link_state_activate_lonk
 	dw cm_link_state_finish_mirrordoor
 	dw cm_link_state_statue_drag
+	dw cm_link_state_searchindex
 	dw cm_link_state_armed_eg
 	dw cm_link_state_eg_strength
 	dw !menu_end
@@ -74,3 +75,6 @@ cm_link_state_eg_strength:
 	%cm_item("Strong")
 	%cm_item("Weak")
 	db !list_end
+
+cm_link_state_searchindex:
+	%cm_numfield("Anc Index", $7E03C4, #$00, #$FF, #$05)

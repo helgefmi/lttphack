@@ -7,7 +7,38 @@ org $00802F
 	JSL init_hook
 	NOP
 
+; need to fix a small buffer myself since it empties to 0 not in init
+org $0CC1FF
+JSL ClearWatchBuffer_pre
+
 pullpc
+ClearWatchBuffer:
+	PHX
+	PHA
+	PHP
+	REP #$20
+	SEP #$10
+	LDA #$207F
+	LDX #$3E
+
+	print pc
+--	STA.l !dg_buffer_r0, X
+	STA.l !dg_buffer_r1, X
+	STA.l !dg_buffer_r2, X
+	STA.l !dg_buffer_r3, X
+	STA.l !dg_buffer_r4, X
+	DEX : DEX : BPL --
+
+	PLP
+	PLA
+	PLX
+	RTL
+
+.pre
+	STA.b $CA ; vanilla code
+	SEP #$30
+	BRA ClearWatchBuffer
+
 init_hook:
 	LDA #$81 : STA $4200
 	JSL init_expand

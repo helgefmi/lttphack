@@ -56,7 +56,7 @@
 							<!-- Create the patcher component pointing to a specific patch manifest -->
 							<patcher id="prachack" manifest-path="patcher/manifest.json" />
 						</div>
-					</div>					
+					</div>
 					<p>
 						<strong>SD2SNES</strong> is the only SNES system that supports 256kb SRAM. This makes it possible to have in-game save states. These will not work on emulators, Everdrive etc.
 					</p>
@@ -538,9 +538,11 @@
 						<dd>Sets the mirror door wait timer to finish after 11 frames. For safety reasons, this will only run when the Triforce door submodule is in effect. If successful, you should hear a <i>VOOMP</i>; otherwise, you will hear a <i>beep</i>.</dd>
 						<dt>Statue drag</dt>
 						<dd>Toggles the fake statue address.</dd>
+						<dt>Anc Index</dt>
+						<dd>Set ancilla search index ($03C4); 0&ndash;255</dd>
 						<dt>Armed EG</dt>
 						<dd>Toggle status of armed EG.</dd>
-						<dt>Strong EG</dt>
+						<dt>Eg strength</dt>
 						<dd class="optionList">
 							<ul>
 								<li>EG 0</li>
@@ -558,10 +560,10 @@
 						<dd>Presets will have more health, as if the Sanctuary heart were collected earlier in the run.</dd>
 						<dt>Disable beams</dt>
 						<dd>The Master Sword and its upgrades will no longer fire sword beams at full health.</dd>
-						<dt>Fast walls</dt>
-						<dd>Speeds up the moving wall cutscenes.</dd>
 						<dt>Lit rooms</dt>
 						<dd>Dark rooms will be at full brightness and visibility. This option will remove the darkness in the current room as well.</dd>
+						<dt>Fast walls</dt>
+						<dd>Speeds up the moving wall cutscenes.</dd>
 						<dt>Visible probes</dt>
 						<dd>Search probes used by guards, beamos, etc. will display a graphic.</dd>
 						<dt>See bonk items</dt>
@@ -593,6 +595,8 @@
 							</dl>
 							<strong class="lag"><b>WARNING:</b> toggling this option will reset existing fairy luck.</strong>
 						</dd>
+						<dt>Frame rule</dt>
+						<dd>Forces the frame counter to a specific value on preset or savestate load.</dd>
 					</dl>
 					<dl class="inlineDefinition dinkyList">
 						<dt>Pokeys</dt>
@@ -652,10 +656,6 @@
 							</ol>
 						</dd>
 						<dt>Turtles walk</dt>
-						<dd>Random, 32 fixed RNGs</dd>
-						<dt>Cannonballs</dt>
-						<dd>Random, 32 fixed RNGs</dd>
-						<dt>Soldiers</dt>
 						<dd>Random, 32 fixed RNGs</dd>
 						<dt>Lanmola exit</dt>
 						<dd>Random, fixed {X,Y} for 0≤X≤7; 0≤Y≤7</dd>
@@ -741,6 +741,8 @@
 						<dd>Time spent since the beginning of the last segment timer reset.</dd>
 						<dt>Coordinates<sup class="cc-badge">CC</sup></dt>
 						<dd>Absolute position of Link (X,Y)	</dd>
+						<dt>QW indicator<sup class="cc-badge">CC</sup></dt>
+						<dd>Displays an icon on the HUD when the current camera will produce a quickwarp.</dd>
 						<dt>RAM watch</dt>
 						<dd>
 							<dl class="subDefinition">
@@ -754,22 +756,21 @@
 								<dd>Same as subpixels, but tells you when you're in a door.</dd>
 							</dl>
 						</dd>
-						<dt>QW indicator<sup class="cc-badge">CC</sup></dt>
-						<dd>Displays an icon on the HUD when the current camera will produce a quickwarp.</dd>
+						<dt>Super watch</dt>
+						<dd>
+						<dl class="subDefinition">
+								<dt>Ancillae</dt>
+								<dd>Ancillae RAM watch geared towards misslotting</dd>
+								<dt>UW Glitches</dt>
+								<dd>RAM watch geared towards underworld glitches (see <a href="doorwatch.html">this page</a>).<strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
+							</dl>
+						</dd>
 						<dt>Lanmola cycs</dt>
 						<dd>Displays a counter for the cycle count of the three Lanmolas individually.</dd>
 						<dt>Lagometer</dt>
 						<dd>Shows a rough calculation of the amount of lag a frame has. The more the bar is filled, the closer a frame was to producing a lag frame. Lag from one frame does not affect the next, but trends in the lagometer can be used to gauge how laggy an area is.</dd>
 						<dt>Enemy HP</dt>
 						<dd>Shows the exact health of a single enemy. Attempts to find the most relevant enemy as you play. <strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
-						<dt>Misslots RAM</dt>
-						<dd>Ancillae RAM watch geared towards misslotting (see diagram)
-							<div class="center">
-								<img src="ancillawatch.png" class="helpvis" width="729">
-							</div>
-						</dd>
-						<dt>DG watch</dt>
-						<dd>RAM watch geared towards door glitches (see <a href="doorwatch.html">this page</a>).<strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
 					</dl>
 
 					<h3 id="menuConfiguration">Configuration</h3>
@@ -811,6 +812,33 @@
 			<div class="row">
 				<div class="col-lg-8 mx-auto">
 					<h2>Changelog</h2>
+					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.2.0">v13.2.0</a> <span class="releaseDate">15 September 2020</span></h3>
+					<ul>
+						<li>Link state:
+							<ul>
+								<li>Added ancillae search index editor</li>
+							</ul>
+						</li>
+						<li>RNG control:
+							<ul>
+								<li>Added an option for forcing the frame counter to a specific value for frame rule testing.</li>
+								<li>Removed cannonball and soldier settings in favor of forced frames.</li>
+							</ul>
+						</li>
+						<li>HUD extras:
+							<ul>
+								<li>Merged misslots- and DG-watch into a single feature under the name "Super Watch".</li>
+							</ul>
+						</li>
+						<li>Ancillae watch has been revamped to be more readable and expandable.</li>
+						<li>Bug fixes:
+							<ul>
+								<li>The ancillae watch revamp means the quickwarp indicator is no longer overwritten.</li>
+								<li>Menu sound effects no longer cause problems when changing certain options.</li>
+								<li>Fixed mastersword LSD effect.</li>
+							</ul>
+						</li>
+					</ul>
 					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.1.1">v13.1.1</a> <span class="releaseDate">23 April 2020</span></h3>
 					<ul>
 						<li>More efficient music muting, accomplished by adjust ADSR (sorry Myramong).</li>

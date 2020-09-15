@@ -1,7 +1,11 @@
 Big stuff
 ----------
 
-- merge misslot watch into dg watch window
+- Clear BG3 thing for last resort fix
+
+- Music always mutes
+
+- adjustable search index
 
 - fill everything in menu
 
@@ -26,8 +30,6 @@ Big stuff
 - "if you start a preset from first SW preset and play out the whole dungeon, you sometimes end up with a small key [before] bomb jump"
 
 - ad khold preset is hard to move around in
-
-- slot 0 misslot ram missing???
 
 - input display on text??
 

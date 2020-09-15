@@ -14,7 +14,9 @@ org $0080A5 : db #CM_Main>>16
 pullpc
 
 macro menubeep()
+	PHA
 	LDA #$0C : STA $012F
+	PLA
 endmacro
 
 macro set_menu_icon(icon)
@@ -614,14 +616,18 @@ cm_execute_jsr:
 	LDX #$0000
 	JSR ($0002, X)
 	%a8()
+	PHA
 	LDA #$25 : STA $012F ; switch sound
+	PLA
 .end
 	RTS
 
 cm_execute_submenu:
 	%a8()
 	LDA $F6 : BPL .end
+	PHA
 	LDA #$24 : STA $012F
+	PLA
 	; Increments stack index and puts the submenu into the stack.
 	%a16()
 	LDA !lowram_cm_stack_index : INC #2 : STA !lowram_cm_stack_index : TAX
@@ -634,7 +640,9 @@ cm_execute_back:
 	; > should do nothing here
 	%a8()
 	BIT $F0 : BPL .end
+	PHA
 	LDA #$24 : STA $012F
+	PLA
 	; Decrements the stack index.
 	%a16()
 	; make sure next time we go to a submenu, we start on the first line.
@@ -705,7 +713,9 @@ cm_execute_choice:
 .end
 	%ai8()
 	STA [$02]
+	PHA
 	LDA #$1D : STA $012F ; magic boop
+	PLA
 	RTS
 
 cm_execute_choice_jsr:
@@ -721,11 +731,15 @@ cm_execute_numfield:
 	; min in $05[0x1]
 	; max in $06[0x1]
 	; increment value in $07[0x1]
+	PHX
+	PHY
+	PHP
 	%a16()
 	LDA ($00) : INC $00 : INC $00 : STA $02
 	LDA ($00) : INC $00 : INC $00 : STA $04
 	; One additional INC on the max value here, for convenience later.
 	LDA ($00) : INC $00 : INC $00 : INC : STA $06
+	TAY ; for comparison for FF
 	%ai8()
 
 	LDA $72 : BNE .set_to_min
@@ -739,13 +753,14 @@ cm_execute_numfield:
 
 .pressed_R_shoulder
 	LDA [$02] : CLC : ADC $07
+	CPY #$00 : BEQ ++ ; skip boundaries if max=FF
 	CMP $06 : BCS .set_to_max
 	BRA ++
 
 .pressed_right
 	LDA [$02] : CLC : ADC #$01
+	CPY #$00 : BEQ ++ ; skip boundaries if max=FF
 	CMP $06 : BCS .set_to_min
-
 ++	STA [$02] : BRA .end
 
 .pressed_L_shoulder
@@ -766,9 +781,13 @@ cm_execute_numfield:
 	LDA $06 : DEC : STA [$02] : CLC
 
 .end
+	PHA
 	LDA #$1D : STA $012F ; magic boop
+	PLA
 .quit
-	%ai16()
+	PLP
+	PLY
+	PLX
 	RTS
 
 cm_execute_preset:
@@ -803,7 +822,9 @@ cm_execute_toggle_bit:
 	LDA ($00) : INC $00 : STA $05
 	%ai8()
 	LDA [$02] : EOR $05 : STA [$02]
+	PHA
 	LDA #$1D : STA $012F ; magic boop
+	PLA
 	RTS
 
 cm_execute_ctrl_shortcut:
@@ -900,8 +921,9 @@ cm_execute_movie:
 
 .error
 	%a8()
+	PHA
 	LDA #$3C : STA $012E
-
+	PLA
 .end
 	%ai16()
 	RTS

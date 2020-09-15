@@ -48,6 +48,33 @@ function char(n) = $2150+n
 ; ................................
 
 UpdateGlitchedWindow:
+	PHB : PHK : PLB
+	LDA.l !ram_superwatch
+	ASL : TAX
+	JSR (.routines, X)
+	PLB : RTL
+
+.routines
+	dw NoSuperWatch
+	dw UpdateAncillaWindow
+	dw UpdateUWWindow
+
+NoSuperWatch:
+	LDA #$20
+
+.set
+	TRB $9B
+	RTS
+
+UpdateUWWindow:
+	LDA.l !ram_superwatch
+	LSR : AND $1B : LSR ; set or clear carry
+
+	LDA #$20
+	BCC NoSuperWatch_set
+	LDX $10 : CPX #$0E : BEQ NoSuperWatch_set
+	CPX #$0C : BEQ NoSuperWatch_set
+	TSB $9B
 
 clear_buffer:
 	REP #$20
@@ -344,7 +371,7 @@ draw_overlay:
 
 trigger_update:
 	%a8()
-	RTL
+	RTS
 
 !CHEST_TILE = char($15)
 !QUAD = char($14)
@@ -358,7 +385,7 @@ calc_room_flags_tiles:
 	dw !DOOR_TILE, !DOOR_TILE, !DOOR_TILE, !DOOR_TILE
 	dw !QUAD|!HFLIP, !QUAD, !QUAD|!HFLIP|!VFLIP, !QUAD|!VFLIP
 
-	; Todo: for quadrants, include the flipping in tile
+	; TODO: for quadrants, include the flipping in tile
 	; also make them go RYGB,
 calc_room_flags_palettes:
 	dw !RED_PAL, !YELLOW_PAL, !YELLOW_PAL

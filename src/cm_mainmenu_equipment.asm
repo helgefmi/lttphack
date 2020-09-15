@@ -143,7 +143,7 @@ cm_equipment_fill_hearts:
 
 cm_equipment_maxhp:
 	dw !CM_ACTION_CHOICE_JSR
-	dw #.set_maxhp
+	dw .set_maxhp
 	dl !ram_cm_equipment_maxhp
 	%cm_item("Max HP")
 	%cm_item("3")

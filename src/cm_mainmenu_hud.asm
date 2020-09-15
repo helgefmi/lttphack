@@ -13,11 +13,10 @@ cm_submenu_hud:
 	dw cm_hud_xy
 	dw cm_hud_qw
 	dw cm_hud_ramwatch
+	dw cm_hud_superwatch
 	dw cm_hud_lanmola_cycle_count
 	dw cm_hud_lagometer
 	dw cm_hud_enemy_hp
-	dw cm_hud_misslots
-	dw cm_hud_doorwatch
 	dw !menu_end
 	%cm_header("HUD EXTRAS")
 
@@ -133,26 +132,39 @@ cm_hud_lanmola_cycle_count:
 	%a8()
 	RTS
 
-cm_hud_misslots:
-	%cm_toggle("Misslots RAM", !ram_misslots_toggle)
-
-cm_hud_doorwatch:
-	%cm_toggle_jsr("DG watch", !ram_doorwatch_toggle)
+cm_hud_superwatch:
+	dw !CM_ACTION_CHOICE_JSR
+	dw .toggle
+	dl !ram_superwatch
+	%cm_item("Super Watch")
+	%cm_item("Off")
+	%cm_item("Ancillae")
+	%cm_item("UW Glitches")
+	db !list_end
 
 .toggle
-	LDA !ram_doorwatch_toggle : BEQ ++
 
-	REP #$20
-	LDA #$207F
-	LDX #$3E
---	STA !dg_buffer_r0, X
-	STA !dg_buffer_r1, X
-	STA !dg_buffer_r2, X
-	STA !dg_buffer_r3, X
-	DEX : DEX : BPL --
+	JSL ClearWatchBuffer
 
 	PHP : PHB
+	; wait for vblank
+	SEP #$30
+	LDA.b #$80
+	STA.w $2100
+	REP #$30
+	LDA.w #$C200>>1 ; tile map location of BG3 
+	STA.w $2116
+	LDX.w #24*32
+	LDA.w #$207F
+--	STA.w $2118
+	DEX
+	BNE --
+
+
+
 	%a8()
+	LDA !ram_superwatch : CMP #$02 : BNE ++
+
 	%i16()
 	PEA.w (!dg_hdma>>16)&$00FF ; Pushes bank $00 then bank $7F (probably)
 	PLB ; bank of the hdma table for modifying
@@ -180,8 +192,9 @@ cm_hud_doorwatch:
 	PLB : PLP
 	RTS
 
+++	PLB : PLP
 	LDA #$20 : TRB $9B ; shut off HDMA
-++	RTS
+	RTS
 
 ; these all do the same thing: empty the counters
 cm_hud_real_toggle:

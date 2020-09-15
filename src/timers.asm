@@ -30,7 +30,7 @@ org $05AFC6 : JSL UpdateOnOWMirror
 org $07A995 : JSL UpdateOnOWMirror2
 org $0794DB : JSL UpdateOnOWPitTransition
 org $04E8CF : JSL UpdateOnOWToSpecial
-org $04E968 : JSL UpdateOnSpecialToOW
+org $04E966 : JSL UpdateOnSpecialToOW
 org $1EEED8 : JSL UpdateOnWhirlPool
 org $1BC209 : JSL UpdateOnBombableWallOW
 org $08E06A : JSL UpdateOnFlute

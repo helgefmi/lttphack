@@ -5,6 +5,7 @@ cm_main_goto_rng_control:
 
 cm_submenu_rng_control:
 	dw cm_rng_drops
+	dw cm_rng_framerule
 	dw cm_rng_pokey
 	dw cm_rng_agahnim
 	dw cm_rng_helmasaur
@@ -14,8 +15,6 @@ cm_submenu_rng_control:
 	dw cm_rng_eyegore
 	dw cm_rng_arrghus
 	dw cm_rng_turtles
-	dw cm_rng_cannonballs
-	dw cm_rng_soldiers
 	dw cm_rng_lanmola
 	dw cm_rng_conveyor
 	dw !menu_end
@@ -143,10 +142,10 @@ cm_rng_turtles:
 	%cm_item("Slowest")
 	db !list_end
 
-cm_rng_cannonballs:
+cm_rng_framerule:
 	dw !CM_ACTION_CHOICE
-	dl !ram_cannonballs_rng
-	%cm_item("Cannonballs")
+	dl !ram_framerule
+	%cm_item("Frame rule")
 	%cm_item("Random")
 	%cm_item("00")
 	%cm_item("01")
@@ -180,47 +179,39 @@ cm_rng_cannonballs:
 	%cm_item("1D")
 	%cm_item("1E")
 	%cm_item("1F")
+	%cm_item("20")
+	%cm_item("21")
+	%cm_item("22")
+	%cm_item("23")
+	%cm_item("24")
+	%cm_item("25")
+	%cm_item("26")
+	%cm_item("27")
+	%cm_item("28")
+	%cm_item("29")
+	%cm_item("2A")
+	%cm_item("2B")
+	%cm_item("2C")
+	%cm_item("2D")
+	%cm_item("2E")
+	%cm_item("2F")
+	%cm_item("30")
+	%cm_item("31")
+	%cm_item("32")
+	%cm_item("33")
+	%cm_item("34")
+	%cm_item("35")
+	%cm_item("36")
+	%cm_item("37")
+	%cm_item("38")
+	%cm_item("39")
+	%cm_item("3A")
+	%cm_item("3B")
+	%cm_item("3C")
+	%cm_item("3D")
+	%cm_item("3E")
+	%cm_item("3F")
 	db !list_end
-
-cm_rng_soldiers:
-	dw !CM_ACTION_CHOICE
-	dl !ram_soldiers_rng
-	%cm_item("Soldiers")
-	%cm_item("Random")
-	%cm_item("00")
-	%cm_item("01")
-	%cm_item("02")
-	%cm_item("03")
-	%cm_item("04")
-	%cm_item("05")
-	%cm_item("06")
-	%cm_item("07")
-	%cm_item("08")
-	%cm_item("09")
-	%cm_item("0A")
-	%cm_item("0B")
-	%cm_item("0C")
-	%cm_item("0D")
-	%cm_item("0E")
-	%cm_item("0F")
-	%cm_item("10")
-	%cm_item("11")
-	%cm_item("12")
-	%cm_item("13")
-	%cm_item("14")
-	%cm_item("15")
-	%cm_item("16")
-	%cm_item("17")
-	%cm_item("18")
-	%cm_item("19")
-	%cm_item("1A")
-	%cm_item("1B")
-	%cm_item("1C")
-	%cm_item("1D")
-	%cm_item("1E")
-	%cm_item("1F")
-	db !list_end
-
 
 cm_rng_lanmola:
 	dw !CM_ACTION_CHOICE

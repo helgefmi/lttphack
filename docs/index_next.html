@@ -2,7 +2,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>LTTPHack - A practice romhack for ALttP speedrunners</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">		
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="hack.css">
 </head>
@@ -50,53 +50,13 @@
 			<div class="row">
 				<div class="col-lg-8 mx-auto">
 					<h2>Download</h2>
-					<table class="table table-bordered dl-tbl romtable">
-						<caption>We are currently on version 13.1.0</caption>
-						<tbody>
-							<tr>
-								<th rowspan="2">Emulator, Everdrive, SNES Classic</th>
-								<td>
-									<a href="https://drive.google.com/open?id=1LAlAyvgATxuY8PGePEktfa-dZZtPcXu3">
-									Custom HUD
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<a href="https://drive.google.com/open?id=1_CA3xotHitiByZX5lFvsJzVn0kFalCrZ">
-									Vanilla HUD
-								</td>
-							</tr>
-
-							<tr>
-								<th rowspan="2">SD2SNES</th>
-								<td>
-									<a href="https://drive.google.com/open?id=1-PACc9Tp-NtQNowyDhl4R3p5uAn0oQc7">
-									Custom HUD
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<a href="https://drive.google.com/open?id=178ph2bKgWQ-S6p0ap2_QzkPxE057RnWE">
-									Vanilla HUD
-								</td>
-							</tr>
-							<tr>
-								<th rowspan="2">Debug</th>
-								<td>
-									<a href="https://drive.google.com/open?id=1LkDbOgE7JDmWsB3ZZO-p8TIHkBKrHcAQ">
-									Unstable for Emulators</a>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<a href="https://drive.google.com/open?id=1K_hwU1pEmZoXFRl5ffX8rx39slBjC3fb">
-									Unstable for SD2SNES</a>
-								</td>
-							</tr>
-						</tbody>
-						<caption>Pick the correct ROM for your system. SD2SNES ROMs will not work on other carts or emulators.</caption>
-						
-					</table>
+					<div class="row justify-content-md-center">
+						<!-- Create a patcher app instance -->
+						<div id="patcher-app" class="col-md-12" >
+							<!-- Create the patcher component pointing to a specific patch manifest -->
+							<patcher id="prachack" manifest-path="patcher/manifest.json" />
+						</div>
+					</div>					
 					<p>
 						<strong>SD2SNES</strong> is the only SNES system that supports 256kb SRAM. This makes it possible to have in-game save states. These will not work on emulators, Everdrive etc.
 					</p>
@@ -105,8 +65,8 @@
 						<strong>VanillaHUD</strong> variants use the HUD from the original game. Counters are turned off by default, but can be turned on if you wish. They will be drawn over some of the hearts, though.
 					</p>
 
-					<p>
-						The <strong>Debug</strong> version is the most recently compiled version of the practice hack while I code new features/fixes. It may not even reflect the version of the code live on Github. There is no guarantee that this version will even run properly, but it is available for people to poke around with uncoming stuff. This version is custom HUD without SD2SNES features. Please do not report bugs that are specific to the debug version.
+					<!--<p>
+						The <strong>Debug</strong> version is the most recently compiled version of the practice hack while I code new features/fixes. It may not even reflect the version of the code live on Github. There is no guarantee that this version will even run properly, but it is available for people to poke around with uncoming stuff. This version is custom HUD without SD2SNES features. Please do not report bugs that are specific to the debug version.-->
 					</p>
 				</div>
 			</div>
@@ -578,9 +538,11 @@
 						<dd>Sets the mirror door wait timer to finish after 11 frames. For safety reasons, this will only run when the Triforce door submodule is in effect. If successful, you should hear a <i>VOOMP</i>; otherwise, you will hear a <i>beep</i>.</dd>
 						<dt>Statue drag</dt>
 						<dd>Toggles the fake statue address.</dd>
+						<dt>Anc Index</dt>
+						<dd>Set ancilla search index ($03C4); 0&ndash;255</dd>
 						<dt>Armed EG</dt>
 						<dd>Toggle status of armed EG.</dd>
-						<dt>Strong EG</dt>
+						<dt>Eg strength</dt>
 						<dd class="optionList">
 							<ul>
 								<li>EG 0</li>
@@ -598,10 +560,10 @@
 						<dd>Presets will have more health, as if the Sanctuary heart were collected earlier in the run.</dd>
 						<dt>Disable beams</dt>
 						<dd>The Master Sword and its upgrades will no longer fire sword beams at full health.</dd>
-						<dt>Fast walls</dt>
-						<dd>Speeds up the moving wall cutscenes.</dd>
 						<dt>Lit rooms</dt>
 						<dd>Dark rooms will be at full brightness and visibility. This option will remove the darkness in the current room as well.</dd>
+						<dt>Fast walls</dt>
+						<dd>Speeds up the moving wall cutscenes.</dd>
 						<dt>Visible probes</dt>
 						<dd>Search probes used by guards, beamos, etc. will display a graphic.</dd>
 						<dt>See bonk items</dt>
@@ -633,6 +595,8 @@
 							</dl>
 							<strong class="lag"><b>WARNING:</b> toggling this option will reset existing fairy luck.</strong>
 						</dd>
+						<dt>Frame rule</dt>
+						<dd>Forces the frame counter to a specific value on preset or savestate load.</dd>
 					</dl>
 					<dl class="inlineDefinition dinkyList">
 						<dt>Pokeys</dt>
@@ -692,10 +656,6 @@
 							</ol>
 						</dd>
 						<dt>Turtles walk</dt>
-						<dd>Random, 32 fixed RNGs</dd>
-						<dt>Cannonballs</dt>
-						<dd>Random, 32 fixed RNGs</dd>
-						<dt>Soldiers</dt>
 						<dd>Random, 32 fixed RNGs</dd>
 						<dt>Lanmola exit</dt>
 						<dd>Random, fixed {X,Y} for 0≤X≤7; 0≤Y≤7</dd>
@@ -781,6 +741,8 @@
 						<dd>Time spent since the beginning of the last segment timer reset.</dd>
 						<dt>Coordinates<sup class="cc-badge">CC</sup></dt>
 						<dd>Absolute position of Link (X,Y)	</dd>
+						<dt>QW indicator<sup class="cc-badge">CC</sup></dt>
+						<dd>Displays an icon on the HUD when the current camera will produce a quickwarp.</dd>
 						<dt>RAM watch</dt>
 						<dd>
 							<dl class="subDefinition">
@@ -794,22 +756,21 @@
 								<dd>Same as subpixels, but tells you when you're in a door.</dd>
 							</dl>
 						</dd>
-						<dt>QW indicator<sup class="cc-badge">CC</sup></dt>
-						<dd>Displays an icon on the HUD when the current camera will produce a quickwarp.</dd>
+						<dt>Super watch</dt>
+						<dd>
+						<dl class="subDefinition">
+								<dt>Ancillae</dt>
+								<dd>Ancillae RAM watch geared towards misslotting</dd>
+								<dt>UW Glitches</dt>
+								<dd>RAM watch geared towards underworld glitches (see <a href="doorwatch.html">this page</a>).<strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
+							</dl>
+						</dd>
 						<dt>Lanmola cycs</dt>
 						<dd>Displays a counter for the cycle count of the three Lanmolas individually.</dd>
 						<dt>Lagometer</dt>
 						<dd>Shows a rough calculation of the amount of lag a frame has. The more the bar is filled, the closer a frame was to producing a lag frame. Lag from one frame does not affect the next, but trends in the lagometer can be used to gauge how laggy an area is.</dd>
 						<dt>Enemy HP</dt>
 						<dd>Shows the exact health of a single enemy. Attempts to find the most relevant enemy as you play. <strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
-						<dt>Misslots RAM</dt>
-						<dd>Ancillae RAM watch geared towards misslotting (see diagram)
-							<div class="center">
-								<img src="ancillawatch.png" class="helpvis" width="729">
-							</div>
-						</dd>
-						<dt>DG watch</dt>
-						<dd>RAM watch geared towards door glitches (see <a href="doorwatch.html">this page</a>).<strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
 					</dl>
 
 					<h3 id="menuConfiguration">Configuration</h3>
@@ -851,6 +812,38 @@
 			<div class="row">
 				<div class="col-lg-8 mx-auto">
 					<h2>Changelog</h2>
+					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.2.0">v13.2.0</a> <span class="releaseDate">15 September 2020</span></h3>
+					<ul>
+						<li>Link state:
+							<ul>
+								<li>Added ancillae search index editor</li>
+							</ul>
+						</li>
+						<li>RNG control:
+							<ul>
+								<li>Added an option for forcing the frame counter to a specific value for frame rule testing.</li>
+								<li>Removed cannonball and soldier settings in favor of forced frames.</li>
+							</ul>
+						</li>
+						<li>HUD extras:
+							<ul>
+								<li>Merged misslots- and DG-watch into a single feature under the name "Super Watch".</li>
+							</ul>
+						</li>
+						<li>Ancillae watch has been revamped to be more readable and expandable.</li>
+						<li>Bug fixes:
+							<ul>
+								<li>The ancillae watch revamp means the quickwarp indicator is no longer overwritten.</li>
+								<li>Menu sound effects no longer cause problems when changing certain options.</li>
+								<li>Fixed mastersword LSD effect.</li>
+							</ul>
+						</li>
+					</ul>
+					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.1.1">v13.1.1</a> <span class="releaseDate">23 April 2020</span></h3>
+					<ul>
+						<li>More efficient music muting, accomplished by adjust ADSR (sorry Myramong).</li>
+						<li>Fixed invisible timers caused by MVN.</li>
+					</ul>
 					<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.1.0">v13.1.0</a> <span class="releaseDate">8 Feb 2020</span></h3>
 					<ul>
 						<li>Old versions of the practice hack are no longer archived on GDrive. All future versions will point to the same file, without the version in its name.</li>
@@ -1202,6 +1195,7 @@
 						<li><a href="https://twitch.tv/poor_little_pinkus">Pinkus</a> for the original practice hack</li>
 						<li><a href="https://twitch.tv/lui_">Lui</a> for creating poverty savestates.</li>
 						<li>Myramong for the music muting.</li>
+						<li>tewtal for the JavaScript patcher.</li>
 					</ul>
 				</div>
 			</div>
@@ -1220,6 +1214,18 @@
 	<script async="" src="https://www.google-analytics.com/analytics.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+	<!-- Scripts for the JS patcher -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.8.4/babel.min.js"></script>
+    <script src="https://cdn.polyfill.io/v2/polyfill.js?features=fetch"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/localforage@1.7.3/dist/localforage.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.2/dist/FileSaver.min.js"></script>
+	<script type="text/babel" data-presets="env" src="patcher/js/patcher.js"></script>
+	<script type="text/babel" data-presets="env, typescript" src="patcher/js/bps.ts"></script>
+	<!-- // Scripts for the JS patcher -->
+
 	<script type="text/javascript">
 		(function($) {
 			$('a.js-scroll-trigger[href*="#"]:not([href="#"])').click(function() {

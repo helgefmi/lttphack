@@ -172,17 +172,7 @@ heart_lag_extra:
 update_hearts_hook:
 
 	%ai8()
-	LDA.l !ram_doorwatch_toggle : AND $1B : LSR ; set or clear clarry
-	LDA #$20 ; HDMA bit
-	BCC .noDoorWatch
-	LDX $10 : CPX #$0E : BEQ .noDoorWatch
-	CPX #$0C : BEQ .noDoorWatch
-	TSB $9B
 	JSL UpdateGlitchedWindow
-	BRA ++
-
-.noDoorWatch
-	TRB $9B
 
 ++	%ai16()
 	; Enters: AI=16
@@ -196,9 +186,9 @@ update_hearts_hook:
 
 .dont_draw_enemy_hp
 
-	LDA !ram_misslots_toggle : BEQ .dont_update_misslots
+	;LDA !ram_misslots_toggle : BEQ .dont_update_misslots
 
-	JSR hud_draw_misslots
+	;JSR hud_draw_misslots
 
 .dont_update_misslots
 	%a8()

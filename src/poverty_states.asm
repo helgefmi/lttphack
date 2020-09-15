@@ -143,7 +143,12 @@ load_poverty_state:
 	LDA !ram_rerandomize_accumulator : STA $0FA1
 
 .dont_rerandomize_2
+	LDA.l !ram_framerule
+	
+	BPL .nofixedframerule
+	STA $1A
 
+.nofixedframerule
 	%ai16()
 	JSL !Sprite_LoadGfxProperties
 

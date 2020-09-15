@@ -26,6 +26,7 @@ incsrc rng.asm
 incsrc misc.asm
 incsrc idle.asm
 incsrc glitchedwindow.asm
+incsrc ancillawindow.asm
 
 org $A48000
 incsrc custom_menu.asm

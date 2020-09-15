@@ -13,6 +13,7 @@
 !menu_dma_buffer = $7F8000 ; [0x800] reserved
 !dg_hdma = $7F8800 ; [0x800] reserved
 !dg_dma_buffer = $7F9000 ; [0x800] reserved
+!dg_buffer = !dg_dma_buffer
 !dg_buffer_r0 #= !dg_dma_buffer+(64*0)
 !dg_buffer_r1 #= !dg_dma_buffer+(64*1)
 !dg_buffer_r2 #= !dg_dma_buffer+(64*2)
@@ -116,8 +117,7 @@ endmacro
 %def_wramA("eyegore_rng", 2)
 %def_wramA("arrghus_rng", 2)
 %def_wramA("turtles_rng", 2)
-%def_wramA("cannonballs_rng", 2)
-%def_wramA("soldiers_rng", 2)
+%def_wramA("framerule", 2)
 %def_wramA("lanmola_rng", 2)
 %def_wramA("conveyor_rng", 2)
 %def_wramA("drop_rng", 2)
@@ -249,8 +249,7 @@ endmacro
 %def_sram("counters_segment", !OFF)
 %def_sram("heartlag_spinner", !OFF)
 %def_sram("extra_ram_watch", !OFF)
-%def_sram("misslots_toggle", !OFF)
-%def_sram("doorwatch_toggle", !OFF)
+%def_sram("superwatch", !OFF)
 
 %def_sram("rerandomize_framecount", 0)
 %def_sram("rerandomize_accumulator", 0)
