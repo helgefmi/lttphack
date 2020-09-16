@@ -327,7 +327,7 @@ if !FEATURE_SD2SNES
 .dont_rerandomize_2
 	LDA.l !ram_framerule
 	DEC
-	BPL .nofixedframerule
+	BMI .nofixedframerule
 	STA $1A
 
 .nofixedframerule

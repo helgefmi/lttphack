@@ -11,7 +11,45 @@ org $00802F
 org $0CC1FF
 JSL ClearWatchBuffer_pre
 
+org $008829
+JSL ClearBank7F
+
 pullpc
+ClearBank7F:
+	STA.b $13
+	INC.b $15
+
+	STZ $2181
+	STZ $2182
+	LDA.b #$01
+	STA $2183
+
+	LDA.b #.zero>>0
+	STA $4302
+	LDA.b #.zero>>8
+	STA $4303
+	LDA.b #.zero>>16
+	STA $4304
+
+	LDA #$FF ; fill the whole thing
+	STA $4305
+	STA $4306
+
+	LDA #$08
+	STA $4300
+	LDA #$80
+	STA $4301
+
+	LDA #$01
+	STA $420B ; can't write bank 7F yet
+
+	STZ $2180 ; last byte
+
+	RTL
+
+.zero
+	dw 0
+
 ClearWatchBuffer:
 	PHX
 	PHA
@@ -21,7 +59,6 @@ ClearWatchBuffer:
 	LDA #$207F
 	LDX #$3E
 
-	print pc
 --	STA.l !dg_buffer_r0, X
 	STA.l !dg_buffer_r1, X
 	STA.l !dg_buffer_r2, X
@@ -40,9 +77,9 @@ ClearWatchBuffer:
 	BRA ClearWatchBuffer
 
 init_hook:
-	LDA #$81 : STA $4200
 	JSL init_expand
 	%ai8()
+	LDA #$81 : STA $4200
 	RTL
 
 init_expand:
@@ -78,7 +115,9 @@ init_expand:
 	; Some features probably should be turned off after a reset
 	%a8()
 	STZ !lowram_oob_toggle
-
+	LDA #$00
+	STA.l !ram_superwatch
+	STA.l !ram_superwatch+1
 .done
 	RTL
 

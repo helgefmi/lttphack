@@ -144,8 +144,8 @@ load_poverty_state:
 
 .dont_rerandomize_2
 	LDA.l !ram_framerule
-	
-	BPL .nofixedframerule
+	DEC
+	BMI .nofixedframerule
 	STA $1A
 
 .nofixedframerule

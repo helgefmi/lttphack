@@ -191,7 +191,9 @@ nmi_hud_update:
 	SEP #$10
 
 	LDX !lag_cache : BNE .dontbreakthings
-	LDA.l !ram_superwatch : ASL
+	LDA.l !ram_superwatch
+	AND #$0003
+	ASL
 	TAX
 	JMP (.routines, X)
 
@@ -273,6 +275,7 @@ endmacro
 	dw .nowatch
 	dw .ancillawatch
 	dw .doorwatch
+	dw .nowatch
 
 ;===========================================
 ; OAM cleaner optimization

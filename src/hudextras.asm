@@ -418,7 +418,9 @@ draw_counters:
 ; NMI will be cycle controlled to not always draw this on bg3
 ; the rest of the time it will just draw all blanks
 hud_draw_input_display:
-	LDA !ram_input_display : ASL : TAX
+	LDA !ram_input_display
+	AND #$0003
+	ASL : TAX
 	LDA !ram_ctrl1
 
 	JSR (.options, X)
@@ -525,6 +527,7 @@ hud_draw_input_display_options:
 	dw .off
 	dw .cool
 	dw .lame
+	dw .off
 
 .off
 	STA $72

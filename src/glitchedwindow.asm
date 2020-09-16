@@ -50,6 +50,7 @@ function char(n) = $2150+n
 UpdateGlitchedWindow:
 	PHB : PHK : PLB
 	LDA.l !ram_superwatch
+	AND #$0003
 	ASL : TAX
 	JSR (.routines, X)
 	PLB : RTL
@@ -58,6 +59,7 @@ UpdateGlitchedWindow:
 	dw NoSuperWatch
 	dw UpdateAncillaWindow
 	dw UpdateUWWindow
+	dw NoSuperWatch
 
 NoSuperWatch:
 	LDA #$20
