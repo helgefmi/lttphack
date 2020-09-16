@@ -48,12 +48,13 @@ function char(n) = $2150+n
 ; ................................
 
 UpdateGlitchedWindow:
-	PHB : PHK : PLB
+	PHB : PHK : PLB : PHP
+	SEP #$30
 	LDA.l !ram_superwatch
-	AND #$0003
+	AND #$03
 	ASL : TAX
 	JSR (.routines, X)
-	PLB : RTL
+	PLP : PLB : RTL
 
 .routines
 	dw NoSuperWatch
