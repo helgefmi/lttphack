@@ -51,7 +51,7 @@ UpdateGlitchedWindow:
 	PHB : PHK : PLB : PHP
 	SEP #$30
 	LDA.l !ram_superwatch
-	AND #$03
+	AND.b #$03
 	ASL : TAX
 	JSR (.routines, X)
 	PLP : PLB : RTL
