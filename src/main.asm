@@ -58,6 +58,9 @@ incsrc preset_data_low.asm
 org $B38000
 incsrc preset_data_ad.asm
 
+org $B48000
+incsrc preset_data_anyrmg.asm
+
 org !SPC_DATA_OVERWORLD
 incbin ../resources/spc_overworld.bin
 
