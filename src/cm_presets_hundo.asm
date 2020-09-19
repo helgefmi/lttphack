@@ -15,7 +15,7 @@ cm_hundo_submenu_presets:
 	dw cm_hundo_presets_goto_ganon
 	dw cm_hundo_presets_goto_boss
 	dw !menu_end
-	%cm_header("PRESETS")
+	%cm_header("HUNDO PRESETS")
 
 ; HYRULE CASTLE
 

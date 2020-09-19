@@ -6,7 +6,7 @@ cm_anyrmg_submenu_presets:
     dw cm_anyrmg_presets_goto_ganon
     dw cm_anyrmg_presets_goto_boss
     dw #$0000
-    %cm_header("PRESETS")
+    %cm_header("ANY RMG PRESETS")
 
 ; EASTERN PALACE
 

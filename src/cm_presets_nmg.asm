@@ -15,7 +15,7 @@ cm_nmg_submenu_presets:
 	dw cm_nmg_presets_goto_ganon
 	dw cm_nmg_presets_goto_boss
 	dw !menu_end
-	%cm_header("PRESETS")
+	%cm_header("NMG PRESETS")
 
 ; HYRULE CASTLE
 
