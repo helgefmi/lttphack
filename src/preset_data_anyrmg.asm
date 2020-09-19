@@ -502,8 +502,8 @@ dw sram_anyrmg_esc_eastern_spinspeed_after
 
 preset_anyrmg_esc_dma:
 db $01 ; Overworld
-dw $0012 ; Screen Index
-dw $0603 ; Link X
+dw $0013 ; Screen Index
+dw $0607 ; Link X
 dw $0577 ; Link Y
 dw $9A1A ; BG1 Vertical Scroll
 dw $0513 ; BG2 Vertical Scroll
@@ -511,7 +511,7 @@ dw $1B80 ; BG1 Horizontal Scroll
 dw $0600 ; BG2 Horizontal Scroll
 dw $0685 ; Scroll X
 dw $0582 ; Scroll Y
-dw $08C0 ; Unknown 1
+dw $0880 ; Unknown 1
 dw $FFFB ; Unknown 2
 dw $0000 ; Unknown 3
 dw sram_anyrmg_esc_dma_after
@@ -646,7 +646,7 @@ dw $2400 ; BG2 Vertical Scroll
 dw $1400 ; BG1 Horizontal Scroll
 dw $1400 ; BG2 Horizontal Scroll
 dw $1478 ; Link X
-dw $241C ; Link Y
+dw $2420 ; Link Y
 dw $007F ; Camera X
 dw $0078 ; Camera Y
 dw $0000 ; Door Settings
@@ -812,7 +812,7 @@ dw $0E00 ; BG2 Vertical Scroll
 dw $0000 ; BG1 Horizontal Scroll
 dw $0000 ; BG2 Horizontal Scroll
 dw $0050 ; Link X
-dw $0E23 ; Link Y
+dw $0E24 ; Link Y
 dw $007F ; Camera X
 dw $0078 ; Camera Y
 dw $0000 ; Door Settings
@@ -913,14 +913,14 @@ dw sram_anyrmg_temp_hera_entrance_after
 preset_anyrmg_temp_hera_beetles:
 db $02 ; Dungeon
 dw $0077 ; Room Index
-dw $0EDF ; BG1 Vertical Scroll
-dw $0EDF ; BG2 Vertical Scroll
+dw $0EE0 ; BG1 Vertical Scroll
+dw $0EE0 ; BG2 Vertical Scroll
 dw $0EF0 ; BG1 Horizontal Scroll
 dw $0EF0 ; BG2 Horizontal Scroll
 dw $0F68 ; Link X
-dw $0F4B ; Link Y
+dw $0F4C ; Link Y
 dw $016F ; Camera X
-dw $0156 ; Camera Y
+dw $0157 ; Camera Y
 dw $0000 ; Door Settings
 dw $0F00 ; Relative Coords HU
 dw $0E00 ; Relative Coords FU
@@ -943,14 +943,14 @@ dw sram_anyrmg_temp_hera_beetles_after
 preset_anyrmg_temp_hera_petting_zoo:
 db $02 ; Dungeon
 dw $0031 ; Room Index
-dw $060B ; BG1 Vertical Scroll
-dw $0607 ; BG2 Vertical Scroll
+dw $060D ; BG1 Vertical Scroll
+dw $060B ; BG2 Vertical Scroll
 dw $0280 ; BG1 Horizontal Scroll
 dw $0300 ; BG2 Horizontal Scroll
 dw $03B8 ; Link X
-dw $0674 ; Link Y
+dw $0678 ; Link Y
 dw $017F ; Camera X
-dw $007F ; Camera Y
+dw $0083 ; Camera Y
 dw $0000 ; Door Settings
 dw $0600 ; Relative Coords HU
 dw $0600 ; Relative Coords FU
@@ -1036,8 +1036,8 @@ preset_anyrmg_gtower_entrance:
 db $01 ; Overworld
 dw $0043 ; Screen Index
 dw $08F8 ; Link X
-dw $083D ; Link Y
-dw $F4AF ; BG1 Vertical Scroll
+dw $083E ; Link Y
+dw $F4B0 ; BG1 Vertical Scroll
 dw $031E ; BG2 Vertical Scroll
 dw $0881 ; BG1 Horizontal Scroll
 dw $0881 ; BG2 Horizontal Scroll
@@ -1176,7 +1176,7 @@ dw $0C10 ; BG2 Vertical Scroll
 dw $1600 ; BG1 Horizontal Scroll
 dw $1600 ; BG2 Horizontal Scroll
 dw $1678 ; Link X
-dw $0CDB ; Link Y
+dw $0CD9 ; Link Y
 dw $007F ; Camera X
 dw $0087 ; Camera Y
 dw $0000 ; Door Settings
@@ -1236,7 +1236,7 @@ dw $0C00 ; BG2 Vertical Scroll
 dw $1700 ; BG1 Horizontal Scroll
 dw $1700 ; BG2 Horizontal Scroll
 dw $1778 ; Link X
-dw $0C20 ; Link Y
+dw $0C24 ; Link Y
 dw $017F ; Camera X
 dw $0078 ; Camera Y
 dw $0000 ; Door Settings
@@ -1296,7 +1296,7 @@ dw $0A10 ; BG2 Vertical Scroll
 dw $1A00 ; BG1 Horizontal Scroll
 dw $1A00 ; BG2 Horizontal Scroll
 dw $1A78 ; Link X
-dw $0AD9 ; Link Y
+dw $0AD8 ; Link Y
 dw $007F ; Camera X
 dw $0088 ; Camera Y
 dw $0000 ; Door Settings
@@ -1356,7 +1356,7 @@ dw $0C00 ; BG2 Vertical Scroll
 dw $1800 ; BG1 Horizontal Scroll
 dw $1800 ; BG2 Horizontal Scroll
 dw $1878 ; Link X
-dw $0C24 ; Link Y
+dw $0C28 ; Link Y
 dw $007F ; Camera X
 dw $0078 ; Camera Y
 dw $0000 ; Door Settings
@@ -1386,7 +1386,7 @@ dw $1500 ; BG2 Vertical Scroll
 dw $0B00 ; BG1 Horizontal Scroll
 dw $0B00 ; BG2 Horizontal Scroll
 dw $0B78 ; Link X
-dw $1524 ; Link Y
+dw $1528 ; Link Y
 dw $017F ; Camera X
 dw $0178 ; Camera Y
 dw $0000 ; Door Settings
@@ -1536,7 +1536,7 @@ dw $0710 ; BG2 Vertical Scroll
 dw $1A00 ; BG1 Horizontal Scroll
 dw $1A00 ; BG2 Horizontal Scroll
 dw $1A78 ; Link X
-dw $07DB ; Link Y
+dw $07D9 ; Link Y
 dw $007F ; Camera X
 dw $0188 ; Camera Y
 dw $0000 ; Door Settings
@@ -1625,21 +1625,21 @@ dl $7EF3DA : db $02 : dw $8C01 ; Player name
 dl $7EF3DE : db $02 : dw $8C01 ; Player name
 dl $7EF3E2 : db $02 : dw $0055 ; Player name
 dl $7EF402 : db $02 : dw $00FF ; Deaths
-dl $7EF4FE : db $02 : dw $CDEA ; Inverse checksum
 dl $7EC167 : db $01 : db $7D ; Underworld exit cache
 dl $7EC74B : db $01 : db $20 ; Selected menu gfx, row 1
 dl $7EC78B : db $01 : db $20 ; Selected menu gfx, row 2
 dl $7E0468 : db $02 : dw $0001 ; Trap door state
 dl $7E0540 : db $02 : dw $15CA ; Object tilemap state
-dl $7E0544 : db $02 : dw $17CA ; Object tilemap state
 dl $7EC165 : db $01 : db $23 ; Underworld exit cache
 dl $7EC74C : db $01 : db $7F ; Selected menu gfx, row 1
 dl $7EC78C : db $01 : db $7F ; Selected menu gfx, row 2
 dl $7EC142 : db $02 : dw $0015 ; Underworld exit cache
 dl $7EC166 : db $01 : db $51 ; Underworld exit cache
 dl $7EC74D : db $01 : db $20 ; Selected menu gfx, row 1
-dl $7EC78D : db $01 : db $20 ; Selected menu gfx, row 2
 dl $7E002F : db $01 : db $02 ; Link's direction
+dl $7EF4FE : db $02 : dw $CDEA ; Inverse checksum
+dl $7E0544 : db $02 : dw $17CA ; Object tilemap state
+dl $7EC78D : db $01 : db $20 ; Selected menu gfx, row 2
 .after
 
 sram_anyrmg_east_courtyard_1:
@@ -1660,7 +1660,6 @@ dl $7EF3C6 : db $01 : db $11 ; Game Phase 2
 dl $7FE0EF : db $01 : db $41 ; Room $B7 persistent: Turtle Rock (Map Chest / Key Chest / Roller Room)
 dl $7E0303 : db $01 : db $09 ; Selected menu item
 dl $7E0540 : db $02 : dw $18E6 ; Object tilemap state
-dl $7E0544 : db $02 : dw $1850 ; Object tilemap state
 dl $7EC74C : db $02 : dw $24BD ; Selected menu gfx, row 1
 dl $7E0CBB : db $01 : db $00 ; Sprite drop
 dl $7E010F : db $01 : db $00 ; 
@@ -1669,9 +1668,10 @@ dl $7E0CC7 : db $01 : db $00 ; Sprite drop
 dl $7EF051 : db $01 : db $00 ; Room $0028: Swamp Palace (Entrance Room) (................)
 dl $7E0CC9 : db $01 : db $00 ; Sprite drop
 dl $7EC78C : db $02 : dw $24CD ; Selected menu gfx, row 2
-dl $7E0302 : db $01 : db $00 ; Selected menu item
 dl $7E010E : db $01 : db $7D ; Dungeon entrance index
 dl $7E0202 : db $01 : db $0B ; Selected menu item
+dl $7E0302 : db $01 : db $00 ; Selected menu item
+dl $7E0544 : db $02 : dw $1850 ; Object tilemap state
 .after
 
 sram_anyrmg_east_castle_entrance:
@@ -1692,10 +1692,10 @@ dl $7EF3C4 : db $02 : dw $0100 ;
 dl $7EF36D : db $01 : db $18 ; Health (actual)
 dl $7EF0C2 : db $02 : dw $000F ; Room $0061: Hyrule Castle (Main Entrance Room) (.............qqq)
 dl $7EF3FE : db $02 : dw $0100 ; Deaths
-dl $7EF4FE : db $02 : dw $CAA4 ; Inverse checksum
 dl $7FE0EF : db $01 : db $00 ; Room $B7 persistent: Turtle Rock (Map Chest / Key Chest / Roller Room)
-dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7E010E : db $02 : dw $0032 ; Dungeon entrance index
+dl $7E002F : db $01 : db $02 ; Link's direction
+dl $7EF4FE : db $02 : dw $CAA4 ; Inverse checksum
 .after
 
 sram_anyrmg_east_links_house_citrus:
@@ -1705,8 +1705,8 @@ dl $7EF0C0 : db $02 : dw $000F ; Room $0060: Hyrule Castle (West Entrance Room) 
 dl $7EF36D : db $01 : db $12 ; Health (actual)
 dl $7FE0EF : db $01 : db $41 ; Overworld $B7 persistent: UNKNOWN
 dl $7E0540 : db $02 : dw $0470 ; Object tilemap state
-dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 dl $7E010E : db $01 : db $04 ; Dungeon entrance index
+dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 .after
 
 sram_anyrmg_east_outside_palace:
@@ -1732,18 +1732,18 @@ dl $7EF152 : db $02 : dw $000F ; Room $00A9: Eastern Palace (Big Chest Room) (..
 dl $7EF172 : db $02 : dw $000F ; Room $00B9: Eastern Palace (Lobby Cannonballs Room) (.............qqq)
 dl $7EF192 : db $02 : dw $000F ; Room $00C9: Eastern Palace (Entrance Room) (.............qqq)
 dl $7E0540 : db $02 : dw $138A ; Object tilemap state
-dl $7E0544 : db $02 : dw $1C8A ; Object tilemap state
-dl $7E0548 : db $02 : dw $181E ; Object tilemap state
 dl $7E0B37 : db $01 : db $00 ; Arc variable
 dl $7E0B3F : db $01 : db $00 ; Arc variable
 dl $7E0CBD : db $01 : db $00 ; Sprite drop
 dl $7E0B3E : db $01 : db $00 ; Arc variable
 dl $7E0B36 : db $01 : db $00 ; Arc variable
+dl $7E010E : db $01 : db $08 ; Dungeon entrance index
 dl $7E0B0C : db $01 : db $20 ; Arc variable
 dl $7E0B34 : db $01 : db $00 ; Arc variable
 dl $7E0B3C : db $01 : db $00 ; Arc variable
 dl $7E002F : db $01 : db $04 ; Link's direction
-dl $7E010E : db $01 : db $08 ; Dungeon entrance index
+dl $7E0544 : db $02 : dw $1C8A ; Object tilemap state
+dl $7E0548 : db $02 : dw $181E ; Object tilemap state
 .after
 
 sram_anyrmg_east_big_chest_room_1:
@@ -1760,12 +1760,12 @@ dl $7E054E : db $02 : dw $396C ; Object tilemap state
 dl $7EF377 : db $01 : db $05 ; Arrows
 dl $7EF154 : db $02 : dw $000A ; Room $00AA: Eastern Palace (Map Chest Room) (.............q.q)
 dl $7E0540 : db $02 : dw $05D4 ; Object tilemap state
-dl $7E0544 : db $02 : dw $0AD4 ; Object tilemap state
-dl $7E0548 : db $02 : dw $085E ; Object tilemap state
-dl $7E054C : db $02 : dw $386C ; Object tilemap state
 dl $7E0CBF : db $01 : db $00 ; Sprite drop
 dl $7E0CBE : db $01 : db $00 ; Sprite drop
 dl $7E002F : db $01 : db $02 ; Link's direction
+dl $7E0544 : db $02 : dw $0AD4 ; Object tilemap state
+dl $7E0548 : db $02 : dw $085E ; Object tilemap state
+dl $7E054C : db $02 : dw $386C ; Object tilemap state
 .after
 
 sram_anyrmg_east_dark_key_room:
@@ -1779,10 +1779,10 @@ dl $7EF174 : db $02 : dw $0008 ; Room $00BA: Eastern Palace (Dark Antifairy / Ke
 dl $7FE0F4 : db $02 : dw $0010 ; Room $BA persistent: Eastern Palace (Dark Antifairy / Key Pot Room)
 dl $7E0468 : db $01 : db $00 ; Trap door state
 dl $7E0540 : db $02 : dw $064C ; Object tilemap state
+dl $7E002F : db $01 : db $06 ; Link's direction
 dl $7E0544 : db $02 : dw $0858 ; Object tilemap state
 dl $7E0548 : db $02 : dw $0C5E ; Object tilemap state
 dl $7E054C : db $02 : dw $0670 ; Object tilemap state
-dl $7E002F : db $01 : db $06 ; Link's direction
 .after
 
 sram_anyrmg_east_big_key_dmg_boost:
@@ -1798,11 +1798,11 @@ dl $7EF362 : db $02 : dw $0005 ; Rupees (actual)
 dl $7FE0F4 : db $02 : dw $0050 ; Room $BA persistent: Eastern Palace (Dark Antifairy / Key Pot Room)
 dl $7E0468 : db $02 : dw $0001 ; Trap door state
 dl $7E0540 : db $02 : dw $125C ; Object tilemap state
+dl $7E0B37 : db $01 : db $FF ; Arc variable
+dl $7E002F : db $01 : db $04 ; Link's direction
 dl $7E0544 : db $02 : dw $1268 ; Object tilemap state
 dl $7E0548 : db $02 : dw $0000 ; Object tilemap state
 dl $7E054C : db $02 : dw $0000 ; Object tilemap state
-dl $7E0B37 : db $01 : db $FF ; Arc variable
-dl $7E002F : db $01 : db $04 ; Link's direction
 .after
 
 sram_anyrmg_east_big_chest_room_2:
@@ -1814,11 +1814,11 @@ dl $7EF170 : db $02 : dw $8015 ; Room $00B8: Eastern Palace (Big Key Room) (.d..
 dl $7EF36D : db $01 : db $0C ; Health (actual)
 dl $7EF366 : db $02 : dw $2000 ; BigKey1
 dl $7E0540 : db $02 : dw $138A ; Object tilemap state
-dl $7E0544 : db $02 : dw $1C8A ; Object tilemap state
-dl $7E0548 : db $02 : dw $181E ; Object tilemap state
 dl $7E0B37 : db $01 : db $00 ; Arc variable
 dl $7E0641 : db $02 : dw $0001 ; Room puzzle state (?)
 dl $7E002F : db $01 : db $06 ; Link's direction
+dl $7E0544 : db $02 : dw $1C8A ; Object tilemap state
+dl $7E0548 : db $02 : dw $181E ; Object tilemap state
 .after
 
 sram_anyrmg_east_gwg:
@@ -1835,14 +1835,14 @@ dl $7EF152 : db $02 : dw $201F ; Room $00A9: Eastern Palace (Big Chest Room) (..
 dl $7E0303 : db $01 : db $03 ; Selected menu item
 dl $7FE0F4 : db $02 : dw $0000 ; Room $BA persistent: Eastern Palace (Dark Antifairy / Key Pot Room)
 dl $7E0540 : db $02 : dw $146C ; Object tilemap state
+dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
+dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
+dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E0641 : db $01 : db $00 ; Room puzzle state (?)
+dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7E0544 : db $02 : dw $130C ; Object tilemap state
 dl $7E0548 : db $02 : dw $2B90 ; Object tilemap state
 dl $7E054C : db $02 : dw $2BEC ; Object tilemap state
-dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
-dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
-dl $7E0641 : db $01 : db $00 ; Room puzzle state (?)
-dl $7E002F : db $01 : db $00 ; Link's direction
-dl $7E0202 : db $01 : db $01 ; Selected menu item
 .after
 
 sram_anyrmg_east_pot_room:
@@ -1855,10 +1855,10 @@ dl $7EF377 : db $01 : db $0E ; Arrows
 dl $7EF132 : db $02 : dw $C403 ; Room $0099: Eastern Palace (Eyegore Key Room) (.dd...K........q)
 dl $7EF36E : db $01 : db $10 ; Magic Power
 dl $7E0540 : db $02 : dw $1428 ; Object tilemap state
+dl $7FE0B2 : db $02 : dw $0008 ; Room $99 persistent: Eastern Palace (Eyegore Key Room)
 dl $7E0544 : db $02 : dw $13BE ; Object tilemap state
 dl $7E0548 : db $02 : dw $1CD2 ; Object tilemap state
 dl $7E054C : db $02 : dw $0000 ; Object tilemap state
-dl $7FE0B2 : db $02 : dw $0008 ; Room $99 persistent: Eastern Palace (Eyegore Key Room)
 .after
 
 sram_anyrmg_east_zeldagamer_room:
@@ -1869,9 +1869,9 @@ dl $7EF1B4 : db $02 : dw $0002 ; Room $00DA: Eastern Palace (...............q)
 dl $7EF1B2 : db $02 : dw $0003 ; Room $00D9: Eastern Palace (Canonball Room) (...............q)
 dl $7E0468 : db $01 : db $00 ; Trap door state
 dl $7E0540 : db $02 : dw $145C ; Object tilemap state
+dl $7E002F : db $01 : db $04 ; Link's direction
 dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0548 : db $02 : dw $0000 ; Object tilemap state
-dl $7E002F : db $01 : db $04 ; Link's direction
 .after
 
 sram_anyrmg_east_armos:
@@ -1886,10 +1886,10 @@ dl $7EF1B0 : db $02 : dw $0005 ; Room $00D8: Eastern Palace (Zeldagamer Room / P
 dl $7EF360 : db $02 : dw $000B ; Rupees (goal)
 dl $7EF362 : db $02 : dw $000B ; Rupees (actual)
 dl $7E0540 : db $02 : dw $08CA ; Object tilemap state
+dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7E0544 : db $02 : dw $0CCA ; Object tilemap state
 dl $7E0548 : db $02 : dw $0CF2 ; Object tilemap state
 dl $7E054C : db $02 : dw $185C ; Object tilemap state
-dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7E0FCB : db $01 : db $01 ; Prize pack index
 dl $7FE130 : db $02 : dw $07FF ; Room $D8 persistent: Eastern Palace (Zeldagamer Room / Pre-Armos Knights Room)
 .after
@@ -1912,9 +1912,6 @@ dl $7EF374 : db $01 : db $04 ; Pendants
 dl $7EF36D : db $01 : db $20 ; Health (actual)
 dl $7EF36E : db $01 : db $80 ; Magic Power
 dl $7E0540 : db $02 : dw $0000 ; Object tilemap state
-dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
-dl $7E0548 : db $02 : dw $0000 ; Object tilemap state
-dl $7E054C : db $02 : dw $0000 ; Object tilemap state
 dl $7E02A1 : db $01 : db $17 ; Arc variable
 dl $7E0B32 : db $01 : db $30 ; Arc variable
 dl $7E0B33 : db $01 : db $30 ; Arc variable
@@ -1924,6 +1921,9 @@ dl $7E0B08 : db $01 : db $40 ; Arc variable
 dl $7E0B30 : db $01 : db $30 ; Arc variable
 dl $7E0B34 : db $01 : db $30 ; Arc variable
 dl $7E002F : db $01 : db $02 ; Link's direction
+dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
+dl $7E0548 : db $02 : dw $0000 ; Object tilemap state
+dl $7E054C : db $02 : dw $0000 ; Object tilemap state
 dl $7FE130 : db $01 : db $00 ; Overworld $D8 persistent: UNKNOWN
 .after
 
@@ -1949,8 +1949,8 @@ dl $7EC16C : db $02 : dw $FFF8 ; Underworld exit cache
 dl $7EC170 : db $02 : dw $FFF6 ; Underworld exit cache
 dl $7E0468 : db $01 : db $01 ; Trap door state
 dl $7E0540 : db $02 : dw $151C ; Object tilemap state
-dl $7E0544 : db $02 : dw $141E ; Object tilemap state
 dl $7EC165 : db $01 : db $20 ; Underworld exit cache
+dl $7E010E : db $01 : db $45 ; Dungeon entrance index
 dl $7EC142 : db $02 : dw $0116 ; Underworld exit cache
 dl $7EC146 : db $02 : dw $0C76 ; Underworld exit cache
 dl $7EC14A : db $02 : dw $0CF0 ; Underworld exit cache
@@ -1963,7 +1963,7 @@ dl $7EC162 : db $02 : dw $1000 ; Underworld exit cache
 dl $7EC166 : db $01 : db $25 ; Underworld exit cache
 dl $7EC16A : db $02 : dw $0008 ; Underworld exit cache
 dl $7EC16E : db $02 : dw $000A ; Underworld exit cache
-dl $7E010E : db $01 : db $45 ; Dungeon entrance index
+dl $7E0544 : db $02 : dw $141E ; Object tilemap state
 .after
 
 sram_anyrmg_esc_dma:
@@ -1979,10 +1979,10 @@ dl $7EF3C8 : db $01 : db $05 ; Entrances Phase
 dl $7EF3CC : db $01 : db $04 ; Tagalong
 dl $7EF1E2 : db $02 : dw $000F ; Room $00F1: Cave (Lost Old Man Starting Cave) (.............qqq)
 dl $7E0540 : db $02 : dw $0540 ; Object tilemap state
-dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
+dl $7E010E : db $01 : db $06 ; Dungeon entrance index
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
 dl $7E002F : db $01 : db $02 ; Link's direction
-dl $7E010E : db $01 : db $06 ; Dungeon entrance index
+dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 .after
 
 sram_anyrmg_esc_kiki_yeet:
@@ -2012,14 +2012,14 @@ dl $7EF1F2 : db $02 : dw $000F ; Room $00F9: Cave (.............qqq)
 dl $7E029F : db $01 : db $00 ; Arc variable
 dl $7E0303 : db $01 : db $01 ; Selected menu item
 dl $7E0540 : db $02 : dw $050E ; Object tilemap state
-dl $7E0544 : db $02 : dw $0B0E ; Object tilemap state
-dl $7E0548 : db $02 : dw $0838 ; Object tilemap state
-dl $7E054C : db $02 : dw $055C ; Object tilemap state
-dl $7E0550 : db $02 : dw $0B5C ; Object tilemap state
 dl $7EC74C : db $02 : dw $2CB3 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $6CC2 ; Selected menu gfx, row 2
 dl $7E010E : db $01 : db $21 ; Dungeon entrance index
 dl $7E0202 : db $01 : db $04 ; Selected menu item
+dl $7E0544 : db $02 : dw $0B0E ; Object tilemap state
+dl $7E0548 : db $02 : dw $0838 ; Object tilemap state
+dl $7E054C : db $02 : dw $055C ; Object tilemap state
+dl $7E0550 : db $02 : dw $0B5C ; Object tilemap state
 .after
 
 sram_anyrmg_esc_pod_main_hub_hammerjump:
@@ -2077,16 +2077,16 @@ dl $7EF36E : db $02 : dw $FC80 ; Magic Power
 dl $7EF376 : db $02 : dw $0900 ; Arrow filler
 dl $7EF3C6 : db $02 : dw $0311 ; Game Phase 2
 dl $7EF3E6 : db $02 : dw $0100 ; 
-dl $7EF4FE : db $02 : dw $4585 ; Inverse checksum
 dl $7E0303 : db $01 : db $03 ; Selected menu item
 dl $7E0540 : db $02 : dw $0000 ; Object tilemap state
-dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0B37 : db $01 : db $A0 ; Arc variable
 dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
-dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7E010E : db $02 : dw $0002 ; Dungeon entrance index
 dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E002F : db $01 : db $02 ; Link's direction
+dl $7EF4FE : db $02 : dw $4585 ; Inverse checksum
+dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 .after
 
 sram_anyrmg_esc_entrance:
@@ -2102,8 +2102,8 @@ dl $7EF0A4 : db $02 : dw $000F ; Room $0052: Hyrule Castle (East Corridor) (....
 dl $7EF0C4 : db $02 : dw $000F ; Room $0062: Hyrule Castle (East Entrance Room) (.............qqq)
 dl $7EF002 : db $02 : dw $000C ; Room $0001: Hyrule Castle (North Corridor) (.............qq.)
 dl $7FE0EF : db $01 : db $00 ; Room $B7 persistent: Turtle Rock (Map Chest / Key Chest / Roller Room)
-dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
 dl $7E010E : db $01 : db $05 ; Dungeon entrance index
+dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
 .after
 
 sram_anyrmg_esc_stealth_room:
@@ -2115,11 +2115,11 @@ dl $7EF104 : db $02 : dw $000F ; Room $0082: Hyrule Castle (Basement Chasm Room)
 dl $7E0303 : db $01 : db $04 ; Selected menu item
 dl $7FE064 : db $02 : dw $0001 ; Room $72 persistent: Hyrule Castle (Map Chest Room)
 dl $7E0540 : db $02 : dw $324C ; Object tilemap state
-dl $7E0544 : db $02 : dw $2A32 ; Object tilemap state
 dl $7EC74C : db $02 : dw $20B7 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $20C7 ; Selected menu gfx, row 2
-dl $7E002F : db $01 : db $04 ; Link's direction
 dl $7E0202 : db $01 : db $0C ; Selected menu item
+dl $7E002F : db $01 : db $04 ; Link's direction
+dl $7E0544 : db $02 : dw $2A32 ; Object tilemap state
 .after
 
 sram_anyrmg_esc_2nd_keyguard:
@@ -2128,11 +2128,11 @@ dl $7EF0E2 : db $02 : dw $0002 ; Room $0071: Hyrule Castle (Boomerang Chest Room
 dl $7EF102 : db $02 : dw $000F ; Room $0081: Hyrule Castle (.............qqq)
 dl $7E0468 : db $02 : dw $0000 ; Trap door state
 dl $7E0540 : db $02 : dw $0000 ; Object tilemap state
-dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0CBB : db $01 : db $01 ; Sprite drop
 dl $7FE062 : db $02 : dw $0001 ; Room $71 persistent: Hyrule Castle (Boomerang Chest Room)
 dl $7FE082 : db $02 : dw $0001 ; Room $81 persistent: Hyrule Castle
 dl $7E002F : db $01 : db $06 ; Link's direction
+dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 .after
 
 sram_anyrmg_esc_zeldas_cell:
@@ -2158,7 +2158,6 @@ dl $7EF3E4 : db $02 : dw $0100 ; Player name
 dl $7EF3E5 : db $02 : dw $0001 ; Validity (checksum)
 dl $7EF36E : db $02 : dw $0080 ; Magic Power
 dl $7EF3C6 : db $01 : db $15 ; Game Phase 2
-dl $7EF4FE : db $02 : dw $36CE ; Inverse checksum
 dl $7E0303 : db $01 : db $14 ; Selected menu item
 dl $7EC74C : db $02 : dw $2C63 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $2C73 ; Selected menu gfx, row 2
@@ -2166,6 +2165,7 @@ dl $7FE062 : db $01 : db $00 ; Room $71 persistent: Hyrule Castle (Boomerang Che
 dl $7FE082 : db $01 : db $00 ; Room $81 persistent: Hyrule Castle
 dl $7E010E : db $02 : dw $0002 ; Dungeon entrance index
 dl $7E0202 : db $01 : db $14 ; Selected menu item
+dl $7EF4FE : db $02 : dw $36CE ; Inverse checksum
 .after
 
 sram_anyrmg_temp_old_man_cave:
@@ -2187,14 +2187,14 @@ dl $7EF3C5 : db $01 : db $02 ; Game Phase 1
 dl $7EF29A : db $02 : dw $2000 ; Overworld $1A: Unknown (........)
 dl $7EF3C6 : db $02 : dw $0115 ; Game Phase 2
 dl $7EF3E2 : db $02 : dw $0155 ; Player name
-dl $7EF4FE : db $02 : dw $0EB4 ; Inverse checksum
 dl $7E0303 : db $01 : db $03 ; Selected menu item
 dl $7E0540 : db $02 : dw $0920 ; Object tilemap state
 dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
-dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7E010E : db $02 : dw $0030 ; Dungeon entrance index
 dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E002F : db $01 : db $02 ; Link's direction
+dl $7EF4FE : db $02 : dw $0EB4 ; Inverse checksum
 .after
 
 sram_anyrmg_temp_hera_entrance:
@@ -2208,9 +2208,9 @@ dl $7E0542 : db $02 : dw $0000 ; Object tilemap state
 dl $7EF36F : db $01 : db $00 ; Keys
 dl $7EF0EE : db $02 : dw $000F ; Room $0077: Tower of Hera (Entrance Room) (.............qqq)
 dl $7E0540 : db $02 : dw $0000 ; Object tilemap state
+dl $7E010E : db $01 : db $33 ; Dungeon entrance index
 dl $7FDFCB : db $01 : db $00 ; Room $25 persistent: Empty Clone Room
 dl $7E002F : db $01 : db $00 ; Link's direction
-dl $7E010E : db $01 : db $33 ; Dungeon entrance index
 .after
 
 sram_anyrmg_temp_hera_petting_zoo:
@@ -2238,8 +2238,8 @@ dl $7EC74C : db $02 : dw $2C63 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $2C73 ; Selected menu gfx, row 2
 dl $7FDFE2 : db $01 : db $00 ; Overworld $31 persistent: UNKNOWN
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
-dl $7E002F : db $01 : db $06 ; Link's direction
 dl $7E0202 : db $01 : db $14 ; Selected menu item
+dl $7E002F : db $01 : db $06 ; Link's direction
 .after
 
 sram_anyrmg_temp_getting_tempered:
@@ -2273,14 +2273,14 @@ dl $7EF356 : db $02 : dw $0100 ; Flippers
 dl $7EF362 : db $02 : dw $0001 ; Rupees (actual)
 dl $7EF36E : db $02 : dw $FF80 ; Magic Power
 dl $7EF3FE : db $02 : dw $0200 ; Deaths
-dl $7EF4FE : db $02 : dw $6B7D ; Inverse checksum
 dl $7E0303 : db $01 : db $03 ; Selected menu item
 dl $7E0540 : db $02 : dw $0920 ; Object tilemap state
 dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
-dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7E010E : db $02 : dw $0030 ; Dungeon entrance index
 dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E002F : db $01 : db $02 ; Link's direction
+dl $7EF4FE : db $02 : dw $6B7D ; Inverse checksum
 .after
 
 sram_anyrmg_gtower_entrance:
@@ -2290,8 +2290,8 @@ dl $7EF3CA : db $01 : db $40 ; LW/DW
 dl $7E0303 : db $01 : db $04 ; Selected menu item
 dl $7EC74C : db $02 : dw $20B7 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $20C7 ; Selected menu gfx, row 2
-dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7E0202 : db $01 : db $0C ; Selected menu item
+dl $7E002F : db $01 : db $00 ; Link's direction
 .after
 
 sram_anyrmg_gtower_spike_skip:
@@ -2306,15 +2306,15 @@ dl $7EF018 : db $02 : dw $000F ; Room $000C: Ganon's Tower (Entrance Room) (....
 dl $7EF118 : db $02 : dw $0408 ; Room $008C: Ganon's Tower (East and West Downstairs / Big Chest Room) (......K......q..)
 dl $7EF116 : db $02 : dw $0404 ; Room $008B: Ganon's Tower (Block Puzzle / Spike Skip / Map Chest Room) (......K.......q.)
 dl $7E0468 : db $01 : db $00 ; Trap door state
+dl $7E010E : db $01 : db $37 ; Dungeon entrance index
+dl $7E0641 : db $02 : dw $0001 ; Room puzzle state (?)
+dl $7E0B0C : db $01 : db $50 ; Arc variable
+dl $7E002F : db $01 : db $04 ; Link's direction
 dl $7E0544 : db $02 : dw $1720 ; Object tilemap state
 dl $7E0548 : db $02 : dw $0760 ; Object tilemap state
 dl $7E054C : db $02 : dw $0960 ; Object tilemap state
 dl $7E0550 : db $02 : dw $0C70 ; Object tilemap state
 dl $7E0554 : db $02 : dw $1C4C ; Object tilemap state
-dl $7E0641 : db $02 : dw $0001 ; Room puzzle state (?)
-dl $7E0B0C : db $01 : db $50 ; Arc variable
-dl $7E002F : db $01 : db $04 ; Link's direction
-dl $7E010E : db $01 : db $37 ; Dungeon entrance index
 .after
 
 sram_anyrmg_gtower_pre_firesnakes_room:
@@ -2331,18 +2331,18 @@ dl $7EF136 : db $02 : dw $8408 ; Room $009B: Ganon's Tower (Many Spikes / Warp M
 dl $7E0303 : db $01 : db $02 ; Selected menu item
 dl $7E0468 : db $02 : dw $0001 ; Trap door state
 dl $7E0540 : db $02 : dw $0430 ; Object tilemap state
+dl $7EC74C : db $02 : dw $2CB9 ; Selected menu gfx, row 1
+dl $7EC78C : db $02 : dw $2CC9 ; Selected menu gfx, row 2
+dl $7EC172 : db $01 : db $01 ; Crystal switch state
+dl $7E0202 : db $01 : db $02 ; Selected menu item
+dl $7E0641 : db $01 : db $00 ; Room puzzle state (?)
+dl $7E02A2 : db $01 : db $00 ; Arc variable
+dl $7E002F : db $01 : db $06 ; Link's direction
 dl $7E0544 : db $02 : dw $181C ; Object tilemap state
 dl $7E0548 : db $02 : dw $0000 ; Object tilemap state
 dl $7E054C : db $02 : dw $0000 ; Object tilemap state
 dl $7E0550 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0554 : db $02 : dw $0000 ; Object tilemap state
-dl $7EC74C : db $02 : dw $2CB9 ; Selected menu gfx, row 1
-dl $7EC78C : db $02 : dw $2CC9 ; Selected menu gfx, row 2
-dl $7EC172 : db $01 : db $01 ; Crystal switch state
-dl $7E0641 : db $01 : db $00 ; Room puzzle state (?)
-dl $7E02A2 : db $01 : db $00 ; Arc variable
-dl $7E002F : db $01 : db $06 ; Link's direction
-dl $7E0202 : db $01 : db $02 ; Selected menu item
 .after
 
 sram_anyrmg_gtower_bombable_floor:
@@ -2360,12 +2360,12 @@ dl $7EF376 : db $01 : db $00 ; Arrow filler
 dl $7E0303 : db $01 : db $01 ; Selected menu item
 dl $7FE0B8 : db $02 : dw $0032 ; Room $9C persistent: Ganon's Tower (Invisible Floor Maze Room)
 dl $7E0540 : db $02 : dw $0838 ; Object tilemap state
-dl $7E0544 : db $02 : dw $0550 ; Object tilemap state
 dl $7EC74C : db $02 : dw $2CB3 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $6CC2 ; Selected menu gfx, row 2
 dl $7EC172 : db $01 : db $00 ; Crystal switch state
-dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7E0202 : db $01 : db $04 ; Selected menu item
+dl $7E002F : db $01 : db $00 ; Link's direction
+dl $7E0544 : db $02 : dw $0550 ; Object tilemap state
 .after
 
 sram_anyrmg_gtower_floor_2:
@@ -2381,13 +2381,13 @@ dl $7EF366 : db $02 : dw $F024 ; BigKey1
 dl $7E0303 : db $01 : db $03 ; Selected menu item
 dl $7FE0B8 : db $01 : db $00 ; Room $9C persistent: Ganon's Tower (Invisible Floor Maze Room)
 dl $7E0540 : db $02 : dw $0000 ; Object tilemap state
-dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0B33 : db $01 : db $30 ; Arc variable
 dl $7E0B37 : db $01 : db $CF ; Arc variable
 dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
-dl $7E0B34 : db $01 : db $30 ; Arc variable
 dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E0B34 : db $01 : db $30 ; Arc variable
+dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 .after
 
 sram_anyrmg_gtower_mimics1:
@@ -2399,13 +2399,13 @@ dl $7EF377 : db $01 : db $0F ; Arrows
 dl $7EF0D6 : db $02 : dw $000C ; Room $006B: Ganon's Tower (Mimics Rooms) (.............qq.)
 dl $7E0468 : db $01 : db $00 ; Trap door state
 dl $7E0540 : db $02 : dw $051C ; Object tilemap state
+dl $7EC172 : db $01 : db $01 ; Crystal switch state
+dl $7E0641 : db $02 : dw $0001 ; Room puzzle state (?)
+dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7E0544 : db $02 : dw $081C ; Object tilemap state
 dl $7E0548 : db $02 : dw $0B1C ; Object tilemap state
 dl $7E054C : db $02 : dw $195A ; Object tilemap state
 dl $7E0550 : db $02 : dw $050C ; Object tilemap state
-dl $7EC172 : db $01 : db $01 ; Crystal switch state
-dl $7E0641 : db $02 : dw $0001 ; Room puzzle state (?)
-dl $7E002F : db $01 : db $02 ; Link's direction
 .after
 
 sram_anyrmg_gtower_mimics2:
@@ -2433,12 +2433,12 @@ dl $7E054E : db $02 : dw $16E4 ; Object tilemap state
 dl $7EF0B8 : db $02 : dw $000C ; Room $005C: Ganon's Tower (Ganon-Ball Z) (.............qq.)
 dl $7EF0B6 : db $02 : dw $8005 ; Room $005B: Ganon's Tower (Spike Pit Room) (.d............q.)
 dl $7E0540 : db $02 : dw $165E ; Object tilemap state
+dl $7FE036 : db $02 : dw $0008 ; Room $5B persistent: Ganon's Tower (Spike Pit Room)
+dl $7EC172 : db $01 : db $00 ; Crystal switch state
 dl $7E0544 : db $02 : dw $1854 ; Object tilemap state
 dl $7E0548 : db $02 : dw $1A5E ; Object tilemap state
 dl $7E054C : db $02 : dw $1868 ; Object tilemap state
 dl $7E0550 : db $02 : dw $0000 ; Object tilemap state
-dl $7FE036 : db $02 : dw $0008 ; Room $5B persistent: Ganon's Tower (Spike Pit Room)
-dl $7EC172 : db $01 : db $00 ; Crystal switch state
 .after
 
 sram_anyrmg_gtower_gauntlet_3:
@@ -2451,11 +2451,11 @@ dl $7E0FCC : db $01 : db $02 ; Prize pack index
 dl $7EF0BA : db $02 : dw $000C ; Room $005D: Ganon's Tower (Gauntlet 1/2/3) (.............qq.)
 dl $7E0468 : db $02 : dw $0000 ; Trap door state
 dl $7E0540 : db $02 : dw $0510 ; Object tilemap state
+dl $7FE03A : db $02 : dw $00FD ; Room $5D persistent: Ganon's Tower (Gauntlet 1/2/3)
+dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7E0544 : db $02 : dw $0B10 ; Object tilemap state
 dl $7E0548 : db $02 : dw $140C ; Object tilemap state
 dl $7E054C : db $02 : dw $1C0C ; Object tilemap state
-dl $7FE03A : db $02 : dw $00FD ; Room $5D persistent: Ganon's Tower (Gauntlet 1/2/3)
-dl $7E002F : db $01 : db $02 ; Link's direction
 .after
 
 sram_anyrmg_gtower_lanmola2:
@@ -2468,13 +2468,13 @@ dl $7E0FCC : db $01 : db $04 ; Prize pack index
 dl $7EF0BA : db $02 : dw $000E ; Room $005D: Ganon's Tower (Gauntlet 1/2/3) (.............qqq)
 dl $7EF0DA : db $02 : dw $000A ; Room $006D: Ganon's Tower (Gauntlet 4/5) (.............q.q)
 dl $7E0540 : db $02 : dw $1A1C ; Object tilemap state
-dl $7E0544 : db $02 : dw $1B1C ; Object tilemap state
-dl $7E0548 : db $02 : dw $0000 ; Object tilemap state
-dl $7E054C : db $02 : dw $0000 ; Object tilemap state
 dl $7FE03A : db $02 : dw $0EFD ; Room $5D persistent: Ganon's Tower (Gauntlet 1/2/3)
 dl $7FE056 : db $02 : dw $0000 ; Room $6B persistent: Ganon's Tower (Mimics Rooms)
 dl $7FE05A : db $02 : dw $00C9 ; Room $6D persistent: Ganon's Tower (Gauntlet 4/5)
 dl $7E002F : db $01 : db $04 ; Link's direction
+dl $7E0544 : db $02 : dw $1B1C ; Object tilemap state
+dl $7E0548 : db $02 : dw $0000 ; Object tilemap state
+dl $7E054C : db $02 : dw $0000 ; Object tilemap state
 .after
 
 sram_anyrmg_gtower_wizz1:
@@ -2483,9 +2483,9 @@ dl $7E0546 : db $02 : dw $0A28 ; Object tilemap state
 dl $7EF0D8 : db $02 : dw $000B ; Room $006C: Ganon's Tower (Lanmolas Room) (.............q.q)
 dl $7E0468 : db $01 : db $01 ; Trap door state
 dl $7E0540 : db $02 : dw $0614 ; Object tilemap state
-dl $7E0544 : db $02 : dw $0A14 ; Object tilemap state
 dl $7FE036 : db $02 : dw $0000 ; Room $5B persistent: Ganon's Tower (Spike Pit Room)
 dl $7E002F : db $01 : db $00 ; Link's direction
+dl $7E0544 : db $02 : dw $0A14 ; Object tilemap state
 .after
 
 sram_anyrmg_gtower_wizz2:
@@ -2494,8 +2494,8 @@ dl $7E0546 : db $02 : dw $0000 ; Object tilemap state
 dl $7EF377 : db $01 : db $06 ; Arrows
 dl $7EF14A : db $02 : dw $000B ; Room $00A5: Ganon's Tower (Wizzrobes Rooms) (.............q.q)
 dl $7E0540 : db $02 : dw $0000 ; Object tilemap state
-dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 dl $7FE0CA : db $02 : dw $088C ; Room $A5 persistent: Ganon's Tower (Wizzrobes Rooms)
+dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 .after
 
 sram_anyrmg_gtower_torches1:
@@ -2525,17 +2525,17 @@ dl $7EF36E : db $01 : db $70 ; Magic Power
 dl $7E0303 : db $01 : db $09 ; Selected menu item
 dl $7E0468 : db $02 : dw $0000 ; Trap door state
 dl $7E0540 : db $02 : dw $154C ; Object tilemap state
+dl $7E0B37 : db $01 : db $0B ; Arc variable
+dl $7EC74C : db $02 : dw $24BD ; Selected menu gfx, row 1
+dl $7EC78C : db $02 : dw $24CD ; Selected menu gfx, row 2
+dl $7FE05A : db $02 : dw $0000 ; Room $6D persistent: Ganon's Tower (Gauntlet 4/5)
+dl $7E0202 : db $01 : db $0B ; Selected menu item
+dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7E0544 : db $02 : dw $0520 ; Object tilemap state
 dl $7E0548 : db $02 : dw $1120 ; Object tilemap state
 dl $7E054C : db $02 : dw $180E ; Object tilemap state
 dl $7E0550 : db $02 : dw $8420 ; Object tilemap state
 dl $7E0554 : db $02 : dw $8B32 ; Object tilemap state
-dl $7E0B37 : db $01 : db $0B ; Arc variable
-dl $7EC74C : db $02 : dw $24BD ; Selected menu gfx, row 1
-dl $7EC78C : db $02 : dw $24CD ; Selected menu gfx, row 2
-dl $7FE05A : db $02 : dw $0000 ; Room $6D persistent: Ganon's Tower (Gauntlet 4/5)
-dl $7E002F : db $01 : db $00 ; Link's direction
-dl $7E0202 : db $01 : db $0B ; Selected menu item
 .after
 
 sram_anyrmg_gtower_helma_key:
@@ -2549,12 +2549,12 @@ dl $7E0556 : db $02 : dw $0000 ; Object tilemap state
 dl $7EF07A : db $02 : dw $0001 ; Room $003D: Ganon's Tower (Torch Room 2) (................)
 dl $7EF36E : db $01 : db $60 ; Magic Power
 dl $7E0540 : db $02 : dw $0C4C ; Object tilemap state
+dl $7E0B37 : db $01 : db $06 ; Arc variable
 dl $7E0544 : db $02 : dw $1618 ; Object tilemap state
 dl $7E0548 : db $02 : dw $1820 ; Object tilemap state
 dl $7E054C : db $02 : dw $1A24 ; Object tilemap state
 dl $7E0550 : db $02 : dw $9570 ; Object tilemap state
 dl $7E0554 : db $02 : dw $9C6C ; Object tilemap state
-dl $7E0B37 : db $01 : db $06 ; Arc variable
 .after
 
 sram_anyrmg_gtower_bombable_wall:
@@ -2566,8 +2566,8 @@ dl $7E0303 : db $01 : db $01 ; Selected menu item
 dl $7E0B37 : db $01 : db $03 ; Arc variable
 dl $7EC74C : db $02 : dw $2CB3 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $6CC2 ; Selected menu gfx, row 2
-dl $7E002F : db $01 : db $04 ; Link's direction
 dl $7E0202 : db $01 : db $04 ; Selected menu item
+dl $7E002F : db $01 : db $04 ; Link's direction
 .after
 
 sram_anyrmg_gtower_moldorm_2:
@@ -2579,12 +2579,12 @@ dl $7EC78A : db $02 : dw $24CC ; Selected menu gfx, row 2
 dl $7EF07A : db $02 : dw $700F ; Room $003D: Ganon's Tower (Torch Room 2) (..ddb........qqq)
 dl $7E0303 : db $01 : db $09 ; Selected menu item
 dl $7E0468 : db $02 : dw $0001 ; Trap door state
-dl $7E0554 : db $02 : dw $1C6C ; Object tilemap state
 dl $7E0B37 : db $01 : db $10 ; Arc variable
 dl $7EC74C : db $02 : dw $24BD ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $24CD ; Selected menu gfx, row 2
-dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7E0202 : db $01 : db $0B ; Selected menu item
+dl $7E002F : db $01 : db $02 ; Link's direction
+dl $7E0554 : db $02 : dw $1C6C ; Object tilemap state
 .after
 
 sram_anyrmg_gtower_agahnim_2:
@@ -2598,13 +2598,13 @@ dl $7EF098 : db $02 : dw $0005 ; Room $004C: Ganon's Tower (Mini-Helmasaur Conve
 dl $7EF03A : db $02 : dw $800C ; Room $001D: Ganon's Tower (Final Hallway) (.d...........qq.)
 dl $7EF09A : db $02 : dw $800F ; Room $004D: Ganon's Tower (Moldorm Room) (.d...........qqq)
 dl $7E0540 : db $02 : dw $0000 ; Object tilemap state
+dl $7FE0CA : db $02 : dw $0000 ; Room $A5 persistent: Ganon's Tower (Wizzrobes Rooms)
+dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0548 : db $02 : dw $0000 ; Object tilemap state
 dl $7E054C : db $02 : dw $0000 ; Object tilemap state
 dl $7E0550 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0554 : db $02 : dw $0000 ; Object tilemap state
-dl $7FE0CA : db $02 : dw $0000 ; Room $A5 persistent: Ganon's Tower (Wizzrobes Rooms)
-dl $7E002F : db $01 : db $00 ; Link's direction
 .after
 
 sram_anyrmg_ganon_pyramid:
