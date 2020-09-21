@@ -1925,6 +1925,8 @@ dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0548 : db $02 : dw $0000 ; Object tilemap state
 dl $7E054C : db $02 : dw $0000 ; Object tilemap state
 dl $7FE130 : db $01 : db $00 ; Overworld $D8 persistent: UNKNOWN
+dl $7E0B10 : db $01 : db $31 ; Overlord X coordinate high byte
+dl $7E0B20 : db $01 : db $11 ; Overlord Y coordinate high byte
 .after
 
 sram_anyrmg_esc_eastern_spinspeed:
