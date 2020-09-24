@@ -15,7 +15,7 @@ cm_ad_submenu_presets:
 	dw cm_ad_presets_goto_ganon
 	dw cm_ad_presets_goto_boss
 	dw #$0000
-	%cm_header("PRESETS")
+	%cm_header("AD PRESETS")
 
 ; HYRULE CASTLE
 

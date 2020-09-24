@@ -3336,7 +3336,7 @@ dw $1810 ; BG2 Vertical Scroll
 dw $1D00 ; BG1 Horizontal Scroll
 dw $1D00 ; BG2 Horizontal Scroll
 dw $1D40 ; Link X
-dw $18A0 ; Link Y
+dw $18AA ; Link Y
 dw $017F ; Camera X
 dw $0088 ; Camera Y
 dw $0000 ; Door Settings
@@ -3352,7 +3352,7 @@ dw $0000 ; Quadrant 1
 dw $0001 ; Quadrant 2
 db $0B ; Main Graphics
 db $16 ; Music Track
-db $FB ; Starting Floor
+db $FA ; Starting Floor
 db $12 ; Palace No
 db $00 ; Door Orientation
 db $00 ; Starting Background
@@ -4281,25 +4281,25 @@ dw sram_ad_atower_spear_guards_after
 preset_ad_atower_circle_of_pots:
 db $02 ; Dungeon
 dw $00B0 ; Room Index
-dw $1654 ; BG1 Vertical Scroll
-dw $1654 ; BG2 Vertical Scroll
+dw $1610 ; BG1 Vertical Scroll
+dw $1610 ; BG2 Vertical Scroll
 dw $0000 ; BG1 Horizontal Scroll
 dw $0000 ; BG2 Horizontal Scroll
 dw $0078 ; Link X
-dw $16F4 ; Link Y
+dw $16DC ; Link Y
 dw $007F ; Camera X
-dw $0178 ; Camera Y
+dw $0088 ; Camera Y
 dw $0000 ; Door Settings
-dw $1700 ; Relative Coords HU
+dw $1600 ; Relative Coords HU
 dw $1600 ; Relative Coords FU
-dw $1710 ; Relative Coords HD
+dw $1610 ; Relative Coords HD
 dw $1710 ; Relative Coords FD
 dw $0000 ; Relative Coords HL
 dw $0000 ; Relative Coords FL
 dw $0000 ; Relative Coords HR
 dw $0100 ; Relative Coords FR
 dw $0000 ; Quadrant 1
-dw $0200 ; Quadrant 2
+dw $0000 ; Quadrant 2
 db $04 ; Main Graphics
 db $10 ; Music Track
 db $04 ; Starting Floor
@@ -5909,6 +5909,8 @@ dl $7EC74C : db $02 : dw $20B7 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $20C7 ; Selected menu gfx, row 2
 dl $7EC172 : db $02 : dw $0008 ; Crystal switch state
 dl $7FE05B : db $01 : db $47 ; Overworld $6D persistent: Peg Bridge
+dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E0303 : db $01 : db $04 ; Selected menu item
 .after
 
 sram_ad_desert_fluteless_mire:
