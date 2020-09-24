@@ -25,6 +25,7 @@ cm_submenu_equipment:
 	; dw cm_equipment_goto_small_keys_submenu ; maybe?
 	dw cm_equipment_goto_big_keys_submenu
 
+	dw cm_equipment_fill_everything
 	dw !menu_end
 	%cm_header("EQUIPMENT")
 
@@ -139,6 +140,13 @@ cm_equipment_fill_hearts:
 
 .routine
 	LDA !ram_equipment_maxhp : STA !ram_equipment_curhp
+	RTS
+
+cm_equipment_fill_everything:
+	%cm_jsr("Fill Everything")
+
+.routine
+	JSL gamemode_fill_everything_long
 	RTS
 
 cm_equipment_maxhp:

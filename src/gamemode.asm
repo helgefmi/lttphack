@@ -447,6 +447,13 @@ gamemode_disable_sprites:
 	RTS
 
 
+; TODO make this a table instead of a bunch of STA?
+gamemode_fill_everything_long:
+	PHP
+	JSR gamemode_fill_everything
+	PLP
+	RTL
+
 gamemode_fill_everything:
 	%a8()
 	LDA #$01
@@ -507,6 +514,7 @@ gamemode_fill_everything:
 	LDA #$FF
 	STA !ram_capabilities
 
+	SEP #$30
 	JSL !DecompSwordGfx
 	JSL !Palette_Sword
 	JSL !DecompShieldGfx

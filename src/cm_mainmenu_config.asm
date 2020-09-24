@@ -65,12 +65,12 @@ cm_config_hud_font:
 	%cm_item("Pac-Man")
 	%cm_item("DOOM")
 
-;	%cm_item("Undertale")
-;	%cm_item("Planet X-3")
-;	%cm_item("Skyroads")
-;	%cm_item("Yoshi's")
-;	%cm_item("S. Metroid")
-;	%cm_item("Tazmania")
+	%cm_item("Undertale")
+	%cm_item("Planet X-3")
+	%cm_item("Skyroads")
+	%cm_item("Yoshi's")
+	%cm_item("S. Metroid")
+	%cm_item("Tazmania")
 ;	%cm_item("")
 ;	%cm_item("")
 
