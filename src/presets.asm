@@ -574,6 +574,9 @@ preset_reset_state_after_loading:
 
 	; Remove stair lag
 	STZ $57
+	
+	; Room transition flags (change layer, alter dungeon ID)
+	STZ $EF
 
 	RTS
 
