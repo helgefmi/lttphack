@@ -657,7 +657,10 @@ cm_execute_submenu:
 	%a16()
 	LDA !lowram_cm_stack_index : INC #2 : STA !lowram_cm_stack_index : TAX
 	LDA ($00) : INC $00 : INC $00 : STA !ram_cm_menu_stack, X
-	LDA ($00) : INC $00 : AND #$00FF : STA !ram_cm_menu_bank_stack, X
+	%a8()
+	LDA ($00) : INC $00 : STA !ram_cm_menu_bank_stack, X
+	PHA : PLB
+	%a16()
 
 .end
 	RTS
@@ -681,6 +684,12 @@ cm_execute_back:
 
 .done
 	STA !lowram_cm_stack_index
+	%a8()
+	TAX
+	LDA !ram_cm_menu_bank_stack,x
+	PHA
+	PLB
+	%a16()
 
 .end
 	RTS
@@ -887,8 +896,6 @@ cm_execute_ctrl_shortcut:
 	RTS
 
 cm_execute_submenu_variable:
-	WDM #42
-	
 	; dpad should do nothing here
 	%a8()
 	LDA $F0 : BNE .end
@@ -918,9 +925,12 @@ cm_execute_submenu_variable:
 	STA !ram_cm_menu_stack,x
 	INY
 	INY
+	%a8()
 	LDA ($00),y
-	AND #$00FF
 	STA !ram_cm_menu_bank_stack,x
+	PHA
+	PLB
+	%a16()
 
 	LDA $05
 	ASL
@@ -1068,7 +1078,7 @@ cm_draw_jsr:
 
 
 cm_draw_submenu:
-	INC $02 : INC $02 ; skip submenu address
+	INC $02 : INC $02 : INC $02 ; skip submenu address
 
 .from_var
 	; draw text normally
@@ -1282,8 +1292,14 @@ cm_draw_submenu_variable:
 	; skip var address
 	INC $02 : INC $02 : INC $02
 
-	; get (max index + 1) * 2
-	LDA ($02) : AND #$00FF : ASL : STA $04 : INC $02
+	; get (max index + 1) * 3
+	LDA ($02)
+	AND #$00FF
+	STA $04
+	ASL
+	ADC $04
+	STA $04
+	INC $02
 
 	; skip submenu pointers
 	LDA $02 : CLC : ADC $04 : STA $02
