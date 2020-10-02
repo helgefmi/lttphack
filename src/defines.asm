@@ -273,6 +273,7 @@ endmacro
 %def_wramA("cm_old_submode", 1)
 
 %def_wramA("cm_menu_stack", $10) ; 0x10
+%def_wramA("cm_menu_bank_stack", $10) ; 0x10
 !lowram_cm_cursor_stack = $0648 ; 0x10
 !lowram_cm_stack_index = $0658
 %def_wramA("cm_last_frame_input", 2)

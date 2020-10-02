@@ -32,16 +32,16 @@ org $A48000
 incsrc custom_menu.asm
 print "Custom menu size: ", pc
 
-org $A58000
+org $A68000
 incsrc presets.asm
 
-org $A68000
+org $A78000
 incsrc poverty_states.asm
 
-org $A78000
+org $A88000
 incsrc music.asm
 
-org $A88000
+org $A98000
 incsrc movie.asm
 
 ; ---- data ----
@@ -60,6 +60,9 @@ incsrc preset_data_ad.asm
 
 org $B48000
 incsrc preset_data_anyrmg.asm
+
+org $B58000
+incsrc preset_data_lownmg.asm
 
 org !SPC_DATA_OVERWORLD
 incbin ../resources/spc_overworld.bin

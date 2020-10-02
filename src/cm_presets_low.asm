@@ -15,7 +15,7 @@ cm_low_submenu_presets:
 	dw cm_low_presets_goto_ganon
 	dw cm_low_presets_goto_boss
 	dw !menu_end
-	%cm_header("LOW PRESETS")
+	%cm_header("LOW LEGACY PRESETS")
 
 ; HYRULE CASTLE
 

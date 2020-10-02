@@ -29,7 +29,7 @@ endmacro
 
 macro cm_submenu(title, addr)
 	dw !CM_ACTION_SUBMENU
-	dw <addr>
+	dl <addr>
 	db #$24, "<title>", #$FF
 endmacro
 
@@ -99,12 +99,13 @@ incsrc cm_mainmenu_config.asm
 cm_main_goto_presets:
 	dw !CM_ACTION_SUBMENU_VARIABLE
 	dl !ram_preset_category
-	db $05
-	dw cm_nmg_submenu_presets
-	dw cm_hundo_submenu_presets
-	dw cm_low_submenu_presets
-	dw cm_ad_submenu_presets
-	dw cm_anyrmg_submenu_presets
+	db $06
+	dl cm_nmg_submenu_presets
+	dl cm_hundo_submenu_presets
+	dl cm_lownmg_submenu_presets
+	dl cm_low_submenu_presets
+	dl cm_ad_submenu_presets
+	dl cm_anyrmg_submenu_presets
 	%cm_item("Presets")
 
 incsrc cm_presets_nmg.asm
@@ -112,5 +113,9 @@ incsrc cm_presets_hundo.asm
 incsrc cm_presets_low.asm
 incsrc cm_presets_ad.asm
 incsrc cm_presets_anyrmg.asm
+
+org $A58000
+
+incsrc cm_presets_lownmg.asm
 
 ; }}}
