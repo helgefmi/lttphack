@@ -887,6 +887,8 @@ cm_execute_ctrl_shortcut:
 	RTS
 
 cm_execute_submenu_variable:
+	WDM #42
+	
 	; dpad should do nothing here
 	%a8()
 	LDA $F0 : BNE .end
@@ -911,13 +913,13 @@ cm_execute_submenu_variable:
 	STA $07
 	ASL
 	ADC $07
-	STA $07
 	TAY
 	LDA ($00),y
 	STA !ram_cm_menu_stack,x
 	INY
 	INY
 	LDA ($00),y
+	AND #$00FF
 	STA !ram_cm_menu_bank_stack,x
 
 	LDA $05
