@@ -650,9 +650,7 @@ cm_execute_jsr:
 cm_execute_submenu:
 	%a8()
 	LDA $F6 : BPL .end
-	PHA
 	LDA #$24 : STA $012F
-	PLA
 	; Increments stack index and puts the submenu into the stack.
 	%a16()
 	LDA !lowram_cm_stack_index : INC #2 : STA !lowram_cm_stack_index : TAX
@@ -899,6 +897,7 @@ cm_execute_submenu_variable:
 	; dpad should do nothing here
 	%a8()
 	LDA $F0 : BNE .end
+	LDA #$24 : STA $012F
 
 	; Increments stack index and puts the submenu into the stack.
 	%a16()
