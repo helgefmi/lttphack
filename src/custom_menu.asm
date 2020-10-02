@@ -26,10 +26,8 @@ macro set_menu_icon(icon)
 endmacro
 
 ; jsr ($0000,x) equivalent but program bank != data bank
-macro jsr_ptr_table(addr, reg)
-	T<reg>A
-	CLC
-	ADC.w #<addr>
+macro jsr_ptr_table(addr)
+	LDA.l <addr>,x
 	STA $B7
 	PEA ?ret-1
 	JMP ($00B7)
@@ -489,7 +487,7 @@ cm_draw_active_menu:
 	; draw function to use its data however it likes, and jump to it.
 	LDA ($02) : TAX
 	INC $02 : INC $02
-	%jsr_ptr_table(cm_draw_action_table, X)
+	%jsr_ptr_table(cm_draw_action_table)
 
 	PLX : PLY
 	INY #2
@@ -581,7 +579,7 @@ cm_execute_cursor:
 	; Consume the action index and jump to the appropriate execute subroutine.
 	LDA ($00) : INC $00 : INC $00 : TAX
 
-	%jsr_ptr_table(cm_execute_action_table, X)
+	%jsr_ptr_table(cm_execute_action_table)
 	%ai8()
 	RTS
 
@@ -658,8 +656,8 @@ cm_execute_submenu:
 	; Increments stack index and puts the submenu into the stack.
 	%a16()
 	LDA !lowram_cm_stack_index : INC #2 : STA !lowram_cm_stack_index : TAX
-	LDA [$00] : INC $00 : INC $00 : STA !ram_cm_menu_stack, X
-	LDA [$00] : INC $00 : AND #$00FF : STA !ram_cm_menu_bank_stack, X
+	LDA ($00) : INC $00 : INC $00 : STA !ram_cm_menu_stack, X
+	LDA ($00) : INC $00 : AND #$00FF : STA !ram_cm_menu_bank_stack, X
 
 .end
 	RTS
