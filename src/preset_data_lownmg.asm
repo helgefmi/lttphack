@@ -469,33 +469,33 @@ dw sram_lownmg_east_after_cutscene_after
 preset_lownmg_east_octoroc:
 db $01 ; Overworld
 dw $001D ; Screen Index
-dw $0B0C ; Link X
-dw $07DF ; Link Y
+dw $0B10 ; Link X
+dw $07DC ; Link Y
 dw $068F ; BG1 Vertical Scroll
 dw $071E ; BG2 Vertical Scroll
-dw $0A4B ; BG1 Horizontal Scroll
-dw $0A97 ; BG2 Horizontal Scroll
-dw $0B14 ; Scroll X
+dw $0A4F ; BG1 Horizontal Scroll
+dw $0A9E ; BG2 Horizontal Scroll
+dw $0B1B ; Scroll X
 dw $078B ; Scroll Y
 dw $0894 ; Unknown 1
 dw $0000 ; Unknown 2
-dw $0009 ; Unknown 3
+dw $0002 ; Unknown 3
 dw sram_lownmg_east_octoroc_after
 
 preset_lownmg_east_outside_palace:
 db $01 ; Overworld
 dw $002E ; Screen Index
-dw $0C8A ; Link X
-dw $0A04 ; Link Y
+dw $0C70 ; Link X
+dw $0A08 ; Link Y
 dw $0A00 ; BG1 Vertical Scroll
 dw $0A00 ; BG2 Vertical Scroll
-dw $0C0C ; BG1 Horizontal Scroll
-dw $0C18 ; BG2 Horizontal Scroll
-dw $0C95 ; Scroll X
+dw $0C00 ; BG1 Horizontal Scroll
+dw $0C00 ; BG2 Horizontal Scroll
+dw $0C7D ; Scroll X
 dw $0A6D ; Scroll Y
-dw $0002 ; Unknown 1
+dw $0000 ; Unknown 1
 dw $0000 ; Unknown 2
-dw $FFF8 ; Unknown 3
+dw $0000 ; Unknown 3
 dw sram_lownmg_east_outside_palace_after
 
 preset_lownmg_east_entrance:
@@ -4003,10 +4003,10 @@ db $02 ; Dungeon
 dw $003E ; Room Index
 dw $0710 ; BG1 Vertical Scroll
 dw $0710 ; BG2 Vertical Scroll
-dw $1B45 ; BG1 Horizontal Scroll
+dw $1BD7 ; BG1 Horizontal Scroll
 dw $1C00 ; BG2 Horizontal Scroll
-dw $1BBD ; Link X
-dw $07D6 ; Link Y
+dw $1C78 ; Link X
+dw $07D3 ; Link Y
 dw $007F ; Camera X
 dw $0188 ; Camera Y
 dw $0000 ; Door Settings
@@ -4025,7 +4025,7 @@ db $16 ; Music Track
 db $FE ; Starting Floor
 db $12 ; Palace No
 db $01 ; Door Orientation
-db $01 ; Starting Background
+db $00 ; Starting Background
 dw sram_lownmg_ice_ipbj_after
 
 preset_lownmg_ice_penguin_room:

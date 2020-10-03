@@ -297,7 +297,7 @@ cm_nmg_aga_first_rupee_tree:
 cm_nmg_aga_lost_woods:
 	%cm_preset("Lost Woods", preset_nmg_aga_lost_woods)
 	
-cm_nmg_aga_after_lost_woods:
+cm_nmg_aga_after_grove:
 	%cm_preset("After Grove", preset_nmg_aga_after_grove)
 
 cm_nmg_aga_after_lost_woods:
