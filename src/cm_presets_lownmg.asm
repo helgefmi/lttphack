@@ -103,7 +103,7 @@ cm_lownmg_presets_eastern:
     dw cm_lownmg_east_zeldagamer_room
     dw cm_lownmg_east_armos
     dw #$0000
-    %cm_header("EASTERN")
+    %cm_header("EASTERN PALACE")
 
 cm_lownmg_east_before_cutscene:
     %cm_preset("Before Cutscene", preset_lownmg_east_before_cutscene)
@@ -168,7 +168,7 @@ cm_lownmg_presets_desert:
     dw cm_lownmg_desert_torches
     dw cm_lownmg_desert_lanmolas
     dw #$0000
-    %cm_header("DESERT")
+    %cm_header("DESERT PALACE")
 
 cm_lownmg_desert_outside_eastern_palace:
     %cm_preset("Outside Eastern Palace", preset_lownmg_desert_outside_eastern_palace)
@@ -233,7 +233,7 @@ cm_lownmg_presets_hera:
     dw cm_lownmg_hera_petting_zoo
     dw cm_lownmg_hera_moldorm
     dw #$0000
-    %cm_header("HERA")
+    %cm_header("TOWER OF HERA")
 
 cm_lownmg_hera_outside_desert_palace:
     %cm_preset("Outside Desert Palace", preset_lownmg_hera_outside_desert_palace)

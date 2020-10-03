@@ -258,32 +258,32 @@ dw sram_lownmg_esc_keyguard_revisited_after
 
 preset_lownmg_esc_throne_room:
 db $02 ; Dungeon
-dw $0060 ; Room Index
-dw $0C8B ; BG1 Vertical Scroll
-dw $0C8B ; BG2 Vertical Scroll
-dw $0100 ; BG1 Horizontal Scroll
-dw $0100 ; BG2 Horizontal Scroll
-dw $01BA ; Link X
-dw $0CF8 ; Link Y
-dw $017F ; Camera X
-dw $0103 ; Camera Y
+dw $0051 ; Room Index
+dw $0A22 ; BG1 Vertical Scroll
+dw $0A22 ; BG2 Vertical Scroll
+dw $0280 ; BG1 Horizontal Scroll
+dw $0280 ; BG2 Horizontal Scroll
+dw $02F8 ; Link X
+dw $0A8F ; Link Y
+dw $00FF ; Camera X
+dw $009A ; Camera Y
 dw $0000 ; Door Settings
-dw $0C00 ; Relative Coords HU
-dw $0C00 ; Relative Coords FU
-dw $0C10 ; Relative Coords HD
-dw $0D10 ; Relative Coords FD
-dw $0100 ; Relative Coords HL
-dw $0000 ; Relative Coords FL
-dw $0100 ; Relative Coords HR
-dw $0100 ; Relative Coords FR
-dw $0200 ; Quadrant 1
-dw $0001 ; Quadrant 2
+dw $0A00 ; Relative Coords HU
+dw $0A00 ; Relative Coords FU
+dw $0A10 ; Relative Coords HD
+dw $0B10 ; Relative Coords FD
+dw $0200 ; Relative Coords HL
+dw $0200 ; Relative Coords FL
+dw $0200 ; Relative Coords HR
+dw $0300 ; Relative Coords FR
+dw $0202 ; Quadrant 1
+dw $0000 ; Quadrant 2
 db $04 ; Main Graphics
 db $10 ; Music Track
-db $00 ; Starting Floor
+db $01 ; Starting Floor
 db $02 ; Palace No
-db $02 ; Door Orientation
-db $01 ; Starting Background
+db $00 ; Door Orientation
+db $00 ; Starting Background
 dw sram_lownmg_esc_throne_room_after
 
 preset_lownmg_esc_snake_avoidance_room:
@@ -439,14 +439,14 @@ dw sram_lownmg_east_before_cutscene_after
 preset_lownmg_east_after_cutscene:
 db $02 ; Dungeon
 dw $0012 ; Room Index
-dw $0200 ; BG1 Vertical Scroll
-dw $0200 ; BG2 Vertical Scroll
+dw $0207 ; BG1 Vertical Scroll
+dw $0207 ; BG2 Vertical Scroll
 dw $0480 ; BG1 Horizontal Scroll
 dw $0480 ; BG2 Horizontal Scroll
 dw $04F8 ; Link X
-dw $0238 ; Link Y
+dw $0274 ; Link Y
 dw $00FF ; Camera X
-dw $0078 ; Camera Y
+dw $007F ; Camera Y
 dw $0000 ; Door Settings
 dw $0200 ; Relative Coords HU
 dw $0200 ; Relative Coords FU
@@ -462,7 +462,7 @@ db $04 ; Main Graphics
 db $10 ; Music Track
 db $00 ; Starting Floor
 db $00 ; Palace No
-db $01 ; Door Orientation
+db $00 ; Door Orientation
 db $00 ; Starting Background
 dw sram_lownmg_east_after_cutscene_after
 
@@ -666,26 +666,26 @@ dw sram_lownmg_east_big_chest_room_2_after
 
 preset_lownmg_east_gwg:
 db $02 ; Dungeon
-dw $0099 ; Room Index
+dw $00A9 ; Room Index
 dw $1400 ; BG1 Vertical Scroll
 dw $1400 ; BG2 Vertical Scroll
 dw $1280 ; BG1 Horizontal Scroll
 dw $1280 ; BG2 Horizontal Scroll
 dw $12F8 ; Link X
-dw $1411 ; Link Y
+dw $1423 ; Link Y
 dw $00FF ; Camera X
-dw $0188 ; Camera Y
+dw $0078 ; Camera Y
 dw $0000 ; Door Settings
-dw $1300 ; Relative Coords HU
-dw $1200 ; Relative Coords FU
-dw $1310 ; Relative Coords HD
-dw $1310 ; Relative Coords FD
+dw $1400 ; Relative Coords HU
+dw $1400 ; Relative Coords FU
+dw $1410 ; Relative Coords HD
+dw $1510 ; Relative Coords FD
 dw $1200 ; Relative Coords HL
 dw $1200 ; Relative Coords FL
 dw $1200 ; Relative Coords HR
 dw $1300 ; Relative Coords FR
 dw $0202 ; Quadrant 1
-dw $0200 ; Quadrant 2
+dw $0000 ; Quadrant 2
 db $05 ; Main Graphics
 db $11 ; Music Track
 db $00 ; Starting Floor
@@ -917,8 +917,8 @@ dw $0F00 ; BG1 Vertical Scroll
 dw $0F00 ; BG2 Vertical Scroll
 dw $0700 ; BG1 Horizontal Scroll
 dw $0700 ; BG2 Horizontal Scroll
-dw $079A ; Link X
-dw $0F30 ; Link Y
+dw $0778 ; Link X
+dw $0F24 ; Link Y
 dw $017F ; Camera X
 dw $0178 ; Camera Y
 dw $0000 ; Door Settings
@@ -936,7 +936,7 @@ db $12 ; Main Graphics
 db $11 ; Music Track
 db $FF ; Starting Floor
 db $06 ; Palace No
-db $00 ; Door Orientation
+db $01 ; Door Orientation
 db $00 ; Starting Background
 dw sram_lownmg_desert_keybonk_after
 
@@ -2022,26 +2022,26 @@ dw sram_lownmg_pod_sexy_statue_room_after
 
 preset_lownmg_pod_mimics:
 db $02 ; Dungeon
-dw $001B ; Room Index
+dw $002B ; Room Index
 dw $0400 ; BG1 Vertical Scroll
 dw $0400 ; BG2 Vertical Scroll
 dw $1600 ; BG1 Horizontal Scroll
 dw $1600 ; BG2 Horizontal Scroll
 dw $1678 ; Link X
-dw $0411 ; Link Y
+dw $0414 ; Link Y
 dw $007F ; Camera X
-dw $0188 ; Camera Y
+dw $0078 ; Camera Y
 dw $0000 ; Door Settings
-dw $0300 ; Relative Coords HU
-dw $0200 ; Relative Coords FU
-dw $0310 ; Relative Coords HD
-dw $0310 ; Relative Coords FD
+dw $0400 ; Relative Coords HU
+dw $0400 ; Relative Coords FU
+dw $0410 ; Relative Coords HD
+dw $0510 ; Relative Coords FD
 dw $1600 ; Relative Coords HL
 dw $1600 ; Relative Coords FL
 dw $1600 ; Relative Coords HR
 dw $1700 ; Relative Coords FR
 dw $0200 ; Quadrant 1
-dw $0200 ; Quadrant 2
+dw $0000 ; Quadrant 2
 db $07 ; Main Graphics
 db $16 ; Music Track
 db $00 ; Starting Floor
@@ -3409,33 +3409,19 @@ dw $0000 ; Unknown 3
 dw sram_lownmg_swamp_swamp_overworld_after
 
 preset_lownmg_swamp_antifairy_room:
-db $02 ; Dungeon
-dw $010B ; Room Index
-dw $2100 ; BG1 Vertical Scroll
-dw $2100 ; BG2 Vertical Scroll
-dw $1680 ; BG1 Horizontal Scroll
-dw $1680 ; BG2 Horizontal Scroll
-dw $16F8 ; Link X
-dw $2123 ; Link Y
-dw $00FF ; Camera X
-dw $0177 ; Camera Y
-dw $0000 ; Door Settings
-dw $2100 ; Relative Coords HU
-dw $2000 ; Relative Coords FU
-dw $2110 ; Relative Coords HD
-dw $2110 ; Relative Coords FD
-dw $1600 ; Relative Coords HL
-dw $1600 ; Relative Coords FL
-dw $1600 ; Relative Coords HR
-dw $1700 ; Relative Coords FR
-dw $0002 ; Quadrant 1
-dw $0200 ; Quadrant 2
-db $08 ; Main Graphics
-db $18 ; Music Track
-db $00 ; Starting Floor
-db $FF ; Palace No
-db $01 ; Door Orientation
-db $00 ; Starting Background
+db $01 ; Overworld
+dw $003B ; Screen Index
+dw $0778 ; Link X
+dw $0EED ; Link Y
+dw $0E99 ; BG1 Vertical Scroll
+dw $0E8E ; BG2 Vertical Scroll
+dw $06FD ; BG1 Horizontal Scroll
+dw $06FB ; BG2 Horizontal Scroll
+dw $0780 ; Scroll X
+dw $0EFB ; Scroll Y
+dw $04A0 ; Unknown 1
+dw $0002 ; Unknown 2
+dw $0005 ; Unknown 3
 dw sram_lownmg_swamp_antifairy_room_after
 
 preset_lownmg_swamp_entrance:
@@ -4017,10 +4003,10 @@ db $02 ; Dungeon
 dw $003E ; Room Index
 dw $0710 ; BG1 Vertical Scroll
 dw $0710 ; BG2 Vertical Scroll
-dw $1B44 ; BG1 Horizontal Scroll
+dw $1B45 ; BG1 Horizontal Scroll
 dw $1C00 ; BG2 Horizontal Scroll
-dw $1BBC ; Link X
-dw $07D9 ; Link Y
+dw $1BBD ; Link X
+dw $07D6 ; Link Y
 dw $007F ; Camera X
 dw $0188 ; Camera Y
 dw $0000 ; Door Settings
@@ -5349,10 +5335,8 @@ dl $7E0CBA : db $01 : db $01 ; Sprite drop
 .after
 
 sram_lownmg_esc_throne_room:
-dl $7E0542 : db $02 : dw $044C ; Object tilemap state
+dl $7EF0A2 : db $02 : dw $000F ; Room $0051: Hyrule Castle (Throne Room) (.............qqq)
 dl $7FE080 : db $02 : dw $0000 ; Room $80 persistent: Hyrule Castle (Jail Cell Room)
-dl $7E0540 : db $02 : dw $0470 ; Object tilemap state
-dl $7E002F : db $01 : db $06 ; Link's direction
 dl $7E0CBA : db $01 : db $00 ; Sprite drop
 .after
 
@@ -5362,12 +5346,10 @@ dl $7E0546 : db $02 : dw $1694 ; Object tilemap state
 dl $7E054A : db $02 : dw $0E70 ; Object tilemap state
 dl $7EF3C8 : db $01 : db $04 ; Entrances Phase
 dl $7EF082 : db $02 : dw $000F ; Room $0041: Hyrule Castle (First Dark Room) (.............qqq)
-dl $7EF0A2 : db $02 : dw $000F ; Room $0051: Hyrule Castle (Throne Room) (.............qqq)
 dl $7E0540 : db $02 : dw $0A64 ; Object tilemap state
 dl $7E0544 : db $02 : dw $1034 ; Object tilemap state
 dl $7E0548 : db $02 : dw $053E ; Object tilemap state
 dl $7E054C : db $02 : dw $1590 ; Object tilemap state
-dl $7E002F : db $01 : db $00 ; Link's direction
 .after
 
 sram_lownmg_esc_water_rooms:
@@ -5570,25 +5552,27 @@ dl $7E0548 : db $02 : dw $181E ; Object tilemap state
 dl $7E0B37 : db $01 : db $00 ; Arc variable
 dl $7E0641 : db $02 : dw $0001 ; Room puzzle state (?)
 dl $7E002F : db $01 : db $06 ; Link's direction
+; Manual changes:
+dl $7E0CFB : db $02 : dw $041D ; Rupee pull kill and damage counters
 .after
 
 sram_lownmg_east_gwg:
-dl $7E0542 : db $02 : dw $1454 ; Object tilemap state
-dl $7E0546 : db $02 : dw $1CAA ; Object tilemap state
-dl $7E054A : db $02 : dw $0000 ; Object tilemap state
+dl $7E0542 : db $02 : dw $1370 ; Object tilemap state
+dl $7E0546 : db $02 : dw $1410 ; Object tilemap state
+dl $7E054A : db $02 : dw $2C90 ; Object tilemap state
+dl $7E054E : db $02 : dw $2CEC ; Object tilemap state
 dl $7EC74A : db $02 : dw $28BA ; Selected menu gfx, row 1
 dl $7EF34F : db $01 : db $00 ; Bottles
 dl $7EF377 : db $01 : db $0F ; Arrows
 dl $7EC78A : db $02 : dw $2849 ; Selected menu gfx, row 2
 dl $7EF340 : db $01 : db $02 ; Bow
-dl $7EF132 : db $02 : dw $4000 ; Room $0099: Eastern Palace (Eyegore Key Room) (..d.............)
 dl $7EF152 : db $02 : dw $201F ; Room $00A9: Eastern Palace (Big Chest Room) (...d........qqqq)
 dl $7E0303 : db $01 : db $03 ; Selected menu item
 dl $7FE0F4 : db $02 : dw $0000 ; Room $BA persistent: Eastern Palace (Dark Antifairy / Key Pot Room)
-dl $7E0540 : db $02 : dw $1428 ; Object tilemap state
-dl $7E0544 : db $02 : dw $13BE ; Object tilemap state
-dl $7E0548 : db $02 : dw $1CD2 ; Object tilemap state
-dl $7E0CBD : db $01 : db $01 ; Sprite drop
+dl $7E0540 : db $02 : dw $146C ; Object tilemap state
+dl $7E0544 : db $02 : dw $130C ; Object tilemap state
+dl $7E0548 : db $02 : dw $2B90 ; Object tilemap state
+dl $7E054C : db $02 : dw $2BEC ; Object tilemap state
 dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
 dl $7E0641 : db $01 : db $00 ; Room puzzle state (?)
@@ -5597,10 +5581,17 @@ dl $7E0202 : db $01 : db $01 ; Selected menu item
 .after
 
 sram_lownmg_east_pot_room:
+dl $7E0542 : db $02 : dw $1454 ; Object tilemap state
+dl $7E0546 : db $02 : dw $1CAA ; Object tilemap state
+dl $7E054A : db $02 : dw $0000 ; Object tilemap state
+dl $7E054E : db $02 : dw $0000 ; Object tilemap state
 dl $7EF377 : db $01 : db $0E ; Arrows
 dl $7EF132 : db $02 : dw $C403 ; Room $0099: Eastern Palace (Eyegore Key Room) (.dd...K........q)
 dl $7EF36E : db $01 : db $20 ; Magic Power
-dl $7E0CBD : db $01 : db $00 ; Sprite drop
+dl $7E0540 : db $02 : dw $1428 ; Object tilemap state
+dl $7E0544 : db $02 : dw $13BE ; Object tilemap state
+dl $7E0548 : db $02 : dw $1CD2 ; Object tilemap state
+dl $7E054C : db $02 : dw $0000 ; Object tilemap state
 dl $7FE0B2 : db $02 : dw $0008 ; Room $99 persistent: Eastern Palace (Eyegore Key Room)
 .after
 
@@ -5804,7 +5795,6 @@ dl $7E054C : db $02 : dw $1B9E ; Object tilemap state
 dl $7E0550 : db $02 : dw $18A8 ; Object tilemap state
 dl $7E0554 : db $02 : dw $0C8A ; Object tilemap state
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
-dl $7E002F : db $01 : db $04 ; Link's direction
 dl $7E010E : db $01 : db $09 ; Dungeon entrance index
 .after
 
@@ -6216,6 +6206,8 @@ dl $7EF36E : db $01 : db $70 ; Magic Power
 dl $7EC172 : db $02 : dw $0902 ; Crystal switch state
 dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7FE14E : db $01 : db $00 ; Overworld $E7 persistent: UNKNOWN
+; Manual changes:
+dl $7E0CFB : db $02 : dw $0001 ; Rupee pull kill and damage counters
 .after
 
 sram_lownmg_aga_after_grove:
@@ -6225,11 +6217,15 @@ dl $7EF359 : db $01 : db $02 ; Sword
 dl $7FE1E8 : db $01 : db $E9 ; Overworld $134 persistent: UNKNOWN
 dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7FE132 : db $01 : db $01 ; Overworld $D9 persistent: UNKNOWN
+; Manual changes:
+dl $7E0CFB : db $02 : dw $0003 ; Rupee pull kill and damage counters
 .after
 
 sram_lownmg_aga_after_lost_woods:
 dl $7EF360 : db $02 : dw $00E8 ; Rupees (goal)
 dl $7EF362 : db $02 : dw $00E8 ; Rupees (actual)
+; Manual changes:
+dl $7E0CFB : db $02 : dw $0001 ; Rupee pull kill and damage counters
 .after
 
 sram_lownmg_aga_castle_screen:
@@ -6239,6 +6235,8 @@ dl $7EC172 : db $02 : dw $000C ; Crystal switch state
 dl $7E002F : db $01 : db $06 ; Link's direction
 dl $7FE132 : db $01 : db $00 ; Overworld $D9 persistent: UNKNOWN
 dl $7FE144 : db $01 : db $42 ; Overworld $E2 persistent: UNKNOWN
+; Manual changes:
+dl $7E0CFB : db $02 : dw $0003 ; Rupee pull kill and damage counters
 .after
 
 sram_lownmg_aga_entrance:
@@ -6275,6 +6273,8 @@ dl $7E0540 : db $02 : dw $0000 ; Object tilemap state
 dl $7E002F : db $01 : db $06 ; Link's direction
 dl $7E010E : db $01 : db $24 ; Dungeon entrance index
 dl $7FE140 : db $02 : dw $0003 ; Room $E0 persistent: Agahnim's Tower (Entrance Room)
+; Manual changes:
+dl $7EF377 : db $01 : db 10 ; Arrows
 .after
 
 sram_lownmg_aga_dark_room_of_despair:
@@ -6510,6 +6510,8 @@ dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
 dl $7EC172 : db $01 : db $01 ; Crystal switch state
 dl $7E002F : db $01 : db $06 ; Link's direction
 dl $7E0202 : db $01 : db $01 ; Selected menu item
+; Manual changes:
+dl $7EF377 : db $01 : db 14 ; Arrows
 .after
 
 sram_lownmg_pod_mimics:
@@ -6522,7 +6524,6 @@ dl $7E0556 : db $02 : dw $151E ; Object tilemap state
 dl $7E0642 : db $01 : db $01 ; Room puzzle state (?)
 dl $7EF343 : db $01 : db $05 ; Bombs
 dl $7EF36D : db $01 : db $18 ; Health (actual)
-dl $7EF036 : db $02 : dw $000A ; Room $001B: Palace of Darkness (Mimics / Moving Wall Room) (.............q.q)
 dl $7EF056 : db $02 : dw $000A ; Room $002B: Palace of Darkness (Map Chest / Fairy Room) (.............q.q)
 dl $7E0468 : db $02 : dw $0000 ; Trap door state
 dl $7E0540 : db $02 : dw $0510 ; Object tilemap state
@@ -6544,6 +6545,7 @@ dl $7E0552 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0556 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0642 : db $01 : db $00 ; Room puzzle state (?)
 dl $7EF377 : db $01 : db $18 ; Arrows
+dl $7EF036 : db $02 : dw $0002 ; Room $001B: Palace of Darkness (Mimics / Moving Wall Room) (...............q)
 dl $7E0540 : db $02 : dw $1714 ; Object tilemap state
 dl $7E0544 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0548 : db $02 : dw $0000 ; Object tilemap state
@@ -6553,6 +6555,8 @@ dl $7E0554 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0558 : db $02 : dw $0000 ; Object tilemap state
 dl $7FDFB6 : db $02 : dw $0038 ; Room $1B persistent: Palace of Darkness (Mimics / Moving Wall Room)
 dl $7E0FCB : db $01 : db $05 ; Prize pack index
+; Manual changes:
+dl $7EF377 : db $01 : db 25 ; Arrows
 .after
 
 sram_lownmg_pod_basement:
@@ -6570,6 +6574,9 @@ dl $7EC78C : db $02 : dw $20C7 ; Selected menu gfx, row 2
 dl $7EC172 : db $01 : db $00 ; Crystal switch state
 dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7E0202 : db $01 : db $0C ; Selected menu item
+; Manual changes:
+dl $7EF377 : db $01 : db 24 ; Arrows
+dl $7E03C4 : db $01 : db $00 ; Ancilla Search Index
 .after
 
 sram_lownmg_pod_turtle_room:
@@ -6650,6 +6657,8 @@ dl $7E0B0C : db $01 : db $4F ; Arc variable
 dl $7E0B30 : db $01 : db $02 ; Arc variable
 dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7E0202 : db $01 : db $01 ; Selected menu item
+; Manual changes:
+dl $7EF377 : db $01 : db 18 ; Arrows
 .after
 
 sram_lownmg_thieves_ow_hammerdash:
@@ -6950,6 +6959,8 @@ dl $7E0554 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0558 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0B37 : db $01 : db $03 ; Arc variable
 dl $7E002F : db $01 : db $00 ; Link's direction
+; Manual changes:
+dl $7EF377 : db $01 : db 23 ; Arrows
 .after
 
 sram_lownmg_thieves_blind:
@@ -6978,6 +6989,8 @@ dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
 dl $7E02A2 : db $01 : db $00 ; Arc variable
 dl $7E0202 : db $01 : db $01 ; Selected menu item
+; Manual changes:
+dl $7E03C4 : db $01 : db $04 ; Ancilla Search Index
 .after
 
 sram_lownmg_sw_outside_thieves:
@@ -7010,6 +7023,8 @@ dl $7FE00A : db $01 : db $00 ; Overworld $45 persistent: Death Mountain East
 dl $7FE0E3 : db $01 : db $13 ; Overworld $B1 persistent: UNKNOWN
 dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7FE148 : db $01 : db $26 ; Overworld $E4 persistent: UNKNOWN
+; Manual changes:
+dl $7EF377 : db $01 : db 18 ; Arrows
 .after
 
 sram_lownmg_sw_dash_to_sw:
@@ -7167,6 +7182,8 @@ dl $7E055C : db $02 : dw $0000 ; Object tilemap state
 dl $7E0B37 : db $01 : db $6B ; Arc variable
 dl $7E002F : db $01 : db $06 ; Link's direction
 dl $7FDFF2 : db $02 : dw $0002 ; Room $39 persistent: Skull Woods (Gibdo Key / Mothula Hole Room)
+; Manual changes:
+dl $7EF377 : db $01 : db 23 ; Arrows
 .after
 
 sram_lownmg_mire_outside_skull:
@@ -7193,6 +7210,8 @@ dl $7FE0FA : db $01 : db $23 ; Overworld $BD persistent: UNKNOWN
 dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7FDFF2 : db $01 : db $00 ; Overworld $39 persistent: UNKNOWN
 dl $7E0202 : db $01 : db $01 ; Selected menu item
+; Manual changes:
+dl $7EF377 : db $01 : db 18 ; Arrows
 .after
 
 sram_lownmg_mire_dm:
@@ -7287,6 +7306,8 @@ dl $7FDFA6 : db $01 : db $00 ; Overworld $13 persistent: Sanctuary
 dl $7E02A2 : db $01 : db $FE ; Arc variable
 dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7E0202 : db $01 : db $0D ; Selected menu item
+; Manual changes:
+dl $7E02A2 : db $01 : db $8B ; Altitude
 .after
 
 sram_lownmg_mire_entrance:
@@ -7340,6 +7361,8 @@ dl $7E0548 : db $02 : dw $294C ; Object tilemap state
 dl $7E054C : db $02 : dw $185E ; Object tilemap state
 dl $7E0641 : db $02 : dw $0001 ; Room puzzle state (?)
 dl $7E002F : db $01 : db $02 ; Link's direction
+; Manual changes:
+dl $7EF377 : db $01 : db 23 ; Arrows
 .after
 
 sram_lownmg_mire_bari_key:
@@ -7513,6 +7536,8 @@ dl $7EC78C : db $02 : dw $24ED ; Selected menu gfx, row 2
 dl $7E02A2 : db $01 : db $00 ; Arc variable
 dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7E0202 : db $01 : db $11 ; Selected menu item
+; Manual changes:
+dl $7EF377 : db $01 : db 6 ; Arrows
 .after
 
 sram_lownmg_swamp_links_house:
@@ -7549,68 +7574,51 @@ dl $7E0202 : db $01 : db $0C ; Selected menu item
 .after
 
 sram_lownmg_swamp_antifairy_room:
-dl $7E0542 : db $02 : dw $193E ; Object tilemap state
 dl $7EC74A : db $02 : dw $2C62 ; Selected menu gfx, row 1
 dl $7EC78A : db $02 : dw $2C72 ; Selected menu gfx, row 2
-dl $7E0B36 : db $01 : db $00 ; Arc variable
 dl $7E1ABF : db $01 : db $7C ; Warp Vortex Coordinate
 dl $7E1ACF : db $01 : db $07 ; Warp Vortex Coordinate
 dl $7E1ADF : db $01 : db $04 ; Warp Vortex Coordinate
 dl $7E1AEF : db $01 : db $0F ; Warp Vortex Coordinate
-dl $7EF216 : db $02 : dw $0003 ; Room $010B: Unknown (...............q)
 dl $7EF3CA : db $01 : db $00 ; LW/DW
-dl $7EC167 : db $01 : db $20 ; Underworld exit cache
-dl $7FE147 : db $01 : db $00 ; Room $E3 persistent: Cave (1/2 Magic)
+dl $7FE147 : db $01 : db $00 ; Overworld $E3 persistent: UNKNOWN
+dl $7FE153 : db $01 : db $D3 ; Overworld $E9 persistent: UNKNOWN
 dl $7E0303 : db $01 : db $14 ; Selected menu item
-dl $7EC140 : db $02 : dw $003B ; Underworld exit cache
-dl $7EC144 : db $02 : dw $0E89 ; Underworld exit cache
-dl $7EC148 : db $02 : dw $0EE7 ; Underworld exit cache
-dl $7EC14C : db $02 : dw $003B ; Underworld exit cache
-dl $7EC150 : db $02 : dw $0EF6 ; Underworld exit cache
-dl $7EC154 : db $02 : dw $0E00 ; Underworld exit cache
-dl $7EC158 : db $02 : dw $0600 ; Underworld exit cache
-dl $7EC15C : db $02 : dw $0D20 ; Underworld exit cache
-dl $7EC160 : db $02 : dw $0500 ; Underworld exit cache
-dl $7EC16C : db $02 : dw $FFF9 ; Underworld exit cache
-dl $7EC170 : db $02 : dw $FFFB ; Underworld exit cache
-dl $7FE164 : db $01 : db $00 ; Room $F2 persistent: House
-dl $7FE059 : db $01 : db $00 ; Room $6C persistent: Ganon's Tower (Lanmolas Room)
-dl $7E0540 : db $02 : dw $193A ; Object tilemap state
-dl $7E0544 : db $02 : dw $1842 ; Object tilemap state
-dl $7E0B37 : db $01 : db $00 ; Arc variable
+dl $7FE07C : db $01 : db $09 ; Overworld $7E persistent: UNKNOWN
+dl $7FE164 : db $01 : db $EC ; Overworld $F2 persistent: UNKNOWN
+dl $7FE059 : db $01 : db $00 ; Overworld $6C persistent: Dark Link's House
 dl $7EC74C : db $02 : dw $2C63 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $2C73 ; Selected menu gfx, row 2
-dl $7EC146 : db $02 : dw $06FB ; Underworld exit cache
-dl $7EC14A : db $02 : dw $0778 ; Underworld exit cache
-dl $7EC14E : db $02 : dw $04A0 ; Underworld exit cache
-dl $7EC152 : db $02 : dw $0780 ; Underworld exit cache
-dl $7EC156 : db $02 : dw $0F1E ; Underworld exit cache
-dl $7EC15A : db $02 : dw $0700 ; Underworld exit cache
-dl $7EC15E : db $02 : dw $1000 ; Underworld exit cache
-dl $7EC162 : db $02 : dw $0800 ; Underworld exit cache
-dl $7EC16A : db $02 : dw $0007 ; Underworld exit cache
-dl $7EC16E : db $02 : dw $0005 ; Underworld exit cache
-dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
-dl $7E0B0C : db $01 : db $F0 ; Arc variable
+dl $7EC172 : db $02 : dw $0020 ; Crystal switch state
 dl $7E002F : db $01 : db $00 ; Link's direction
-dl $7E010E : db $01 : db $4E ; Dungeon entrance index
 dl $7E0202 : db $01 : db $14 ; Selected menu item
 .after
 
 sram_lownmg_swamp_entrance:
+dl $7E0542 : db $02 : dw $193E ; Object tilemap state
 dl $7EF2BB : db $01 : db $20 ; Overworld $3B: Unknown (...?....)
 dl $7EF2FB : db $01 : db $20 ; Overworld $7B: Unknown (...?....)
 dl $7EC74A : db $02 : dw $20B6 ; Selected menu gfx, row 1
 dl $7EC78A : db $02 : dw $20C6 ; Selected menu gfx, row 2
+dl $7E0B36 : db $01 : db $00 ; Arc variable
 dl $7EF216 : db $02 : dw $008F ; Room $010B: Unknown (.........c...qqq)
 dl $7EF3CA : db $01 : db $40 ; LW/DW
+dl $7FE153 : db $01 : db $00 ; Overworld $E9 persistent: UNKNOWN
 dl $7E0303 : db $01 : db $04 ; Selected menu item
+dl $7FE07C : db $01 : db $00 ; Overworld $7E persistent: UNKNOWN
+dl $7FE164 : db $01 : db $00 ; Overworld $F2 persistent: UNKNOWN
 dl $7FE07D : db $01 : db $13 ; Overworld $7E persistent: UNKNOWN
+dl $7E0540 : db $02 : dw $193A ; Object tilemap state
+dl $7E0544 : db $02 : dw $1842 ; Object tilemap state
 dl $7FE126 : db $01 : db $AB ; Overworld $D3 persistent: UNKNOWN
 dl $7EF051 : db $01 : db $01 ; Room $0028: Swamp Palace (Entrance Room) (................)
+dl $7E0B37 : db $01 : db $00 ; Arc variable
 dl $7EC74C : db $02 : dw $20B7 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $20C7 ; Selected menu gfx, row 2
 dl $7FE0E2 : db $01 : db $AA ; Overworld $B1 persistent: UNKNOWN
+dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
+dl $7E0B0C : db $01 : db $F0 ; Arc variable
+dl $7E010E : db $01 : db $4E ; Dungeon entrance index
 dl $7E0202 : db $01 : db $0C ; Selected menu item
 .after
 
@@ -7767,6 +7775,8 @@ dl $7E054C : db $02 : dw $0000 ; Object tilemap state
 dl $7E0B33 : db $01 : db $75 ; Arc variable
 dl $7E0B37 : db $01 : db $90 ; Arc variable
 dl $7E0B34 : db $01 : db $89 ; Arc variable
+; Manual changes:
+dl $7EF377 : db $01 : db 11 ; Arrows
 .after
 
 sram_lownmg_swamp_restock:
@@ -7813,6 +7823,8 @@ dl $7E0550 : db $02 : dw $13F0 ; Object tilemap state
 dl $7E0554 : db $02 : dw $0000 ; Object tilemap state
 dl $7E0B37 : db $01 : db $63 ; Arc variable
 dl $7E002F : db $01 : db $02 ; Link's direction
+; Manual changes:
+dl $7EF377 : db $01 : db 16 ; Arrows
 .after
 
 sram_lownmg_swamp_arrghus:
@@ -7908,6 +7920,8 @@ dl $7FE047 : db $01 : db $00 ; Overworld $63 persistent: UNKNOWN
 dl $7E02A2 : db $01 : db $00 ; Arc variable
 dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7E0202 : db $01 : db $06 ; Selected menu item
+; Manual changes:
+dl $7E02A2 : db $01 : db $00 ; Altitude
 .after
 
 sram_lownmg_ice_ice2:
@@ -7975,7 +7989,7 @@ dl $7E0FCC : db $01 : db $00 ; Prize pack index
 dl $7EF07C : db $02 : dw $4407 ; Room $003E: Ice Palace (Stalfos Knights / Conveyor Hellway) (..d...K.......qq)
 dl $7FDFFC : db $02 : dw $0326 ; Room $3E persistent: Ice Palace (Stalfos Knights / Conveyor Hellway)
 dl $7E0468 : db $01 : db $01 ; Trap door state
-dl $7E0B37 : db $01 : db $20 ; Arc variable
+dl $7E0B37 : db $01 : db $22 ; Arc variable
 dl $7E0CC2 : db $01 : db $00 ; Sprite drop
 .after
 
@@ -8438,6 +8452,8 @@ dl $7EC78C : db $02 : dw $6CC2 ; Selected menu gfx, row 2
 dl $7EC172 : db $01 : db $00 ; Crystal switch state
 dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7E0202 : db $01 : db $04 ; Selected menu item
+; Manual changes:
+dl $7EF377 : db $01 : db 21 ; Arrows
 .after
 
 sram_lownmg_gtower_ice_armos:
@@ -8455,6 +8471,8 @@ dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
 dl $7FE096 : db $02 : dw $0000 ; Room $8B persistent: Ganon's Tower (Block Puzzle / Spike Skip / Map Chest Room)
 dl $7E0302 : db $01 : db $01 ; Selected menu item
 dl $7E0202 : db $01 : db $01 ; Selected menu item
+; Manual changes:
+dl $7EF377 : db $01 : db 21 ; Arrows
 .after
 
 sram_lownmg_gtower_floor_2:
@@ -8480,6 +8498,8 @@ dl $7E0B08 : db $01 : db $40 ; Arc variable
 dl $7E0B30 : db $01 : db $AD ; Arc variable
 dl $7E0B34 : db $01 : db $42 ; Arc variable
 dl $7E0202 : db $01 : db $14 ; Selected menu item
+; Manual changes:
+dl $7EF377 : db $01 : db 13 ; Arrows
 .after
 
 sram_lownmg_gtower_mimics1:
@@ -8513,6 +8533,8 @@ dl $7FE056 : db $02 : dw $0240 ; Room $6B persistent: Ganon's Tower (Mimics Room
 dl $7E0641 : db $01 : db $00 ; Room puzzle state (?)
 dl $7E002F : db $01 : db $06 ; Link's direction
 dl $7E0FCB : db $01 : db $07 ; Prize pack index
+; Manual changes:
+dl $7EF377 : db $01 : db 9 ; Arrows
 .after
 
 sram_lownmg_gtower_spike_room:
@@ -8522,6 +8544,8 @@ dl $7E0468 : db $01 : db $01 ; Trap door state
 dl $7FE056 : db $02 : dw $2640 ; Room $6B persistent: Ganon's Tower (Mimics Rooms)
 dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7E0FCB : db $01 : db $00 ; Prize pack index
+; Manual changes:
+dl $7EF377 : db $01 : db 5 ; Arrows
 .after
 
 sram_lownmg_gtower_gauntlet:
@@ -8554,6 +8578,8 @@ dl $7E0548 : db $02 : dw $140C ; Object tilemap state
 dl $7E054C : db $02 : dw $1C0C ; Object tilemap state
 dl $7FE03A : db $02 : dw $00FD ; Room $5D persistent: Ganon's Tower (Gauntlet 1/2/3)
 dl $7E002F : db $01 : db $02 ; Link's direction
+; Manual changes:
+dl $7EF377 : db $01 : db 8 ; Arrows
 .after
 
 sram_lownmg_gtower_lanmola2:
@@ -8580,6 +8606,8 @@ dl $7FE056 : db $02 : dw $0000 ; Room $6B persistent: Ganon's Tower (Mimics Room
 dl $7FE05A : db $02 : dw $00C9 ; Room $6D persistent: Ganon's Tower (Gauntlet 4/5)
 dl $7E002F : db $01 : db $04 ; Link's direction
 dl $7E0202 : db $01 : db $06 ; Selected menu item
+; Manual changes:
+dl $7EF377 : db $01 : db 7 ; Arrows
 .after
 
 sram_lownmg_gtower_wizz1:
