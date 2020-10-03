@@ -1442,6 +1442,22 @@ dw $0008 ; Unknown 2
 dw $0000 ; Unknown 3
 dw sram_nmg_aga_lost_woods_after
 
+preset_nmg_aga_after_grove:
+db $01 ; Overworld
+dw $0000 ; Screen Index
+dw $00A0 ; Link X
+dw $00CB ; Link Y
+dw $0057 ; BG1 Vertical Scroll
+dw $006B ; BG2 Vertical Scroll
+dw $0022 ; BG1 Horizontal Scroll
+dw $0022 ; BG2 Horizontal Scroll
+dw $00A7 ; Scroll X
+dw $00DA ; Scroll Y
+dw $0306 ; Unknown 1
+dw $FFF3 ; Unknown 2
+dw $000E ; Unknown 3
+dw sram_nmg_aga_after_grove_after
+
 preset_nmg_aga_after_lost_woods:
 db $01 ; Overworld
 dw $0000 ; Screen Index
@@ -5583,6 +5599,8 @@ dl $7E0548 : db $02 : dw $181E ; Object tilemap state
 dl $7E0B37 : db $01 : db $00 ; Arc variable
 dl $7E0641 : db $02 : dw $0001 ; Room puzzle state (?)
 dl $7E002F : db $01 : db $06 ; Link's direction
+; Manual changes:
+dl $7E0CFB : db $02 : dw $041D ; Rupee pull kill and damage counters
 .after
 
 sram_nmg_east_gwg:
@@ -6177,6 +6195,19 @@ dl $7EF362 : db $02 : dw $0026 ; Rupees (actual)
 dl $7EC172 : db $02 : dw $0900 ; Crystal switch state
 dl $7E002F : db $01 : db $04 ; Link's direction
 dl $7FE14E : db $01 : db $00 ; Overworld $E7 persistent: UNKNOWN
+; Manual changes:
+dl $7E0CFB : db $02 : dw $0001 ; Rupee pull kill and damage counters
+.after
+
+sram_nmg_aga_after_grove:
+dl $7EF3C7 : db $01 : db $05 ; Map Phase
+dl $7EF300 : db $01 : db $40 ; Overworld $80: Unknown (..?.....)
+dl $7EF359 : db $01 : db $02 ; Sword
+dl $7FE1E8 : db $01 : db $E9 ; Overworld $134 persistent: UNKNOWN
+dl $7E002F : db $01 : db $02 ; Link's direction
+dl $7FE132 : db $01 : db $01 ; Overworld $D9 persistent: UNKNOWN
+; Manual changes:
+dl $7E0CFB : db $02 : dw $0003 ; Rupee pull kill and damage counters
 .after
 
 sram_nmg_aga_after_lost_woods:
@@ -6188,6 +6219,8 @@ dl $7EF362 : db $02 : dw $0076 ; Rupees (actual)
 dl $7FE1E8 : db $01 : db $E9 ; Overworld $134 persistent: UNKNOWN
 dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7FE132 : db $01 : db $01 ; Overworld $D9 persistent: UNKNOWN
+; Manual changes:
+dl $7E0CFB : db $02 : dw $0001 ; Rupee pull kill and damage counters
 .after
 
 sram_nmg_aga_castle_screen:
@@ -6197,6 +6230,8 @@ dl $7EC172 : db $02 : dw $000A ; Crystal switch state
 dl $7E002F : db $01 : db $06 ; Link's direction
 dl $7FE132 : db $01 : db $00 ; Overworld $D9 persistent: UNKNOWN
 dl $7FE144 : db $01 : db $42 ; Overworld $E2 persistent: UNKNOWN
+; Manual changes:
+dl $7E0CFB : db $02 : dw $0003 ; Rupee pull kill and damage counters
 .after
 
 sram_nmg_aga_entrance:
