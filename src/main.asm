@@ -53,7 +53,7 @@ org $B18000
 incsrc preset_data_hundo.asm
 
 org $B28000
-incsrc preset_data_low.asm
+incsrc preset_data_lowleg.asm
 
 org $B38000
 incsrc preset_data_ad.asm

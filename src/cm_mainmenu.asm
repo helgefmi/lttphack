@@ -110,7 +110,7 @@ cm_main_goto_presets:
 
 incsrc cm_presets_nmg.asm
 incsrc cm_presets_hundo.asm
-incsrc cm_presets_low.asm
+incsrc cm_presets_lowleg.asm
 incsrc cm_presets_ad.asm
 incsrc cm_presets_anyrmg.asm
 
