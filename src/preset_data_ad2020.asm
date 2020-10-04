@@ -5293,7 +5293,6 @@ dl $7EF36F : db $02 : dw $0001 ; Keys
 dl $7EC78A : db $02 : dw $20C6 ; Selected menu gfx, row 2
 dl $7EF36D : db $01 : db $10 ; Health (actual)
 dl $7EF04E : db $02 : dw $001F ; Room $0027: Tower of Hera (Big Chest) (............qqqq)
-; dl $7EF06E : db $02 : dw $208C ; Room $0037: Swamp Palace (Map Chest / Water Fill Room) (...d.....c...qq.)
 dl $7E029F : db $01 : db $11 ; Arc variable
 dl $7E0303 : db $01 : db $04 ; Selected menu item
 dl $7E0540 : db $02 : dw $0420 ; Object tilemap state
