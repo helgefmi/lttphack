@@ -4719,6 +4719,9 @@ dl $7E0B30 : db $01 : db $30 ; Arc variable
 dl $7E0B34 : db $01 : db $30 ; Arc variable
 dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7FE130 : db $01 : db $00 ; Overworld $D8 persistent: UNKNOWN
+; Manual changes:
+dl $7E0B10 : db $01 : db $31 ; Overlord X coordinate high byte
+dl $7E0B20 : db $01 : db $11 ; Overlord Y coordinate high byte
 .after
 
 sram_ad2020_pod_eastern_spinspeed:
@@ -5315,7 +5318,6 @@ dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
 dl $7E002F : db $01 : db $04 ; Link's direction
 dl $7E0202 : db $01 : db $01 ; Selected menu item
-dl $7E0202 : db $01 : db $14 ; Selected menu item
 ; Manual changes:
 dl $7E03C4 : db $01 : db $00 ; Ancilla Search Index
 .after
