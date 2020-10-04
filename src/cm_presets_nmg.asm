@@ -274,6 +274,7 @@ cm_nmg_presets_atower:
 	dw cm_nmg_aga_outside_hera
 	dw cm_nmg_aga_first_rupee_tree
 	dw cm_nmg_aga_lost_woods
+	dw cm_nmg_aga_after_grove
 	dw cm_nmg_aga_after_lost_woods
 	dw cm_nmg_aga_castle_screen
 	dw cm_nmg_aga_entrance
@@ -295,6 +296,9 @@ cm_nmg_aga_first_rupee_tree:
 
 cm_nmg_aga_lost_woods:
 	%cm_preset("Lost Woods", preset_nmg_aga_lost_woods)
+	
+cm_nmg_aga_after_grove:
+	%cm_preset("After Grove", preset_nmg_aga_after_grove)
 
 cm_nmg_aga_after_lost_woods:
 	%cm_preset("After Lost Woods", preset_nmg_aga_after_lost_woods)

@@ -1858,16 +1858,16 @@ dw sram_ad_skull_cursed_dwarf_after
 
 preset_ad_skull_getting_tempered:
 db $01 ; Overworld
-dw $0062 ; Screen Index
-dw $03E8 ; Link X
+dw $0058 ; Screen Index
+dw $03E6 ; Link X
 dw $0918 ; Link Y
-dw $08EB ; BG1 Vertical Scroll
+dw $08B2 ; BG1 Vertical Scroll
 dw $08B4 ; BG2 Vertical Scroll
-dw $0283 ; BG1 Horizontal Scroll
+dw $0300 ; BG1 Horizontal Scroll
 dw $0300 ; BG2 Horizontal Scroll
-dw $038D ; Scroll X
+dw $0385 ; Scroll X
 dw $0923 ; Scroll Y
-dw $0560 ; Unknown 1
+dw $1560 ; Unknown 1
 dw $000A ; Unknown 2
 dw $0000 ; Unknown 3
 dw sram_ad_skull_getting_tempered_after

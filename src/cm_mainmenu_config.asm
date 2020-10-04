@@ -37,6 +37,7 @@ cm_config_preset_category:
 	%cm_item("NMG")
 	%cm_item("Hundo")
 	%cm_item("Low")
+	%cm_item("Low Legacy")
 	%cm_item("AD")
 	%cm_item("Any RMG")
 	db !list_end

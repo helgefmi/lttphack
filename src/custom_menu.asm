@@ -25,6 +25,15 @@ macro set_menu_icon(icon)
 	STA.l !menu_dma_buffer-2, X
 endmacro
 
+; jsr ($0000,x) equivalent but program bank != data bank
+macro jsr_ptr_table(addr)
+	LDA.l <addr>,x
+	STA $B7
+	PEA ?ret-1
+	JMP ($00B7)
+?ret:
+endmacro
+
 !OPTION_OFFSET = $001E
 CM_Main:
 	PHB : PHK : PLB
@@ -34,7 +43,7 @@ CM_Main:
 	PLB
 	RTL
 
-
+ 
 CM_Local:
 	; For all these local $11 indexed subroutines:
 	; Enters: AI=8
@@ -58,14 +67,15 @@ CM_Init:
 	JSR cm_clear_stack
 	STZ $B0
 
-	; Put the main menu onto the stack.
-	%a16()
-	LDA #$0000 : STA !lowram_cm_stack_index
-	LDA #cm_mainmenu_indices : STA !ram_cm_menu_stack
 	; Scroll down
+	%a16()
 	LDA #$0100 : STA $E4
 	LDA #$0118 : STA $EA
+	; Put the main menu onto the stack.
+	LDA #$0000 : STA !lowram_cm_stack_index
+	LDA #cm_mainmenu_indices : STA !ram_cm_menu_stack
 	%a8()
+	LDA.b #cm_mainmenu_indices>>16 : STA !ram_cm_menu_bank_stack
 	LDA $9B : AND #$DF : STA $9B
 	JSR cm_init_item_variables
 
@@ -78,6 +88,12 @@ CM_Init:
 CM_DrawMenu:
 	; Save $1000-1680 so we can transfer it back aferwards
 	;JSR cm_cache_buffer
+	
+	PHB
+	LDX !lowram_cm_stack_index
+	LDA !ram_cm_menu_bank_stack,x
+	PHA
+	PLB
 
 	%ppu_off()
 	JSR cm_transfer_tileset
@@ -88,6 +104,7 @@ CM_DrawMenu:
 	LDA.b #$14 : STA $012E
 
 	INC $11
+	PLB
 	RTS
 
 
@@ -97,9 +114,16 @@ CM_MenuDown:
 	RTS
 
 CM_Active:
+	PHB
+	LDX !lowram_cm_stack_index
+	LDA !ram_cm_menu_bank_stack,x
+	PHA
+	PLB
+
 	LDA $B0 : BEQ .in_menu
 	JSR cm_do_ctrl_config
 
+	PLB
 	RTS
 
 .in_menu
@@ -169,6 +193,7 @@ CM_Active:
 	JSR cm_redraw
 
 .done
+	PLB
 	RTS
 
 
@@ -300,9 +325,9 @@ cm_clear_stack:
 .loop
 	STA !lowram_cm_cursor_stack, X
 	STA !ram_cm_menu_stack, X
+	STA !ram_cm_menu_bank_stack, X
 	INX #2
 	CPX.b #$10 : BNE .loop
-
 	%a8()
 	RTS
 
@@ -462,7 +487,7 @@ cm_draw_active_menu:
 	; draw function to use its data however it likes, and jump to it.
 	LDA ($02) : TAX
 	INC $02 : INC $02
-	JSR (cm_draw_action_table, X)
+	%jsr_ptr_table(cm_draw_action_table)
 
 	PLX : PLY
 	INY #2
@@ -554,7 +579,7 @@ cm_execute_cursor:
 	; Consume the action index and jump to the appropriate execute subroutine.
 	LDA ($00) : INC $00 : INC $00 : TAX
 
-	JSR (cm_execute_action_table, X)
+	%jsr_ptr_table(cm_execute_action_table)
 	%ai8()
 	RTS
 
@@ -564,7 +589,7 @@ cm_execute_cursor:
 
 cm_execute_action_table:
 	; Subroutines for executing an action when the user selects a menu item.
-	; Enters: AI=8
+	; Enters: AI=16
 	; Can mess with whatever it wants.
 	dw cm_execute_toggle
 	dw cm_execute_jsr
@@ -625,13 +650,15 @@ cm_execute_jsr:
 cm_execute_submenu:
 	%a8()
 	LDA $F6 : BPL .end
-	PHA
 	LDA #$24 : STA $012F
-	PLA
 	; Increments stack index and puts the submenu into the stack.
 	%a16()
 	LDA !lowram_cm_stack_index : INC #2 : STA !lowram_cm_stack_index : TAX
 	LDA ($00) : INC $00 : INC $00 : STA !ram_cm_menu_stack, X
+	%a8()
+	LDA ($00) : INC $00 : STA !ram_cm_menu_bank_stack, X
+	PHA : PLB
+	%a16()
 
 .end
 	RTS
@@ -655,6 +682,12 @@ cm_execute_back:
 
 .done
 	STA !lowram_cm_stack_index
+	%a8()
+	TAX
+	LDA !ram_cm_menu_bank_stack,x
+	PHA
+	PLB
+	%a16()
 
 .end
 	RTS
@@ -811,6 +844,7 @@ cm_execute_preset:
 cm_preset_data_banks:
 	db sram_nmg_esc_bed>>16
 	db sram_hundo_esc_bed>>16
+	db sram_lownmg_esc_bed>>16
 	db sram_low_esc_bed>>16
 	db sram_ad_esc_links_bed>>16
 	db sram_anyrmg_east_bed>>16
@@ -863,6 +897,7 @@ cm_execute_submenu_variable:
 	; dpad should do nothing here
 	%a8()
 	LDA $F0 : BNE .end
+	LDA #$24 : STA $012F
 
 	; Increments stack index and puts the submenu into the stack.
 	%a16()
@@ -881,11 +916,26 @@ cm_execute_submenu_variable:
 	LDA $05 : DEC
 
 .in_range
-	ASL : TAY
-	LDA ($00), Y : STA !ram_cm_menu_stack, X
-
+	STA $07
+	ASL
+	ADC $07
+	TAY
+	LDA ($00),y
+	STA !ram_cm_menu_stack,x
+	INY
+	INY
 	%a8()
-	LDA $00 : CLC : ADC $05 : STA $00
+	LDA ($00),y
+	STA !ram_cm_menu_bank_stack,x
+	PHA
+	PLB
+	%a16()
+
+	LDA $05
+	ASL
+	ADC $05
+	ADC $00
+	STA $00
 
 .end
 	RTS
@@ -1027,7 +1077,7 @@ cm_draw_jsr:
 
 
 cm_draw_submenu:
-	INC $02 : INC $02 ; skip submenu address
+	INC $02 : INC $02 : INC $02 ; skip submenu address
 
 .from_var
 	; draw text normally
@@ -1241,8 +1291,14 @@ cm_draw_submenu_variable:
 	; skip var address
 	INC $02 : INC $02 : INC $02
 
-	; get (max index + 1) * 2
-	LDA ($02) : AND #$00FF : ASL : STA $04 : INC $02
+	; get (max index + 1) * 3
+	LDA ($02)
+	AND #$00FF
+	STA $04
+	ASL
+	ADC $04
+	STA $04
+	INC $02
 
 	; skip submenu pointers
 	LDA $02 : CLC : ADC $04 : STA $02

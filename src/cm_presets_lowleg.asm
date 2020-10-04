@@ -15,7 +15,7 @@ cm_low_submenu_presets:
 	dw cm_low_presets_goto_ganon
 	dw cm_low_presets_goto_boss
 	dw !menu_end
-	%cm_header("LOW PRESETS")
+	%cm_header("LOW LEGACY PRESETS")
 
 ; HYRULE CASTLE
 
@@ -274,6 +274,7 @@ cm_low_presets_atower:
 	dw cm_low_aga_outside_hera
 	dw cm_low_aga_first_rupee_tree
 	dw cm_low_aga_lost_woods
+	dw cm_low_aga_after_grove
 	dw cm_low_aga_after_lost_woods
 	dw cm_low_aga_castle_screen
 	dw cm_low_aga_entrance
@@ -295,6 +296,9 @@ cm_low_aga_first_rupee_tree:
 
 cm_low_aga_lost_woods:
 	%cm_preset("Lost Woods", preset_low_aga_lost_woods)
+	
+cm_low_aga_after_grove:
+	%cm_preset("After Grove", preset_low_aga_after_grove)
 
 cm_low_aga_after_lost_woods:
 	%cm_preset("After Lost Woods", preset_low_aga_after_lost_woods)
