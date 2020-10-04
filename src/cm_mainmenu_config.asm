@@ -38,7 +38,8 @@ cm_config_preset_category:
 	%cm_item("Hundo")
 	%cm_item("Low")
 	%cm_item("Low Legacy")
-	%cm_item("AD")
+	%cm_item("AD 2020")
+	%cm_item("AD 2014")
 	%cm_item("Any RMG")
 	db !list_end
 

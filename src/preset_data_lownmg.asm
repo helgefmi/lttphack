@@ -7303,11 +7303,9 @@ dl $7FE05D : db $01 : db $00 ; Overworld $6E persistent: Outside Hedge Maze
 dl $7EC74C : db $02 : dw $2CD5 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $2CE5 ; Selected menu gfx, row 2
 dl $7FDFA6 : db $01 : db $00 ; Overworld $13 persistent: Sanctuary
-dl $7E02A2 : db $01 : db $FE ; Arc variable
+dl $7E02A2 : db $01 : db $8B ; Arc variable
 dl $7E002F : db $01 : db $02 ; Link's direction
 dl $7E0202 : db $01 : db $0D ; Selected menu item
-; Manual changes:
-dl $7E02A2 : db $01 : db $8B ; Altitude
 .after
 
 sram_lownmg_mire_entrance:
@@ -7319,9 +7317,10 @@ dl $7EF3CA : db $01 : db $40 ; LW/DW
 dl $7E0303 : db $01 : db $10 ; Selected menu item
 dl $7EC74C : db $02 : dw $2877 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $E876 ; Selected menu gfx, row 2
-dl $7E02A2 : db $01 : db $88 ; Arc variable
 dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7E0202 : db $01 : db $09 ; Selected menu item
+; Manual changes:
+dl $7E02A2 : db $01 : db $8B ; Altitude
 .after
 
 sram_lownmg_mire_mire2:
@@ -7920,8 +7919,6 @@ dl $7FE047 : db $01 : db $00 ; Overworld $63 persistent: UNKNOWN
 dl $7E02A2 : db $01 : db $00 ; Arc variable
 dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7E0202 : db $01 : db $06 ; Selected menu item
-; Manual changes:
-dl $7E02A2 : db $01 : db $00 ; Altitude
 .after
 
 sram_lownmg_ice_ice2:
