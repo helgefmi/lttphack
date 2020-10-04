@@ -1335,14 +1335,14 @@ dw sram_ad2020_hook_petting_zoo_after
 preset_ad2020_hook_fake_clippers:
 db $02 ; Dungeon
 dw $0037 ; Room Index
-dw $0610 ; BG1 Vertical Scroll
-dw $0610 ; BG2 Vertical Scroll
-dw $0E00 ; BG1 Horizontal Scroll
-dw $0E00 ; BG2 Horizontal Scroll
-dw $0E78 ; Link X
-dw $06D9 ; Link Y
-dw $007F ; Camera X
-dw $0088 ; Camera Y
+dw $0600 ; BG1 Vertical Scroll
+dw $0600 ; BG2 Vertical Scroll
+dw $0E08 ; BG1 Horizontal Scroll
+dw $0E08 ; BG2 Horizontal Scroll
+dw $0E80 ; Link X
+dw $0630 ; Link Y
+dw $0087 ; Camera X
+dw $0078 ; Camera Y
 dw $0000 ; Door Settings
 dw $0600 ; Relative Coords HU
 dw $0600 ; Relative Coords FU
@@ -5287,23 +5287,23 @@ sram_ad2020_hook_fake_clippers:
 dl $7E0542 : db $02 : dw $0520 ; Object tilemap state
 dl $7E0546 : db $02 : dw $1430 ; Object tilemap state
 dl $7EF343 : db $01 : db $07 ; Bombs
-dl $7EC74A : db $02 : dw $2CB2 ; Selected menu gfx, row 1
+dl $7EC74A : db $02 : dw $20B6 ; Selected menu gfx, row 1
 dl $7EF357 : db $01 : db $01 ; Moon Pearl
-dl $7EF36F : db $02 : dw $0000 ; Keys
-dl $7EC78A : db $02 : dw $2CC2 ; Selected menu gfx, row 2
+dl $7EF36F : db $02 : dw $0001 ; Keys
+dl $7EC78A : db $02 : dw $20C6 ; Selected menu gfx, row 2
 dl $7EF36D : db $01 : db $10 ; Health (actual)
 dl $7EF04E : db $02 : dw $001F ; Room $0027: Tower of Hera (Big Chest) (............qqqq)
-dl $7EF06E : db $02 : dw $208C ; Room $0037: Swamp Palace (Map Chest / Water Fill Room) (...d.....c...qq.)
+; dl $7EF06E : db $02 : dw $208C ; Room $0037: Swamp Palace (Map Chest / Water Fill Room) (...d.....c...qq.)
 dl $7E029F : db $01 : db $11 ; Arc variable
-dl $7E0303 : db $01 : db $01 ; Selected menu item
+dl $7E0303 : db $01 : db $04 ; Selected menu item
 dl $7E0540 : db $02 : dw $0420 ; Object tilemap state
 dl $7E0544 : db $02 : dw $0620 ; Object tilemap state
 dl $7E0548 : db $02 : dw $063C ; Object tilemap state
-dl $7EC74C : db $02 : dw $2CB3 ; Selected menu gfx, row 1
-dl $7EC78C : db $02 : dw $6CC2 ; Selected menu gfx, row 2
+dl $7EC74C : db $02 : dw $20B7 ; Selected menu gfx, row 1
+dl $7EC78C : db $02 : dw $20C7 ; Selected menu gfx, row 2
 dl $7FDFCE : db $02 : dw $0008 ; Room $27 persistent: Tower of Hera (Big Chest)
-dl $7E002F : db $01 : db $02 ; Link's direction
-dl $7E0202 : db $01 : db $04 ; Selected menu item
+dl $7E002F : db $01 : db $04 ; Link's direction
+dl $7E0202 : db $01 : db $0C ; Selected menu item
 .after
 
 sram_ad2020_hook_hookshot:
