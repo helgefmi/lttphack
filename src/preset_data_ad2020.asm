@@ -1804,15 +1804,15 @@ preset_ad2020_sw_outside_thieves:
 db $01 ; Overworld
 dw $0058 ; Screen Index
 dw $01F8 ; Link X
-dw $07B3 ; Link Y
-dw $075A ; BG1 Vertical Scroll
-dw $075A ; BG2 Vertical Scroll
+dw $07BB ; Link Y
+dw $075B ; BG1 Vertical Scroll
+dw $075D ; BG2 Vertical Scroll
 dw $0176 ; BG1 Horizontal Scroll
 dw $0176 ; BG2 Horizontal Scroll
 dw $0203 ; Scroll X
-dw $07C7 ; Scroll Y
+dw $07CA ; Scroll Y
 dw $0B2E ; Unknown 1
-dw $0006 ; Unknown 2
+dw $0003 ; Unknown 2
 dw $FFFA ; Unknown 3
 dw sram_ad2020_sw_outside_thieves_after
 
