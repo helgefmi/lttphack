@@ -99,11 +99,12 @@ incsrc cm_mainmenu_config.asm
 cm_main_goto_presets:
 	dw !CM_ACTION_SUBMENU_VARIABLE
 	dl !ram_preset_category
-	db $06
+	db $07
 	dl cm_nmg_submenu_presets
 	dl cm_hundo_submenu_presets
 	dl cm_lownmg_submenu_presets
 	dl cm_low_submenu_presets
+	dl cm_ad2020_submenu_presets
 	dl cm_ad_submenu_presets
 	dl cm_anyrmg_submenu_presets
 	%cm_item("Presets")
@@ -117,5 +118,6 @@ incsrc cm_presets_anyrmg.asm
 org $A58000
 
 incsrc cm_presets_lownmg.asm
+incsrc cm_presets_ad2020.asm
 
 ; }}}

@@ -60,6 +60,7 @@ incsrc preset_data_ad.asm
 
 org $B48000
 incsrc preset_data_anyrmg.asm
+incsrc preset_data_ad2020.asm
 
 org $B58000
 incsrc preset_data_lownmg.asm
