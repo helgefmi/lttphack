@@ -60,17 +60,17 @@ org $02C240
 load_entrance_local:
 	; Enters AI=8
 	; This is called without using presets too, so need to redirect to the correct code.
-	LDA !ram_preset_type : BNE .custom
+	LDA.w SA1RAM.preset_type : BNE .custom
 
-	JSR !Dungeon_LoadEntrance
-	%ai8()
+	JSR Dungeon_LoadEntrance
+	SEP #$30
 	RTS
 
 .custom
-	LDA #$00 : STA !ram_preset_type
-	JSR !Dungeon_LoadEntrance
+	LDA #$00 : STA.w SA1RAM.preset_type
+	JSR Dungeon_LoadEntrance
 	JSL preset_load_dungeon
-	%ai8()
+	SEP #$30
 	RTS
 warnpc $02C270
 
@@ -85,14 +85,14 @@ org $02987D
 	JSL preset_did_we_load_preset
 	BCC +
 	RTL
-+	NOP
+	NOP : +
 
 
 ; Module_Dungeon -> Spotlight_Open
 ; This is called last
 org $02922F
 	JSL preset_spotlight_open_hook
-	NOP #2
+	BRA + : +
 	;02922f jsl $00f290
 	;029233 inc $b0
 	;029235 rts
@@ -100,17 +100,17 @@ org $02922F
 pullpc
 preset_load_next_frame:
 	; This subroutine is used for any preset loading (load last, replay movie, from menu, autopreset)
-	%ai8()
+	SEP #$30
 	JSR preset_deinit_current_state
-	%ai16()
+
+	REP #$30
 	JSR preset_clear_tilemap
 
-	%ai8()
-
+	SEP #$30
 	LDA #$F0 : STA $012C
 	LDA #$05 : STA $012D
 
-	LDA !ram_preset_type : CMP #$02 : BEQ .dungeon
+	LDA.w SA1RAM.preset_type : CMP #$02 : BEQ .dungeon
 
 	; "Moving floor" flag that needs to be reset to prevent overworld bugs
 	; when loading preset from Mothula, Conveyor rooms etc.
@@ -129,7 +129,7 @@ preset_load_next_frame:
 	RTL
 
 .dungeon
-	LDA #$08 : STA !ram_preset_spotlight_timer
+	LDA #$08 : STA.w SA1RAM.preset_spotlight_timer
 
 	; Makes PreDungeon not use a smaller "entrance only" table for data.
 	STZ $04AA
@@ -151,7 +151,7 @@ preset_deinit_current_state:
 	; Leaves: AI=8
 
 	; This is mainly needed to stop interactions with nearby sprites (e.g. talking to Kiki)
-	JSL !Sprite_ResetAll
+	JSL Sprite_ResetAll
 
 	; Clears the warp vortex.
 	STZ $1ABF
@@ -165,8 +165,8 @@ preset_deinit_current_state:
 
 	LDA #$81 : STA $4200 ; disable IRQ
 
-	LDA !ram_cm_old_gamemode : CMP #$0E : BNE .not_message_module
-	LDA !ram_cm_old_submode : CMP #$02 : BNE .not_message_module
+	LDA.b $10 : CMP #$0E : BNE .not_message_module
+	LDA.b $11 : CMP #$02 : BNE .not_message_module
 
 	JSR preset_deinit_dialog_mode
 
@@ -178,7 +178,7 @@ preset_deinit_dialog_mode:
 	; Enters: AI=8
 	; Leaves: AI=8
 
-	%ai16()
+	REP #$30
 	; Clears HUD3 VRAM in case there's text present.
 	LDA $1CD2 : STA $1CD0
 
@@ -188,7 +188,7 @@ preset_deinit_dialog_mode:
 
 	LDA #$FFFF : STA $1008
 
-	%ai8()
+	SEP #$30
 	LDA #$01 : STA $14
 
 	STZ $1CD8
@@ -201,28 +201,22 @@ preset_deinit_dialog_mode:
 
 preset_load_overworld:
 	; Enters: AI=8
-	LDA !ram_preset_type : BNE .preset
+	LDA.w SA1RAM.preset_type : BNE .preset
 
 	; This means we got here from the actual Bird menu (how boring),
-	; so lets just jump to the original function.
-	JML !BirdTravel_LoadTargetAreaData
+	; so let's just jump to the original function.
+	JML BirdTravel_LoadTargetAreaData
 
 .preset
 	PHB : PHK : PLB
 	; Set link to be in the Overworld
 	STZ $1B
 
-	; sram or rom
-	LDA !lowram_is_poverty_load : BEQ .from_rom
-	LDA #$70 : STA $02
-	BRA +
-
-.from_rom
-	LDA !ram_preset_category : TAX
+	LDA.w !ram_preset_category : TAX
 	LDA.l cm_preset_data_banks, X : STA $02
 
-+	%ai16()
-	LDA !ram_preset_destination : STA $00
+	REP #$30
+	LDA.w SA1RAM.preset_destination : STA $00
 	LDY #$0000
 
 	STZ $04AC
@@ -254,13 +248,9 @@ preset_load_overworld:
 	LDA [$00], Y : INY #2 : STA $0628
 	LDA #$0000 : SEC : SBC $0628 : STA $062A
 
-	LDA [$00], Y : INY #2 : STA !ram_preset_end_of_sram_state
+	LDA [$00], Y : INY #2 : STA.w SA1RAM.preset_end_of_sram_state
 
-	LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
-	LDA !ram_preset_category : AND #$00FF : ASL : TAX
-	LDA.l preset_end_of_base_states, X : STA !ram_preset_end_of_sram_state
-
-+	%ai8()
+	SEP #$30
 	; LW/DW
 	LDA $8A : AND #$40 : STA $7EF3CA
 
@@ -269,12 +259,10 @@ preset_load_overworld:
 
 	JSR preset_reset_state_after_loading
 	JSR preset_reset_counters
-%ai16()
-	JSR preset_load_state
-	LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
-	JSL load_poverty_state
 
-+	%i8()
+	REP #$30
+	JSR preset_load_state
+	SEP #$10
 
 	; Makes it possible to spawn in the middle of a field/not inside doorway?
 	STZ $0696
@@ -286,29 +274,22 @@ preset_load_overworld:
 
 	JSL music_reload
 
-	%a16()
+	REP #$20
 
 .dontNeedNewMusicBank
 
 	PLB
-	JML !BirdTravel_LoadTargetAreaData_AfterData
+	JML BirdTravel_LoadTargetAreaData_AfterData
 
 
 preset_load_dungeon:
 	; Can leave with anything.
-	PHB : PHB : PLB
+	PHB
 
-	; sram or rom
-	LDA !lowram_is_poverty_load : BEQ .from_rom
-	LDA #$70 : STA $02
-	BRA +
-
-.from_rom
-	LDA !ram_preset_category : TAX
+	LDA.w !ram_preset_category : TAX
 	LDA.l cm_preset_data_banks, X : STA $02
-
-+	%ai16()
-	LDA !ram_preset_destination : STA $00
+	REP #$30
+	LDA.w SA1RAM.preset_destination : STA $00
 	LDY #$0000
 
 	; Room index
@@ -351,16 +332,16 @@ preset_load_dungeon:
 	LDA [$00], Y : INY #2 : STA $A6
 	LDA [$00], Y : INY #2 : STA $A9
 
-	%a8()
+	SEP #$20
 
 	; Set link to be in the Overworld
 	LDA #$01 : STA $1B
 
 	; Main blockset value (main graphics)
-	LDA [$00], Y : %a16() : INY : %a8() : STA $0AA1
+	LDA [$00], Y : REP #$20 : INY : SEP #$20 : STA $0AA1
 
 	; Music track value. Is it the beginning music?
-	LDA [$00], Y : %a16() : INY : %a8() : STA $0132 : CMP #$03 : BNE .notBeginningMusic
+	LDA [$00], Y : REP #$20 : INY : SEP #$20 : STA $0132 : CMP #$03 : BNE .notBeginningMusic
 
 	; Check game status
 	; Is it less than first part?
@@ -379,13 +360,13 @@ preset_load_dungeon:
 	LDA $2140 : BNE .loop
 
 	; Starting floor
-	LDA [$00], Y : %a16() : INY : %a8() : STA $A4
+	LDA [$00], Y : REP #$20 : INY : SEP #$20 : STA $A4
 
 	; Load the palace number.
-	LDA [$00], Y : %a16() : INY : %a8() : STA $040C
+	LDA [$00], Y : REP #$20 : INY : SEP #$20 : STA $040C
 
 	; Doorway orientation
-	LDA [$00], Y : %a16() : INY : %a8() : STA $6C
+	LDA [$00], Y : REP #$20 : INY : SEP #$20 : STA $6C
 
 	; Starting BG
 	; Set the position that Link starts at.
@@ -393,26 +374,19 @@ preset_load_dungeon:
 	LDA [$00], Y : STA $EE
 
 	; Set Pseudo bg level
-	LDA [$00], Y : %a16() : INY : %a8() : AND #$0F : STA $0476
+	LDA [$00], Y : REP #$20 : INY : SEP #$20 : AND #$0F : STA $0476
 
 	PHY
 
-	%ai8()
+	SEP #$30
 	JSR preset_reset_state_after_loading
 	JSR preset_reset_counters
 
-	%ai16()
+	REP #$30
 	PLY
-	LDA [$00], Y : INY #2 : STA !ram_preset_end_of_sram_state
-	LDA !lowram_is_poverty_load : AND #$00FF :  BEQ +
-	LDA !ram_preset_category : AND #$00FF : ASL : TAX
-	LDA.l preset_end_of_base_states, X : STA !ram_preset_end_of_sram_state
-
-+	JSR preset_load_state
-	LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
-	JSL load_poverty_state
-
-+	%ai8()
+	LDA [$00], Y : INY #2 : STA.w SA1RAM.preset_end_of_sram_state
+	JSR preset_load_state
+	SEP #$30
 	PLB
 	RTL
 
@@ -420,21 +394,17 @@ preset_load_dungeon:
 preset_sprite_reset_all:
 	; Enters AI=8
 	; Call the original routine
-	JSL !Sprite_ResetAll
+	JSL Sprite_ResetAll
 
 	; Check if we want to load our own state.
-	%ai16()
-	LDA !ram_preset_end_of_sram_state : BEQ .end
+	REP #$30
+	LDA.w SA1RAM.preset_end_of_sram_state : BEQ .end
 
 	JSR preset_load_state
-	LDA #$0000 : STA !ram_preset_end_of_sram_state
-	LDA !lowram_is_poverty_load : AND #$00FF : BEQ .notPoverty
-	JSL load_poverty_state
-
-.notPoverty
+	LDA #$0000 : STA.w SA1RAM.preset_end_of_sram_state
 	;JSL movie_preset_loaded
 .end
-	%ai8()
+	SEP #$30
 	RTL
 
 
@@ -443,12 +413,12 @@ preset_load_state:
 
 	JSR preset_clear_for_initial_preset
 
-	%a8()
-	LDA !ram_preset_category : TAX
+	SEP #$20
+	LDA.w !ram_preset_category : TAX
 	PHB : LDA.l cm_preset_data_banks, X : PHA : PLB
-	%a16()
-	LDA !ram_preset_end_of_sram_state : STA $06
-	LDA !ram_preset_category : AND #$00FF : ASL : TAX
+	REP #$20
+	LDA.w SA1RAM.preset_end_of_sram_state : STA $06
+	LDA.w !ram_preset_category : AND #$00FF : ASL : TAX
 	LDA.l preset_start_ptrs, X : STA $00
 
 .next_item
@@ -464,50 +434,50 @@ preset_load_state:
 	BRA .next_item
 
 .one_byte
-	%a8()
+	SEP #$20
 	LDA ($00) : STA [$02]
-	%a16()
+	REP #$20
 	INC $00
 	BRA .next_item
 
 .done_with_state
 	PLB
 
-	%ai16()
-	JSL !Sprite_LoadGfxProperties
+	REP #$30
+	JSL Sprite_LoadGfxProperties
 
-	%ai8()
+	SEP #$30
 	; Reload graphics and palette for sword, shield and armor
-	JSL !DecompSwordGfx
-	JSL !Palette_Sword
-	JSL !DecompShieldGfx
-	JSL !Palette_Shield
-	JSL !Palette_Armor
+	JSL DecompSwordGfx
+	JSL Palette_Sword
+	JSL DecompShieldGfx
+	JSL Palette_Shield
+	JSL Palette_Armor
 
 	; Check if we're in overworld
 	LDA $1B : BEQ .in_overworld
 
-	JSL !UpdateBarrierTileChr
+	JSL UpdateBarrierTileChr
 
 	LDA $11 : PHA
 	LDA #$07 : STA $0690
-	JSL !Dungeon_AnimateTrapDoors
+	JSL Dungeon_AnimateTrapDoors
 	PLA : STA $11
 
 .in_overworld
 	; Check if we currently have a tagalong
 	LDA $7EF3CC : BEQ .no_tagalong
-	JSL !Tagalong_LoadGfx
+	JSL Tagalong_LoadGfx
 
 .no_tagalong
-	LDA !ram_game_progress : CMP #$02 : BMI .done
+	LDA.l !ram_game_progress : CMP #$02 : BMI .done
 
-	LDA !ram_sanctuary_heart : BEQ .done
-	LDA !ram_equipment_maxhp : CLC : ADC #$08 : STA !ram_equipment_maxhp
-	LDA !ram_equipment_curhp : CLC : ADC #$08 : STA !ram_equipment_curhp
+	LDA.w !ram_sanctuary_heart : BEQ .done
+	LDA.l !ram_equipment_maxhp : CLC : ADC #$08 : STA.l !ram_equipment_maxhp
+	LDA.l !ram_equipment_curhp : CLC : ADC #$08 : STA.l !ram_equipment_curhp
 
 .done
-	%ai16()
+	REP #$30
 	RTS
 
 
@@ -525,6 +495,7 @@ preset_clear_for_initial_preset:
 	INX #2 : CPX #$0010 : BNE -
 
 	LDX #$0000
+
 -	STZ $029E, X
 	INX #2 : CPX #$000A : BNE -
 
@@ -552,7 +523,7 @@ preset_reset_state_after_loading:
 	; Assumes A=8
 
 	; Reset a bunch of Link state (sleeping, falling in hole etc).
-	JSL !Player_ResetState
+	JSL Player_ResetState
 
 	; Resets "Link Immovable" flag
 	STZ $02E4
@@ -582,20 +553,19 @@ preset_reset_state_after_loading:
 
 
 preset_reset_counters:
-	%a16()
-	LDA #$0000
-	STA !ram_lanmola_cycles
-	%a8()
-	STA !ram_lanmola_cycles+2
-	LDA #$41 : STA !timer_allowed
+	SEP #$20
+	STZ.w SA1IRAM.LanmoCycles+0
+	STZ.w SA1IRAM.LanmoCycles+1
+	STZ.w SA1IRAM.LanmoCycles+2
+	LDA #$41 : STA SA1IRAM.TIMER_FLAG
 	RTS
 
 
 preset_load_last_preset:
-	%a16()
-	LDA !ram_previous_preset_destination : STA !ram_preset_destination
-	%a8()
-	LDA !ram_previous_preset_type : STA !ram_preset_type
+	REP #$20
+	LDA.w SA1RAM.previous_preset_destination : STA.w SA1RAM.preset_destination
+	SEP #$20
+	LDA.w SA1RAM.previous_preset_type : STA.w SA1RAM.preset_type
 	LDA #12 : STA $10
 	LDA #05 : STA $11
 	RTL
@@ -603,18 +573,18 @@ preset_load_last_preset:
 
 preset_duck_dropoff_hook:
 	PHA
-	LDA !ram_preset_type : BNE .custom
+	LDA.w SA1RAM.preset_type : BNE .custom
 
 	PLA
 	JML $099509
 
 .custom
-	LDA #$00 : STA !ram_preset_type
+	LDA #$00 : STA.w SA1RAM.preset_type
 
 	LDA $02E0 : ORA $56 : BEQ .notBunny
 
 	; Fixes bunny graphics after Palette_ArmorAndGloves messes it up
-	JSL !LoadGearPalettes_bunny
+	JSL LoadGearPalettes_bunny
 
 .notBunny
 	PLA
@@ -622,11 +592,9 @@ preset_duck_dropoff_hook:
 
 
 preset_autoload_preset:
-	LDA !ram_autoload_preset : BEQ .die
+	LDA.w !ram_autoload_preset : BEQ .die
 
-	STZ !lowram_is_poverty_load
-	JSL preset_load_last_preset
-	RTL
+	JML preset_load_last_preset
 
 .die
 	LDA $10 : STA $010C
@@ -636,8 +604,8 @@ preset_autoload_preset:
 
 
 preset_did_we_load_preset:
-	LDA !ram_preset_spotlight_timer : BEQ .not_preset
-	DEC : STA !ram_preset_spotlight_timer : BEQ .done
+	LDA.w SA1RAM.preset_spotlight_timer : BEQ .not_preset
+	DEC : STA.w SA1RAM.preset_spotlight_timer : BEQ .done
 	STA $2100 : STA $13
 	SEC
 	RTL
@@ -648,18 +616,20 @@ preset_did_we_load_preset:
 	LDA $010C : STA $10
 	STZ $11
 	LDA #$80 : STA $2100 : STA $13
-	LDA #$08 : STA !ram_preset_spotlight_timer
-	SEC : RTL
+	LDA #$08 : STA.w SA1RAM.preset_spotlight_timer
+	SEC
+	RTL
 
 .not_preset
 	LDA $11 : ASL : TAX
-	CLC : RTL
+	CLC
+	RTL
 
 
 preset_spotlight_open_hook:
-	LDA !ram_preset_spotlight_timer : BEQ .not_preset
-	DEC : STA !ram_preset_spotlight_timer : BEQ .done
-	LDA #$0F : SEC : SBC !ram_preset_spotlight_timer : STA $2100 : STA $13
+	LDA.w SA1RAM.preset_spotlight_timer : BEQ .not_preset
+	DEC : STA.w SA1RAM.preset_spotlight_timer : BEQ .done
+	LDA #$0F : SEC : SBC.w SA1RAM.preset_spotlight_timer : STA $2100 : STA $13
 	RTL
 
 .done
@@ -670,7 +640,7 @@ preset_spotlight_open_hook:
 	LDA $02E0 : ORA $56 : BEQ .notBunny
 
 	; Fixes bunny graphics after Palette_ArmorAndGloves messes it up
-	JSL !LoadGearPalettes_bunny
+	JSL LoadGearPalettes_bunny
 
 .notBunny
 	LDA $010C : STA $10

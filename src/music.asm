@@ -1,8 +1,7 @@
 ; Used when turning on the console, so sound is correctly unmuted after selecting a file.
 ; This removes file screen music, but oh well.
 music_reload:
-	SEP #$30
-	SEI
+	SEP #$34 ; I flag too
 	STZ $4200
 	STZ $420C
 	STZ $0136
@@ -19,7 +18,7 @@ music_reload:
 	RTL
 
 music_overworld_track:
-	LDA !ram_preset_type : BNE .loadedPreset
+	LDA.w SA1IRAM.preset_type : BNE .loadedPreset
 
 	; Let duck music logic run
 	LDA #$10
@@ -143,96 +142,3 @@ music_overworld_track:
 .done
 	SEC
 	RTL
-
-; incsrc "musicvolumes.asm"
-mute_music:
-	PHP : SEP #$30
-	LDA.b #MutedInstruments>>0 : STA $00
-	LDA.b #MutedInstruments>>8 : STA $01
-	BRA DoMusic
-
-unmute_music:
-	PHP : SEP #$30
-	LDA.b #UnmutedInstruments>>0 : STA $00
-	LDA.b #UnmutedInstruments>>8 : STA $01
-	BRA DoMusic
-
-DoMusic:
-	SEI
-	STZ $4200
-	STZ $420C
-	LDA #$FF : STA $2140
-	LDA.b #DoMusic>>16
-	JSL $00891D ; load song bank
-
-	SEP #$30
-	LDA #$81 : STA $4200
-	LDA $0133 : STA $012C
-	PLP
-	RTL
-
-UnmutedInstruments:
-	dw .end-.start, $3D00
-
-.start
-	db $00, $FF, $E0, $B8, $04, $70
-	db $01, $FF, $E0, $B8, $07, $90
-	db $02, $FF, $E0, $B8, $09, $C0
-	db $03, $FF, $E0, $B8, $04, $00
-	db $04, $FF, $E0, $B8, $04, $00
-	db $05, $FF, $E0, $B8, $04, $70
-	db $06, $FF, $E0, $B8, $04, $70
-	db $07, $FF, $E0, $B8, $04, $70
-	db $08, $FF, $E0, $B8, $07, $A0
-	db $09, $8F, $E9, $B8, $01, $E0
-	db $0A, $8A, $E9, $B8, $01, $E0
-	db $0B, $FF, $E0, $B8, $03, $00
-	db $0C, $FF, $E0, $B8, $03, $A0
-	db $0D, $FF, $E0, $B8, $01, $00
-	db $0E, $FF, $EF, $B8, $0E, $A0
-	db $0F, $FF, $EF, $B8, $06, $00
-	db $10, $FF, $E0, $B8, $03, $D0
-	db $11, $8F, $E0, $B8, $03, $00
-	db $12, $8F, $E0, $B8, $06, $F0
-	db $13, $FD, $E0, $B8, $07, $A0
-	db $14, $FF, $E0, $B8, $07, $A0
-	db $15, $FF, $E0, $B8, $03, $D0
-	db $16, $8F, $E0, $B8, $03, $00
-	db $17, $FF, $E0, $B8, $02, $C0
-	db $18, $FE, $8F, $B8, $06, $F0
-
-.end
-	dw $0000, $0800
-
-MutedInstruments:
-	dw .end-.start, $3D00
-
-.start
-	db $00, $00, $00, $B8, $04, $70
-	db $01, $00, $00, $B8, $07, $90
-	db $02, $00, $00, $B8, $09, $C0
-	db $03, $00, $00, $B8, $04, $00
-	db $04, $00, $00, $B8, $04, $00
-	db $05, $00, $00, $B8, $04, $70
-	db $06, $FF, $E0, $B8, $04, $70 ; mirror uses this, leave unmuted
-	db $07, $00, $00, $B8, $04, $70
-	db $08, $00, $00, $B8, $07, $A0
-	db $09, $00, $00, $B8, $01, $E0
-	db $0A, $00, $00, $B8, $01, $E0
-	db $0B, $00, $00, $B8, $03, $00
-	db $0C, $00, $00, $B8, $03, $A0
-	db $0D, $00, $00, $B8, $01, $00
-	db $0E, $00, $00, $B8, $0E, $A0
-	db $0F, $00, $00, $B8, $06, $00
-	db $10, $00, $00, $B8, $03, $D0
-	db $11, $00, $00, $B8, $03, $00
-	db $12, $00, $00, $B8, $06, $F0
-	db $13, $00, $00, $B8, $07, $A0
-	db $14, $00, $00, $B8, $07, $A0
-	db $15, $00, $00, $B8, $03, $D0
-	db $16, $00, $00, $B8, $03, $00
-	db $17, $00, $00, $B8, $02, $C0
-	db $18, $00, $00, $B8, $06, $F0
-
-.end
-	dw $0000, $0800

@@ -1,85 +1,71 @@
-lorom
+math pri on
 
-!FEATURE_HUD ?= 1
-!FEATURE_SD2SNES ?= 1
+sa1rom
+
 !VERSION ?= "ALEPH 1"
 
 incsrc defines.asm
 incsrc hexedits.asm
 
-org $A08000
+org $208000
+incsrc sa1hooks.asm
 incsrc gamemode.asm
 incsrc nmi.asm
 incsrc timers.asm
 incsrc hudextras.asm
-
-if !FEATURE_HUD
-	incsrc hud.asm
-endif
-
-org $A28000
-incsrc tiles.asm
-
-org $A38000
-incsrc init.asm
 incsrc rng.asm
 incsrc misc.asm
-incsrc idle.asm
-incsrc glitchedwindow.asm
-incsrc ancillawindow.asm
-
-org $A48000
-incsrc custom_menu.asm
-print "Custom menu size: ", pc
-
-org $A68000
-incsrc presets.asm
-
-org $A78000
-incsrc poverty_states.asm
-
-org $A88000
 incsrc music.asm
+incsrc init.asm
+incsrc presets2.asm
 
-org $A98000
-incsrc movie.asm
+org $218000
+incsrc tiles.asm
 
-; ---- data ----
+org $228000
+CM:
+table resources/menu.tbl
+incsrc cm_macros.asm
+incsrc cm_main.asm
+incsrc cm_draw.asm
+incsrc cm_func.asm
+incsrc cm_items.asm
+incsrc cm_equipment.asm
+incsrc cm_gamestate.asm
+incsrc cm_linkstate.asm
+incsrc cm_gameplay.asm
+incsrc cm_rng.asm
+incsrc cm_hud.asm
+incsrc cm_shortcuts.asm
+incsrc cm_config.asm
 
-org $B08000
-incsrc preset_data_nmg.asm
+CM_END:
+print ""
+print "Custom menu size: $", hex(CM_END-CM)
 
-org $B18000
-incsrc preset_data_hundo.asm
+org $268000
 
-org $B28000
-incsrc preset_data_lowleg.asm
 
-org $B38000
-incsrc preset_data_ad.asm
+org $308000
+print ""
+print "Preset data:"
+print "--------------------"
 
-org $B48000
-incsrc preset_data_anyrmg.asm
-incsrc preset_data_ad2020.asm
+incsrc cm_presets_nmg.asm
+incsrc cm_presets_anyrmg.asm
 
-org $B58000
-incsrc preset_data_lownmg.asm
+org $318000
+incsrc cm_presets_hundo.asm
 
-org !SPC_DATA_OVERWORLD
-incbin ../resources/spc_overworld.bin
+org $328000
+incsrc cm_presets_lowleg.asm
 
-org !SPC_DATA_UNDERWORLD
-incbin ../resources/spc_underworld.bin
+org $338000
+incsrc cm_presets_adold.asm
+incsrc cm_presets_ad2020.asm
 
-org !SPC_DATA_CREDITS
-incbin ../resources/spc_credits.bin
-
-;========================================================================
-; LEAVE THIS HERE
-; it's needed for calculating when certain data comes from a possibly
-; non-vanilla source, which requires knowing the last bank we write to
-;========================================================================
-EndOfPracticeROM:
+org $348000
+incsrc cm_presets_lownmg.asm
 
 ; pad rom to 2mb
 org $3FFFFF

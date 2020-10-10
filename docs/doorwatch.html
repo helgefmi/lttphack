@@ -33,9 +33,6 @@
 			<div class="row">
 				<div class="col-lg-8 mx-auto">
 					<h3>Explanation of DG watch values</h3>
-					<div class="center">
-								<img src="doorwatch.png" class="helpvis" width="832">
-					</div>
 					<h4>Row 1</h4>
 					<dl>
 						<dt><span class="dgIcon dgCoords"></span>Coordinates</dt>
@@ -177,25 +174,9 @@
 								</tbody>
 							</table>
 						</dd>
-						<dt><span class="dgIcon dgOverlay"></span>Overlay buffer</dt>
-						<dd><p>This is the location in memory that determines where the buffer is that causes the major effects of <a href="https://alttp-wiki.net/index.php/Overlay_corruption">overlay corruption</a>. First, where to <em>find</em> the pointer is determined by the value at address <code class="wram">$BA</code><code class="size16">(2 bytes)</code>.</p>
-						
-							<p>When <code class="wram">$BA</code> is <code class="value">$0000</code>, the buffer's pointer is read from ROM, by looking at the value of address <code class="wram">$04BA</code><code class="size16">(2 bytes)</code>, multiplying it by 3, and using it as an offset into a table beginning at <code class="rom">$04:E9A1</code>. When this is the case, the address displayed will be preceded by the "ROM pointer" icon <span class="dgIcon dgROMOverlay"></span>.</p>
-							<p>When <code class="wram">$BA</code> is any non-zero value, the buffer's pointer is read from WRAM, by looking at the values in addresses <code class="wram">$B9</code> (bank byte) and <code class="wram">$B7</code> and <code class="wram">$B8</code> (16-bit address). When this is the case, the address displayed will be preceded by the "RAM pointer" icon <span class="dgIcon dgRAMOverlay"></span>.</p>
-							<p>While knowing exactly what "data" (it may not actually be data) will be read from the buffer is not important, knowing the effects of each location is helpful for roughly determining the effects of the corruption. It can also be used to group rooms together, as rooms with the same pointer will likely have the same results.</p>
+						<dt><span class="dgIcon dgWarning"></span>Wrong warps</dt>
+						<dd>The right-side number is the current destination for all pits and warp tiles, as read from <code class="wram">$7E:C000</code>. If the warning icon is lit up yellow, then it is indicating the current room ID will deal pit damage when falling. When gray, pits lead to the destination room.</p>
 						</dd>
-						<dt>Buffer results warning</dt>
-						<dd>
-							<p>If there as a potential problem with the current buffer pointer, an icon will be displayed after it. Although, I'm not sure these conditions are even possible to meet.</p>
-							<dl class="subDefinition">
-								<dt><span class="dgIcon dgWarning"></span>Vanilla warning</dt>
-								<dd>This icon will display if the buffer is pointing to a ROM bank that contains practice hack code, meaning that the results will very likely not be vanilla.</dd>
-								<dt><span class="dgIcon dgCritical"></span>Volatile warning</dt>
-								<dd>This icon will display if the buffer is pointing to WRAM banks (<code class="bank">$7E</code> and <code class="bank">$7F</code>), SRAM banks, WRAM/hardware register mirrors, or open bus. Basically anything that contains volatile memory and is likely to cause a crash.</dd>
-							</dl>
-							<strong class="lag"><b>WARNING:</b>The vanilla code warning can only determine where practice hack code is by the bank pointer (highest byte). There is still potential for non-vanilla memory to be read as data in other portions of ROM.</strong>
-						</dd>
-					</dl>
 
 					<h4>Rows 3 & 4</h4>
 					<p>These rows contain the same information for different properties. Row 3 contains information about camera control on the X-axis. Its highlight information is in white text. Row 4 contains information about camera control on the Y-axis. Its highlight information is in yellow text.</p>

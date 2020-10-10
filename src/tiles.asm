@@ -11,8 +11,8 @@ org $028068
 pullpc
 load_default_tileset:
 LoadCustomHUDGFX:
-	%a16()
-	%i8()
+	REP #$20
+	SEP #$10
 	LDY #$01 ; dma channel 0
 
 	LDX #$80 : STX $2115
@@ -34,14 +34,14 @@ LoadHudFont:
 	; since the offset is a multiple of 256,
 	; we can just swap the bytes and
 	; add them in as the offset
-	LDA !ram_hud_font : XBA : CLC : ADC.w #hud_font : STA $4302
+	LDA.w !ram_hud_font : XBA : CLC : ADC.w #hud_font : STA $4302
 	LDX.b #hud_font>>16 : STX $4304
 	LDA #$0100 : STA $4305
 
 	STY $420B
 
 LoadHudInputDisplay:
-	LDA !ram_input_display : AND #$0002 : BEQ CustomCharsDone
+	LDA.w !ram_input_display : AND #$0002 : BEQ CustomCharsDone
 	LDA #$7000 : STA $2116
 	LDA #$1801 : STA $4300
 	LDA #hud_inputchars : STA $4302
@@ -52,22 +52,17 @@ LoadHudInputDisplay:
 	STY $420B
 
 CustomCharsDone:
-	%ai8() ; expected flags from both entry points/DecompAndDirectCopy
+	SEP #$30 ; expected flags from both entry points/DecompAndDirectCopy
 	RTL
 
 hud_table:
-	incbin ../resources/hud_gfx1.2bpp
-	incbin ../resources/hud_gfx2.2bpp
-	incbin ../resources/hud_gfx3.2bpp
+	incbin resources/hud_gfx.2bpp
 
 hud_font:
-	incbin ../resources/hud_font1.2bpp
-	incbin ../resources/hud_font2.2bpp
-	incbin ../resources/hud_font3.2bpp
+	incbin resources/hud_font.2bpp
 
-cm_hud_table:
-	incbin ../resources/menu_font1.2bpp
-	incbin ../resources/menu_font2.2bpp
+cm_gfx:
+	incbin resources/menu_font.2bpp
 
 hud_inputchars:
-	incbin ../resources/inputchars.2bpp
+	incbin resources/inputchars.2bpp

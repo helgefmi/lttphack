@@ -1,0 +1,20 @@
+= Escape
+738 Link's bed
+2410 Lamp
+2936 Outside
+4434 Uncle
+5402 Courtyard
+6014 Entrance
+6809 Stair clip
+7209 Re-arm EG
+
+= Desert
+8646 Tile room
+9077 Backtracking
+9438 Reverse genocide
+10134 Tile room 2
+10977 Dungeon Reload
+12034 Dark room
+13468 Lanmolas
+
+= End

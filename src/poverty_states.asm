@@ -2,7 +2,7 @@ save_preset_data:
 	LDA.b #$80 : STA $2100 : STA $13
 	STZ $4200
 
-	%i16()
+	REP #$10
 	LDY #$0000
 	LDA.b #!sram_pss_offset : STA $00
 	LDA.b #!sram_pss_offset>>8 : STA $01
@@ -11,7 +11,7 @@ save_preset_data:
 	LDA $1B : INC : STA [$00], Y : INY
 	CMP #$02 : BEQ .dungeon
 
-	%a16()
+	REP #$20
 	; overworld
 	LDA $040A : STA [$00], Y : INY #2
 	LDA $22 : STA [$00], Y : INY #2
@@ -29,7 +29,7 @@ save_preset_data:
 	JMP .end
 
 .dungeon:
-	%a16()
+	REP #$20
 	LDA $048E : STA [$00], Y : INY #2
 	LDA $E6 : STA [$00], Y : INY #2
 	LDA $E8 : STA [$00], Y : INY #2
@@ -50,23 +50,23 @@ save_preset_data:
 	LDA $060E : STA [$00], Y : INY #2
 	LDA $A6 : STA [$00], Y : INY #2
 	LDA $A9 : STA [$00], Y : INY #2
-	%a8()
+	SEP #$20
 	LDA $0AA1 : STA [$00], Y : INY
 	LDA $0132 : STA [$00], Y : INY
 	LDA $A4 : STA [$00], Y : INY
 	LDA $040C : STA [$00], Y : INY
 	LDA $6C : STA [$00], Y : INY
 	LDA $EE : STA [$00], Y : INY
-	%a16()
+	REP #$20
 	LDA #$FFFF : STA [$00], Y : INY #2
 
 .end:
 	JSR save_poverty_state
 
-	%a8()
+	SEP #$20
 	LDA #$81 : STA $4200
 	LDA #$0F : STA $13 : STA $2100
-	%ai8()
+	SEP #$30
 	LDA #$01 : STA !lowram_last_frame_did_saveload
 	STA !ram_can_load_pss
 	RTL
@@ -75,7 +75,7 @@ save_preset_data:
 ; enter ai16
 save_poverty_state:
 	PHB : PHK : PLB
-	%a8()
+	SEP #$20
 	STY $03
 	LDY #$0000
 
@@ -87,26 +87,26 @@ save_poverty_state:
 .fetch
 	LDA pss_data, Y : CMP #$FF : BEQ .done
 	STA $2181
-	%a16()
+	REP #$20
 	LDA pss_data+1, Y : STA $2182
 	LDA #!sram_pss_offset : CLC : ADC $03 : STA $4312
 	LDA pss_data+3, Y : INC : STA $4315
 	CLC : ADC $03 : STA $03
-	%a8()
+	SEP #$20
 	LDA #$02 : STA $420B
 	INY #5
 	BRA .fetch
 
 .done
 	PLB
-	%ai16()
+	REP #$30
 	RTS
 
 
 ; enter ai16
 load_poverty_state:
 	PHB : PHK : PLB
-	%a8()
+	SEP #$20
 	LDA !sram_pss_offset : CMP #$02 : BEQ .dungeon
 	LDY #$001B
 	BRA +
@@ -123,12 +123,12 @@ load_poverty_state:
 .fetch
 	LDA pss_data, Y : CMP #$FF : BEQ .done
 	STA $2181
-	%a16()
+	REP #$20
 	LDA pss_data+1, Y : STA $2182
 	LDA #!sram_pss_offset : CLC : ADC $03 : STA $4312
 	LDA pss_data+3, Y : INC : STA $4315
 	CLC : ADC $03 : STA $03
-	%a8()
+	SEP #$20
 	LDA #$02 : STA $420B
 	INY #5
 	BRA .fetch
@@ -136,11 +136,11 @@ load_poverty_state:
 .done
 	PLB
 
-	%ai8()
+	SEP #$30
 	LDA !ram_rerandomize_toggle : BEQ .dont_rerandomize_2
 
 	LDA !ram_rerandomize_framecount : STA $1A
-	LDA !ram_rerandomize_accumulator : STA $0FA1
+	LDA !ram_rerandomize_rng : STA $0FA1
 
 .dont_rerandomize_2
 	LDA.l !ram_framerule
@@ -149,31 +149,31 @@ load_poverty_state:
 	STA $1A
 
 .nofixedframerule
-	%ai16()
-	JSL !Sprite_LoadGfxProperties
+	REP #$30
+	JSL Sprite_LoadGfxProperties
 
-	%ai8()
-	JSL !DecompSwordGfx
-	JSL !Palette_Sword
-	JSL !DecompShieldGfx
-	JSL !Palette_Shield
-	JSL !Palette_Armor
+	SEP #$30
+	JSL DecompSwordGfx
+	JSL Palette_Sword
+	JSL DecompShieldGfx
+	JSL Palette_Shield
+	JSL Palette_Armor
 
 	; Check if we're in overworld
 	LDA $1B : BEQ .in_overworld
 
-	JSL !UpdateBarrierTileChr
+	JSL UpdateBarrierTileChr
 
 	LDA $11 : PHA
 	LDA.b #$07 : STA $0690
-	JSL !Dungeon_AnimateTrapDoors
+	JSL Dungeon_AnimateTrapDoors
 	PLA : STA $11
 
 .in_overworld
 	; Check if we currently have a tagalong
 	LDA $7EF3CC : BEQ +
-	JSL !Tagalong_LoadGfx
-+	%ai16()
+	JSL Tagalong_LoadGfx
++	REP #$30
 	RTL
 
 
@@ -181,8 +181,8 @@ pss_data:
 	dl $7EF000 : dw $04FF ; save data
 	dl $7FDF80 : dw $027F ; underworld sprite state
 	dl $7EC172 : dw $0001 ; crystal switch state
-	dl $7EC74A : dw $0003 ; selected menu item
-	dl $7EC78A : dw $0003
+	dl SA1RAM.HUD+$4A : dw $0003 ; selected menu item
+	dl SA1RAM.HUD+$8A : dw $0003
 	dl $7E0202 : dw $0000
 	dl $7E0302 : dw $0001
 	dl $7E002F : dw $0000 ; link's direction

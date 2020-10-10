@@ -32,6 +32,7 @@ org $0794DB : JSL UpdateOnOWPitTransition
 org $04E8CF : JSL UpdateOnOWToSpecial
 org $04E966 : JSL UpdateOnSpecialToOW
 org $1EEED8 : JSL UpdateOnWhirlPool
+org $1EEE83 : JSL UpdateOnOWMirror
 org $1BC209 : JSL UpdateOnBombableWallOW
 org $08E06A : JSL UpdateOnFlute
 
@@ -45,25 +46,42 @@ org $06D192 : JSL UpdateOnKey ; normal key
 org $078FFB : JSL UpdateOnBonk
 org $07999D : PHB : JSL UpdateOnReceiveItem
 
-org $0DFA90 : PHB : JSL StupidMVN : NOP
+;org $0DFA90 : PHB : JSL StupidMVN : NOP
+
+; Waitkey
+org $0EFB90
+	LDA $F4 ; vanilla pointlessly used absolute; dp is better
+	JSL idle_waitkey ; now we have an easy 4 bytes here for the JSL
+
+; EndMessage
+org $0EFBBB
+	JSL idle_endmessage
+
+; MenuActive
+org $0DDF1E
+	JSL idle_menu
+
+; BottleMenu
+org $0DE0E2
+	JSL idle_menu
 
 !reset = $42
 !update = $02
 pullpc
 
 macro update_timer()
-	LDA #$02 : STA !timer_allowed
+	LDA #$02 : STA.w SA1IRAM.TIMER_FLAG
 endmacro
 
 macro reset_timer()
-	LDA #$41 : STA !timer_allowed
+	LDA #$41 : STA.w SA1IRAM.TIMER_FLAG
 endmacro
 
-StupidMVN:
-	LDA #$80 : TSB !timer_allowed
-	REP #$30
-	LDA #$0149
-	RTL
+;StupidMVN:
+;	LDA #$80 : TSB.w SA1IRAM.TIMER_FLAG
+;	REP #$30
+;	LDA #$0149
+;	RTL
 
 ; Underworld updates
 UpdateOnUWTransition:
@@ -146,37 +164,37 @@ UpdateOnMovingWallStart:
 ; mire/pod: 1704->17
 
 UpdateOnMovingWallEndPodMire:
-	LDA.l !ram_fast_moving_walls : BEQ .slowwalls
+	LDA.w !ram_fast_moving_walls : BEQ .slowwalls
 	SED
 	CLC
-	LDA !room_time_F : ADC.w #$47
+	LDA.w SA1IRAM.ROOM_TIME_F : ADC.w #$47
 	CMP.w #$60 : BCC ++
 	SBC.w #$60
-++	STA !room_time_F
-	LDA !room_time_S : ADC.w #$16
-	STA !room_time_S
+++	STA.w SA1IRAM.ROOM_TIME_F
+	LDA.w SA1IRAM.ROOM_TIME_S : ADC.w #$16
+	STA.w SA1IRAM.ROOM_TIME_S
 	CLD
 
 .slowwalls
-	LDY #$02 : STY !timer_allowed
+	LDY #$02 : STY.w SA1IRAM.TIMER_FLAG
 	LDY #$00 : STY $AE, X
 	RTL
 
 ; desert: 918->10
 UpdateOnMovingWallEndDesert:
-	LDA.l !ram_fast_moving_walls : BEQ .slowwalls
+	LDA.w !ram_fast_moving_walls : BEQ .slowwalls
 	SED
 	CLC
-	LDA !room_time_F : ADC.w #$08
+	LDA.w SA1IRAM.ROOM_TIME_F : ADC.w #$08
 	CMP.w #$60 : BCC ++
 	SBC.w #$60
-++	STA !room_time_F
-	LDA !room_time_S : ADC.w #$09
-	STA !room_time_S
+++	STA.w SA1IRAM.ROOM_TIME_F
+	LDA.w SA1IRAM.ROOM_TIME_S : ADC.w #$09
+	STA.w SA1IRAM.ROOM_TIME_S
 	CLD
 
 .slowwalls
-	LDY #$02 : STY !timer_allowed
+	LDY #$02 : STY.w SA1IRAM.TIMER_FLAG
 	LDY #$00 : STY $AE, X
 	RTL
 
@@ -255,41 +273,40 @@ UpdateOnReceiveItem:
 	LDA $4D
 	RTL
 
-; !timer_allowed bitfield:
-; 7 - timers have been set and are awaiing a hud update
-; 6 - reset timer
-; 5
-; 4
-; 3
-; 2 - Update without blocking further updates
-; 1 - One update then no more
-; 0 - 
-
-dotimers:
+;==============================================================================
+; Idle frames
+;==============================================================================
+macro inc_idle()
+	REP #$21
+	SED
+	LDA SA1IRAM.ROOM_TIME_IDLE : ADC #$0001 : STA SA1IRAM.ROOM_TIME_IDLE
+	CLD
 	SEP #$20
-	LDA !timer_allowed 
-	BMI .donothing
-	BEQ .donothing
+endmacro
 
-	BIT !timer_allowed
-	REP #$30
+idle_waitkey:
+	; LDA $F4 from entry point
+	ORA $F6 : AND #$C0 : BNE .pressed_key
+	%inc_idle()
+	LDA $F4 : ORA $F6 : AND #$C0 
+.pressed_key
+	RTL
 
-	LDA #$000F ; transferring 16 bytes
-	LDX.w #!room_time_F+$0F
-	LDY.w #!room_time_F_disp+$0F
+idle_endmessage:
+	LDA $F4 : ORA $F6 : BNE .pressed_key
 
-	MVP $00,$00
+	%inc_idle()
+	LDA $F4 : ORA $F6
 
-	BVC .dontreset
+.pressed_key
+	RTL
 
-	STZ !room_time_F+0
-	STZ !room_time_F+2
-	STZ !room_time_F+4
-	STZ !room_time_F+6
+idle_menu:
+	LDA $F4 : BNE .pressed_key
 
-.dontreset
-	SEP #$30
-	LDA #$80 : STA !timer_allowed
+	%inc_idle()
+	LDA $F4
 
-.donothing
-	RTS
+.pressed_key
+	AND #$10
+	RTL

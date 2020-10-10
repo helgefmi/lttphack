@@ -1,46 +1,33 @@
 Big stuff
 ----------
 
-- Clear BG3 thing for last resort fix
+timer trigger on ganon sword up
+
+room flags line is wrong
+
+Room tab:
+	room ID selector
+	"Set to current room"
+	show flags
+	"Load room"
+	new menu chars for improved flag viewing?
+
+
+aga 2 rng
+	lui: agah2 submenu -> set positions for each of the agahs for cycles 1, 2, 3 and 4+
+
+- Z coordinate option?
 
 - Music always mutes
-
-- adjustable search index
-
-- fill everything in menu
-
-- need to trigger updates more to let things works (like after transitions)
-
-- Movies
-
-- Ghost Link
-
-- Counters (spec below)
-
-- Rewrite sd2snes save/load state code
-
-- Mashing & Pumping mini-game
-
-- Rewrite presets
-
-- Lua script in bizhawk for lag
-
-- IRQ causes lag when preset loaded from crystal cutscene (should be an easy fix)
 
 - "if you start a preset from first SW preset and play out the whole dungeon, you sometimes end up with a small key [before] bomb jump"
 
 - ad khold preset is hard to move around in
 
-- input display on text??
-
 Other stuff
 ------------
 
-- preset randomizer
-
 - multiple rng support?
-
-- cm_clear_buffer -> wram dma
 
 - deadrock rng control?
 
@@ -60,27 +47,23 @@ Other stuff
 
 - Active movement speed counter. Like the above kinda but shows real time how fast you're going. Would help for things like understanding swim speeds or hidden bastard/rail type deals.
 
-- A way to change/preset your antennae value for spoopy inputs presently lengthy. To easily engage in mirerod entanglements.
-
-- powder/mushroom setting like sanc heart
-
-- loading presets after sq shows wrong menu item
-
 - YBA lua like shortcut for collision mapping
-
-Possible toggles/options
--------------------------
-- Follower $7EF3CC
 
 Low priority
 -------------
-- Make the menu redraw less often, just for practicality's sake and less disruptive fblank
-
 - TT palette transparency problems: JSL.l $02FD68 sets to not transparent, find similar routine; it's in bank0E in US though
 
-- first swamp door in hundo preset
-
 ======== MINIGAMES TODO ========
+
+- Movies
+
+- Ghost Link
+
+- Counters (spec below)
+
+- Mashing & Pumping mini-game
+
+
 
 - Mini games (menu)
 

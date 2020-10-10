@@ -1,40 +1,62 @@
-; Fast ROM
-org $00FFD5 : db $30
+!VERSIONTEXT = "v"
+if stringsequal("!VERSION", "DEBUG")
+	!VERSIONTEXT = ""
+endif
 
-; ROM Size
-org $00FFD7 : db #11 ; 2mb
+!VERSIONTEXT += !VERSION
 
-; SRAM Size
-org $00FFD8 : db select(!FEATURE_SD2SNES, $08, $05)
+pushtable
+cleartable
+org $00FFC0
+db "                     " ; empty this
+
+org $00FFC0
+db "ALTTPRAC !VERSIONTEXT"
+warnpc $00FFD5
+pulltable
+
+org $00FFD5 : db $23, $35 ; SA-1
+org $00FFD7 : db 11 ; 2mb ROM
+org $00FFD8 : db 8 ; 256k SRAM
+
+pushtable
+table resources/fileselecttop.tbl
+	org $0CDDF0 : fillword $0188 : fill 52
+	org $0CDDF0 : dw "PRACTICE HACK !VERSIONTEXT"
+
+table resources/fileselectbot.tbl
+	org $0CDE2C : fillword $0188 : fill 52
+	org $0CDE2C : dw "PRACTICE HACK !VERSIONTEXT"
+pulltable
 
 ; == CTRL 2 ==
 ;
 ; Enable controller 2 CLR
 ; Overrides the following:
 ; $0083F8: 60  RTS
-org $0083F8
-	NOP
+;org $0083F8
+;	NOP
 
 
 ; == FRAME ADVANCE ==
 
 ; Overrides the following
 ;$008039: 80 16  BRA $008051
-org $008039
-	NOP #2
+;org $008039
+;	NOP #2
 
 
 ; Overrides the following
 ; $00803B: A5 F6  LDA $F6
 ; $00803D: 29 20  AND #$20
-org $00803B
-	LDA $F5 : AND.b #$00
+;org $00803B
+;	LDA $F5 : AND.b #$00
 
 ; Overrides the following
 ; $008044: A5 F6  LDA $F6
 ; $008046: 29 10  AND #$10
-org $008044
-	LDA $F7 : AND.b #$00
+;org $008044
+;	LDA $F7 : AND.b #$00
 
 ; == BAGE CHEAT CODE ==
 ;
@@ -53,25 +75,6 @@ org $0CDB79
 	NOP : NOP : NOP : NOP   ; AF D9 03 70   LDA $7003D9
 	NOP : NOP : NOP         ; C9 01 00      CMP #$0001
 	NOP : NOP               ; D0 18         BNE $0CDC49
-
-macro file_select_text(n)
-pushtable
-table ../resources/fileselecttop.tbl
-	org $0CDDF0 : fillword $0188 : fill 52
-	org $0CDDF0 : dw "<n>"
-
-table ../resources/fileselectbot.tbl
-	org $0CDE2C : fillword $0188 : fill 52
-	org $0CDE2C : dw "<n>"
-pulltable
-endmacro
-
-!VERSIONTEXT = "v"
-if stringsequal("!VERSION", "DEBUG")
-	!VERSIONTEXT = ""
-endif
-!VERSIONTEXT += !VERSION
-%file_select_text("PRACTICE HACK !VERSIONTEXT")
 
 macro what_item_is_this()
 	fillword !BLANK_TILE : fill 16
@@ -139,3 +142,9 @@ org $0DFA11
 
 org $0DF829 ; boots location moved
 	dw $3521, $3522, $3523, $3524
+
+;===================================================================================================
+
+if !RANDO
+	incsrc "rando.asm"
+endif

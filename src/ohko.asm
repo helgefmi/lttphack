@@ -2,7 +2,7 @@ lorom
 
 
 org $00FFD7
-	db #11 ; 2mb
+	db 11 ; 2mb
 
 
 org $0697DF
@@ -134,9 +134,9 @@ org $1EB944
 
 
 ; Nerf Ether (magic needed)
-; db #$20, #$10, #$08
+; db $20, #$10, #$08
 org $07B073
-	db #$48, #$48, #$48
+	db $48, #$48, #$48
 
 ; 1de7e3 lda $0ed0,x
 ; 1de7e6 sta $04
@@ -558,7 +558,7 @@ db $18 ;Agahnim teleporting Zelda to dark world
 db $C2 ;Boulders / Rocks from Lanmolas erupting from the ground
 db $18 ;Gibo (vulnerable part)
 db $C4 ;Thief
-db $18 ;Evil Fireball Spitters (THE FACES!!!)
+db $18 ;Evil Fireball Spitters (THE FACES!!)
 db $C6 ;Four Way Fireball Spitters (spit when you use your sword)
 db $18 ;Hokbok (HM calls it Fuzzy Stack, I think?)
 db $C8 ;Big Healing Faeries / Faerie Dust

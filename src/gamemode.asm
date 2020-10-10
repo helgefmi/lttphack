@@ -1,299 +1,120 @@
 pushpc
-org $008056 ; Game Mode Hijack
-	JSL gamemode_hook
+org $008039
+gamemode_hook:
+	BIT.w SA1IRAM.SHORTCUT_USED+1
+	BPL .askforshortcut
+
+	JSL UseShortCut
+
+	SEP #$30
+	STZ.w SA1IRAM.SHORTCUT_USED+1
+	BRA .done
+
+.askforshortcut
+	LDA.b #$81
+	STA.w $2200 ; SA-1 IRQ, bit 1 for preparing shortcut checks
+	BRA .done
+
+warnpc $008051
+org $008051
+.done
+
 pullpc
 
-macro test_shortcut(shortcut, func, leavecarry)
-+	LDA.w !ram_ctrl1 : AND <shortcut> : CMP <shortcut> : BNE +
-	AND.l !ram_ctrl1_filtered : BEQ +
-	JSR.w <func>
-	if equal(<leavecarry>, 0)
-		CLC
-	endif
+UseShortCut:
+	JMP.w (SA1IRAM.SHORTCUT_USED)
+
+UseShortCutSA1:
+	DEC
+	PHA
 	RTS
-endmacro
 
-gamemode_hook:
-	PHB : PHK : PLB
-	JSR check_mode_safety
-	BEQ .safeForNone
-	BVS .safeForAll
-	BMI .safeForSome
-;	BNE .pracMenu
-
-.pracMenu
-	JSR gamemode_shortcuts_practiceMenu
-	BRA ++
-
-.safeForSome
-.safeForAll
-	JSR gamemode_shortcuts_everything ; overflow flag checks the presets in here
-	BCS .skip
-
-.safeForNone ; we will exit in 16 bit A if it's not safe for anything
-++	%a16()
-	INC !lowram_room_gametime
-
-	%ai8()
-	PLB
-	JSL $0080B5 ; GameMode
-
-	JSL draw_counters
-	LDA !ram_lagometer_toggle : BEQ .done
-	JSR gamemode_lagometer
-.done
+gamemode_sa1_side_shortcut:
 	RTL
-
-.skip
-	%ai8()
-	PLB : RTL
-
-!notVerySafe = select(!FEATURE_SD2SNES, .SD2SNESBranch, .OtherBranch)
-gamemode_shortcuts:
-.practiceMenu
-	LDA $B0
-	%a16() ; this code is copyright Lui 2020
-	BEQ !notVerySafe
--	CLC : RTS
-
-.everything
-	TAY
-	LDA !ram_ctrl1_filtered : ORA !ram_ctrl1_filtered+1 : BEQ -
-	TYA
-	%a16()
-	BMI !notVerySafe
-
-	%test_shortcut(!pracmenu_shortcut, gamemode_custom_menu, 1)
-
-.SD2SNESBranch
-	;------------------------------
-	%test_shortcut(!ram_ctrl_load_last_preset, gamemode_load_previous_preset, 1)
-	%test_shortcut(!ram_ctrl_save_state, gamemode_savestate_save, 1)
-	%test_shortcut(!ram_ctrl_load_state, gamemode_savestate_load, 1)
-
-.OtherBranch
-	;------------------------------
-	%test_shortcut(!ram_ctrl_reset_segment_timer, gamemode_reset_segment_timer, 0)
-	%test_shortcut(!ram_ctrl_somaria_pits, gamemode_somaria_pits_wrapper, 0)
-	%test_shortcut(!ram_ctrl_fix_vram, gamemode_fix_vram, 0)
-	%test_shortcut(!ram_ctrl_fill_everything, gamemode_fill_everything, 0)
-	%test_shortcut(!ram_ctrl_toggle_oob, gamemode_oob, 0)
-	%test_shortcut(!ram_ctrl_skip_text, gamemode_skip_text, 0)
-	%test_shortcut(!ram_ctrl_disable_sprites, gamemode_disable_sprites, 0)
-;	%test_shortcut(!ram_ctrl_replay_last_movie, gamemode_replay_last_movie, 1)
-
-+	CLC
---	RTS
-
-; return values in P
-!SOME_SAFE = $8080 ; some presets are not always safe = negative flag
-
-!ALL_SAFE = $4040 ; everything is safe = overflow flag
-!NONE_SAFE = $0000 ; all modes unsafe = zero flag
-; zero flag off = practice menu special
-
-check_mode_safety:
-	LDA $10 : CMP #$0C : BNE .notCustomMenu
-	CLV ; clear overflow
-	LDA #$01 ; make sure N/Z flags are not set
-.neverSafe
-	RTS
-
-.notCustomMenu
-	ASL : TAX ; get index
-	REP #%11100010 ; clear NVMZ for checks and for 16 bit accum
-	LDA Module_safety, X
-	BEQ .neverSafe ; staying in 16 bit A is fine here
-
-	STA $00
-	LDY $11 ; get submodule
-
-	%a8()
-	LDA ($00), Y ; get safety level of submodule
-	STA $00 ; put it in $00
-	LDA $7EC011 : BEQ .safe ; check mosaics
-
-	LDA.b #!SOME_SAFE ; not safe
-	RTS
-
-.safe
-	LDA $00 : BIT $00 ; bit test to set NVZ
-	RTS
-
-Module_safety:
-	dw !SOME_SAFE ; Intro_safety
-	dw !SOME_SAFE ; SelectFile_safety
-	dw !SOME_SAFE ; CopyFile_safety
-	dw !SOME_SAFE ; EraseFile_safety
-	dw !SOME_SAFE ; NamePlayer_safety
-	dw !SOME_SAFE ; LoadFile_safety
-	dw !SOME_SAFE ; PreDungeon_safety
-	dw Dungeon_safety
-	dw !SOME_SAFE ; PreOverworld_safety
-	dw Overworld_safety
-	dw !SOME_SAFE ; PreOverworld_safety
-	dw Overworld_safety
-	dw !SOME_SAFE ; CustomMenu_safety ; unsafe, but custom behavior
-	dw !SOME_SAFE ; Unknown1_safety
-	dw Messaging_safety
-	dw !SOME_SAFE ; CloseSpotlight_safety
-	dw !SOME_SAFE ; OpenSpotlight_safety
-	dw !SOME_SAFE ; HoleToDungeon_safety
-	dw !SOME_SAFE ; Death_safety
-	dw !ALL_SAFE ; BossVictory_safety
-	dw !SOME_SAFE ; Attract_safety
-	dw !ALL_SAFE ; Mirror_safety
-	dw !ALL_SAFE ; Victory_safety
-	dw !SOME_SAFE ; Quit_safety
-	dw !ALL_SAFE ; GanonEmerges_safety
-	dw !SOME_SAFE ; TriforceRoom_safety
-	dw !SOME_SAFE ;  EndSequence_safety
-	dw !SOME_SAFE ; LocationMenu_safety
-
-; How to behave on modules, pre shifted for address jumps
-
-	Dungeon_safety: ; $07
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x00, 0x01, 0x02, 0x03
-		db !ALL_SAFE, !ALL_SAFE, !SOME_SAFE, !SOME_SAFE ; 0x04, 0x05, 0x06, 0x07
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x08, 0x09, 0x0A, 0x0B
-		db !ALL_SAFE, !ALL_SAFE, !SOME_SAFE, !SOME_SAFE ; 0x0C, 0x0D, 0x0E, 0x0F
-		db !ALL_SAFE, !ALL_SAFE, !SOME_SAFE, !SOME_SAFE ; 0x10, 0x11, 0x12, 0x13
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x14, 0x15, 0x16, 0x17
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x18, 0x19, 0x1A
-
-	Overworld_safety: ; $09/$0B
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x00, 0x01, 0x02, 0x03
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x04, 0x05, 0x06, 0x07
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x08, 0x09, 0x0A, 0x0B
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x0C, 0x0D, 0x0E, 0x0F
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x10, 0x11, 0x12, 0x13
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x14, 0x15, 0x16, 0x17
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x18, 0x19, 0x1A, 0x1B
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x1C, 0x1D, 0x1E, 0x1F
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !SOME_SAFE; 0x20, 0x21, 0x22, 0x23
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x24, 0x25, 0x26, 0x27
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x28, 0x29, 0x2A, 0x2B
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x2C, 0x2D, 0x2E, 0x2F
-
-	Messaging_safety: ; $0E
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !NONE_SAFE ; 0x00, 0x01, 0x02, 0x03
-		db !ALL_SAFE, !ALL_SAFE, !ALL_SAFE, !NONE_SAFE ; 0x04, 0x05, 0x06, 0x07
-		db !ALL_SAFE, !NONE_SAFE, !ALL_SAFE, !ALL_SAFE ; 0x08, 0x09, 0x0A, 0x0B
 
 ; Custom Menu
 gamemode_custom_menu:
-	LDA $10 : STA !ram_cm_old_gamemode
-
-	LDA #$000C : STA $10
-
-	SEC : RTS
-
+	JML CM_Main
 
 ; Load previous preset
 gamemode_load_previous_preset:
-	%ai8()
+	SEP #$30
 
-	; Loading during text mode make the text stay or the item menu to bug
+	; Loading during text mode makes the text stay or the item menu bug
 	LDA $10 : CMP #$0E : BEQ .no_load_preset
-	%a16()
-	LDA !ram_previous_preset_destination
-	%a8()
+	REP #$20
+	LDA.w SA1IRAM.preset_addr
+	SEP #$20
 	BEQ .no_load_preset
 
-	STZ !lowram_is_poverty_load
-
-	JSL preset_load_last_preset
-	SEC : RTS
+	JML preset_load_last_preset
 
 .no_load_preset
-	CLC : RTS
+	RTL
 
 ; Replay last movie
 gamemode_replay_last_movie:
-	%a8()
+	SEP #$20
 	LDA !ram_movie_mode : CMP #$02 : BEQ .no_replay
 
-	%ai8()
+	SEP #$30
 	JSR gamemode_load_previous_preset : BCC .no_replay
 	LDA #$02 : STA !ram_movie_next_mode
 
-	SEC : RTS
-
 .no_replay
-	%a8()
-	CLC : RTS
+	RTL
 
 ; Save state
 gamemode_savestate:
 .save
-if !FEATURE_SD2SNES
-	%a8()
-	%i16()
+	SEP #$20
+	REP #$10
 	; Remember which song bank was loaded before load stating
 	; I put it here too, since `end` code runs both on save and load state..
-	LDA $0136 : STA !sram_old_music_bank
+	LDA $0136 : STA.w SA1RAM.ss_old_music_bank
 
 	; store DMA to SRAM
 	LDY #$0000 : LDX #$0000
--	LDA $4300, X : STA !sram_ss_dma_buffer, X
+-	LDA $4300, X : STA.w SA1RAM.ss_dma_buffer, X
 	INX
 	INY : CPY #$000B : BNE -
-	CPX #$007B : BEQ +
+	CPX #$007B : BCS +
 	INX #5
 	LDY #$0000
 	BRA -
 	; end of DMA to SRAM
 
-+	JSR ppuoff
-	LDA #$80 : STA $4310
-	JSR func_dma2
++	JSL ppuoff
+	LDA #$80 : STA $4310 ; B to A
+	JSR DMA_BWRAMSRAM
 
-	LDA #$81 : STA $4310
-	LDA #$39 : STA $4311
-	JMP end
-
-else
-
-	; make sure we're not on a screen transition or falling down
-	LDA $0126 : AND #$00FF : ORA $0410 : BNE .skip
-	LDA $5B : AND #$00FF : CMP #$0002 : BCS .skip
-	%a8()
-	JSL save_preset_data
-	%ai8()
-	SEC : RTS
-
-.skip
-	%ai8()
-	CLC : RTS
-
-endif
+	JMP savestate_end
 
 .load
-	%a8()
-	%i16()
+	SEP #$20
+	REP #$10
 	; Remember which song bank was loaded before load stating (so we can change if needed)
-	LDA $0136 : STA !sram_old_music_bank
+	LDA $0136 : STA.w SA1RAM.ss_old_music_bank
 
-	LDA !ram_rerandomize_toggle : BEQ .dont_rerandomize_1
+	LDA.w !ram_rerandomize_toggle : BEQ .dont_rerandomize_1
 
 	; Save the current framecounter & rng accumulator
-	LDA $1A : STA !ram_rerandomize_framecount
-	LDA $0FA1 : STA !ram_rerandomize_accumulator
+	LDA $1A : STA.w SA1RAM.frame_cache
+	LDA $0FA1 : STA.w SA1RAM.rng_cache
 
 .dont_rerandomize_1
-if !FEATURE_SD2SNES
-
-	%a8()
-	; Mute music
-	LDA #$F0 : STA $2140
+	SEP #$20
+	; Remember which song was playing before loading state
+	LDA.w $0130 : STA.w SA1RAM.old_music
 
 	; Mute ambient sounds
 	LDA #$05 : STA $2141
 
 	STZ $420C
-	JSR ppuoff
+	JSL ppuoff
 	STZ $4310
-	JSR func_dma2
+	LDA.b #$00 : STA.w $4310
+	JSR DMA_BWRAMSRAM
 
 	LDX $1C : STX $212C
 	LDX $1E : STX $212E
@@ -302,8 +123,10 @@ if !FEATURE_SD2SNES
 	LDX $99 : STX $2130
 
 	INC $15
-	LDA $0130 : STA $012C
-	STZ $0133
+	; Update which song is currently being played by the APU
+	LDA.w SA1RAM.old_music : STA.w $0133
+	; Attempt to restart the current song if it isn't already playing
+	LDA.w $0130 : STA.w $012C
 
 	LDA $0131 : CMP #$17 : BEQ .annoyingSounds ; Bird music
 	STA $012D : STZ $0131
@@ -319,92 +142,132 @@ if !FEATURE_SD2SNES
 	LDA #$01 : STA $4310
 	LDA #$18 : STA $4311
 
-	LDA !ram_rerandomize_toggle : BEQ .dont_rerandomize_2
+	LDA.w !ram_rerandomize_toggle : BEQ .dont_rerandomize_2
 
-	LDA !ram_rerandomize_framecount : STA $1A
-	LDA !ram_rerandomize_accumulator : STA $0FA1
+	LDA.w SA1RAM.frame_cache : STA $1A
+	LDA.w SA1RAM.rng_cache : STA $0FA1
 
 .dont_rerandomize_2
-	LDA.l !ram_framerule
+	LDA.w SA1RAM.framerule
 	DEC
 	BMI .nofixedframerule
 	STA $1A
 
 .nofixedframerule
-+ %a8()
-	JMP end
++	SEP #$20
 
-else
-	%a8()
-	; Loading during text mode makes the text stay or the item menu to bug
-	LDA $10 : CMP #$0E : BEQ .no_load
-
-	LDA !ram_can_load_pss : BEQ .no_load
-
-	%a16()
-	LDA #!sram_pss_offset+1 : STA !ram_preset_destination
-	%a8()
-	LDA !sram_pss_offset : STA !ram_preset_type
-	LDA #12 : STA $10
-	LDA #05 : STA $11
-	LDA #$01 : STA !lowram_is_poverty_load
-
-	%ai8()
-	SEC : RTS
-
-.no_load:
-	%ai8()
-	CLC : RTS
-
-endif
+	JMP savestate_end
 
 ppuoff:
-	LDA #$80 : STA $2100
-	STZ $4200
+	LDA.b #$80 : STA.w $2100
+	STZ.w $4200
+	STZ.w $420C
+	RTL
+
+ppuon:
+	LDA.b #$0F : STA.b $13
+	LDA.b #$81 : STA.w $4200
+	RTL
+
+DMA_BWRAMSRAM:
+	PLX : STX.w $4328
+
+	STA.w $4310 ; direction
+	LDA.b #$80 : STA.w $4311 ; wram
+	LDA.b #$41 : STA.w $4314
+
+	LDX.w #$0000
+	TXA : XBA ; top byte 0
+	STX.w $4312 ; bottom of bank
+
+.next
+	LDA.w .address_size+2, X ; get bank
+	BEQ .sa1stuff
+
+	STA.w $2183
+	LDY.w .address_size+0, X
+	STY.w $2181
+
+	LDY.w .address_size+3, X
+	STY.w $4315
+
+	LDA.b #$02 : STA.w $420B
+
+	TXA
+	CLC
+	ADC.b #$05
+	TAX
+	BRA .next
+
+.sa1stuff
+	PHB
+	LDA.b #$00
+	XBA
+	LDA.b #(SA1IRAM.savethis_end-SA1IRAM.savethis_start)-1
+	BIT.w $4310 ; which way to transfer?
+	BPL ..loading
+
+..saving
+	LDX.w #SA1IRAM.savethis_start
+	LDY.w $4312 ; get location last written
+	%MVN($00, $41)
+	BRA .done
+
+..loading
+	LDY.w #SA1IRAM.savethis_start
+	LDX.w $4312 ; get location last written
+	%MVN($41, $00)
+
+.done
+	LDX.w $4328 : PHX
+	LDA.w $4338 : PHA
+	PLB
 	RTS
 
-func_dma1:
-	LDX #$7500 : LDY #$0000 : LDA #$80 : JSR func_dma1b
-	LDX #$7600 : LDY #$4000 : LDA #$80 : JSR func_dma1b
-	RTS
+.address_size
+	dl $7E0000 : dw $6000
+	dl $7EC000 : dw $0900
+	dl $7EE800 : dw $1800
 
-func_dma1b:
-	STY $2116 : STZ $4312 : STX $4313 : STZ $4315 : STA $4316 : STZ $2115
+	dl $7F0000 : dw $6000
+	dl $7FDD80 : dw $1200
+	dl $7FF800 : dw $0800
 
-	LDA $4311 : CMP #$39 : BNE +
-	LDA $2139
+	dl 0
 
-+	LDA #$02 : STA $420B
-	RTS
+savestate_end:
+	LDA.w $4310
+	ORA.b #$01
+	STA.w $4310
+	BMI .saving
 
-func_dma2:
-	PLX : STX $4318
+.loading
+	LDA.b #$18
+	BRA .continue
 
-	STZ $2181 : STZ $4312
+.saving
+	LDA.b #$39
 
-	LDY #$0071 : LDX #$0000 : JSR func_dma2b
-	INY : LDX #$0080 : JSR func_dma2b
-	INY : LDX #$0100 : JSR func_dma2b
-	INY : LDX #$0180 : JSR func_dma2b
+.continue
+	STA.w $4311
 
-	LDX $4318 : PHX
+	LDX.w #$0000
+	STX.w $4312
+	LDA.b #$42
+	STA.w $4314
 
-	RTS
+	STX.w $4315
+	STX.w $2116
+	LDA.w $4311 : CMP.b #$39 : BNE ++
+	LDY.w $2139
 
-func_dma2b:
-	STZ $4313 : STY $4314 : STX $2182
-	LDA #$80 : STA $4311 : STA $4316
-	LDA #$02 : STA $420B
-	RTS
-
-end:
-	JSR func_dma1
+++	LDA.b #$02 : STA.w $420B
 
 	; load DMA from SRAM
 	LDY #$0000 : LDX #$0000
-	%a8()
-	%i16()
--	LDA !sram_ss_dma_buffer, X : STA $4300, X
+	SEP #$20
+	REP #$10
+-	LDA.w SA1RAM.ss_dma_buffer, X : STA.w $4300, X
 	INX
 	INY : CPY #$000B : BNE -
 	CPX #$007B : BEQ +
@@ -413,159 +276,241 @@ end:
 	BRA -
 	; end of DMA from SRAM
 
-+	LDA !sram_old_music_bank : CMP $0136 : BEQ .songBankNotChanged
++	LDA.w SA1RAM.ss_old_music_bank : CMP $0136 : BEQ .songBankNotChanged
 	JSL music_reload
 
 .songBankNotChanged
+	SEP #$31
 
-	LDA #$81 : STA $4200
-	LDA $13 : STA $2100
-	%ai8()
-	LDA #$01 : STA !lowram_last_frame_did_saveload
-	SEC : RTS
+	; i hope this works
+	; now we just reset to the main game loop
+	REP #$20
+	LDA.w #$0000
+	TCD
+	PHA
+	PLB
 
-after_save_state:
-	%ai8()
-	CLC : RTS
+	STZ.w SA1IRAM.SHORTCUT_USED
 
+	LDA.w #$1FFF
+	TCS
+
+	SEP #$30
+	STZ.b $12
+	;LDA.b $13 : STA.w $2100
+	LDA.b #$81 : STA.w $4200
+	JML.l $008034
 
 gamemode_oob:
-	%a8()
-	LDA !lowram_oob_toggle : EOR #$01 : STA !lowram_oob_toggle
-	RTS
+	SEP #$20
+	LDA.w $037F
+	AND.b #$01 ; just in case
+	EOR.b #$01
+	STA.w $037F
+	RTL
+
+gamemode_toggle_switch:
+	REP #$20
+	LDA.b $10
+	CMP.w #$0007
+	SEP #$20
+	BNE .notsafe
+
+	LDA.l $7EC172 : EOR #$01 : STA.l $7EC172
+	LDA.b #$16 : STA.b $11
+	LDA.b #$25 : STA.w $012F
+
+
+.notsafe
+	RTL
 
 
 gamemode_skip_text:
-	%a8()
-	LDA #$04 : STA $1CD4
-	RTS
-
-
-gamemode_disable_sprites:
-	%a8()
-	JSL !Sprite_DisableAll
-	RTS
-
-
-; TODO make this a table instead of a bunch of STA?
-gamemode_fill_everything_long:
-	PHP
-	JSR gamemode_fill_everything
-	PLP
+	SEP #$20
+	LDA.b #$04 : STA.w $1CD4
 	RTL
 
+gamemode_disable_sprites:
+	SEP #$20
+	JML Sprite_DisableAll
+
 gamemode_fill_everything:
-	%a8()
-	LDA #$01
-	STA !ram_item_book
-	STA !ram_item_hook
-	STA !ram_item_fire_rod
-	STA !ram_item_ice_rod
-	STA !ram_item_bombos
-	STA !ram_item_ether
-	STA !ram_item_2quake
-	STA !ram_item_lantern
-	STA !ram_item_hammer
-	STA !ram_item_net
-	STA !ram_item_somaria
-	STA !ram_item_byrna
-	STA !ram_item_cape
-	STA !ram_equipment_boots
-	STA !ram_equipment_flippers
-	STA !ram_equipment_moon_pearl
-	STA !ram_equipment_half_magic
+	SEP #$20
+	REP #$10
+	PHB
+	PHK
+	PLB
 
-	LDA #$02
-	STA !ram_item_boom
-	STA !ram_item_mirror
-	STA !ram_item_powder
-	STA !ram_equipment_gloves
-	STA !ram_equipment_shield
-	STA !ram_equipment_armor
+	LDA.b #$7E ; bank of SRAM mirror
+	STA.b $0C
 
-	LDA #$03
-	STA !ram_item_bow
-	STA !ram_item_bottle_array+0
-	STA !ram_item_flute
+	LDY.w #0
 
-	LDA #$04
-	STA !ram_item_bottle_array+1
-	STA !ram_equipment_sword
+.next_item
+	LDX.w .table+0, Y
+	BEQ .itemsover
 
-	LDA #$05
-	STA !ram_item_bottle_array+2
+	STX.b $0A ; SRAM address we're writing to
 
-	LDA #$06 : STA !ram_item_bottle_array+3
+	LDA.w .table+2, Y ; value we're writing
+	STA.b [$0A]
 
-	LDA #$09 : STA !ram_equipment_keys
-	LDA #20<<3 : STA !ram_equipment_maxhp
-	LDA #19<<3 : STA !ram_equipment_curhp
+	INY
+	INY
+	INY
+	BRA .next_item
 
-	; rupees
-	%a16() : LDA #$03E7 : STA $7EF360 : STA $7EF362 : %a8()
+.itemsover
 
-	LDA #$78
-	STA !ram_equipment_magic_meter
+	; do keys
+	LDA.w $001B ; are we indoors?
+	BEQ .outdoors
 
-	LDA #30
-	STA !ram_item_bombs
-	STA !ram_equipment_arrows_filler
+	LDA.w $040C ; are we in a dungeon?
+	BMI .cavestate
 
-	LDA #$FF
-	STA !ram_capabilities
+	LDA.b #$09
+	BRA .write_keys
+
+.cavestate
+	LDA.b #$FF ; -1 for cavestate
+
+.write_keys
+	STA.l !ram_equipment_keys
+
+.outdoors
+	LDA.l !ram_game_progress : BNE .ignoreprogress
+	LDA #$01 : STA.l !ram_game_progress
+
+.ignoreprogress
+
+	PLB
 
 	SEP #$30
-	JSL !DecompSwordGfx
-	JSL !Palette_Sword
-	JSL !DecompShieldGfx
-	JSL !Palette_Shield
-	JSL !Palette_Armor
+	JSL DecompSwordGfx
+	JSL Palette_Sword
+	JSL DecompShieldGfx
+	JSL Palette_Shield
+	JSL Palette_Armor
 
-	LDA !ram_game_progress : BNE .exit
-	LDA #$01 : STA !ram_game_progress
+	RTL
 
-.exit
-	RTS
+.table
+	dw $F340 : db 4   ; bow: silvers w/ arrows
+	dw $F341 : db 2   ; red boomerang
+	dw $F342 : db 1   ; hookshot
+	dw $F343 : db 30  ; max bombs
+	dw $F344 : db 2   ; powder
+
+	dw $F345 : db 1   ; fire rod
+	dw $F346 : db 1   ; ice rod
+	dw $F347 : db 1   ; bombos
+	dw $F348 : db 1   ; ether
+	dw $F349 : db 1   ; quake
+
+	dw $F34A : db 1   ; lamp
+	dw $F34B : db 1   ; hammer
+	dw $F34C : db 3   ; active flute
+	dw $F34D : db 1   ; bug net
+	dw $F34E : db 1   ; book
+
+	dw $F34F : db 1   ; bottles: slot 1 selected
+	dw $F350 : db 1   ; somaria
+	dw $F351 : db 1   ; byrna
+	dw $F352 : db 1   ; cape
+	dw $F353 : db 2   ; mirror
+
+	dw $F354 : db 2   ; titan's mitt
+	dw $F355 : db 1   ; boots
+	dw $F356 : db 1   ; flippers
+	dw $F357 : db 1   ; pearl
+
+	dw $F359 : db 4   ; gold sword
+	dw $F35A : db 3   ; mirror shield
+	dw $F35B : db 2   ; red mail
+
+	dw $F35C : db 4   ; green potion
+	dw $F35D : db 3   ; red potion
+	dw $F35E : db 5   ; blue potion
+	dw $F35F : db 6   ; fairy
+
+	dw $F360 : db $E7 ; rupees
+	dw $F361 : db $03 ; high byte
+	dw $F362 : db $E7 ; rupees
+	dw $F363 : db $03 ; high byte
+
+	dw $F364 : db $FF ; every compass
+	dw $F365 : db $FF ; more compasses
+	dw $F366 : db $FF ; every big key
+	dw $F367 : db $FF ; more big keys
+	dw $F368 : db $FF ; every map
+	dw $F369 : db $FF ; more maps
+
+	dw $F36D : db $98 ; 1 less than max health
+	dw $F36C : db $A0 ; 20 hearts
+
+	dw $F36E : db $78 ; full magic - 8
+
+	dw $F370 : db 7   ; max bomb upgrades
+	dw $F371 : db 7   ; max arrow upgrades
+
+	dw $F372 : db 0   ; prevent filling of hp
+	dw $F373 : db 0   ; prevent filling of magic
+
+	dw $F374 : db $07 ; every pendant
+
+	dw $F375 : db 0   ; prevent filling of bombs
+	dw $F376 : db 0   ; prevent filling of arrows
+	dw $F377 : db 50  ; max arrows
+
+	dw $F379 : db $FE ; every ability
+	dw $F37A : db $7F ; every crystal
+
+	dw $F37B : db 1   ; half magic
+
+	dl 0 ; end
 
 gamemode_reset_segment_timer:
-	%a16()
-	STZ !seg_time_F
-	STZ !seg_time_S
-	STZ !seg_time_M
-
-.done
-	%a8()
-	RTS
+	REP #$20
+	STZ.w SA1IRAM.SEG_TIME_F
+	STZ.w SA1IRAM.SEG_TIME_S
+	STZ.w SA1IRAM.SEG_TIME_M
+	SEP #$20
+	LDA.b #$02 : TSB.w SA1IRAM.TIMER_FLAG
+	RTL
 
 gamemode_fix_vram:
-	%a16()
-	%i16()
-	LDA #$0280 : STA $2100
-	LDA #$0313 : STA $2107
-	LDA #$0063 : STA $2109 ; zeros out unused bg4
-	LDA #$0722 : STA $210B
-	STZ $2133 ; mode 7 register hit, but who cares
+	SEP #$20
+	LDA.b #$80 : STA.w $2100 ; keep fblank on while we do stuff
+	STZ.w $4200
 
-	%a8()
-	LDA #$80 : STA $13 : STA $2100 ; keep fblank on while we do stuff
-	LDA $1B : BEQ ++
+	REP #$30
+	LDA.w #$0280 : STA.w $2100
+	LDA.w #$0313 : STA.w $2107
+	LDA.w #$0063 : STA.w $2109 ; zeros out unused bg4
+	LDA.w #$0722 : STA.w $210B
+	STZ.w $2133 ; mode 7 register hit, but who cares
+
+	SEP #$20
+	LDA.b $1B : BEQ ++
 	JSR fix_vram_uw
 	JSL load_default_tileset
 
 	LDA $7EC172 : BEQ ++
 	JSR fixpegs ; quick and dirty pegs reset
 
-++	LDA #$0F : STA $13
-	RTS
+++	LDA.b #$0F : STA.b $13
+	LDA.b #$81 : STA.w $4200
+	RTL
 
 fixpegs:
 
-	%ai16()
+	REP #$30
 	LDX #$0000
 --	LDA $7EB4C0, X : STA $7F0000, X
 	LDA $7EB340, X : STA $7F0080, X
 	INX #2 : CPX #$0080 : BNE --
-	%ai8()
+	SEP #$30
 	LDA #$17 : STA $17
 	RTS
 
@@ -598,26 +543,27 @@ fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics - pc: $56F19
 	STZ $B0
 
 	PLA : STA $9B
-	PLB : RTS
+	PLB
+	RTL
 
 ; wrapper because of push and pull logic
 ; need this to make it safe and ultimately fix INIDISP ($13)
 gamemode_somaria_pits_wrapper:
-	%ai8()
+	SEP #$30
 	LDA $1B : BEQ ++ ; don't do this outdoors
 
 	LDA #$80 : STA $13 : STA $2100 ; keep fblank on while we do stuff
 	JSR gamemode_somaria_pits
 	LDA #$0F : STA $13
 
-++	RTS
+++	RTL
 
 gamemode_somaria_pits:
 	PHB ; rebalanced in redraw
 	PEA $007F ; push both bank 00 and bank 7F (wram)
 	PLB ; but only pull 7F for now
 
-	%ai16()
+	REP #$30
 
 	LDY #$0FFE
 
@@ -635,58 +581,152 @@ gamemode_somaria_pits:
 	DEY : BPL --
 
 .time_for_tilemaps ; just a delimiting label
-	%ai8()
+	SEP #$30
 	PLB ; pull to bank 00 for this next stuff
 
 	LDA $9B : PHA ; rebalanced in redraw
 	STZ $9B : STZ $420C
 
-	JMP fix_vram_uw_just_redraw ; jmp to have 1 less rts and because of stack
+	JMP fix_vram_uw_just_redraw ; jmp because of stack
 
-gamemode_lagometer:
-	%ai16()
-	LDA !lowram_nmi_counter : CMP #$0002 : BCS .lag_frame
-	LDA #$3C00 : STA !lowram_draw_tmp
+;gamemode_lagometer:
+;	REP #$30
+;	LDA !lowram_nmi_counter : CMP #$0002 : BCS .lag_frame
+;	LDA #$3C00 : STA !lowram_draw_tmp
+;
+;	LDA $2137 : LDA $213D : AND #$00FF : CMP #$007F : BCS .warning
+;	BRA .draw
+;
+;.warning
+;	PHA : LDA #$2800 : STA !lowram_draw_tmp : PLA
+;	BRA .draw
+;
+;.lag_frame
+;	LDA #$3400 : STA !lowram_draw_tmp
+;	LDA #$00FF
+;
+;.draw
+;	STZ !lowram_nmi_counter
+;
+;	AND #$00FF : LSR : CLC : ADC #$0007 : AND #$FFF8 : TAX
+;
+;	LDA.l .mp_tilemap+0, X : ORA !lowram_draw_tmp : STA.w SA1RAM.HUD+$42
+;	LDA.l .mp_tilemap+2, X : ORA !lowram_draw_tmp : STA.w SA1RAM.HUD+$82
+;	LDA.l .mp_tilemap+4, X : ORA !lowram_draw_tmp : STA.w SA1RAM.HUD+$C2
+;	LDA.l .mp_tilemap+6, X : ORA !lowram_draw_tmp : STA.w SA1RAM.HUD+$102
+;
+;	SEP #$30
+;	RTS
+;
+;.mp_tilemap
+;	dw $00F5, $00F5, $00F5, $00F5
+;	dw $00F5, $00F5, $00F5, $005F
+;	dw $00F5, $00F5, $00F5, $004C
+;	dw $00F5, $00F5, $00F5, $004D
+;	dw $00F5, $00F5, $00F5, $004E
+;	dw $00F5, $00F5, $005F, $005E
+;	dw $00F5, $00F5, $004C, $005E
+;	dw $00F5, $00F5, $004D, $005E
+;	dw $00F5, $00F5, $004E, $005E
+;	dw $00F5, $005F, $005E, $005E
+;	dw $00F5, $004C, $005E, $005E
+;	dw $00F5, $004D, $005E, $005E
+;	dw $00F5, $004E, $005E, $005E
+;	dw $005F, $005E, $005E, $005E
+;	dw $004C, $005E, $005E, $005E
+;	dw $004D, $005E, $005E, $005E
+;	dw $004E, $005E, $005E, $005E
 
-	LDA $2137 : LDA $213D : AND #$00FF : CMP #$007F : BCS .warning
-	BRA .draw
+;===================================================================================================
+; DISGUSTING
+; No shared slots except bottles
+;===================================================================================================
+QuickSwap:
+	LDA.b $F6 : AND.b #$30 : BEQ .done
 
-.warning
-	PHA : LDA #$2800 : STA !lowram_draw_tmp : PLA
-	BRA .draw
+	PHX
+	LDX.w $0202 : BEQ .done_X
 
-.lag_frame
-	LDA #$3400 : STA !lowram_draw_tmp
-	LDA #$00FF
+	CMP.b #$30 : BEQ .special
+	BIT.b #$10 : BEQ .no_r_press
 
-.draw
-	STZ !lowram_nmi_counter
+	LDA.b $F2 : BIT.b #$20 : BNE .special_from_last_r
+	STZ.w SA1IRAM.QuickSwapLR
+.find_r
+	JSR .find_next
+	BRA .store
 
-	AND #$00FF : LSR : CLC : ADC #$0007 : AND #$FFF8 : TAX
+.no_r_press
+	LDA.b $F2 : BIT.b #$10 : BNE .special_from_last_l
+	STZ.w SA1IRAM.QuickSwapLR
+.find_l
+	JSR .find_prev
+	BRA .store
 
-	LDA.l .mp_tilemap+0, X : ORA !lowram_draw_tmp : STA $7EC742
-	LDA.l .mp_tilemap+2, X : ORA !lowram_draw_tmp : STA $7EC782
-	LDA.l .mp_tilemap+4, X : ORA !lowram_draw_tmp : STA $7EC7C2
-	LDA.l .mp_tilemap+6, X : ORA !lowram_draw_tmp : STA $7EC802
+.special
+	CPX.b #$10 : BNE .store ; not bottles
+	STX.w SA1IRAM.QuickSwapLR
 
-	%ai8()
+	JSR FindNextBottle
+	BRA .swap
+
+.store
+	STX.w $0202
+
+.swap
+	LDA.b #$20 : STA.w $012F
+
+	JSL $0DDB7F
+
+.done_X
+	PLX
+
+.done
+	LDA.b $F6 : AND.b #$40
+	RTL
+
+;---------------------------------------------------------------------------------------------------
+
+.special_from_last_r
+	LDA.w SA1IRAM.QuickSwapLR : BEQ .find_r
+	BRA .store
+
+.special_from_last_l
+	LDA.w SA1IRAM.QuickSwapLR : BEQ .find_l
+	BRA .store
+
+;---------------------------------------------------------------------------------------------------
+
+.find_next
+	INX
+	CPX.b #$15 : BCC + : LDX.b #$00
++	LDA.l $7EF33F,X : BEQ .find_next
 	RTS
 
-.mp_tilemap
-	dw $00F5, $00F5, $00F5, $00F5
-	dw $00F5, $00F5, $00F5, $005F
-	dw $00F5, $00F5, $00F5, $004C
-	dw $00F5, $00F5, $00F5, $004D
-	dw $00F5, $00F5, $00F5, $004E
-	dw $00F5, $00F5, $005F, $005E
-	dw $00F5, $00F5, $004C, $005E
-	dw $00F5, $00F5, $004D, $005E
-	dw $00F5, $00F5, $004E, $005E
-	dw $00F5, $005F, $005E, $005E
-	dw $00F5, $004C, $005E, $005E
-	dw $00F5, $004D, $005E, $005E
-	dw $00F5, $004E, $005E, $005E
-	dw $005F, $005E, $005E, $005E
-	dw $004C, $005E, $005E, $005E
-	dw $004D, $005E, $005E, $005E
-	dw $004E, $005E, $005E, $005E
+.find_prev
+	DEX : BPL + : LDX.b #$14
++	LDA.l $7EF33F,X : BEQ .find_prev
+	RTS
+
+;===================================================================================================
+
+FindNextBottle:
+	LDA.l $7EF34F
+	TAX
+.next
+	INX : CPX.b #$05 : BCC ++ : LDX.b #$01
+++	LDA.l $7EF35B,X
+	BEQ .next
+	TXA
+	STA.l $7EF34F
+	RTS
+
+;===================================================================================================
+BottleMenuButtonPress:
+	BIT.b $F4 : BVC ++
+	JSR FindNextBottle
+	RTL
+
+++	BIT.b $F6 : BVC ++
+	LDA.b #$07 : STA.w $0200
+++	RTL
