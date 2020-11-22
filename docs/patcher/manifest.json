@@ -20,6 +20,7 @@
             "options": [
                 { "id": "customhud", "name": "Custom HUD" },
                 { "id": "vanillahud", "name": "Vanilla HUD" }
+                { "id": "sa1", "name": "v14 aleph" }
             ]
         }
     ],
@@ -29,5 +30,8 @@
 
         { "platform": "sd2snes", "type": "customhud", "file": "patcher/files/sd2snes-customhud.bps"},
         { "platform": "sd2snes", "type": "vanillahud", "file": "patcher/files/sd2snes-vanillahud.bps"}
+
+        { "platform": "sd2snes", "type": "sa1", "file": "patcher/files/sa1.bps"}
+        { "platform": "emulator", "type": "sa1", "file": "patcher/files/sa1.bps"}
     ]
 }
