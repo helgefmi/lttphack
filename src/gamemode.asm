@@ -302,10 +302,11 @@ if !FEATURE_SD2SNES
 	LDX $99 : STX $2130
 
 	INC $15
-	LDA $0130 : CMP !sram_old_music : BEQ .dont_change_music
-	STA $012C
-	STZ $0133
-.dont_change_music
+	
+	; Update which song is currently being played by the APU
+	LDA !sram_old_music : STA $0133
+	; Attempt to restart the current song if it isn't already playing
+	LDA $0130 : STA $012C
 
 	LDA $0131 : CMP #$17 : BEQ .annoyingSounds ; Bird music
 	STA $012D : STZ $0131
