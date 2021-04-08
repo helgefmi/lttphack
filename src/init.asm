@@ -118,6 +118,9 @@ init_expand:
 	LDA #$00
 	STA.l !ram_superwatch
 	STA.l !ram_superwatch+1
+	LDA.l !ram_feature_music : BNE +
+	JSL mute_music
++
 .done
 	RTL
 

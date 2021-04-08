@@ -284,8 +284,8 @@ endif
 if !FEATURE_SD2SNES
 
 	%a8()
-	; Mute music
-	LDA #$F0 : STA $2140
+	; Remember which song was playing before loading state
+	LDA $0130 : STA !sram_old_music
 
 	; Mute ambient sounds
 	LDA #$05 : STA $2141
@@ -302,8 +302,10 @@ if !FEATURE_SD2SNES
 	LDX $99 : STX $2130
 
 	INC $15
-	LDA $0130 : STA $012C
+	LDA $0130 : CMP !sram_old_music : BEQ .dont_change_music
+	STA $012C
 	STZ $0133
+.dont_change_music
 
 	LDA $0131 : CMP #$17 : BEQ .annoyingSounds ; Bird music
 	STA $012D : STZ $0131

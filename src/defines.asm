@@ -284,6 +284,7 @@ endmacro
 
 !sram_ss_dma_buffer = $770000
 !sram_old_music_bank = $770080
+!sram_old_music = $770081
 !sram_pss_offset = $702000
 
 ;-------------------------
