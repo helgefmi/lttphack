@@ -1,6 +1,14 @@
 Original hack by pinkus, under new management.
 
-Assembles with [Asar](https://github.com/RPGHacker/asar)
+# Building
+
+Download [Asar](https://github.com/RPGHacker/asar) (You can build it yourself or grab a recent [release](https://github.com/RPGHacker/asar/releases)). Unzip it somewhere and make sure `asar.exe` is on your path.
+
+Download [flips](https://github.com/Alcaro/Flips) (You can build it yourself, or there's [a pre-built version](https://github.com/Alcaro/Flips). You'll have to rename or make a copy of `flips.exe` named just `flips`. Make sure this is on your path as well.
+
+Make a directory called `target` and copy your vanilla rom into it with the filename `alttp.sfc`.
+
+Now you should be able to double-click `build.bat` and have your ROMs built!
 
 **PRESETS NOTES**
 
