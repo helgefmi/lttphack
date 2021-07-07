@@ -1,8 +1,6 @@
-See http://milde.no/lttp/ for info.
+Original hack by pinkus, under new management.
 
-Pull requests very much appreciated.
-
-I use a custom version of [Asar](https://github.com/AndreaOrru/Asar) forked [here](https://github.com/helgefmi/Asar) as an assembler. See the Makefile for more information.
+Assembles with [Asar](https://github.com/RPGHacker/asar)
 
 **PRESETS NOTES**
 

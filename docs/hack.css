@@ -1,0 +1,662 @@
+:target{
+	padding-top: 54px;
+	margin-top: -54px;
+}
+
+table.romtable th {
+	width: 25%;
+	vertical-align: middle;
+	text-align: right;
+}
+
+table.ctrltable th {
+	vertical-align: middle;
+	text-align: center;
+	background-color: #F0F0F0;
+}
+
+table.ctrltable th,
+table.ctrltable td {
+	padding: 2px 10px;
+}
+
+table.ctrltable td {
+	font-size: 90%;
+}
+
+table.ctrltable.iconstable tr:not(:first-child) th,
+table.ctrltable.iconstable tr:not(:first-child) th+td,
+table.ctrltable.iconstable tr:not(:first-child) th+td+td {
+	border-top: 3px solid #DEE2E6;
+}
+
+table.ctrltable caption,
+table.romtable caption {
+	caption-side: top;
+	text-align: center;
+}
+
+table.romtable caption:last-of-type {
+	caption-side: bottom;
+	text-align: center;
+}
+
+strong.lag {
+	color: red;
+	font-weight: normal;
+	border-bottom: 1px dashed red;
+}
+
+strong.lag b {
+	font-size:80%;
+}
+
+strong.lag b:before {
+	content: "\026A0";
+}
+
+h3 {
+	border-bottom: 2px solid #505050;
+}
+
+h4 {
+	font-size: 1.45rem;
+}
+
+div.center {
+	text-align: center;
+}
+
+img {
+	max-width: 100%;
+}
+
+img.helpvis {
+	background: #C3C3C3;
+}
+
+dt:after {
+	content: ":";
+}
+
+strong.lag:before,
+dt:before {
+	content: " ";
+	display: block;
+}
+
+dd {
+	padding-left: 60px;
+}
+
+dt {
+	padding-left: 30px;
+}
+
+dl.subDefinition {
+	padding-left: 10px;
+	font-size: 100%;
+}
+
+dl.subDefinition dt,
+dl.inlineDefinition:not(.dinkyList) dt {
+	display: contents;
+	font-size:100%;
+}
+
+dl.inlineDefinition.dinkyList {
+	padding-left:30px;
+}
+
+dl.subDefinition dt,
+dl.inlineDefinition.dinkyList dt {
+	display: contents;
+	padding-left:30px;
+}
+
+dl.subDefinition dd,
+dl.inlineDefinition dd {
+	display: inline;
+	padding-left: 5px;
+}
+
+dl.inlineDefinition dd ol {
+	display: inline;
+	padding-left: 0;
+}
+
+dl.inlineDefinition dd li {
+	display: inline
+}
+
+dl.inlineDefinition dd ol>li:not(:last-child):after {
+	content: ",";
+}
+
+em.SD2SNES {
+	font-weight: 600;
+	font-size: 80%;
+	color: #555555;
+	display:inline-block;
+}
+
+sup.cc-badge {
+	font-weight:bold;
+	font-family:consolas;
+	color:red;
+	display: inline-block;
+	text-shadow: 0px 0px 1px black;
+}
+
+sup.cc-badge::first-letter {
+	color: blue;
+}
+
+p.warped {
+	transform: skewX(45deg) rotate(-3deg) translateY(-19px);
+	font-family: impact;
+	text-shadow: -10px 16px 4px #005691;
+	padding-left: 60px;
+}
+
+p.warped span{
+	display: inline-block;
+}
+span.morewarped {
+	transform: skewX(12deg) rotate(30deg) translate(05px,15px);
+}
+
+.warped:hover span:not(.morewarped) {
+	transform: rotate(180deg);
+	text-shadow: 10px -16px 4px #005691;
+}
+
+p.warped::selection {
+	transform: scale(3);
+	color: red;
+	font-family: monospace;
+	text-shadow: none
+
+}
+
+span.morewarped::selection {
+	color: blue;
+}
+
+.jaeger:hover::before {
+	content: 'Attack on ';
+}
+
+header {
+	padding: 120px 0 55px;
+}
+
+@media (min-width: 992px) {
+	header {
+		padding: 120px 0 55x;
+	}
+}
+
+div.headerTitle {
+	font-size: 3.2rem;
+}
+section {
+	padding: 50px 0;
+}
+
+.dl-tbl th {
+	background-color: #fafafa;
+}
+
+header {
+	background-color: #4A545F;
+}
+
+.nav-dropdown:hover {
+	background-color: #4A545F;	
+}
+
+.nav-dropdown ul {
+	display: none;
+	position: absolute;
+	background-color: #4A545F;
+	padding: 10px 40px 10px 10px;
+	font-size: 90%;
+}
+
+.nav-dropdown li a {
+	color: rgba(255,255,255,.5);
+	text-decoration: none
+}
+
+.nav-dropdown li a:hover {
+	color: white;
+}
+
+.nav-dropdown li {
+	list-style: none;
+	padding-left: 0;
+	margin-left: 0;
+}
+
+.nav-dropdown:hover ul {
+	display: block;
+}
+
+.bg-dark a {
+	color: #A0B6CE;
+}
+
+h2 {
+	font-size: 2.5rem;
+}
+
+ul.quietlist {
+	list-style: none;
+}
+
+ul.footlist {
+	font-size: 95%;
+	font-style: italic;
+}
+
+sup.footnote {
+	font-size: 100%;
+	font-weight: 600;
+	font-style: italic;
+	top: -.2em;
+	left: .1em;
+}
+
+li > sup.footnote {
+	opacity: .6;
+}
+
+li:hover > sup.footnote {
+	opacity: 1.0
+}
+
+span.dgIcon {
+	background-image: url("doorwatchicons.png");
+	background-color: #AEAEAE;
+	outline: 2px solid #AEAEAE;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	margin-right: .3em;
+	margin-left: .5px;
+	image-rendering: pixelated;
+}
+
+span.dgIcon.dgRoom {
+	width: 32px;
+	background-position: -16px 0px;
+}
+
+span.dgIcon.dgSync {
+	background-position: 0px -16px;
+	background-color: transparent;
+	outline-color: transparent;
+}
+
+span.dgIcon.dgDesync {
+	background-position: -16px -16px;
+	background-color: transparent;
+	outline-color: transparent;
+}
+
+span.dgIcon.dgFixed {
+	background-position: -32px -16px;
+	background-color: transparent;
+	outline-color: transparent;
+}
+
+span.dgIcon.dgQuad {
+	background-position: -64px -16px;
+}
+
+span.dgIcon.dgFlags {
+	background-position: -144px -16px;
+}
+
+span.dgIcon.dgHeart {
+	background-position: 0px -32px;
+	background-color: transparent;
+	outline-color: transparent;
+}
+
+span.dgIcon.dgKey {
+	background-position: -16px -32px;
+	background-color: transparent;
+	outline-color: transparent;
+}
+
+span.dgIcon.dgChest {
+	background-position: -80px -16px;
+	background-color: transparent;
+	outline-color: transparent;
+}
+
+span.dgIcon.dgDoor {
+	background-position: -160px -16px;
+	background-color: transparent;
+	outline-color: transparent;
+}
+
+span.dgIcon.dgQuadUL {
+	background-position: -32px -32px;
+	background-color: transparent;
+	outline-color: transparent;
+}
+
+span.dgIcon.dgQuadUR {
+	background-position: -48px -32px;
+	background-color: transparent;
+	outline-color: transparent;
+}
+
+span.dgIcon.dgQuadBL {
+	background-position: -64px -32px;
+	background-color: transparent;
+	outline-color: transparent;
+}
+
+span.dgIcon.dgQuadBR {
+	background-position: -80px -32px;
+	background-color: transparent;
+	outline-color: transparent;
+}
+
+span.dgIcon.dgOverlay {
+	background-position: -128px -16px;
+	background-color: transparent;
+	outline-color: transparent;
+}
+
+span.dgIcon.dgRAMOverlay {
+	background-position: -176px -16px;
+}
+
+span.dgIcon.dgROMOverlay {
+	background-position: -192px -16px;
+}
+
+span.dgIcon.dgWarning {
+	background-position: -96px -16px;
+	background-color: transparent;
+	outline-color: transparent;
+}
+
+span.dgIcon.dgCritical {
+	background-position: -112px -16px;
+	background-color: transparent;
+	outline-color: transparent;
+}
+
+span.dgIcon.dgCamera {
+	background-position: -48px -16px;
+	background-color: transparent;
+	outline-color: transparent;
+}
+
+span.dgIcon.dgXleft {
+	background-position: -144px 0px;
+}
+
+span.dgIcon.dgXright {
+	background-position: -160px 0px;
+}
+
+span.dgIcon.dgYtop {
+	background-position: -176px 0px;
+}
+
+span.dgIcon.dgYbottom {
+	background-position: -192px 0px;
+}
+
+span.menuIcon {
+	background-image: url("menuicons.png");
+	outline: 2px solid #282828;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	margin-right: .3em;
+	margin-left: .5px;
+	image-rendering: pixelated;
+}
+
+span.menuIcon.menuSubmenu {
+	background-position: 0px 0px
+}
+
+span.menuIcon.menuCommand {
+	background-position: -16px 0px
+}
+
+span.menuIcon.menuToggle {
+	background-position: -32px 0px
+}
+
+span.menuIcon.menuSelection {
+	background-position: -48px 0px
+}
+
+span.menuIcon.menuNumfield {
+	background-position: -64px 0px
+}
+
+span.menuIcon.menuPreset {
+	background-position: -80px 0px
+}
+
+code.size16 {
+	font-family: inherit;
+	color: #777777;
+	font-size: 80%;
+	vertical-align: bottom;
+}
+
+code.wram {
+	color: deeppink;
+}
+
+code.bank,
+code.rom {
+	color: royalblue;
+}
+
+code.value {
+	color: orangered;
+}
+
+table.ramTable th {
+	text-align: center;
+	background: #F4F4F4;
+}
+
+table.ramTable th,
+table.ramTable td {
+	padding: 1px 14px;
+	border: 1px solid;
+}
+
+table.flagtable tr:nth-child(even) {
+	background: #FDF;
+}
+
+table.flagtable tr:nth-child(odd):not(:nth-child(1)) {
+	background: #ECF;
+}
+
+table.flagtable th:not(:empty) {
+	padding-left: 10px;
+	background: #ECE;
+	border-right: 1px solid #D8D;
+	border-bottom: 1px solid #D8D;
+}
+
+table.flagtable td:not(:empty) {
+	border-right: 1px solid #D8D;
+}
+
+table.flagtable tr > td:nth-child(3),
+table.flagtable tr > td:nth-child(4),
+table.flagtable tr > td:nth-child(7),
+table.flagtable tr > td:nth-child(8) {
+	text-align: right;
+}
+
+table.flagtable tr > td:nth-child(1),
+table.flagtable tr > td:nth-child(5) {
+	text-align: center;
+}
+
+table.flagtable tr > td:nth-child(2),
+table.flagtable tr > td:nth-child(6) {
+	font-size: 87%;
+}
+
+table.flagtable th,
+table.flagtable td {
+	padding-right: 5px;
+	padding-left: 5px;
+}
+
+th.dividerColumn {
+	padding: 0px 10px;
+}
+
+ul.fontList > li > span.fontName {
+	display: inline-block;
+	width: 50%;
+}
+
+ul.fontList > li > span.fontPreview {
+	display: inline-block;
+	background-image: url("fontpreviews.png");
+	background-color: #489848;
+	outline: 2px solid #489848;
+	width: 256;
+	height: 16px;
+	vertical-align: sub;
+	image-rendering: pixelated;
+}
+
+ul.fontList > li:hover > span.fontName {
+	font-weight: bold;
+}
+
+ul.fontList > li:hover > span.fontPreview {
+	transform: scale(2.0) translate(65px, 0);
+	background-color: #8080F0;
+	outline: 2px solid #8080F0;
+}
+
+span.fontPreview.font1 {
+	background-position: 0px 0px;
+}
+
+span.fontPreview.font2 {
+	background-position: 0px -16px;
+}
+
+span.fontPreview.font3 {
+	background-position: 0px -32px;
+}
+
+span.fontPreview.font4 {
+	background-position: 0px -48px;
+}
+
+span.fontPreview.font5 {
+	background-position: 0px -64px;
+}
+
+span.fontPreview.font6 {
+	background-position: 0px -80px;
+}
+
+span.fontPreview.font7 {
+	background-position: 0px -96px;
+}
+
+span.fontPreview.font8 {
+	background-position: 0px -112px;
+}
+
+span.fontPreview.font9 {
+	background-position: 0px -128px;
+}
+
+span.fontPreview.font10 {
+	background-position: 0px -144px;
+}
+
+span.fontPreview.font11 {
+	background-position: 0px -160px;
+}
+
+span.fontPreview.font12 {
+	background-position: 0px -176px;
+}
+
+span.fontPreview.font13 {
+	background-position: 0px -192px;
+}
+
+span.fontPreview.font14 {
+	background-position: 0px -208px;
+}
+
+span.fontPreview.font15 {
+	background-position: 0px -224px;
+}
+
+span.fontPreview.font16 {
+	background-position: 0px -240px;
+}
+
+span.fontPreview.font17 {
+	background-position: 0px -256px;
+}
+
+span.fontPreview.font18 {
+	background-position: 0px -272px;
+}
+
+span.fontPreview.font19 {
+	background-position: 0px -288px;
+}
+
+span.fontPreview.font20 {
+	background-position: 0px -304px;
+}
+
+span.fontPreview.font21 {
+	background-position: 0px -320px;
+}
+
+span.fontPreview.font22 {
+	background-position: 0px -336px;
+}
+
+span.snesButton {
+	font-weight: 600;
+	font-variant: small-caps;
+}
+
+span.releaseDate {
+	font-variant: small-caps;
+	font-size: 70%;
+}
+
+a.headerLink {
+	font-size: 60%;
+	vertical-align: super;
+	opacity: .5;
+}
+
+a.headerLink:hover {
+	opacity: 1.0;
+}

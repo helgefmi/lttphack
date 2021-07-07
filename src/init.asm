@@ -1,103 +1,143 @@
-; INIT
-;
+pushpc
 ; Code that is run once after the game has been powered on.
-
-!SRAM_VERSION = $001E
 
 ; Overrides the following:
 ; LDA.b #$81 : STA $4200
 org $00802F
-    JSL init_hook
-    NOP
+	JSL init_hook
+	NOP
 
+; need to fix a small buffer myself since it empties to 0 not in init
+org $0CC1FF
+JSL ClearWatchBuffer_pre
 
-org !ORG
+org $008829
+JSL ClearBank7F
+
+pullpc
+ClearBank7F:
+	STA.b $13
+	INC.b $15
+
+	STZ $2181
+	STZ $2182
+	LDA.b #$01
+	STA $2183
+
+	LDA.b #.zero>>0
+	STA $4302
+	LDA.b #.zero>>8
+	STA $4303
+	LDA.b #.zero>>16
+	STA $4304
+
+	LDA #$FF ; fill the whole thing
+	STA $4305
+	STA $4306
+
+	LDA #$08
+	STA $4300
+	LDA #$80
+	STA $4301
+
+	LDA #$01
+	STA $420B ; can't write bank 7F yet
+
+	STZ $2180 ; last byte
+
+	RTL
+
+.zero
+	dw 0
+
+ClearWatchBuffer:
+	PHX
+	PHA
+	PHP
+	REP #$20
+	SEP #$10
+	LDA #$207F
+	LDX #$3E
+
+--	STA.l !dg_buffer_r0, X
+	STA.l !dg_buffer_r1, X
+	STA.l !dg_buffer_r2, X
+	STA.l !dg_buffer_r3, X
+	STA.l !dg_buffer_r4, X
+	DEX : DEX : BPL --
+
+	PLP
+	PLA
+	PLX
+	RTL
+
+.pre
+	STA.b $CA ; vanilla code
+	SEP #$30
+	BRA ClearWatchBuffer
+
 init_hook:
-    LDA #$81 : STA $4200
-    JSL init_expand
-  %ai8()
-    RTL
+	JSL init_expand
+	%ai8()
+	LDA #$81 : STA $4200
+	RTL
 
 init_expand:
-    ; enters AI=8
-  %a16()
-    ; If user holds Start+Select, we reinitialize.
-    LDA !ram_ctrl1 : CMP #$0030 : BEQ .reinitialize
+	LDA #$01 : STA $420D ; enable fast rom
+	; enters AI=8
+	; If user holds Start+Select, we reinitialize.
+	; we need some manual joypad reading
+	LDA #$01 : STA $4016 : STZ $4016 ; pulse controller
 
-    LDA !ram_sram_initialized : CMP #!SRAM_VERSION : BEQ .sram_initialized
+	STZ $00 : STZ $01
+	LDY #$10 ; reading 16 bits
+--	LDA $4016 ; if the last bit is on, carry will be set, otherwise, it won't; A is still 1
+	LSR
+	ROL $00 : ROL $01 ; roll carry from A and then from $00
+	DEY : BNE -- ; decrement
 
-  .reinitialize
-    JSR init_initialize
+	%a16()
+	LDA $00
+	AND #$FF00 : CMP #$3000 : BEQ .forcereset
+	LDA !ram_ctrl_prachack_menu : CMP #$1010 : BEQ .noforcereset
 
-  .sram_initialized
-    ; Some features probably should be turned off after a reset
-  %a8()
-    LDA #$00 : STA !ram_oob_toggle : STA !lowram_oob_toggle
+.forcereset
+	JSR init_initialize_all
+	BRA .sram_initialized
 
-  .done
-    JSL music_init
-    RTL
+.noforcereset
+	LDA !ram_sram_initialized : CMP #!SRAM_VERSION : BEQ .sram_initialized
+
+.reinitialize
+	JSR init_initialize
+
+.sram_initialized
+	; Some features probably should be turned off after a reset
+	%a8()
+	STZ !lowram_oob_toggle
+	LDA #$00
+	STA.l !ram_superwatch
+	STA.l !ram_superwatch+1
+	LDA.l !ram_feature_music : BNE +
+	JSL mute_music
++
+.done
+	RTL
+
+init_initialize_all:
+	!PERM_INIT
 
 init_initialize:
-    LDA.w #!FEATURE_HUD
-    STA !ram_counters_idle
-    STA !ram_counters_lag
-    STA !ram_counters_real
-    STA !ram_input_display_toggle
-    STA !ram_toggle_lanmola_cycles
+	!INIT_ASSEMBLY
 
-    LDA #$0001
-    STA !ram_feature_music
-    STA !ram_rerandomize_toggle
+	LDA #!SRAM_VERSION : STA !ram_sram_initialized
 
-    LDA #$0000
-    STA !ram_can_load_pss
-    STA !ram_counters_segment
-    STA !ram_misslots_toggle
-    STA !ram_enemy_hp_toggle
-    STA !ram_lagometer_toggle
-    STA !ram_lit_rooms_toggle
-    STA !ram_preset_category
-    STA !ram_previous_preset_destination
-    STA !ram_previous_preset_type
-    STA !ram_qw_toggle
-    STA !ram_secondary_counter_type
-    STA !ram_subpixels_toggle
-    STA !ram_xy_toggle
-    STA !ram_sanctuary_heart
-    STA !ram_autoload_preset
-    STA !ram_movie_mode
-    STA !ram_movie_index
-    STA !ram_movie_timer
-    STA !ram_prev_ctrl
+	%i16()
+	LDA #$0000
+	LDX #$00FE
+.loop
+	STA !sram_movies, X
+	DEX #2 : BPL .loop
+	%i8()
 
-    ; Start + R
-    LDA #$1010 : STA !ram_ctrl_prachack_menu
-    ; B + L + Select
-    LDA #$20A0 : STA !ram_ctrl_load_last_preset
-    ; Y + R + Select
-    LDA #$1060 : STA !ram_ctrl_save_state
-    ; Y + L + Select
-    LDA #$2060 : STA !ram_ctrl_load_state
-    ; R + L + Select
-    LDA #$3020 : STA !ram_ctrl_replay_last_movie
-
-    ; Unset
-    LDA #$0000
-    STA !ram_ctrl_toggle_oob
-    STA !ram_ctrl_skip_text
-    STA !ram_ctrl_reset_segment_timer
-    STA !ram_ctrl_disable_sprites
-    STA !ram_ctrl_fill_everything
-
-    LDA #!SRAM_VERSION : STA !ram_sram_initialized
-
-  %i16()
-    LDA #$0000
-    LDX #$00FE
-  .loop
-    STA !sram_movies, X
-    DEX #2 : BPL .loop
-  %i8()
-
-    RTS
+	RTS

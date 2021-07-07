@@ -1,23 +1,79 @@
+; Magic words
+!SRAM_VERSION = $0025
+
+!menu_end = #$0000
+!list_end = #$FF
+
+!pracmenu_shortcut = #$1010
+
+!EMPTY = $207F
+!QMARK = $212A
+!BLANK_TILE = $24F5
+
+!menu_dma_buffer = $7F8000 ; [0x800] reserved
+!dg_hdma = $7F8800 ; [0x800] reserved
+!dg_dma_buffer = $7F9000 ; [0x800] reserved
+!dg_buffer = !dg_dma_buffer
+!dg_buffer_r0 #= !dg_dma_buffer+(64*0)
+!dg_buffer_r1 #= !dg_dma_buffer+(64*1)
+!dg_buffer_r2 #= !dg_dma_buffer+(64*2)
+!dg_buffer_r3 #= !dg_dma_buffer+(64*3)
+!dg_buffer_r4 #= !dg_dma_buffer+(64*4)
+
+!NUMBER_OF_COUNTERS = 6
+!HUD_EXTRAS_BUFFER = $7ED000
+!POS_MEM_INPUT_DISPLAY_TOP #= !HUD_EXTRAS_BUFFER+((!NUMBER_OF_COUNTERS+1)*16)
+!POS_MEM_INPUT_DISPLAY_BOT #= !POS_MEM_INPUT_DISPLAY_TOP+12
+
+!EXTRAS_SIZE #= 12+(!NUMBER_OF_COUNTERS*16)
+
+!POS_MEM_INPUT_DISPLAY_TOP = $7EC728
+!POS_MEM_INPUT_DISPLAY_BOT = $7EC768
+
+!offsetWA = $7F7680
+!offsetincWA = 0
+macro def_wramA(name, size)
+	!ram_<name> #= !offsetWA+!offsetincWA
+	!offsetincWA #= !offsetincWA+<size>
+endmacro
+
 ; ==== RAM usage ====
 ;
 ; 7C[0x08] (84)
 ; 8E[0x02] (90)
+; AB[0x02]
+; B6[0x01]
+; 7A[0x01]
+; 7C[0x02]
 ; 04CB[0x25] (04F0)
 ; $7F7667[0x6719] (7FDD80)
 ; $7EC900[0x1F00] (7EE800)
 ;  * 7ED000 - 7ED780 = VRAM buffer backup in custom_menu.asm
 
-!lowram_room_realtime = $04CC
-!lowram_room_gametime = $04CE
-!lowram_seg_frames = $04D0
-!lowram_seg_minutes = $04D2
-!lowram_seg_seconds = $04D4
+; timers BCD
+!room_time_F = $0230 ; [0x2]
+!room_time_S = $0232 ; [0x2]
+!lag_frames = $0234 ; [0x2]
+!idle_frames = $0236 ; [0x2]
+!seg_time_F = $0238 ; [0x2]
+!seg_time_S = $023A ; [0x2]
+!seg_time_M = $023C ; [0x2]
 
-!lowram_room_realtime_copy = $04D6
-!lowram_room_gametime_copy = $04D8
+!room_time_F_disp = $0240 ; [0x2]
+!room_time_S_disp = $0242 ; [0x2]
+!lag_frames_disp = $0244 ; [0x2]
+!idle_frames_disp = $0246 ; [0x2]
+!seg_time_F_disp = $0248 ; [0x2]
+!seg_time_S_disp = $024A ; [0x2]
+!seg_time_M_disp = $024C ; [0x2]
+
+!lag_cache = $04CC
+!do_heart_lag = $04CE
+
+; old stuff
+!lowram_room_gametime = $04CC
 
 !lowram_last_frame_did_saveload = $04DA
-!lowram_last_frame_hearts = $04DB
 !lowram_draw_tmp = $04DC
 !lowram_draw_tmp2 = $04DE
 !lowram_draw_tmp3 = $04E0
@@ -31,104 +87,210 @@
 
 ; AXLR|....|BYSlSt|udlr
 !ram_ctrl1 = $04E4
-!ram_ctrl1_filtered = $7F7684
-!ram_ctrl1_word_copy = $7F7686
+%def_wramA("ctrl1_filtered", 2)
+%def_wramA("ctrl1_word_copy", 2)
 
-!ram_gamemode_copy = $7F767E
-!ram_submode_copy = $7F7680
+%def_wramA("gamemode_copy", 2)
+%def_wramA("submode_copy", 2)
+%def_wramA("received_item_copy", 2)
 
-!ram_received_item_copy = $7F7688
-!ram_hex2dec_tmp = $7F768A
-!ram_hex2dec_first_digit = $7F768C
-!ram_hex2dec_second_digit = $7F768E
-!ram_hex2dec_third_digit = $7F7690
+!ram_gamemode_copy = $6F
+!ram_submode_copy = $70
+!ram_received_item_copy = $71
+!ram_can_reset_timer = $8E
+!timer_allowed = !ram_can_reset_timer
 
-!ram_qw_last_scroll = $7F76A2
-!ram_lanmola_cycles = $7F7700 ; 3 bytes
-!ram_rng_counter = $7F7704
-!ram_pokey_rng = $7F7706
-!ram_agahnim_rng = $7F7708
-!ram_helmasaur_rng = $7F770A
-!ram_ganon_warp_location_rng = $7F770C
-!ram_ganon_warp_rng = $7F770E
-!ram_eyegore_rng = $7F7712
-!ram_arrghus_rng = $7F7714
-!ram_turtles_rng = $7F7716
-!ram_cannonballs_rng = $7F7718
-!ram_soldiers_rng = $7F771A
-!ram_lanmola_rng = $7F771C
-!ram_conveyor_rng = $7F771E
+%def_wramA("hex2dec_tmp", 2)
+%def_wramA("hex2dec_first_digit", 2)
+%def_wramA("hex2dec_second_digit", 2)
+%def_wramA("hex2dec_third_digit", 2)
 
-!ram_ctrl_last_input = $7F7710
+%def_wramA("qw_last_scroll", 2)
+%def_wramA("lanmola_cycles", 2) ; 3 bytes
+%def_wramA("lanmola_cycles3", 2)
+%def_wramA("rng_counter", 2)
+%def_wramA("pokey_rng", 2)
+%def_wramA("agahnim_rng", 2)
+%def_wramA("helmasaur_rng", 2)
+%def_wramA("ganon_warp_location_rng", 2)
+%def_wramA("ganon_warp_rng", 2)
+%def_wramA("eyegore_rng", 2)
+%def_wramA("arrghus_rng", 2)
+%def_wramA("turtles_rng", 2)
+%def_wramA("framerule", 2)
+%def_wramA("lanmola_rng", 2)
+%def_wramA("conveyor_rng", 2)
+%def_wramA("drop_rng", 2)
+%def_wramA("vitreous_rng", 2)
+
+%def_wramA("ctrl_last_input", 2)
 
 ; Account for different SRAM layouts
 
 if !FEATURE_SD2SNES
-    !offset = $770100
+	!offset = $770100
+	!statename = "State"
+	!statename2 = "State"
 else
-    !offset = $701E00
+	!offset = $701E00
+	!statename = "Preset"
+	!statename2 = "saved preset"
 endif
 
-!ram_sram_initialized = !offset+0
-!ram_input_display_toggle = !offset+4
-!ram_enemy_hp_toggle = !offset+6
-!ram_xy_toggle = !offset+8
-!ram_qw_toggle = !offset+10
-!ram_lit_rooms_toggle = !offset+12
-!ram_oob_toggle = !offset+14
-!ram_toggle_lanmola_cycles = !offset+16
-!ram_subpixels_toggle = !offset+58
-!ram_rerandomize_toggle = !offset+64
+!offsetinc = 0
+!OFF = 0
+!ON = 1
+!HUDONLY = select(!FEATURE_HUD, !ON, !OFF)
 
-!ram_previous_preset_destination = !offset+24
-!ram_previous_preset_type = !offset+26
-!ram_preset_category = !offset+60
-!ram_can_load_pss = !offset+62
-!ram_feature_music = !offset+28
-!ram_secondary_counter_type = !offset+46
-!ram_lagometer_toggle = !offset+56
-!ram_sanctuary_heart = !offset+74
-!ram_autoload_preset = !offset+76
+macro def_sram(name, default)
+	!ram_<name> #= !offset+!offsetinc
+	!newval := "LDA.w #<default> : STA.l !ram_<name>"
 
-!ram_ctrl_prachack_menu = !offset+30
-!ram_ctrl_load_last_preset = !offset+32
-!ram_ctrl_replay_last_movie = !offset+78
-!ram_ctrl_save_state = !offset+34
-!ram_ctrl_load_state = !offset+36
-!ram_ctrl_toggle_oob = !offset+38
-!ram_ctrl_skip_text = !offset+40
-!ram_ctrl_disable_sprites = !offset+42
-!ram_ctrl_reset_segment_timer = !offset+44
-!ram_ctrl_fill_everything = !offset+70
+	if defined("INIT_ASSEMBLY")
+		!INIT_ASSEMBLY := "!INIT_ASSEMBLY : !newval"
+	else
+		!INIT_ASSEMBLY := "!newval"
+	endif
 
-!ram_counters_real = !offset+48
-!ram_counters_lag = !offset+50
-!ram_counters_idle = !offset+52
-!ram_counters_segment = !offset+54
-!ram_misslots_toggle = !offset+80
+	!offsetinc #= !offsetinc+2
+endmacro
 
-!ram_rerandomize_framecount = !offset+66
-!ram_rerandomize_accumulator = !offset+68
+macro def_perm_sram(name, default)
+	!ram_<name> #= !offset+!offsetinc
+	!newval := "LDA.w #<default> : STA.l !ram_<name>"
+
+	if defined("PERM_INIT")
+		!PERM_INIT := "!PERM_INIT : !newval"
+	else
+		!PERM_INIT := "!newval"
+	endif
+
+	!offsetinc #= !offsetinc+2
+endmacro
+
+%def_sram("sram_initialized", !OFF)
+
+; permanent SRAM that works across versions
+; DO NOT CHANGE THE ORDER OF THESE
+%def_perm_sram("ctrl_prachack_menu", $1010)
+%def_perm_sram("ctrl_load_last_preset", $20A0)
+%def_perm_sram("ctrl_replay_last_movie", $3020)
+%def_perm_sram("ctrl_save_state", $1060)
+%def_perm_sram("ctrl_load_state", $2060)
+%def_perm_sram("ctrl_toggle_oob", !OFF)
+%def_perm_sram("ctrl_skip_text", !OFF)
+%def_perm_sram("ctrl_disable_sprites", !OFF)
+%def_perm_sram("ctrl_reset_segment_timer", !OFF)
+%def_perm_sram("ctrl_fill_everything", !OFF)
+%def_perm_sram("ctrl_fix_vram", !OFF)
+%def_perm_sram("ctrl_somaria_pits", !OFF)
+%def_perm_sram("preset_category", $0000)
+%def_perm_sram("hud_font", 0)
+%def_perm_sram("feature_music", !ON)
+%def_perm_sram("input_display", !HUDONLY)
+
+; Placeholders for future SRAM
+; this way, future updates will end up in one of these
+; instead of say, a preset thing
+%def_sram("PLACEHOLDER_0", 0)
+%def_sram("PLACEHOLDER_1", 0)
+%def_sram("PLACEHOLDER_2", 0)
+%def_sram("PLACEHOLDER_3", 0)
+%def_sram("PLACEHOLDER_4", 0)
+%def_sram("PLACEHOLDER_5", 0)
+%def_sram("PLACEHOLDER_6", 0)
+%def_sram("PLACEHOLDER_7", 0)
+%def_sram("PLACEHOLDER_8", 0)
+%def_sram("PLACEHOLDER_9", 0)
+%def_sram("PLACEHOLDER_A", 0)
+%def_sram("PLACEHOLDER_B", 0)
+%def_sram("PLACEHOLDER_C", 0)
+%def_sram("PLACEHOLDER_D", 0)
+%def_sram("PLACEHOLDER_E", 0)
+%def_sram("PLACEHOLDER_F", 0)
+%def_sram("PLACEHOLDER_G", 0)
+%def_sram("PLACEHOLDER_H", 0)
+%def_sram("PLACEHOLDER_I", 0)
+%def_sram("PLACEHOLDER_J", 0)
+%def_sram("PLACEHOLDER_K", 0)
+%def_sram("PLACEHOLDER_L", 0)
+%def_sram("PLACEHOLDER_M", 0)
+%def_sram("PLACEHOLDER_N", 0)
+%def_sram("PLACEHOLDER_O", 0)
+%def_sram("PLACEHOLDER_P", 0)
+%def_sram("PLACEHOLDER_Q", 0)
+%def_sram("PLACEHOLDER_R", 0)
+%def_sram("PLACEHOLDER_S", 0)
+%def_sram("PLACEHOLDER_T", 0)
+%def_sram("PLACEHOLDER_U", 0)
+%def_sram("PLACEHOLDER_V", 0)
+%def_sram("PLACEHOLDER_W", 0)
+%def_sram("PLACEHOLDER_X", 0)
+%def_sram("PLACEHOLDER_Y", 0)
+%def_sram("PLACEHOLDER_Z", 0)
+
+; Non permanent SRAM
+; these can be moved around
+%def_sram("qw_toggle", !OFF)
+
+%def_sram("can_load_pss", !OFF)
+%def_sram("previous_preset_destination", !OFF)
+%def_sram("previous_preset_type", !OFF)
+%def_sram("autoload_preset", !OFF)
+
+%def_sram("lagometer_toggle", !OFF)
+%def_sram("secondary_counter_type", !OFF)
+%def_sram("toggle_lanmola_cycles", !HUDONLY)
+
+%def_sram("xy_toggle", !HUDONLY)
+%def_sram("counters_real", !HUDONLY)
+%def_sram("counters_lag", !HUDONLY)
+%def_sram("counters_idle", !HUDONLY)
+%def_sram("counters_segment", !OFF)
+%def_sram("heartlag_spinner", !OFF)
+%def_sram("extra_ram_watch", !OFF)
+%def_sram("superwatch", !OFF)
+
+%def_sram("rerandomize_framecount", 0)
+%def_sram("rerandomize_accumulator", 0)
+
+%def_sram("enemy_hp_toggle", !OFF)
+%def_sram("lit_rooms_toggle", !OFF)
+%def_sram("fast_moving_walls", !OFF)
+%def_sram("probe_toggle", !OFF)
+%def_sram("sanctuary_heart",!OFF )
+%def_sram("rerandomize_toggle", !ON)
+%def_sram("skip_triforce_toggle", !OFF)
+%def_sram("bonk_items_toggle", !OFF)
 
 !lowram_oob_toggle = $037F
+!ram_eg_strength = $7E044A
 
-!ram_debug = $7F7777
-!ram_debug2 = $7F7779
+%def_wramA("debug", 2)
+%def_wramA("debug2", 2)
 
-!ram_cm_old_gamemode = $7F76A0
-!ram_cm_old_submode = $7F76A1
-!ram_cm_menu_stack = $7F76B0 ; 0x10
+%def_wramA("cm_old_gamemode", 1)
+%def_wramA("cm_old_submode", 1)
+
+%def_wramA("cm_menu_stack", $10) ; 0x10
+%def_wramA("cm_menu_bank_stack", $10) ; 0x10
 !lowram_cm_cursor_stack = $0648 ; 0x10
 !lowram_cm_stack_index = $0658
-!ram_cm_last_frame_input = $7F76C6
-!ram_cm_input_timer = $7F76C8
-!ram_cm_opened_menu_maunally = $7F7702
+%def_wramA("cm_last_frame_input", 2)
+%def_wramA("cm_input_timer", 2)
+%def_wramA("cm_opened_menu_maunally", 2)
 
-!ram_cm_old_crystal_switch = $7F76CE
+%def_wramA("cm_old_crystal_switch", 2)
 
 !sram_ss_dma_buffer = $770000
 !sram_old_music_bank = $770080
+!sram_old_music = $770081
 !sram_pss_offset = $702000
+
+;-------------------------
+; Transition detection
+;-------------------------
+!ram_linkOAMpos = $7C
 
 ;-------------------------
 ; Transition detection
@@ -138,22 +300,32 @@ endif
 !TD_SHOW = $01
 
 ;-------------------------
+; Layers
+;-------------------------
+!disabled_layers = $B6
+!disabled_layers_temp = $AB ; 2 bytes
+
+;-------------------------
+; Sword beams
+;-------------------------
+!disable_beams = $7A
+
+;-------------------------
 ; HUD
 ;-------------------------
 
-!POS_COUNTERS = $36
+!POS_COUNTERS = $34
 
-!POS_MEM_HEART_GFX = $7EC790
 !POS_HEARTS = $92
+!POS_MEM_HEART_GFX = $7EC790
 
-!POS_MEM_CONTAINER_GFX = $7EC79A
+!POS_MEM_HEARTLAG = $7EC798
+
 !POS_CONTAINERS = $9C
+!POS_MEM_CONTAINER_GFX = $7EC79A
 
-!POS_MEM_ENEMY_HEART_GFX = $7EC7A2
 !POS_ENEMY_HEARTS = $A4
-
-!POS_MEM_INPUT_DISPLAY_TOP = $7EC728
-!POS_MEM_INPUT_DISPLAY_BOT = $7EC768
+!POS_MEM_ENEMY_HEART_GFX = $7EC7A2
 
 ;-------------------------
 ; Custom menu
@@ -172,12 +344,13 @@ endif
 !CM_ACTION_CTRL_SHORTCUT = #$14
 !CM_ACTION_SUBMENU_VARIABLE = #$16
 !CM_ACTION_MOVIE = #$18
+!CM_ACTION_TOGGLE_BIT_TEXT = #$1A
 
-!ram_react_counter = $7F76CA
-!ram_react_frames = $7F76CC
+%def_wramA("react_counter", 2)
+%def_wramA("react_frames", 2)
 
-!ram_mash_counter = $7F76D0
-!ram_mash_inputs = $7F76D2
+%def_wramA("mash_counter", 2)
+%def_wramA("mash_inputs", 2)
 
 
 ;-------------------------
@@ -196,34 +369,34 @@ endif
 !PRESET_DUNGEON = #$02
 
 !ram_preset_type = $04E2
-!ram_preset_destination = $7F7900
-!ram_preset_end_of_sram_state = $7F7902
-!ram_preset_spotlight_timer = $7F7720
+%def_wramA("preset_destination", 2)
+%def_wramA("preset_end_of_sram_state", 2)
+%def_wramA("preset_spotlight_timer", 2)
 
 ;-------------------------
 ; MOVIE
 ;-------------------------
 
 !ram_movie_mode = $7F8000
-!ram_movie_index = $7C
+!ram_movie_index = $0000
 !ram_movie_timer = $7E
 !ram_movie_length = $80
 !ram_movie_rng_index = $82
-!ram_movie_rng_length = $8E
+!ram_movie_rng_length = $0258
 !ram_prev_ctrl = $7F8006
 !ram_movie_framecounter = $7F8002
 !ram_movie_next_mode = $7F8004
 !ram_movie = $7F8020
-!ram_movie_hud = $7F7904 ; [0x40]
+%def_wramA("movie_hud", $40) ; [0x40]
 
 if !FEATURE_SD2SNES
-    !sram_movies = $771000
-    !sram_movie_data = $771100
-    !sram_movie_data_size = $6F00
+	!sram_movies = $771000
+	!sram_movie_data = $771100
+	!sram_movie_data_size = $6F00
 else
-    !sram_movies = $703000
-    !sram_movie_data = $703200
-    !sram_movie_data_size = $4E00
+	!sram_movies = $703000
+	!sram_movie_data = $703200
+	!sram_movie_data_size = $4E00
 endif
 
 !sram_movies_length = !sram_movies+0
@@ -263,7 +436,7 @@ endif
 ; ITEM MENU
 
 !ram_item_bow = $7EF340
-    !ram_cm_item_bow = $7F76C0
+	%def_wramA("cm_item_bow", 1)
 !ram_item_boom = $7EF341
 !ram_item_hook = $7EF342
 !ram_item_bombs = $7EF343
@@ -279,27 +452,25 @@ endif
 !ram_item_net = $7EF34D
 !ram_item_book = $7EF34E
 !ram_item_bottle = $7EF34F
-    !ram_cm_item_bottle = $7F76C2
-    !ram_item_bottle_array = $7EF35C
+	%def_wramA("cm_item_bottle", 1)
+	!ram_item_bottle_array = $7EF35C
 !ram_item_somaria = $7EF350
 !ram_item_byrna = $7EF351
 !ram_item_cape = $7EF352
 !ram_item_mirror = $7EF353
-    !ram_cm_item_mirror = $7F76C1
+	%def_wramA("cm_item_mirror", 1)
 
 ; EQUIPMENT MENU
 
-!ram_equipment_boots_menu = $7EF355
-    !ram_cm_equipment_boots = $7F76C3
+!ram_equipment_boots = $7EF355
 !ram_equipment_gloves = $7EF354
-!ram_equipment_flippers_menu = $7EF356
-    !ram_cm_equipment_flippers = $7F76C4
+!ram_equipment_flippers = $7EF356
 !ram_equipment_moon_pearl = $7EF357
 !ram_equipment_sword = $7EF359
 !ram_equipment_shield = $7EF35A
 !ram_equipment_armor = $7EF35B
 !ram_equipment_maxhp = $7EF36C
-    !ram_cm_equipment_maxhp = $7F76C5
+	%def_wramA("cm_equipment_maxhp", 1)
 !ram_equipment_curhp = $7EF36D
 !ram_equipment_arrows_filler = $7EF377
 !ram_equipment_arrows = $7EF377
@@ -309,8 +480,8 @@ endif
 
 ; OTHER
 
-!ram_cm_armed_eg = $7EF380
-!ram_cm_eg_strength = $7EF382
+!ram_cm_gamestate_world = $7EF3CA
+
 !ram_cm_crystal_switch = $7EF384
 
 !ram_game_big_keys_1 = $7EF366
@@ -329,43 +500,45 @@ endif
 ;-------------------------
 
 macro a8()
-    SEP #$20
+	SEP #$20
 endmacro
 
 macro a16()
-    REP #$20
+	REP #$20
 endmacro
 
 macro i8()
-    SEP #$10
+	SEP #$10
 endmacro
 
 macro i16()
-    REP #$10
+	REP #$10
 endmacro
 
 macro ai8()
-    SEP #$30
+	SEP #$30
 endmacro
 
 macro ai16()
-    REP #$30
+	REP #$30
 endmacro
 
-
 macro ppu_off()
-    LDA #$80 : STA $2100 : STA $13
-    STZ $420C : LDA $9B : PHA : STZ $9B
-    STZ $4200
+	LDA #$80 : STA $2100 : STA $13
+	STZ $420C : LDA $9B : PHA : STZ $9B
+	STZ $4200
 endmacro
 
 macro ppu_on()
-    LDA #$A1 : STA $4200
-    LDA #$0F : STA $13 : STA $2100
-    PLA : STA $9B : STA $420C
+	LDA #$81 : STA $4200
+	LDA #$0F : STA $13 : STA $2100
+	PLA : STA $9B : STA $420C
 endmacro
 
-
+; 13 cycles
+; next opcode takes 1 cycle to fetch
+; that makes 14
 macro wait_14_cycles()
-    PHA : PLA : PHA : PLA
+	NOP : PHD : PLD : NOP
+	NOP ; I think it needs to be 15+1 for 16?
 endmacro

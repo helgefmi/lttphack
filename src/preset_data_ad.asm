@@ -1,5 +1,3 @@
-org !ORG
-
 ; Preset locations
 
 preset_ad_esc_links_bed:
@@ -1860,16 +1858,16 @@ dw sram_ad_skull_cursed_dwarf_after
 
 preset_ad_skull_getting_tempered:
 db $01 ; Overworld
-dw $0062 ; Screen Index
-dw $03E8 ; Link X
+dw $0058 ; Screen Index
+dw $03E6 ; Link X
 dw $0918 ; Link Y
-dw $08EB ; BG1 Vertical Scroll
+dw $08B2 ; BG1 Vertical Scroll
 dw $08B4 ; BG2 Vertical Scroll
-dw $0283 ; BG1 Horizontal Scroll
+dw $0300 ; BG1 Horizontal Scroll
 dw $0300 ; BG2 Horizontal Scroll
-dw $038D ; Scroll X
+dw $0385 ; Scroll X
 dw $0923 ; Scroll Y
-dw $0560 ; Unknown 1
+dw $1560 ; Unknown 1
 dw $000A ; Unknown 2
 dw $0000 ; Unknown 3
 dw sram_ad_skull_getting_tempered_after
@@ -3338,7 +3336,7 @@ dw $1810 ; BG2 Vertical Scroll
 dw $1D00 ; BG1 Horizontal Scroll
 dw $1D00 ; BG2 Horizontal Scroll
 dw $1D40 ; Link X
-dw $18A0 ; Link Y
+dw $18AA ; Link Y
 dw $017F ; Camera X
 dw $0088 ; Camera Y
 dw $0000 ; Door Settings
@@ -3354,7 +3352,7 @@ dw $0000 ; Quadrant 1
 dw $0001 ; Quadrant 2
 db $0B ; Main Graphics
 db $16 ; Music Track
-db $FB ; Starting Floor
+db $FA ; Starting Floor
 db $12 ; Palace No
 db $00 ; Door Orientation
 db $00 ; Starting Background
@@ -4283,25 +4281,25 @@ dw sram_ad_atower_spear_guards_after
 preset_ad_atower_circle_of_pots:
 db $02 ; Dungeon
 dw $00B0 ; Room Index
-dw $1654 ; BG1 Vertical Scroll
-dw $1654 ; BG2 Vertical Scroll
+dw $1610 ; BG1 Vertical Scroll
+dw $1610 ; BG2 Vertical Scroll
 dw $0000 ; BG1 Horizontal Scroll
 dw $0000 ; BG2 Horizontal Scroll
 dw $0078 ; Link X
-dw $16F4 ; Link Y
+dw $16DC ; Link Y
 dw $007F ; Camera X
-dw $0178 ; Camera Y
+dw $0088 ; Camera Y
 dw $0000 ; Door Settings
-dw $1700 ; Relative Coords HU
+dw $1600 ; Relative Coords HU
 dw $1600 ; Relative Coords FU
-dw $1710 ; Relative Coords HD
+dw $1610 ; Relative Coords HD
 dw $1710 ; Relative Coords FD
 dw $0000 ; Relative Coords HL
 dw $0000 ; Relative Coords FL
 dw $0000 ; Relative Coords HR
 dw $0100 ; Relative Coords FR
 dw $0000 ; Quadrant 1
-dw $0200 ; Quadrant 2
+dw $0000 ; Quadrant 2
 db $04 ; Main Graphics
 db $10 ; Music Track
 db $04 ; Starting Floor
@@ -4398,7 +4396,7 @@ dl $7EF208 : db $02 : dw $0002 ; Room $0104: Unknown (...............q)
 dl $7EF20C : db $02 : dw $F000 ; Room $0106: Unknown (.dddb...........)
 dl $7EF36C : db $02 : dw $1818 ; Health (goal)
 dl $7EF378 : db $02 : dw $F800 ; ????
-dl $7EF3D8 : db $02 : dw $2A00 ; 
+dl $7EF3D8 : db $02 : dw $2A00 ;
 dl $7EF3DC : db $02 : dw $8C01 ; Player name
 dl $7EF3E0 : db $02 : dw $AA01 ; Player name
 dl $7EF400 : db $02 : dw $FF00 ; Deaths
@@ -4442,7 +4440,7 @@ dl $7E0540 : db $02 : dw $18E6 ; Object tilemap state
 dl $7E0544 : db $02 : dw $1850 ; Object tilemap state
 dl $7E0202 : db $01 : db $00 ; Selected menu item
 dl $7E0CBB : db $01 : db $00 ; Sprite drop
-dl $7E010F : db $01 : db $00 ; 
+dl $7E010F : db $01 : db $00 ;
 dl $7E0CC7 : db $01 : db $00 ; Sprite drop
 dl $7EF051 : db $01 : db $00 ; Room $0028: Swamp Palace (Entrance Room) (................)
 dl $7E0CC9 : db $01 : db $00 ; Sprite drop
@@ -4640,8 +4638,8 @@ dl $7EF3E3 : db $02 : dw $0000 ; Player name
 dl $7EF3FF : db $02 : dw $0001 ; Deaths
 dl $7EF024 : db $02 : dw $000F ; Room $0012: Sanctuary (.............qqq)
 dl $7EF340 : db $02 : dw $0100 ; Bow
-dl $7EF358 : db $02 : dw $0100 ; 
-dl $7EF3C4 : db $02 : dw $0200 ; 
+dl $7EF358 : db $02 : dw $0100 ;
+dl $7EF3C4 : db $02 : dw $0200 ;
 dl $7EF3C8 : db $01 : db $01 ; Entrances Phase
 dl $7EF3CC : db $02 : dw $0000 ; Tagalong
 dl $7EF36D : db $01 : db $18 ; Health (actual)
@@ -4887,7 +4885,7 @@ dl $7EF342 : db $02 : dw $0300 ; Hookshot
 dl $7EF36E : db $02 : dw $FF80 ; Magic Power
 dl $7EF376 : db $02 : dw $0400 ; Arrow filler
 dl $7EF3C6 : db $02 : dw $0315 ; Game Phase 2
-dl $7EF3E6 : db $02 : dw $0100 ; 
+dl $7EF3E6 : db $02 : dw $0100 ;
 dl $7E002F : db $01 : db $00 ; Link's direction
 dl $7EF4FE : db $02 : dw $9B53 ; Inverse checksum
 dl $7FE103 : db $01 : db $00 ; Room $C1 persistent: Misery Mire (Compass Chest / Tile Room)
@@ -5170,6 +5168,8 @@ dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
 dl $7E010E : db $02 : dw $0030 ; Dungeon entrance index
+dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E0303 : db $01 : db $03 ; Selected menu item
 .after
 
 sram_ad_hera_entrance:
@@ -5817,7 +5817,7 @@ dl $7E0FCC : db $02 : dw $0000 ; Prize pack index
 dl $7EF3FF : db $02 : dw $0001 ; Deaths
 dl $7EF344 : db $02 : dw $0100 ; Mushroom
 dl $7EF354 : db $02 : dw $0102 ; Gloves
-dl $7EF358 : db $02 : dw $0300 ; 
+dl $7EF358 : db $02 : dw $0300 ;
 dl $7EF36C : db $02 : dw $3048 ; Health (goal)
 dl $7E1ABF : db $01 : db $00 ; Warp Vortex Coordinate
 dl $7E1ACF : db $01 : db $00 ; Warp Vortex Coordinate
@@ -5837,6 +5837,8 @@ dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
 dl $7FE0FA : db $01 : db $00 ; Overworld $BD persistent: UNKNOWN
 dl $7FDFCB : db $01 : db $F3 ; Overworld $25 persistent: Octorok Area
 dl $7E010E : db $01 : db $33 ; Dungeon entrance index
+dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E0303 : db $01 : db $03 ; Selected menu item
 .after
 
 sram_ad_desert_bridge_hammerdash:
@@ -5894,6 +5896,8 @@ dl $7EC16A : db $02 : dw $0000 ; Underworld exit cache
 dl $7EC16E : db $02 : dw $0000 ; Underworld exit cache
 dl $7FE16E : db $01 : db $00 ; Room $F7 persistent: Empty Clone Room
 dl $7E010E : db $02 : dw $0000 ; Dungeon entrance index
+dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E0303 : db $01 : db $03 ; Selected menu item
 .after
 
 sram_ad_desert_swamp_warp:
@@ -5905,6 +5909,8 @@ dl $7EC74C : db $02 : dw $20B7 ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $20C7 ; Selected menu gfx, row 2
 dl $7EC172 : db $02 : dw $0008 ; Crystal switch state
 dl $7FE05B : db $01 : db $47 ; Overworld $6D persistent: Peg Bridge
+dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E0303 : db $01 : db $04 ; Selected menu item
 .after
 
 sram_ad_desert_fluteless_mire:
@@ -6770,16 +6776,16 @@ dl $7EF3CA : db $02 : dw $0000 ; LW/DW
 dl $7EF3FE : db $02 : dw $0100 ; Deaths
 dl $7EF4FE : db $02 : dw $04F0 ; Inverse checksum
 dl $7E029F : db $01 : db $16 ; Arc variable
-dl $7E0303 : db $01 : db $01 ; Selected menu item
 dl $7FDFF9 : db $01 : db $00 ; Room $3C persistent: Cave
 dl $7E0540 : db $02 : dw $0920 ; Object tilemap state
 dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
-dl $7E0202 : db $01 : db $04 ; Selected menu item
 dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
 dl $7FDFDA : db $01 : db $00 ; Room $2D persistent: Empty Clone Room
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
 dl $7FE01B : db $01 : db $00 ; Room $4D persistent: Ganon's Tower (Moldorm Room)
 dl $7E010E : db $02 : dw $0030 ; Dungeon entrance index
+dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E0303 : db $01 : db $03 ; Selected menu item
 .after
 
 sram_ad_trock_tr_climb:
@@ -6940,6 +6946,8 @@ dl $7EC74C : db $02 : dw $284A ; Selected menu gfx, row 1
 dl $7EC78C : db $02 : dw $28CB ; Selected menu gfx, row 2
 dl $7EC172 : db $02 : dw $0000 ; Crystal switch state
 dl $7E010E : db $02 : dw $0030 ; Dungeon entrance index
+dl $7E0202 : db $01 : db $01 ; Selected menu item
+dl $7E0303 : db $01 : db $03 ; Selected menu item
 .after
 
 sram_ad_gtower_entrance:

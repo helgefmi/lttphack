@@ -2,82 +2,68 @@ lorom
 
 !FEATURE_HUD ?= 1
 !FEATURE_SD2SNES ?= 1
-!VERSION = "11 ALPHA 1"
+!VERSION ?= "ALEPH 1"
 
 incsrc defines.asm
 incsrc hexedits.asm
 
-!ORG = $208000
+org $A08000
 incsrc gamemode.asm
-warnpc $208FFF
+incsrc nmi.asm
+incsrc timers.asm
+incsrc hudextras.asm
 
 if !FEATURE_HUD
-    !ORG = $218000
-    incsrc hud.asm
-    warnpc $21BFFF
+	incsrc hud.asm
 endif
 
-!ORG = $21C000
-incsrc nmi.asm
-warnpc $21FFFF
-
-!ORG = $228000
-incsrc draw.asm
-warnpc $22BFFF
-
-!ORG = $22C000
+org $A28000
 incsrc tiles.asm
-warnpc $22FFFF
 
-!ORG = $238000
+org $A38000
 incsrc init.asm
-warnpc $23CFFF
-
-!ORG = $23C000
 incsrc rng.asm
-warnpc $23DFFF
-
-!ORG = $23E000
+incsrc misc.asm
 incsrc idle.asm
-warnpc $23FFFF
+incsrc glitchedwindow.asm
+incsrc ancillawindow.asm
 
-!ORG = $248000
+org $A48000
 incsrc custom_menu.asm
-warnpc $24FFFF
+print "Custom menu size: ", pc
 
-!ORG = $258000
+org $A68000
 incsrc presets.asm
-warnpc $25FFFF
 
-!ORG = $268000
+org $A78000
 incsrc poverty_states.asm
-warnpc $26FFFF
 
-!ORG = $278000
+org $A88000
 incsrc music.asm
-warnpc $27FFFF
 
-!ORG = $288000
+org $A98000
 incsrc movie.asm
-warnpc $28FFFF
 
 ; ---- data ----
 
-!ORG = $308000
+org $B08000
 incsrc preset_data_nmg.asm
-warnpc $30FFFF
 
-!ORG = $318000
+org $B18000
 incsrc preset_data_hundo.asm
-warnpc $31FFFF
 
-!ORG = $328000
-incsrc preset_data_low.asm
-warnpc $32FFFF
+org $B28000
+incsrc preset_data_lowleg.asm
 
-!ORG = $338000
+org $B38000
 incsrc preset_data_ad.asm
-warnpc $33FFFF
+
+org $B48000
+incsrc preset_data_anyrmg.asm
+incsrc preset_data_ad2020.asm
+
+org $B58000
+incsrc preset_data_lownmg.asm
 
 org !SPC_DATA_OVERWORLD
 incbin ../resources/spc_overworld.bin
@@ -87,6 +73,13 @@ incbin ../resources/spc_underworld.bin
 
 org !SPC_DATA_CREDITS
 incbin ../resources/spc_credits.bin
+
+;========================================================================
+; LEAVE THIS HERE
+; it's needed for calculating when certain data comes from a possibly
+; non-vanilla source, which requires knowing the last bank we write to
+;========================================================================
+EndOfPracticeROM:
 
 ; pad rom to 2mb
 org $3FFFFF
