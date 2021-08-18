@@ -102,6 +102,7 @@ macro MenuAction(name, args, icon)
 	if greaterequal(!COMMAND_ID,!NUMBER_OF_COMMANDS)
 		error "Too many commands\! !COMMAND_ID >= !NUMBER_OF_COMMANDS"
 	endif
+
 	org ActionLengths+!COMMAND_ID : db <args> ; includes the ID byte
 	org ActionIcons+!COMMAND_ID : db <icon>
 	org ActionDoRoutines+(2*!COMMAND_ID) : dw CMDO_<name>
@@ -133,10 +134,22 @@ macro preset(type, name, category, segment, scene)
 	db "<name>", $FF
 
 #presetdata_<category>_<segment>_<scene>:
-	dw presetpersistent_<category>_<segment>
-	dw presetpersistent_<category>_<segment>_<scene>
+	dw presetpersistent_<category>_<segment>_<scene>_end
 	dw presetSRAM_<category>_<segment>_<scene>_end
 endmacro
+
+macro existing_preset(category, segment, scene)
+	%add_menu_item(presetmenu_<category>_<segment>_<scene>)
+endmacro
+
+;---------------------------------------------------------------------------------------------------
+%MenuAction("LABEL", 1, $2F)
+macro label(name)
+	%add_self()
+	db !CM_LABEL
+	db "<name>", $FF
+endmacro
+
 ;---------------------------------------------------------------------------------------------------
 %MenuAction("TOGGLE", 3, $6B)
 macro toggle(name, addr)

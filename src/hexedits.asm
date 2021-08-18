@@ -68,13 +68,7 @@ pulltable
 org $0CDB79
 	CPX #$0A00 ; Checks if the player saved in third space.
 	SKIP 2 ; There's a BNE I didn't wanna touch here.
-	NOP : NOP : NOP : NOP   ; AF F8 83 00   LDA.l $0083F8
-	NOP : NOP : NOP         ; 29 FF 00      AND #$00FF
-	NOP : NOP : NOP         ; C9 60 00      CMP #$0060
-	NOP : NOP               ; F0 21         BEQ $0CDC49
-	NOP : NOP : NOP : NOP   ; AF D9 03 70   LDA $7003D9
-	NOP : NOP : NOP         ; C9 01 00      CMP #$0001
-	NOP : NOP               ; D0 18         BNE $0CDC49
+	JMP.w $0CD893
 
 macro what_item_is_this()
 	fillword !BLANK_TILE : fill 16
@@ -83,36 +77,33 @@ macro what_item_is_this()
 	fillword !BLANK_TILE : fill 4
 endmacro
 
+!MENU_D = $A482
+!MENU_O = $A483
+!QMARKW = $252F
+
 org $0DE876 ; Japanese "PENDANTS" text
-	dw !BLANK_TILE, !BLANK_TILE, !BLANK_TILE, !BLANK_TILE, !BLANK_TILE
+	dw !MENU_D, !MENU_O, !MENU_D, !MENU_O, !QMARKW
 
 org $0DE92A ; Japanese "CRYSTALS" text
-	dw !BLANK_TILE, !BLANK_TILE, !BLANK_TILE, !BLANK_TILE, !BLANK_TILE
+	dw !MENU_D, !MENU_O, !QMARKW, !MENU_D, !MENU_O
 
 org $0DF1C9
 	rep 36 : %what_item_is_this()
 
 ; these clean up the messy menu tiles in the DO section
-!MENU_D = $2482
-!MENU_O = $2483
-!QMARKW = $252F
-org $0DF96B
-	dw !BLANK_TILE
 
+; Lift texts (leave the number)
 org $0DF951
 	fillword !BLANK_TILE : fill 12
-	dw !MENU_D, !MENU_O, !MENU_D, !MENU_O
-	;fillword !QMARK : fill 8
+	dw $A8D7, !MENU_D, !MENU_O
 
 org $0DF965
 	fillword !BLANK_TILE : fill 12
-	dw !MENU_D, !MENU_O, !MENU_D, !MENU_O
-	;fillword !QMARK : fill 8
+	dw $A8D7, !MENU_D, !MENU_O
 
 org $0DF979
 	fillword !BLANK_TILE : fill 12
-	dw !MENU_D, !MENU_O, !MENU_D, !MENU_O
-	;fillword !QMARK : fill 8
+	dw $A8D7, !MENU_D, !MENU_O
 
 org $0DF99B
 	dw !MENU_D, !MENU_O
@@ -143,6 +134,7 @@ org $0DFA11
 
 org $0DF829 ; boots location moved
 	dw $3521, $3522, $3523, $3524
+
 
 ;===================================================================================================
 

@@ -2,15 +2,12 @@ EQUIPMENT_SUBMENU:
 %menu_header("EQUIPMENT", 19)
 
 ;===================================================================================================
-%numfield_long("Magic", !ram_equipment_magic_meter, 0, $80, 8)
-
-;===================================================================================================
-%numfield_long_func_prgtext("HP", !ram_equipment_curhp, 0, $A0, 8, this, cm_draw_hp)
-	LDA.l !ram_equipment_curhp
-	CMP.l !ram_equipment_maxhp
+%numfield_long_func_prgtext("Health", $7EF36D, 0, $A0, 8, this, cm_draw_hp)
+	LDA.l $7EF36D
+	CMP.l $7EF36C
 	BCC ..not_max
 
-	LDA.l !ram_equipment_maxhp
+	LDA.l $7EF36C
 	BRA ..set
 
 ..not_max
@@ -22,7 +19,7 @@ EQUIPMENT_SUBMENU:
 	AND.b #$F8
 
 ..set
-	STA.l !ram_equipment_curhp
+	STA.l $7EF36D
 	RTL
 
 #cm_draw_hp:
@@ -43,8 +40,11 @@ EQUIPMENT_SUBMENU:
 %numfield_func("Max HP", SA1RAM.cm_equipment_maxhp, 3, 20, 5, this)
 	LDA.w SA1RAM.cm_equipment_maxhp
 	ASL #3
-	STA.l !ram_equipment_maxhp
+	STA.l $7EF36C
 	RTL
+
+;===================================================================================================
+%numfield_long("Magic", $7EF36E, 0, $80, 8)
 
 ;===================================================================================================
 %func("Fill rupees", this)
@@ -58,7 +58,7 @@ EQUIPMENT_SUBMENU:
 %func_filtered("Fill everything", gamemode_fill_everything)
 
 ;===================================================================================================
-%choice_long_func_filtered_here("Sword", !ram_equipment_sword, 5, set_sword)
+%choice_long_func_filtered_here("Sword", $7EF359, 5, set_sword)
 	%list_item("No")
 	%list_item("Fighter")
 	%list_item("Master")
@@ -70,7 +70,7 @@ EQUIPMENT_SUBMENU:
 	JML Palette_Sword
 
 ;===================================================================================================
-%choice_long_func_filtered_here("Shield", !ram_equipment_shield, 4, set_shield)
+%choice_long_func_filtered_here("Shield", $7EF35A, 4, set_shield)
 	%list_item("No")
 	%list_item("Fighter")
 	%list_item("Red")
@@ -81,72 +81,83 @@ EQUIPMENT_SUBMENU:
 	JML Palette_Shield
 
 ;===================================================================================================
-%choice_long_func_filtered_here("Armor", !ram_equipment_armor, 3, Palette_Armor)
+%choice_long_func_filtered_here("Armor", $7EF35B, 3, Palette_Armor)
 	%list_item("Green")
 	%list_item("Blue")
 	%list_item("Red")
 
 ;===================================================================================================
-%choice_long_func_filtered_here("Gloves", !ram_equipment_gloves, 3, Palette_Armor)
+%choice_long_func_filtered_here("Gloves", $7EF354, 3, Palette_Armor)
 	%list_item("Bare hands")
 	%list_item("Power glove")
 	%list_item("Titan's mitt")
 
 ;===================================================================================================
-%toggle_long_func("Boots", !ram_equipment_boots, this)
+%toggle_long_func("Boots", $7EF355, this)
+	LDA.l $7EF355
 	LSR
-	LDA.l !ram_capabilities
+
+	LDA.l $7EF379
 	AND.b #$FB
 	BCC ++
+
 	ORA.b #$04
-++	STA.l !ram_capabilities
+
+++	STA.l $7EF379
+
 	RTL
 
 ;===================================================================================================
-%toggle_long_func("Flippers", !ram_equipment_flippers, this)
+%toggle_long_func("Flippers", $7EF356, this)
+	LDA.l $7EF356
 	LSR
-	LDA.l !ram_capabilities
+
+	LDA.l $7EF379
 	AND.b #$FD
 	BCC ++
+
 	ORA.b #$02
-++	STA.l !ram_capabilities
+++	STA.l $7EF379
+
 	RTL
 
 ;===================================================================================================
-%toggle_long("Moon pearl", !ram_equipment_moon_pearl)
+%toggle_long("Moon pearl", $7EF357)
 
 ;===================================================================================================
-%toggle_long("Half magic", !ram_equipment_half_magic)
+%toggle_long("Half magic", $7EF37B)
 
 ;===================================================================================================
-%numfield_long("Heart pieces", $7EF36B, 0, 3, 1)
+%numfield_long_2digits("Heart pieces", $7EF36B, 0, 3, 1)
 
 ;===================================================================================================
 %add_menu_item(BOMBS_SETTER)
-%numfield_long_2digits("Arrows", !ram_equipment_arrows_filler, 0, 50, 5)
-%numfield_long("Keys", !ram_equipment_keys, 0, 9, 1)
+%numfield_long_2digits("Arrows", $7EF377, 0, 50, 5)
+%numfield_long_2digits("Keys", $7EF36F, 0, 9, 1)
 
 ;===================================================================================================
 %submenu("Big keys", BIG_KEYS_SUBMENU)
+
+;===================================================================================================
 %submenu("Small keys", SMALL_KEYS_SUBMENU)
 
 ;===================================================================================================
 BIG_KEYS_SUBMENU:
 %menu_header("BIG KEYS", 14)
-	%toggle_bit_long("Sewers", !ram_game_big_keys_2, 7)
-	%toggle_bit_long("Hyrule Castle", !ram_game_big_keys_2, 6)
-	%toggle_bit_long("Eastern", !ram_game_big_keys_2, 5)
-	%toggle_bit_long("Desert", !ram_game_big_keys_2, 4)
-	%toggle_bit_long("ATower", !ram_game_big_keys_2, 3)
-	%toggle_bit_long("Swamp", !ram_game_big_keys_2, 2)
-	%toggle_bit_long("Darkness", !ram_game_big_keys_2, 1)
-	%toggle_bit_long("Mire", !ram_game_big_keys_2, 0)
-	%toggle_bit_long("Skull", !ram_game_big_keys_1, 7)
-	%toggle_bit_long("Ice", !ram_game_big_keys_1, 6)
-	%toggle_bit_long("Hera", !ram_game_big_keys_1, 5)
-	%toggle_bit_long("Thieves", !ram_game_big_keys_1, 4)
-	%toggle_bit_long("Turtle Rock", !ram_game_big_keys_1, 3)
-	%toggle_bit_long("GTower", !ram_game_big_keys_1, 2)
+	%toggle_bit_long("Sewers", $7EF367, 7)
+	%toggle_bit_long("Hyrule Castle", $7EF367, 6)
+	%toggle_bit_long("Eastern", $7EF367, 5)
+	%toggle_bit_long("Desert", $7EF367, 4)
+	%toggle_bit_long("Hera", $7EF366, 5)
+	%toggle_bit_long("ATower", $7EF367, 3)
+	%toggle_bit_long("Darkness", $7EF367, 1)
+	%toggle_bit_long("Swamp", $7EF367, 2)
+	%toggle_bit_long("Skull", $7EF366, 7)
+	%toggle_bit_long("Thieves", $7EF366, 4)
+	%toggle_bit_long("Mire", $7EF367, 0)
+	%toggle_bit_long("Ice", $7EF366, 6)
+	%toggle_bit_long("Turtle Rock", $7EF366, 3)
+	%toggle_bit_long("GTower", $7EF366, 2)
 
 ;===================================================================================================
 SMALL_KEYS_SUBMENU:
@@ -157,10 +168,10 @@ SMALL_KEYS_SUBMENU:
 	%numfield_long("Hera", $7EF386, 0, 9, 1)
 	%numfield_long("ATower", $7EF380, 0, 9, 1)
 	%numfield_long("Darkness", $7EF382, 0, 9, 1)
-	%numfield_long("Thieves", $7EF387, 0, 9, 1)
-	%numfield_long("Skull", $7EF384, 0, 9, 1)
-	%numfield_long("Ice", $7EF385, 0, 9, 1)
 	%numfield_long("Swamp", $7EF381, 0, 9, 1)
+	%numfield_long("Skull", $7EF384, 0, 9, 1)
+	%numfield_long("Thieves", $7EF387, 0, 9, 1)
+	%numfield_long("Ice", $7EF385, 0, 9, 1)
 	%numfield_long("Mire", $7EF383, 0, 9, 1)
 	%numfield_long("Turtle Rock", $7EF388, 0, 9, 1)
 	%numfield_long("GTower", $7EF389, 0, 9, 1)

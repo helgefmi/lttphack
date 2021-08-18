@@ -1,9 +1,32 @@
+EmptyEntireMenu:
+	REP #$20
+	SEP #$10
+	LDX.b #$00
+
+	LDA.w #$002F
+
+.loop
+	STA.w SA1RAM.MENU+$0000,X : STA.w SA1RAM.MENU+$0080,X
+	STA.w SA1RAM.MENU+$0100,X : STA.w SA1RAM.MENU+$0180,X
+	STA.w SA1RAM.MENU+$0200,X : STA.w SA1RAM.MENU+$0280,X
+	STA.w SA1RAM.MENU+$0300,X : STA.w SA1RAM.MENU+$0380,X
+	STA.w SA1RAM.MENU+$0400,X : STA.w SA1RAM.MENU+$0480,X
+	STA.w SA1RAM.MENU+$0500,X : STA.w SA1RAM.MENU+$0580,X
+	STA.w SA1RAM.MENU+$0600,X : STA.w SA1RAM.MENU+$0680,X
+	STA.w SA1RAM.MENU+$0700,X : STA.w SA1RAM.MENU+$0780,X
+
+	INX
+	INX
+	BPL .loop
+
+	RTS
+
 EmptyCurrentMenu:
 	REP #$30
 
 	LDY.w #0
 
-	; clean every row listed
+	; clean every row
 .nextclean
 	LDA.b [SA1IRAM.cm_current_menu],Y
 	BPL .doneclean ; if we hit a 0, we're done
@@ -13,29 +36,30 @@ EmptyCurrentMenu:
 	INY
 	BRA .nextclean
 
-.donedraw
 .doneclean
-	RTS
+--	RTS
 
-#DrawCurrentMenu:
+;===================================================================================================
+
+DrawCurrentMenu:
 	REP #$30
 	LDY.w #0
 
 .nextdraw
 	LDA.b [SA1IRAM.cm_current_menu],Y
-	BPL .donedraw
+	BPL --
 
 	JSR DrawCurrentRow
 	INY
 	INY
 	BRA .nextdraw
 
+;===================================================================================================
 
 EmptyCurrentRow:
 	JSR CM_YRowToXOffset
 
-	LDA.w #$0000
-	STA.b SA1IRAM.cm_draw_color
+	STZ.b SA1IRAM.cm_draw_color
 	BRA .next_clean
 
 .from_here_to_end
@@ -57,6 +81,8 @@ EmptyCurrentRow:
 	JSR .from_here_to_end
 	RTL
 
+;===================================================================================================
+
 CM_YRowToXOffset:
 	TYA
 	LSR
@@ -73,6 +99,8 @@ CM_YRowToXOffset:
 	TAX
 	RTS
 
+;===================================================================================================
+
 ; in this case,Y holds the cursor index, not the message index
 DrawCurrentRow_ShiftY:
 	SEP #$10 ; clear top of Y, just in case
@@ -81,6 +109,8 @@ DrawCurrentRow_ShiftY:
 	INC
 	ASL
 	TAY
+
+;===================================================================================================
 
 ; Y = index into thing where 0 = header
 DrawCurrentRow:
@@ -223,6 +253,7 @@ DrawCurrentRow:
 
 
 ;===================================================================================================
+
 CMDRAW_SAVE_ADDRESS_LONG:
 	JSR .continue
 
@@ -242,6 +273,7 @@ CMDRAW_SAVE_ADDRESS_LONG:
 	INY
 
 	STA.b SA1IRAM.cm_writer+0
+
 	LDA.w #$0000 ; clear top byte to be nice
 
 	SEP #$20
@@ -250,6 +282,7 @@ CMDRAW_SAVE_ADDRESS_LONG:
 ;===================================================================================================
 ; This routine hinges on stack for program bank
 ; No JMLs allowed
+;===================================================================================================
 CMDRAW_WORD_LONG_LONG:
 	PEA.w .return-1 ; so it will pull everything we push then return here
 
@@ -269,6 +302,8 @@ CMDRAW_WORD_LONG_LONG:
 .return
 	RTL
 
+;===================================================================================================
+
 CMDRAW_WORD_LONG:
 	PHP
 	REP #$30
@@ -283,6 +318,8 @@ CMDRAW_WORD_LONG:
 
 	REP #$20
 	BRA CMDRAW_WORD_START
+
+;===================================================================================================
 
 CMDRAW_WORD:
 	PHP
@@ -317,6 +354,8 @@ CMDRAW_WORD_START:
 	PLY
 	PLP
 	RTS
+
+;===================================================================================================
 
 CMDRAW_RANDOM:
 	REP #$20
@@ -369,7 +408,9 @@ CMDRAW_ONOFF:
 	%list_item("Off")
 	%list_item("On")
 
-; TODO 3 digits for room ID
+;===================================================================================================
+
+; TODO 3 digits for room ID?
 CMDRAW_NUMFIELD_HEX_UPDATEWHOLEMENU:
 
 CMDRAW_HEX_2_DIGITS:
@@ -430,6 +471,8 @@ CMDRAW_HEX:
 	PLP
 	RTL
 
+;===================================================================================================
+
 CMDRAW_1_CHARACTER:
 	PHP
 	REP #$20
@@ -444,6 +487,7 @@ CMDRAW_1_CHARACTER:
 	RTL
 
 ;===================================================================================================
+
 CMDRAW_TOGGLE_BIT0:
 	LDA.b #$1<<0 : BRA CMDRAW_CHECK_BIT_LOCAL
 
@@ -606,8 +650,8 @@ CMDRAW_TOGGLE_BIT0_LONG_CUSTOMTEXT:
 	LDA.b #$1<<0 : BRA CMDRAW_CHECK_BIT_LONG_CUSTOMTEXT
 
 ;===================================================================================================
+; TODO ?
 CMDRAW_TOGGLE_ROOMFLAG:
-
 	LDA.b [SA1IRAM.cm_current_draw],Y
 	ASL
 	TAY
@@ -619,15 +663,15 @@ CMDRAW_TOGGLE_ROOMFLAG:
 
 	PLX
 
-	LDY.w #'0'
+	AND.w .bits,Y : PHP
 
-	AND.w .bits,Y
-	BEQ ++
+	LDA.w #'0'
 
-	LDY.w #'1'
+	PLP : BEQ ++
 
-++	TYA
-	JSL CMDRAW_1_CHARACTER
+	LDA.w #'1'
+
+++	JSL CMDRAW_1_CHARACTER
 	RTS
 
 .bits
@@ -649,6 +693,7 @@ CMDRAW_TOGGLE_ROOMFLAG:
 	dw 1<<15
 
 ;===================================================================================================
+
 CMDRAW_NUMFIELD_LONG_2DIGITS: ; so bombs and arrows align better
 	DEX
 	DEX
@@ -709,6 +754,8 @@ CMDRAW_NUMBER_DEC:
 
 	RTS
 
+;===================================================================================================
+
 CMDRAW_NUMFIELD_LONG_HEX:
 CMDRAW_NUMFIELD_LONG_FUNC_HEX:
 	JSR CMDRAW_SAVE_ADDRESS_LONG
@@ -723,6 +770,8 @@ CMDRAW_NUMFIELD_LONG_FUNC_HEX:
 	LDA.b [SA1IRAM.cm_writer]
 	JSL CMDRAW_HEX_2_DIGITS
 	RTS
+
+;===================================================================================================
 
 CMDRAW_HEX_TO_DEC:
 	PHX
@@ -740,7 +789,6 @@ CMDRAW_HEX_TO_DEC:
 	SEP #$20
 	ROL.b SA1IRAM.cm_writer+0 ; put carry in bit 0 for 10s place
 
-.tiny_number
 	STA.b SA1IRAM.cm_writer+1
 
 	LDA.l hex_to_dec_fast_table,X
@@ -755,6 +803,8 @@ CMDRAW_HEX_TO_DEC:
 
 	PLX
 	RTS
+
+;===================================================================================================
 
 CMDRAW_NUMFIELD_DEC_FROM_FUNC:
 	PHB
@@ -775,6 +825,7 @@ CMDRAW_NUMFIELD_DEC_FROM_FUNC:
 	PLB
 	RTL
 
+;===================================================================================================
 
 CMDRAW_CTRL_SHORTCUT_FINAL:
 	JSR CMDRAW_SAVE_ADDRESS_LONG
@@ -814,6 +865,8 @@ CMDRAW_CTRL_SHORTCUT_FINAL:
 
 	RTS
 
+;===================================================================================================
+
 CMDRAW_NUMFIELD_FUNC_PRGTEXT:
 	JSR CMDRAW_SAVE_ADDRESS_00
 	LDY.w #9
@@ -852,8 +905,11 @@ CMDRAW_PRGTEXT:
 .return
 	RTS
 
+;===================================================================================================
+
 ; All of these just empty the rest of the row
 CMDRAW_HEADER:
+CMDRAW_LABEL:
 CMDRAW_PRESET_UW:
 CMDRAW_PRESET_OW:
 CMDRAW_SUBMENU:
@@ -861,6 +917,8 @@ CMDRAW_SUBMENU_VARIABLE:
 CMDRAW_FUNC:
 CMDRAW_FUNC_FILTERED:
 	RTS
+
+;===================================================================================================
 
 CMDRAW_CHOICE:
 CMDRAW_CHOICE_FUNC:
@@ -895,4 +953,3 @@ CMDRAW_CHOICE_FUNC:
 	LDA.b [SA1IRAM.cm_writer],Y
 
 	JMP CMDRAW_WORD_LONG
-

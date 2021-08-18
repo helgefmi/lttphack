@@ -24,8 +24,6 @@ struct SA1IRAM $003000
 	.cm_current_menu: skip 4
 	.cm_current_selection: skip 4
 	.cm_current_draw: skip 4
-	.cm_select_address: skip 4
-	.cm_select_params:
 	.cm_draw_color: skip 2
 
 	; these can be shared because they're never used at the same time
@@ -109,20 +107,15 @@ struct SA1IRAM $003000
 	.CopyOf_A4: skip 1
 	.CopyOf_A5: skip 1
 	.CopyOf_B0: skip 1
-	.CopyOf_E2: skip 1
-	.CopyOf_E3: skip 1
-	.CopyOf_E8: skip 1
-	.CopyOf_E9: skip 1
+	.CopyOf_E2: skip 2
+	.CopyOf_E8: skip 2
 
 	.CopyOf_04A0: skip 1
 	.CopyOf_04B4: skip 1
 
-	.CopyOf_02A2: skip 1
-	.CopyOf_02FA: skip 1
-
-	.CopyOf_7EC011: skip 1
 	.CopyOf_7EF36C: skip 1
 	.CopyOf_7EF36D: skip 1
+	.CopyOf_7EF3CA: skip 1
 
 	; not copied, but just moved in rom
 	.Moved_0208: skip 1
@@ -146,75 +139,12 @@ struct SA1IRAM $003000
 	.LINE3VAL: skip 16
 	.LINE4VAL: skip 16
 
-	.CopyOf_03A4: skip 1
-	.CopyOf_0C4A: skip 10
-	.CopyOf_0C5E: skip 10
 
-	.CopyOf_0BFA: skip 10
-	.CopyOf_0C04: skip 10
-	.CopyOf_0C0E: skip 10
-	.CopyOf_0C18: skip 10
-
-	; dg watch
-	.CopyOf_A6: skip 1
-	.CopyOf_A7: skip 1
-	.CopyOf_A8: skip 1
-	.CopyOf_A9: skip 1
-	.CopyOf_AA: skip 1
-
-	.CopyOf_0400: skip 1
-	.CopyOf_0401: skip 1
-	.CopyOf_0402: skip 1
-	.CopyOf_0403: skip 1
-	.CopyOf_0408: skip 1
-	.CopyOf_040A: skip 1
-	.CopyOf_040C: skip 1
-	.CopyOf_04BA: skip 1
-	.CopyOf_04BB: skip 1
-
-
-	.CopyOf_068E: skip 1
-	.CopyOf_068F: skip 1
-	.CopyOf_0690: skip 1
-	.CopyOf_0691: skip 1
-
-	.CopyOf_0600: skip 1
-	.CopyOf_0601: skip 1
-	.CopyOf_0602: skip 1
-	.CopyOf_0603: skip 1
-	.CopyOf_0604: skip 1
-	.CopyOf_0605: skip 1
-	.CopyOf_0606: skip 1
-	.CopyOf_0607: skip 1
-	.CopyOf_0608: skip 1
-	.CopyOf_0609: skip 1
-	.CopyOf_060A: skip 1
-	.CopyOf_060B: skip 1
-	.CopyOf_060C: skip 1
-	.CopyOf_060D: skip 1
-	.CopyOf_060E: skip 1
-	.CopyOf_060F: skip 1
-	.CopyOf_0610: skip 1
-	.CopyOf_0611: skip 1
-	.CopyOf_0612: skip 1
-	.CopyOf_0613: skip 1
-	.CopyOf_0614: skip 1
-	.CopyOf_0615: skip 1
-	.CopyOf_0616: skip 1
-	.CopyOf_0617: skip 1
-	.CopyOf_0618: skip 1
-	.CopyOf_0619: skip 1
-	.CopyOf_061A: skip 1
-	.CopyOf_061B: skip 1
-	.CopyOf_061C: skip 1
-	.CopyOf_061D: skip 1
-	.CopyOf_061E: skip 1
-	.CopyOf_061F: skip 1
 
 	print "SA1 mirroring: $", pc
 endstruct
 
-;==============================================================================
+;===================================================================================================
 
 org $00F7E1
 SA1Reset00:
@@ -262,6 +192,9 @@ incsrc sa1hud.asm
 incsrc sa1sram.asm
 
 pullpc
+
+;===================================================================================================
+
 SNES_CORRUPTION_IRQ:
 	SEP #$20 ; we don't need to preserve A, so it's fine
 	LDA.b #$80 : STA.l $2202 ; acknowledge IRQ
@@ -357,7 +290,6 @@ WasteTimeIfNeeded:
 	JML $008034
 
 ; TODO arbitrary transfers with jump table?
-; add mirror portal coords once arbitrary # of transfers implemented
 CacheSA1Stuff:
 	REP #$30 ; 16 bit first
 	PHD
@@ -384,10 +316,9 @@ CacheSA1Stuff:
 	SEP #$30
 	LDA.w $006C : STA.b SA1IRAM.CopyOf_6C
 	LDA.w $00B0 : STA.b SA1IRAM.CopyOf_B0
-	LDA.w $02FA : STA.b SA1IRAM.CopyOf_02FA
 	LDA.w $04A0 : STA.b SA1IRAM.CopyOf_04A0
 	LDA.w $04B4 : STA.b SA1IRAM.CopyOf_04B4
-	LDA.l $7EC011 : STA.b SA1IRAM.CopyOf_7EC011
+	LDA.l $7EF3CA : STA.b SA1IRAM.CopyOf_7EF3CA
 
 	INC.b SA1IRAM.CachedThisFrame ; flag this
 
@@ -396,6 +327,7 @@ CacheSA1Stuff:
 
 Extra_SA1_Transfers:
 	SEP #$30
+
 	LDY.b #$00
 
 .next
@@ -416,6 +348,7 @@ Extra_SA1_Transfers:
 
 	PLP
 	PLY
+
 	INY
 	INY
 	CPY.b #06
@@ -428,9 +361,13 @@ Extra_SA1_Transfers:
 	dw .roomflag
 	dw .camerax
 	dw .cameray
+	dw .owtran
+	dw .owtran
 	dw .ancilla04
 	dw .ancilla59
 	dw .ancillaIX
+
+.owtran
 
 .nothing
 	RTS
@@ -458,12 +395,13 @@ Extra_SA1_Transfers:
 	LDA.b $A7 : STA.w SA1IRAM.LINEVAL+0,Y
 
 	REP #$20
-	LDA.b $E2 : STA.w SA1IRAM.LINEVAL+1,Y
+	LDA.b $E8 : STA.w SA1IRAM.LINEVAL+1,Y
 
 	LDA.w $0600 : STA.w SA1IRAM.LINEVAL+3,Y
 	LDA.w $0604 : STA.w SA1IRAM.LINEVAL+5,Y
 	LDA.w $0602 : STA.w SA1IRAM.LINEVAL+7,Y
 	LDA.w $0606 : STA.w SA1IRAM.LINEVAL+9,Y
+
 	RTS
 
 .ancilla04
@@ -694,6 +632,8 @@ SA1NMI:
 	STA.w $2209
 	RTS
 
+;---------------------------------------------------------------------------------------------------
+
 SA1NMI_COUNTERS:
 	SED
 
@@ -778,6 +718,8 @@ SA1NMI_COUNTERS:
 
 .donothing
 ++	RTS
+
+;---------------------------------------------------------------------------------------------------
 
 ; For everything not a timer
 SA1IRQ:

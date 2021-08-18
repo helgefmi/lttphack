@@ -11,7 +11,7 @@ SHORTCUTS_SUBMENU:
 	%ctrl_shortcut("Toggle switch", !ram_ctrl_toggle_switch)
 	%ctrl_shortcut("Fill everything", !ram_ctrl_fill_everything)
 	%ctrl_shortcut("VRAM repair", !ram_ctrl_fix_vram)
-	%ctrl_shortcut("Show somaria pits", !ram_ctrl_somaria_pits)
+	%ctrl_shortcut("Mark all pits", !ram_ctrl_somaria_pits)
 
 ;===================================================================================================
 DoShortCuts:
@@ -137,12 +137,6 @@ check_mode_safety:
 	SEP #$20
 	LDA.b (SA1IRAM.SCRATCH),Y ; get safety level of submodule
 	STA.b SA1IRAM.SCRATCH ; put it in $00
-	LDY.b SA1IRAM.CopyOf_7EC011 : BEQ .safe ; check mosaics
-
-	LDA.b #!SOME_SAFE ; not safe
-	RTS
-
-.safe
 	BIT.b SA1IRAM.SCRATCH ; bit test to set NVZ
 	RTS
 

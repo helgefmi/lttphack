@@ -12,7 +12,7 @@
             "options": [
                 { "id": "current", "name": "Latest (SA-1)" },
                 { "id": "rando", "name": "Randomizer (SA-1)" },
-                { "id": "old", "name": "v13.5.0"}
+                { "id": "old", "name": "v13.6.0 (Old)"}
             ]
         },
     ],

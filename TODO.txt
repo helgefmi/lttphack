@@ -9,33 +9,24 @@ Room tab:
 	show flags
 	"Load room"
 	new menu chars for improved flag viewing?
-
+	options for:
+		Peg state: current, red, blue
+		Kill sprites
+		Open shutter doors
+		Keep world state
+		Plaid world?
 
 aga 2 rng
 	lui: agah2 submenu -> set positions for each of the agahs for cycles 1, 2, 3 and 4+
 
-- Z coordinate option?
-
-- Music always mutes
-
-- "if you start a preset from first SW preset and play out the whole dungeon, you sometimes end up with a small key [before] bomb jump"
-
-- ad khold preset is hard to move around in
-
 Other stuff
 ------------
-
-- multiple rng support?
 
 - deadrock rng control?
 
 - Preset for double reddies
 
 - Show cycle counter for Agahnim 2
-
-- Feature: Disable text? Like rando.
-
-- Faster travel speed via shortcut
 
 - Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances the game one frame. Would be good for clip learning. Maybe stop timer during this.
 
@@ -44,10 +35,6 @@ Other stuff
 - Room frame counts that show frame-pixel movement tallies. Would basically be to contrast how many nudge/slowdown/movement frames were lost that is pulled away from room overall time count and lag frames.
 
 - Active movement speed counter. Like the above kinda but shows real time how fast you're going. Would help for things like understanding swim speeds or hidden bastard/rail type deals.
-
-Low priority
--------------
-- TT palette transparency problems: JSL.l $02FD68 sets to not transparent
 
 ======== MINIGAMES TODO ========
 

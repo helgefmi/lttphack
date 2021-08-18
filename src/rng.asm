@@ -124,7 +124,7 @@ rng_pokey_hook:
 	BRA .done
 
 .random
-	JSL RandomNumGen : AND #$03 : TAY
+	JSL GetRandomInt : AND #$03 : TAY
 	LDA.w tbl_real_pokey_x,Y : STA $0D50,X
 	LDA.w tbl_real_pokey_y,Y : STA $0D40,X
 
@@ -186,7 +186,7 @@ rng_arrghus:
 
 ; In the middle for best access
 JML_to_RNG:
-	JML RandomNumGen
+	JML GetRandomInt
 
 ; == Turtles ==
 

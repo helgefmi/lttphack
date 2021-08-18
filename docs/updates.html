@@ -1,7 +1,138 @@
 ---
 layout: practicehack
-title: LTTPHack - A Practice ROM for ALttP Runners
+title: LTTPHack - A Practice ROM for ALttP
 ---
+
+<h2>Latest update</h2>
+
+<h3 id="v14"><a href="https://github.com/spannerisms/lttphack/releases/tag/14.0.0">v14.0.0</a> <span class="releaseDate"></span></h3>
+
+<h4>Changes</h4>
+<ul class="changes">
+	<li>Y-Items:
+		<ul>
+			<li>Unraveled the child and shoved it into its parent. The child being the bottle submenu.</li>
+		</ul>
+	</li>
+	<li>Equipment:
+		<ul>
+			<li>Removed the Fill HP and Fill Magic options and replaced with with numfields.</li>
+			<li>Max arrows is now 50</li>
+			<li>Added a small key editor</li>
+		</ul>
+	</li>
+	<li>Game state:
+		<ul>
+			<li>Follower option</li>
+			<li>Removed crystal switch color in lieu of the shortcut (it was causing problems).</li>
+			<li>Removed the room reset function, as it didn't work quite right.</li>
+			<li>Added some more progress bits to the game flag submenu.</li>
+		</ul>
+	</li>
+	<li>HUD extras:
+		<ul>
+			<li>Vanilla hearts is now here for those who want it for whatever reason.</li>
+			<li>Added "Classic Gray" input display.</li>
+			<li>Condensed the timers and RAM watches into a single system.</li>
+			<li>Replaced super watches with line counters and expanded their functionality.</li>
+			<li>Enemy HP has been replaced with a "Boss HP" watch and now only looks at the sprite in slot 0.</li>
+			<li>Added some more RAM watches:
+				<ul>
+					<li>Room ID</li>
+					<li>Quadrant</li>
+					<li>Overworld screen ID</li>
+					<li>Tile prop</li>
+					<li>West somaria timer</li>
+					<li>Ancilla index (no longer found in general ancilla watch)</li>
+					<li>Hookslot (no longer found in general ancilla watch)</li>
+					<li>Pit destination</li>
+					<li>Boss HP (to replace enemy HP)</li>
+					<li>Hover coach (politely stolen from Wulfy83)</li>
+					<li>Overworld transition triggers</li>
+				</ul>
+			</li>
+			<li>The quick warp icon is now gray when you will not quick warp. Also changed the graphics.</li>
+		</ul>
+	</li>
+	<li>Shortcuts:
+		<ul>
+			<li>Setting a shortcut will abort after 1 second of no input.</li>
+			<li>Toggle crystal switch state (only works when you're in control)</li>
+		</ul>
+	</li>
+	<li>Preset config:
+		<ul>
+			<li>Added various safeties, with separate submenus for each category</li>
+			<li>Added "Randomize Ganon Bats" option</li>
+			<li>Added preset loadout override</li>
+			<li>Add Lanmo RTA presets</li>
+		</ul>
+	</li>
+	<li>Configuration:
+		<ul>
+			<li>Added a <i>Crayon Shin-chan</i> font.</li>
+			<li>Added a <i>Super Black Bass 3</i> font.</li>
+			<li>Updated the default font and renamed it from "Normal" to "Shop".</li>
+			<li>Removed the italic and classic fonts.</li>
+			<li>Added a choice for where the menu opens to.</li>
+			<li>Menu colors can now be customized.</li>
+		</ul>
+	</li>
+	<li>Other:
+		<ul>
+			<li>New website design!</li>
+			<li>Completely new backend for menu and presets. Shoutouts to Siriuscord for debugging bad preset data.</li>
+			<li>Pressing select in the practice menu now brings you to the tippy top.</li>
+			<li>Pressing Y in the practice menu now enables options and sets numfields to their max.</li>
+			<li>Created a new "Preset config" menu that includes some new stuff and some old stuff.</li>
+			<li>Practice menu will restore BG3 properties under heavy VRAM corruption (unavoidable utility fix).</li>
+			<li>The higher position for text boxes has been moved down 1 tile to make room for additional HUD features.</li>
+			<li>Safeguards SA-1 for registers against heavy corruption from overlay corruption. Note that this will prevent the practice hack from crashing where the vanilla game would.</li>
+			<li>Removed the intro screens on initial boot. A boss roar will be played for my amusement as memory is initialized.</li>
+			<li>Added a room time trigger for post-Aga castle warp.</li>
+			<li>Added a room time trigger for Ganon death and Triforce door.</li>
+			<li>Changed a few preset names.</li>
+			<li>Created a page detailing the submission process for presets at <a href="presetbuilding">presetbuilding</a>.</li>
+			<li>The 100% NMG presets are too out of date. They will be operational, but fairly inaccurate. A call for a new movie file has been added to its menu.</li>
+			<li>Moved all these updates to this new page. Anyone who asks about new features should contact their local ISP to ban them from this webpage.</li>
+		</ul>
+	</li>
+	<li>Bug fixes:
+		<ul>
+			<li>Accidentally fixed the bug that prevented input display from updating during text.</li>
+		</ul>
+	</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+<h2>Older updates</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.6.0">v13.6.0</a> <span class="releaseDate">9 April 2021</span></h3>
 <ul>
 	<li>Lui fixed music</li>

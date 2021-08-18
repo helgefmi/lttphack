@@ -49,7 +49,6 @@ DoWRAM4BPP:
 	CLC ; bank 7E
 	BRA DoWRAMBig
 
-
 warnpc $1CF3D4
 
 org $0EFCB2
@@ -61,10 +60,16 @@ org $0EFCB2
 
 pullpc
 
+;===================================================================================================
+
 init_hook:
-	SEP #$20
+	SEP #$30
 	LDA.b #$03 : STA.l $002224 ; image 3 for page $60
-	LDA.b #$22 : STA.l $2143
+
+	LDA.l !ram_feature_music : BNE ++
+	JSL mute_music
+
+++	LDA.b #$22 : STA.l $2143 ; BWOOWOOOWOWOOOOOO
 
 	JSL InitSA1
 
@@ -118,7 +123,7 @@ init_hook:
 --	LDA.w $4016 ; if the last bit is on, carry will be set, otherwise, it won't; A is still 1
 	LSR
 	ROL.b $00 : ROL.b $01 ; roll carry from A and then from $00
-	DEY : BNE -- ; decrement
+	DEY : BNE --
 
 	REP #$20
 	LDA.b $00
@@ -132,26 +137,14 @@ init_hook:
 .noforcereset
 	LDA.w !ram_sram_initialized
 	CMP.w #$0030 : BCC .forcereset
-	CMP.w #!SRAM_VERSION : BEQ .sram_initialized
-
-.reinitialize
-	JSR init_initialize
 
 .sram_initialized
-	; Some features probably should be turned off after a reset
 	SEP #$30
 	STZ.w $037F
-	STZ.w !ram_superwatch
-	STZ.w !ram_superwatch+1
-
-	LDA.l !ram_feature_music : BNE .done
-	JSL mute_music
-
 
 ;===================================================================================================
 ; everything is done now
 ; back to the game
-.done
 	JSL $028000
 	JSL $028022
 	JSL $0EF572
@@ -167,51 +160,22 @@ init_hook:
 
 	LDA.b #$01
 	STA.b $10
+	STA.w $04AA
 
 	LDA.b #$81 : STA.w $4200
 
 	JML init_done
 
-;DoTextChars:
-;	SEP #$20
-;	LDA.b #$80
-;	STA.w $2100
-;
-;	REP #$20
-;	LDA.w #$2000
-;	STA.w $4305
-;
-;	LDA.w #TEXTGFX
-;	STA.w $4302
-;
-;	LDA.w #$E000>>1
-;	STA.w $2116
-;
-;	LDA.w #$1801
-;	STA.w $4300
-;
-;	SEP #$30
-;	LDA.b #$80
-;	STA.w $2115
-;
-;	LDA.b #MessagePointers>>16
-;	STA.w $4304
-;
-;	LDA.b #$01
-;	STA.w $420B
-;
-;	RTL
-
 ;===================================================================================================
 
 init_initialize_all:
 	PEA.w VERSIONSTABLE
-	BRA ++
 
-init_initialize:
-	PEA.w VERSIONUNSTABLE
+	SEP #$20
 
-++	REP #$30
+	LDA.b #$1F : STA.w $2143
+
+	REP #$30
 	PLY
 
 	PHB
@@ -233,14 +197,13 @@ init_initialize:
 	BRA .next
 
 .done
+	LDA.w #$FFFF : STA.l SA1RAM.ss_old_music_bank
 	PLB
 	RTS
 
 VERSIONSTABLE:
 	!PERM_INIT
 
-VERSIONUNSTABLE:
-	!TEMP_INIT
 	dw $0000, $0000
 
 WRAMGFX:

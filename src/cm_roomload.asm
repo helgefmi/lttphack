@@ -6,3 +6,7 @@ ROOMLOAD_SUBMENU:
 
 ;===================================================================================================
 
+%func("Load Selected Room", this)
+	REP #$30
+	JSL CM_Exiting
+	JML LoadArbitraryRoom

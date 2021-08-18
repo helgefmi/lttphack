@@ -10,7 +10,9 @@ GAMESTATE_SUBMENU:
 ;===================================================================================================
 %func("Remove sprites", this)
 	SEP #$30
-	LDA #$22 : STA $012F
+
+	LDA.b #$21 : STA.w $012F
+
 	JML Sprite_DisableAll
 
 ;===================================================================================================
@@ -27,7 +29,7 @@ GAMESTATE_SUBMENU:
 
 ;===================================================================================================
 %choice_long_func_here("Follower", $7EF3CC, 15, $00D463)
-	%list_item("Lonely Link")
+	%list_item("None")
 	%list_item("Zelda")
 	%list_item("Garbage")
 	%list_item("Trash")
@@ -44,29 +46,28 @@ GAMESTATE_SUBMENU:
 	%list_item("Sasha text")
 
 ;===================================================================================================
-%toggle_bit_long_customtext_here("World", !ram_gamestate_world, 2)
-	%list_item("Light World")
+%toggle_bit_long_customtext_here("World", $7EF3CA, 6)
 	%list_item("Dark World")
+	%list_item("Light World")
 
 ;===================================================================================================
-%choice_long_here("Progress", !ram_game_progress, 4)
+%choice_long_here("Progress", $7EF3C5, 4)
 	%list_item("Started")
 	%list_item("Uncle")
 	%list_item("Zelda")
 	%list_item("Agahnim")
 
 ;===================================================================================================
-%choice_long_here("Map indicator", !ram_game_map_indicator, 9)
+%choice_long_here("Map indicator", $7EF3C7, 9)
 	%list_item("Castle")
 	%list_item("Kakariko")
 	%list_item("Sahasrahla")
 	%list_item("Pendants")
-	%list_item("MS")
-	%list_item("ATower")
+	%list_item("Pedestal")
+	%list_item("Tower")
 	%list_item("Darkness")
 	%list_item("Crystals")
 	%list_item("GTower")
-
 
 ;===================================================================================================
 cm_game_state_bosses_submenu:
@@ -86,32 +87,39 @@ cm_game_state_bosses_submenu:
 
 #bossalivetext:
 %list_header(2)
-	%list_item("Alive")
 	%list_item("Dead")
+	%list_item("Alive")
 
 ;===================================================================================================
 cm_submenu_game_state_flags:
-%menu_header("GAME FLAGS", 6)
-	%toggle_bit_long("Uncle dead", !ram_game_flags, 0)
-	%toggle_bit_long("Sanc priest", !ram_game_flags, 1)
-	%toggle_bit_long("Escaped", !ram_game_flags, 2)
-	%toggle_bit_long("Uncle left", !ram_game_flags, 4)
-	%toggle_bit_long("Aginah", !ram_game_flags, 5)
-	%toggle_bit_long("Fortune cycle", !ram_game_flags, 6)
+%menu_header("GAME FLAGS", 12)
+	%toggle_bit_long("Uncle dead", $7EF3C6, 0)
+	%toggle_bit_long("Sanc priest", $7EF3C6, 1)
+	%toggle_bit_long("Escaped", $7EF3C6, 2)
+	%toggle_bit_long("Uncle left", $7EF3C6, 4)
+	%toggle_bit_long("Aginah", $7EF3C6, 5)
+	%toggle_bit_long("Fortune cycle", $7EF3C6, 6)
+
+	%toggle_bit_long("Hobo bottle", $7EF3C9, 0)
+	%toggle_bit_long("Vendor bottle", $7EF3C9, 1)
+	%toggle_bit_long("Stumpy", $7EF3C9, 3)
+	%toggle_bit_long("Purple chest", $7EF3C9, 4)
+	%toggle_bit_long("Smithy rescued", $7EF3C9, 5)
+	%toggle_bit_long("Tempering", $7EF3C9, 7)
 
 ;===================================================================================================
 cm_game_state_crystals_submenu:
 %menu_header("PENDANTS AND CRYSTALS", 10)
-	%toggle_bit_long("Eastern", !ram_game_pendants, 2)
-	%toggle_bit_long("Desert", !ram_game_pendants, 1)
-	%toggle_bit_long("Hera", !ram_game_pendants, 0)
-	%toggle_bit_long("Darkness", !ram_game_crystals, 1)
-	%toggle_bit_long("Thieves", !ram_game_crystals, 5)
-	%toggle_bit_long("Skull", !ram_game_crystals, 6)
-	%toggle_bit_long("Ice", !ram_game_crystals, 2)
-	%toggle_bit_long("Swamp", !ram_game_crystals, 4)
-	%toggle_bit_long("Mire", !ram_game_crystals, 0)
-	%toggle_bit_long("Turtle Rock", !ram_game_crystals, 4)
+	%toggle_bit_long("Eastern", $7EF374, 2)
+	%toggle_bit_long("Desert", $7EF374, 1)
+	%toggle_bit_long("Hera", $7EF374, 0)
+	%toggle_bit_long("Darkness", $7EF37A, 1)
+	%toggle_bit_long("Thieves", $7EF37A, 5)
+	%toggle_bit_long("Skull", $7EF37A, 6)
+	%toggle_bit_long("Ice", $7EF37A, 2)
+	%toggle_bit_long("Swamp", $7EF37A, 4)
+	%toggle_bit_long("Mire", $7EF37A, 0)
+	%toggle_bit_long("Turtle Rock", $7EF37A, 4)
 
 ;===================================================================================================
 cm_game_reset_dungeons_submenu:
@@ -208,7 +216,17 @@ reset_dungeon_func:
 	RTL
 
 .list
-	db !EX, !EP, !DP, !TH
-	db !AT, !PD, !SP, !SW
-	db !TT, !IP, !MM, !TR
-	db !GT, !CV
+	db !EX
+	db !EP
+	db !DP
+	db !TH
+	db !AT
+	db !PD
+	db !SP
+	db !SW
+	db !TT
+	db !IP
+	db !MM
+	db !TR
+	db !GT
+	db !CV

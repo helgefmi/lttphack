@@ -89,14 +89,14 @@ Vue.component('file-uploader', {
 
 			let crc = crc32(fileData);
 			if(crc.toString(16).toUpperCase() !== this.manifest.base.crc.toUpperCase()) {
-				alert("The select file's checksum does not match the expected value, try with another file.");
+				alert("The selected file's checksum does not match the expected value; try with another file.");
 				return;
 			}
 
 			try {
 				await localforage.setItem('baseRom' + this.manifest.base.crc, new Blob([fileData]));
 			} catch (err) {
-				alert("Could not store file to localforage:", err);
+				alert("Could not store file to localforage: ", err);
 				return;
 			}
 
@@ -151,9 +151,15 @@ Vue.component('file-downloader', {
 				let fileName = null;
 
 				if (patch.version.toUpperCase() === "OLD") {
-					fileName = this.manifest.name + "-v13.5.0-snapshot.sfc";
+					fileName = this.manifest.name + "-v13.6.0-snapshot.sfc";
 				} else {
-					fileName = this.manifest.name + "-v" + this.manifest.version + ".sfc";
+					fileName = this.manifest.name + "-v" + this.manifest.version;
+
+					if (patch.version.toUpperCase() === "RANDO") {
+						fileName = fileName + "-rando";
+					}
+
+					fileName = fileName + ".sfc";
 				}
 
 				let expandedRom = null;
@@ -246,4 +252,3 @@ Vue.component('patcher', {
 var app = new Vue({
 	el: '#patcher-app'
 });
-

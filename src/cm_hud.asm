@@ -14,7 +14,7 @@ HUDEXTRAS_SUBMENU:
 	%list_item("Classic Gray")
 
 ;===================================================================================================
-!counter_count = 17
+!counter_count = 19
 %choice("Counter 1", !ram_counter1, !counter_count, counter_names)
 %choice("Counter 2", !ram_counter2, !counter_count, counter_names)
 %choice("Counter 3", !ram_counter3, !counter_count, counter_names)
@@ -46,7 +46,8 @@ endmacro
 	%new_counter($002A, "Subpixels")
 	%new_counter($001A, "Room ID")
 	%new_counter($00A9, "Quadrant")
-	%new_counter($0114, "Tile")
+	%new_counter($008A, "Screen ID")
+	%new_counter($0114, "Tile (UW)")
 	%new_counter($02A2, "Spooky")
 	%new_counter($0B08, "Arc variable")
 	%new_counter($0690, "WEST SOMARIA")
@@ -54,6 +55,7 @@ endmacro
 	%new_counter($039D, "Hookslot")
 	%new_counter($C000, "Pits")
 	%new_counter($0E50, "Boss HP")
+	%new_counter($0374, "Hovering")
 
 #reinit_counteraddr:
 	REP #$30
@@ -61,6 +63,7 @@ endmacro
 	PHB
 	PHK
 	PLB
+
 	LDX.w #$0008
 
 --	LDA.w !ram_counter1,X
@@ -87,7 +90,7 @@ endmacro
 	RTL
 
 ;===================================================================================================
-!linecounter_count = 7
+!linecounter_count = 9
 %choice("Line 1", !ram_linecounter1, !linecounter_count, linecounter_names)
 %choice("Line 2", !ram_linecounter2, !linecounter_count, linecounter_names)
 %choice("Line 3", !ram_linecounter3, !linecounter_count, linecounter_names)
@@ -96,14 +99,16 @@ endmacro
 %list_header(!linecounter_count)
 	%list_item("Off")
 	%list_item("Room flags")
-	%list_item("Camera X")
-	%list_item("Camera Y")
+	%list_item("UW Camera X")
+	%list_item("UW Camera Y")
+	%list_item("OW Trans X")
+	%list_item("OW Trans Y")
 	%list_item("Ancilla 0-4")
 	%list_item("Ancilla 5-9")
 	%list_item("Ancilla IXd")
 
 ;===================================================================================================
-!ancprop_count = 12
+!ancprop_count = 11
 %choice("Ancilla prop 1", !ram_ancprop1, !ancprop_count, ancprop_names)
 %choice("Ancilla prop 2", !ram_ancprop2, !ancprop_count, ancprop_names)
 %choice("Ancilla prop 3", !ram_ancprop3, !ancprop_count, ancprop_names)
@@ -133,9 +138,8 @@ endmacro
 	%new_ancprop($03E4, "Tile prop")
 	%new_ancprop($03A4, "EG check")
 	%new_ancprop($0C72, "Direction")
-	%new_ancprop($0BFA, "Delta X")
-	%new_ancprop($0C04, "Delta Y")
-	%new_ancprop($0BFA, "Delta X")
+	%new_ancprop($0C04, "Delta X")
+	%new_ancprop($0BFA, "Delta Y")
 
 ;===================================================================================================
 %toggle_onoff("Heart lag", !ram_heartlag_spinner)
@@ -144,4 +148,4 @@ endmacro
 %toggle_onoff("QW indicator", !ram_qw_toggle)
 
 ;===================================================================================================
-%toggle_onoff("Lanmola cycs", !ram_toggle_lanmola_cycles)
+%toggle_onoff("Boss cycles", !ram_toggle_boss_cycles)

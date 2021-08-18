@@ -2,6 +2,12 @@ div.content {
 	background-color: #C8C8C8;
 }
 
+footer {
+	position: fixed;
+	bottom: 0;
+	margin-top: auto;
+}
+
 img {
 	max-width: 100%;
 }
@@ -199,14 +205,17 @@ span.dgIcon.dgYbottom {
 	background-position: -192px 0px;
 }
 
+table.ctrltable th:first-child {
+	text-align: center;
+}
+
 span.menuIcon {
 	background-image: url("menuicons.png");
 	outline: 2px solid #282828;
 	width: 16px;
 	height: 16px;
 	display: inline-block;
-	margin-right: .3em;
-	margin-left: .5px;
+	margin: .3em 0 .1em;
 	image-rendering: pixelated;
 }
 
@@ -372,6 +381,80 @@ span.fontPreview.font26 {
 span.snesButton {
 	font-weight: 600;
 	font-variant: small-caps;
+	display: inline-block;
+	color: white;
+	border: 2px solid;
+	border-left: none;
+	border-top: none;
+	border-radius: 20px;
+	text-transform: capitalize;
+	text-align: center;
+}
+
+span.snesButton.snesDPAD {
+	border-radius: 0;
+	width: 17px;
+	height: 17px;
+	padding-bottom: 1px;
+	background: #595E62;
+	border-color: #2B3033;
+}
+
+span.snesButton.snesA,
+span.snesButton.snesB,
+span.snesButton.snesX,
+span.snesButton.snesY {
+	width: 22px;
+	height: 20px;
+	padding: 3px 1px 0;
+}
+
+span.snesButton.snesA {
+	background: #DA3948;
+	border-color: #610102;
+}
+
+span.snesButton.snesB {
+	background: #FEBB52;
+	border-color: #3E0A00;
+}
+
+span.snesButton.snesX {
+	background: #00489F;
+	border-color: #000A35;
+}
+
+span.snesButton.snesY {
+	background: #00916A;
+	border-color: #00331B;
+}
+
+span.snesButton.snesL,
+span.snesButton.snesR {
+	width: 40px;
+	height: 16px;
+	padding-bottom: 1px;
+	font-weight: bold;
+	border-color: #8D8D8D;
+	background: #B8B8A8;
+}
+
+span.snesButton.snesL {
+	border-radius: 12px 0 0 0;
+}
+
+span.snesButton.snesR {
+	border-radius: 0 12px 0 0;
+}
+
+span.snesButton.snesStart,
+span.snesButton.snesSelect {
+	width: 50px;
+	height: 12px;
+	padding-bottom: 4px;
+	background: #4B545B;
+	border-color: #050704;
+	font-variant: small-caps;
 }
 
 span.releaseDate {
@@ -380,20 +463,21 @@ span.releaseDate {
 }
 
 sup.badge {
-	font-weight:bold;
-	font-family:consolas;
-	color:white;
-	border-radius:6px;
+	font-weight: bold;
+	font-family: consolas;
+	color: white;
+	border-radius: 6px;
 	padding: 0 6px;
 }
+
 sup.sa1-badge {
-	background-color:#0089FF;
-	border:1px solid #562AB3;
+	background-color: #0089FF;
+	border: 1px solid #562AB3;
 }
 
 sup.lag-badge {
-	background-color:#FF8900;
-	border:1px solid #B32A56;
+	background-color: #FF8900;
+	border: 1px solid #B32A56;
 }
 
 ul, dl {
@@ -413,6 +497,7 @@ dt {
 dt:after {
 	content: ":";
 }
+
 strong.lag:before,
 dt:not(:first-child):before {
 	content: " ";
@@ -423,10 +508,6 @@ dt:first-child:before {
 	content: " ";
 	display: block;
 	margin-top: -1.2em;
-}
-
-dt:first-child {
-	padding-left: 20px;
 }
 
 dt:first-child:before {
@@ -451,7 +532,7 @@ dl.inlineDefinition:not(.dinkyList) dt {
 }
 
 dl.inlineDefinition.dinkyList {
-	padding-left:30px;
+	padding-left: 30px;
 }
 
 dl.subDefinition dt,
@@ -486,7 +567,7 @@ strong.lag {
 }
 
 strong.lag b {
-	font-size:80%;
+	font-size: 80%;
 }
 
 strong.lag b:before {

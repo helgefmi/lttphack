@@ -1,6 +1,6 @@
 ---
 layout: practicehack
-title: LTTPHack - A Practice ROM for ALttP Runners
+title: LTTPHack - A Practice ROM for ALttP
 ---
 <section id="download">
 
@@ -9,14 +9,19 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 	<patcher id="prachack" manifest-path="patcher/manifest.json" />
 </div>
 
+<!--- Put on updates.html when removing here --->
+<h3>FULL SA-1 REFACTOR</h3>
+<p>Version fourteen point zero point zero if finally here. This represents the biggest and most dramatic update since the inclusion of presets. From here on, the accessibility of the practice hack has been tightened a bit, now requiring decent SA-1 emulation. Fortunately, support is fairly widespread. Anyone without access to a supported system will be able to download v13.6.0 from this page; however, support for these non-SA-1 versions has been officially discontinued.</p>
+<p>The SA-1's on-board RAM allows every system to include large save files, so fully fledged savestates are now available to everyone, eliminating the need for a separate SDSNES version. And while we're at it, the vanilla HUD variants are being nixed too (the option still exists, but it is no longer a separate ROM).</p>
+<p>Anyone without access to a supported system will be unable to use this version or any future version. Sorry. I know not everyone who plays on console can afford the more powerful flash carts, and that there are various other reasons people may stick with their current set up. Regardless, this hack is intended for vanilla practice, making accuracy for lag very important. Without a coprocessor, I have to put an aggressive filter on what features I add and count cycles meticulously everywhere. This inhibits improvement while <em>still</em> being too laggy. With the SA-1, I have so much more leeway. And with other cool features of the chip, I've vastly improved the backend of the practice menu to the point where it doesn't interfere with vanilla memory whatsoever. At the very least, I'm confident that this doesn't affect a majority audience. Many people who run on original hardware own an FXPak, and I can't name anyone who plays on the unsupported emulator cores. And, again, for those who can't or won't upgrade, v13.6 will always be available.</p>
+
 <h3>Latest (SA-1)</h3>
 <p>This version should be used by any system that can properly emulate SA-1 with 256kb of BWRAM.</p>
 
 <h4 class="listheader">Compatible systems:</h4>
 <ul>
 	<li>SD2SNES</li>
-	<li>SNES Classic</li>
-	<li>SuperNT jailbreak</li>
+	<li>SNES Classic (with RetroArch)</li>
 	<li>Mesen-s</li>
 	<li>higan/bsnes v115+</li>
 	<li>bsnes+</li>
@@ -27,117 +32,35 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 <h3>Randomizer (SA-1)</h3>
 <p>This version is slightly modified from the main version to include several randomizer features:</p>
 <ul>
-	<li>Major items are replaced with green 20s</li>
+	<li>Major items are replaced with E</li>
 	<li>No item text</li>
+	<li>No crystal cutscenes</li>
 	<li>Bottle submenu is accessed with X, instead of automatically</li>
 	<li>Pressing Y on a bottle in the menu will select the next bottle</li>
-	<li>Quick swap</li>
+	<li>Quick swap (DISGUSTING!)</li>
 	<li>Hammerable Ganon</li>
 </ul>
 
 <h3>v13.6</h3>
-<p>This is a snapshot of the pre-SA-1 practice hack. It will no longer be updated, as it only serves as a fallback for incompatible systems.</p>
+<p>This is a snapshot of the pre-SA-1 practice hack. It will no longer be updated and only serves as a fallback for incompatible systems.</p>
 
 <h4 class="listheader">List of shame:</h4>
 <ul>
 	<li>Everdrive</li>
+	<li>SuperNT jailbreak</li>
 	<li>BizHawk's bsnes core (v85)</li>
-</ul>
-
-</section>
-
-<section id="newest">
-
-<h2>Latest update</h2>
-<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/14.0.0">v14.0.0</a> <span class="releaseDate"></span></h3>
-<h4>FULL SA-1 REFACTOR</h4>
-<p>This is the biggest and most defining change of v14. From here on, the accessibility of the practice hack has been tightened a bit, now requiring decent SA-1 emulation. Fortunately, support is fairly widespread. Pretty much the only people left behind are Everdrive users, who will still be able to download v13.6.0 from this page; however, support for non-SA-1 versions will be discontinued.</p>
-<p>The SA-1's on-board RAM allows every system to include large save files, so fully fledged savestates are now available to everyone, eliminating the need for a separate SDSNES version. And while we're at it, the vanilla HUD variants are being removed too.</p>
-
-<ul class="changes">
-	<li>Y-Items:
-		<ul>
-			<li>Unraveled the child and shoved it into its parent. The child being the bottle submenu.</li>
-		</ul>
-	</li>
-	<li>Equipment:
-		<ul>
-			<li>Max arrows is now 50</li>
-		</ul>
-	</li>
-	<li>Gameplay:
-		<ul>
-			<li>Added NMG preset powder/shroom toggles</li>
-		</ul>
-	</li>
-	<li>Game state:
-		<ul>
-			<li>Room loading</li>
-			<li>Follower option</li>
-			<li>Removed crystal switch color in lieu of the shortcut (it was causing problems).</li>
-		</ul>
-	</li>
-	<li>HUD extras:
-		<ul>
-			<li>Vanilla hearts is now here for those who want it for whatever reason. I don't understand you guys, honestly. But, if you want it, this is where it is now.</li>
-			<li>Added "Classic Gray" input display.</li>
-			<li>Condensed the timers and ram watches into a single system.</li>
-			<li>Replaced super watches with line counters and expanded functionality.</li>
-			<li>Added some more ram watches:
-				<ul>
-					<li>Room ID</li>
-					<li>Quadrant</li>
-					<li>Tile prop</li>
-					<li>West somaria timer</li>
-					<li>Ancilla index (no longer found in general ancilla watch)</li>
-					<li>Hookslot (no longer found in general ancilla watch)</li>
-					<li>Pit destination</li>
-					<li>Boss HP (to replace enemy HP)</li>
-				</ul>
-			</li>
-			<li>The quick warp icon is now gray when you will not quick warp.</li>
-		</ul>
-	</li>
-	<li>Shortcuts:
-		<ul>
-			<li>Toggle crystal switch state (only works when you're in control)</li>
-		</ul>
-	</li>
-	<li>Configuration:
-		<ul>
-			<li>Added a <i>Crayon Shin-chan</i> font</li>
-			<li>Added a choice for where the menu opens to.</li>
-			<li>Menu colors can now be customized</li>
-		</ul>
-	</li>
-	<li>Other:
-		<ul>
-			<li>Pressing select in the practice menu now brings you to the tippy top.</li>
-			<li>Pressing Y in the practice menu now enables options and sets numfields to their max.</li>
-			<li>The higher position for text boxes has been moved down 1 tile to make room for additional HUD features.</li>
-			<li>Safeguards SA-1 for registers against heavy corruption from overlay corruption. Note that this will prevent the practice hack from crashing where the vanilla game would.</li>
-			<li>Practice menu will restore BG3 properties under heavy VRAM corruption (unavoidable utility fix).</li>
-			<li>I moved this section up here so it's easier to find. Anyone who asks about new features should contact their local ISP to ban them from this webpage. I'd do it myself, but this is all hosted by GitHub, so I have no real control there.</li>
-			<li>Older updates are on a separate page now. If you're reading this, then you're probably in good shape with regards to that ISP banning thing.</li>
-			<li>No one reads these. Why do I even bother?</li>
-		</ul>
-	</li>
-	<li>Bug fixes:
-		<ul>
-			<li>Accidentally fixed the bug that prevented input display from updating during text.</li>
-			<li>Added a room time trigger for post-Aga castle warp.</li>
-		</ul>
-	</li>
+	<li>Canoe (SNES Classics will give a C7 error)</li>
 </ul>
 
 </section>
 
 <section class="features">
+
 <h2>Hack features</h2>
-<p>The practice hack comes loaded with a full suite of HUD edits, features, and hooks to facilitate RTA practice and glitch hunting. The most common commonly used features include:</p>
+<p>The practice hack comes loaded with a full suite of HUD changes, features, and wedges to facilitate RTA practice and glitch hunting. The most common commonly used features include:</p>
 <ul>
 	<li>Presets to load a specific section of the run with the appropriate equipment.</li>
-	<li>Built-in save states for practicing any segment repeatedly.</li>
+	<li>Built-in save states for practicing anything repeatedly.</li>
 	<li>Timers for comparing strategies and execution against yourself and others.</li>
 	<li>Input display for displaying your inputs on your display.</li>
 </ul>
@@ -185,7 +108,7 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 		<tr>
 			<th rowspan="2"><span class="snesButton snesX">X</span></th>
 			<td>Most options</td>
-			<td>Clear/Disable</td>
+			<td>Clear / Disable</td>
 		</tr>
 		<tr>
 			<td>Numfields</td>
@@ -210,12 +133,12 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 			<td>Return to previous menu</td>
 		</tr>
 		<tr>
-			<th rowspan="1"><span class="snesButton snesL">L</span> <span class="snesButton snesR">R</span></th>
+			<th rowspan="1"><span class="snesButton snesL">L</span> / <span class="snesButton snesR">R</span></th>
 			<td>Num field</td>
-			<td>Increment/Decrement by larger amounts; no wrapping.</td>
+			<td>Increment/Decrement by larger amounts; no wrapping</td>
 		</tr>
 		<tr>
-			<th rowspan="3"><span class="snesButton snesDPAD">&lt; &gt;</span></th>
+			<th rowspan="3"><span class="snesButton snesDPAD">⏴</span> / <span class="snesButton snesDPAD">⏵</span></th>
 			<td>Toggle option</td>
 			<td>Toggle item</td>
 		</tr>
@@ -227,7 +150,7 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 			<td>Increment/Decrement by 1</td>
 		</tr>
 		<tr>
-			<th><span class="snesButton DPAD">^ v</span></th>
+			<th><span class="snesButton snesDPAD">⏶</span> / <span class="snesButton snesDPAD">⏷</span></th>
 			<td>Practice menu</td>
 			<td>Move cursor</td>
 		</tr>
@@ -251,7 +174,7 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 		</tr>
 		<tr>
 			<th><span class="menuIcon menuToggle"></span></th>
-			<td>Toggles an option between YES and NO</td>
+			<td>Toggles a binary option</td>
 		</tr>
 		<tr>
 			<th><span class="menuIcon menuSelection"></span></th>
@@ -278,41 +201,44 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 
 <h2>Common concerns</h2>
 <h3>How accurate is lag compared to the vanilla game?</h3>
-<p>As of version 14, very. Here's a quick rundown of how it works:</p>
+<p>As of version 14, very; about 1/10th of a scanline off. Here's a quick rundown of how it works:</p>
 
 <h4>SA-1</h4>
-<p>The SA-1 is a coprocessor that can be used alongside the main SNES CPU. It can run code faster, but, more importantly, it can run at the same time as the SNES without slowing it down. This allows the practice hack to handle certain features with minimal lag change from vanilla. Due to the limitations on memory access, not every feature can be handled lag-free on the SA-1.</p>
+<p>The SA-1 is a coprocessor that can be used alongside the main SNES CPU. It can run code faster, but, more importantly, it can run at the same time as the SNES CPU without slowing it down. This allows the practice hack to handle certain features with minimal lag change from vanilla. Due to the limitations on memory access, not every feature can be handled lag-free on the SA-1.</p>
 
 <p>Features that run on the SA-1 will be marked with this badge: <sup class="badge sa1-badge">SA1</sup>.</p>
 
 <h4>Implementation</h4>
-<p>There are specific pieces of code that get run at the beginning and end of every frame to manage the OAM buffer. The clearing routine isn't coded very efficiently, so it's been optimized to be about twice as fast. The time saved is used to save a bunch of variables only visible to the main SNES CPU in space visible to both the SNES and the SA-1. The SNES CPU then sends an interrupt request which tells the SA-1 to process this information.</p>
-<p>For the game HUD, almost every reference to its WRAM buffer has been changed to a place in BWRAM where the SA-1 can see it. Once the HUD's buffer has been modified by the game, it sends another interrupt request to the SA-1 to indicate that the coprocessor can do its own changes to the HUD before it's drawn to the screen. Some features (such as the hearts) are still written to their original WRAM buffer. This way, they can contribute their normal CPU load numbers without ruining the HUD.</p>
-<p>On any frame where the HUD doesn't update, a separate routine makes sure that roughly the same number of cycles is contributed for SA-1 features on the SNES CPU's side. The rest of the code hacked in is very minimal, and the few extra cycles is unlikely to cause additional lag frames.</p>
-<p>Do note that certain features simply cannot be enabled without requiring more SNES CPU time than normal. These features will only take CPU time when the HUD is redrawn. Such features will be marked with this badge: <sup class="badge lag-badge">LAG</sup>.</p>
+<p>There are specific routines that get run at the beginning and end of every frame to manage the OAM buffer. The clearing routine isn't coded very efficiently, so it's been optimized to about twice its original speed. The SNES CPU then sends an interrupt request which tells the SA-1 to process controller input for shortcuts. If a shortcut is found, a vector pointing to its routine in ROM will be saved in memory. The next frame, the SNES will check for this vector, and respond accordingly.</p>
+<p>For the game HUD, almost every reference to its WRAM buffer has been changed to a place in BWRAM where the SA-1 can see it. Once the HUD's buffer has been modified by the game, it copies a handful of variables that are only visible to the SNES CPU into memory that is visible to both the SNES and the SA-1. This is where most of the time saved with OAM optimization is accounted for. After these variables are copied, the SNES sends another interrupt request to the SA-1 to indicate that the coprocessor can do its own changes to the tilemap before it gets drawn to the screen. Some features (such as the hearts) are still written to their original WRAM buffer. This way, they can contribute their normal CPU load without ruining the HUD.</p>
+<p>On any frame where the HUD doesn't update, a separate check makes sure that these variables are still copied over, as this copying is critical to balancing the practice hack back in line with vanilla. The rest of the code hacked in is very minimal, and those few extra cycles are very unlikely to create additional lag frames.</p>
+<p>Certain features require more variables to be copied over than others. These will necessarily require a slightly higher fraction of the CPU's time, but they will only take this time when the HUD is redrawn. Such features will be marked with this badge: <sup class="badge lag-badge">EX</sup>.</p>
+
+<h3>My system isn't supported! Update the older hacks!</h3>
+<p>No.</p>
+<p>Sorry.</p>
+<p>The change to SA-1 included a complete overhaul of the backend code. Adding new features to both versions would require maintaining two completely separate codebases and writing almost every feature twice. I simply cannot allow my ability to improve this project be inhibited by inferior applications or devices that do not properly emulate expansion chips. You may think it's not fair that I'm ignoring your system, but what's actually not fair is holding everyone else back from a better practice hack.</p>
 
 <h3 id="IKnowAboutItAlready">Known issues <a href="#IKnowAboutItAlready" class="headerLink">(link)</a></h3>
 <ul>
-	<li>The lit rooms toggle may hide BG1 when switched indoors.</li>
-	<li>Lag from mosaics can be very inaccurate.</li>
-	<li>Thieves' Town Hellway and the Agahnim fights may cause issues with transparency and palettes.</li>
+	<li>Lag from mosaics can be very inaccurate, depending on what you've already done in your current play session. I'm still investigating the best way to approach this problem.</li>
+	<li>Giving your sword to the smith will result in a BAD VAL in the equipment menu. I don't have an elegant solution for this yet.</li>
 </ul>
 
 <h2>Trouble shooting</h2>
 <ul>
-	<li>Holding <span class="snesButton snesStart">Start</span> and <span class="snesButton snesSelect">Select</span> during power on will reset all configurations to their default.</li>
+	<li>Holding <span class="snesButton snesStart">Start</span> and <span class="snesButton snesSelect">Select</span> during power on will reset all configurations to their defaults. When you do this, you will hear Link screaming as he falls to his death.</li>
 	<li>If something in the menu goes out of range, you will be warned with "BAD VAL". Press X to clear it.</li>
-	<li>If you accidentally begin setting a shortcut you don't want, hold any combination of buttons to set the shortcut then press X to delete.</li>
 </ul>
-</section>
 
+</section>
 
 <section id="featurelist">
 <h2>Features list</h2>
 <h3 id="menuMain">Main menu</h3>
 <dl class="subDefinition">
 	<dt><a href="#menuPresets">Presets</a></dt>
-	<dd>Built in savestates for various categories</dd>
+	<dd>Built in states for various categories</dd>
 	<dt><a href="#menuItems">Items</a></dt>
 	<dd>Modify Y-item loadout</dd>
 	<dt><a href="#menuEquipment">Equipment</a></dt>
@@ -329,9 +255,16 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 	<dd>Toggle features that appear on the HUD</dd>
 	<dt><a href="#menuShortcuts">Shortcuts</a></dt>
 	<dd>Modify shortcuts for quick feature access</dd>
+	<dt><a href="#menuPresetConfiguration">Preset config</a></dt>
+	<dd>Controls how presets load</dd>
 	<dt><a href="#menuConfiguration">Configuration</a></dt>
 	<dd>Configuration toggles related to meta-operation</dd>
 </dl>
+
+<h3 id="menuPresets">Presets</h3>
+<p>Lists of presets that can be loaded to practice various parts of various runs. The category listed can be changed in the <a href="#menuPresetConfiguration">preset config</a> menu.</p>
+
+<p>If a category you want to practice does not have presets, you can help by making them. Instructions for doing so are listed <strong><a href="presetbuilding">here</a></strong>.</p>
 
 <h3 id="menuItems">Items</h3>
 <dl class="inlineDefinition dinkyList">
@@ -354,17 +287,7 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 	<dt>Hookshot</dt>
 	<dd>On/Off</dd>
 	<dt>Bombs</dt>
-	<dd class="optionList">
-		<ol>
-			<li>0</li>
-			<li>5</li>
-			<li>10</li>
-			<li>15</li>
-			<li>20</li>
-			<li>25</li>
-			<li>30</li>
-		</ol>
-	</dd>
+	<dd>0–30</dd>
 	<dt>Powder</dt>
 	<dd class="optionList">
 		<ol>
@@ -486,6 +409,8 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 	<dd>0–9</dt>
 	<dt>Big keys</dt>
 	<dd>Toggle big keys for each dungeon.</dd>
+	<dt>Small keys</dt>
+	<dd>Key counts for each dungeon.</dd>
 </dl>
 
 <h3 id="menuGameState">Game state</h3>
@@ -494,8 +419,8 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 	<dd>Skips the current text box</dd>
 	<dt>Remove sprites</dt>
 	<dd>Removes all sprites, overlords, and ancillae from the screen.</dd>
-	<dt>Reset current room</dt>
-	<dd>Resets the following data of the current room:
+	<dt>Reset dungeons</dt>
+	<dd>Resets every room associated with a specific dungeon (including all non-dungeon rooms as a single group) following these rules:
 		<ul>
 			<li>Quadrants visited</li>
 			<li>Keys collected</li>
@@ -507,12 +432,7 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 			<li>Heart collected</li>
 			<li>Rupee tiles collected</li>
 		</ul>
-		<strong class="lag"><b>NOTE:</b> This only affects the data pertaining to that specific room, but not data pertaining to the dungeon as a whole. For example, even though key collection is reset, the key count for that dungeon is left unaltered.</strong>
-	</dd>
-	<dt>Load room</dt>
-	<dd>Loads selected EG1 room ID.</dd>
-	<dt>Reset dungeons</dt>
-	<dd>Resets every room associated with a specific dungeon (including all non-dungeon rooms as a single group) with the same caveats and restrictions as Reset current room.</dd>
+		<strong class="lag"><b>NOTE:</b> This only affects the data pertaining to that specific room, but not data pertaining to the dungeon as a whole. For example, even though key collection is reset, the key count for that dungeon is left unaltered.</strong></dd>
 	<dt>Toggle bosses defeated</dt>
 	<dd>Modifies the boss defeated room flag for the specific boss's room.</dd>
 	<dt>Pendants and crystals</dt>
@@ -532,6 +452,18 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 			<dd>Aginah discussing book</dd>
 			<dt>Fortune cycle</dt>
 			<dd>Fortune teller hint selector</dd>
+			<dt>Hobo bottle</dt>
+			<dd>Got bottle from hobo</dd>
+			<dt>Vendor bottle</dt>
+			<dd>Bought bottle in Kakariko</dd>
+			<dt>Stumpy</dt>
+			<dd>Stumpy turned into a tree</dd>
+			<dt>Purple chest</dt>
+			<dd>Unlocked purple chest</dd>
+			<dt>Smithy rescued</dt>
+			<dd>Saved the frog</dd>
+			<dt>Tempering</dt>
+			<dd>Smiths currently have your sword for tempering</dd>
 		</dl>
 	</dd>
 	<dt>Follower</dt>
@@ -639,20 +571,10 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 <dl>
 	<dt>Skip Triforce</dt>
 	<dd>Transitioning north from Ganon's Room will behave like a normal screen transition, allowing consistent and reliable room times for the fight.</dd>
-	<dt>Sanc heart</dt>
-	<dd>Presets will have more health, as if the Sanctuary heart were collected earlier in the run.</dd>
-	<dt>Powder (for NMG)</dt>
-	<dd class="optionList">
-		<ol>
-			<li>No</li>
-			<li>Mushroom</li>
-			<li>Powder</li>
-		</ol>
-	</dd>
 	<dt>Disable beams</dt>
 	<dd>The Master Sword and its upgrades will no longer fire sword beams at full health.</dd>
 	<dt>Lit rooms</dt>
-	<dd>Dark rooms will be at full brightness and visibility. This option will remove the darkness in the current room as well.</dd>
+	<dd>Dark rooms will be at full brightness and visibility. Retains a faded lamp cone for cues.</dd>
 	<dt>Fast walls</dt>
 	<dd>Speeds up the moving wall cutscenes.</dd>
 	<dt>Visible probes<sup class="badge lag-badge">LAG</sup></dt>
@@ -804,11 +726,7 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 			<dd>Classic with unpressed buttons in gray.</dd>
 		</dl>
 	</dd>
-	<dt>Counter 1<sup class="badge sa1-badge">SA1</sup></dt>
-	<dt>Counter 2<sup class="badge sa1-badge">SA1</sup></dt>
-	<dt>Counter 3<sup class="badge sa1-badge">SA1</sup></dt>
-	<dt>Counter 4<sup class="badge sa1-badge">SA1</sup></dt>
-	<dt>Counter 5<sup class="badge sa1-badge">SA1</sup></dt>
+	<dt>Counter #<sup class="badge sa1-badge">SA1</sup></dt>
 	<dd>5 counter slots displayed on the HUD.
 		<dl class="subDefinition">
 			<dt>Room time</dt>
@@ -822,11 +740,15 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 			<dt>Coordinates</dt>
 			<dd>Absolute position of Link (X,Y)</dd>
 			<dt>Subpixels</dt>
-			<dd>Current subpixel remainder (Hexadecimal). Includes door marker for icebreaker, etc.; address: $7E002A</dd>
+			<dd>Current subpixel (Hexadecimal). Includes door marker for icebreaker, etc.; address: $7E002A</dd>
 			<dt>Room ID</dt>
-			<dd>Current room ID, corrected room ID (based on coordinates), and sync; address: $7E00A0</dd>
+			<dd>Current room ID, corrected room ID (based on coordinates), and sync. Sync not displayed on overworld; address: $7E00A0</dd>
 			<dt>Quadrant</dt>
-			<dd>Current quadrant, corrected quadrant (based on coordinates), and sync; address: $7E00A9</dd>
+			<dd>Current quadrant, corrected quadrant (based on coordinates), and sync. Not displayed on overworld; address: $7E00A9</dd>
+			<dt>Screen ID</dt>
+			<dd>Current overworld screen ID, corrected screen ID (based on coordinates), and sync. Not displayed in underworld; address: $7E008A</dd>
+			<dt>Tile (UW)</dt>
+			<dd>Tile type Link is standing on (only works in underworld); address: $7E0114</dd>
 			<dt>Spooky</dt>
 			<dd>Ancilla height for slot 4; address: $7E02A2</dd>
 			<dt>Arc variable</dt>
@@ -836,25 +758,29 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 			<dt>Anc index</dt>
 			<dd>Ancilla overload starting index; address: $7E03C4</dd>
 			<dt>Pits</dt>
-			<dd>Current pit destination/damage flag; address: $7EC000</dd>
+			<dd>Current pit destination/damage flag. Not displayed on overworld; address: $7EC000</dd>
 			<dt>Hookslot</dt>
 			<dd>Hookshot slot index; address: $7E039D</dd>
 			<dt>Boss HP</dt>
 			<dd>Health of enemy in slot 0; address: $7E0E50</dd>
+			<dt>Hovering</dt>
+			<dd>Number of frames A has been held, up to 29; address: $7E0374</dd>
 		</dl>
 	</dd>
 
-	<dt>Line counter 1<sup class="badge lag-badge">LAG</sup></dt>
-	<dt>Line counter 2<sup class="badge lag-badge">LAG</sup></dt>
-	<dt>Line counter 3<sup class="badge lag-badge">LAG</sup></dt>
+	<dt>Line counter #<sup class="badge lag-badge">EX</sup></dt>
 	<dd>3 larger lines of info displayed on the HUD.
 		<dl class="subDefinition">
 			<dt>Room flags</dt>
 			<dd>Boss heart, key, chest, and door floogs for current room.</dd>
-			<dt>Camera X</dt>
+			<dt>UW Camera X</dt>
 			<dd>Camera scroll and boundaries for X-axis.</dd>
-			<dt>Camera Y</dt>
+			<dt>UW Camera Y</dt>
 			<dd>Camera scroll and boundaries for Y-axis.</dd>
+			<dt>OW Trans X</dt>
+			<dd>Transition triggers and target screen IDs for horizontal overworld transitions.</dd>
+			<dt>OW Trans Y</dt>
+			<dd>Transition triggers and target screen IDs for vertical overworld transitions.</dd>
 			<dt>Ancilla 0-4</dt>
 			<dd>Custom ancilla property for slots 0&ndash;4 (property # corresponds to counter #)</dd>
 			<dt>Ancilla 5-9</dt>
@@ -863,10 +789,8 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 			<dd>Custom ancilla property for the 5 slots preceding the current search index ($03C4)</dd>
 		</dl>
 	</dd>
-	<dt>Ancilla Prop 1<dt>
-	<dt>Ancilla Prop 2<dt>
-	<dt>Ancilla Prop 3<dt>
-	<dd>Custom property # for ancillae corresponding to counter #
+	<dt>Ancilla Prop #</dt>
+	<dd>Custom property 1–3 for ancillae corresponding to line counter 1–3
 		<dl class="subDefinition">
 			<dt>ID</dt>
 			<dd>Ancilla ID from $03C4,X (includes coloring for 00 and replacable particles).</dd>
@@ -895,12 +819,8 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 	<dd>Animated spinning square that indicates there is heart lag present.</dd>
 	<dt>QW indicator<sup class="badge sa1-badge">SA1</sup></dt>
 	<dd>Displays an icon on the HUD when the current camera will effect a quickwarp.</dd>
-	<dt>Lanmola cycs<sup class="badge sa1-badge">SA1</sup></dt>
-	<dd>Displays a counter for the cycle count of the three Lanmolas individually.</dd>
-<!----
-	<dt>Lagometer</dt>
-	<dd>Shows a rough calculation of the amount of lag a frame has. The more the bar is filled, the closer a frame was to producing a lag frame. Lag from one frame does not affect the next, but trends in the lagometer can be used to gauge how laggy an area is.</dd>
----->
+	<dt>Boss cycles<sup class="badge sa1-badge">SA1</sup></dt>
+	<dd>Displays a counter for the cycle count of bosses.</dd>
 </dl>
 
 <h3 id="menuShortcuts">Shortcuts</h3>
@@ -931,44 +851,55 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 	<dd>Modifies the upper layer tilemap to mark pits.<strong class="lag"><b>NOTE:</b> this feature is intended for finding pits created by overlay corruption, but it will mark all standard pit tiles the same way.</strong></dd>
 </dl>
 
+<h3 id="menuPresetConfiguration">Preset config</h3>
+<dl>
+	<dt>Preset category</dt>
+	<dd>Changes the selection of <a href="#menuPresets">presets</a>.</dd>
+	<dt>Safeties</dt>
+	<dd>Opens a new submenu with safety options for the currently selected category</dd>
+	<dt>Death reload</dt>
+	<dd>Reloads the last preset upon death.</dd>
+	<dt>Random bats</dt>
+	<dd>Randomizes the arc variable that Ganon uses to spawn bats on preset load.</dd>
+	<dt>Use preset load</dt>
+	<dd>When enabled, the current saved loadout will overwrite items and equipment when presets are loaded.</dd>
+	<dt>Save loadout</dt>
+	<dd>Save your current equipment to a custom loadout for use with presets.</dd>
+</dl>
+
 <h3 id="menuConfiguration">Configuration</h3>
 <dl>
 	<dt>Rerandomize</dt>
 	<dd>When using built-in savestates and presets, this will run the RNG function to create a new value on each load.</dd>
 	<dt>Music</dt>
 	<dd>Sets the ADSR envelope of every instrument used by music to 0 (except the saw used by mirror warps). The size of the SPC transfers remains the same, so this feature does not affect lag.</dd>
-	<dt>Death reload</dt>
-	<dd>Reloads the last preset upon death.</dd>
-	<dt>Preset cat</dt>
-	<dd>Changes the selection of <a href="#menuPresets">presets</a>.</dd>
 	<dt>Menu open</dt>
 	<dd>Select whether the practice menu opens up to where you left off or resets to the top.</dd>
 	<dt>HUD font</dt>
 	<dd>Change the font used by HUD extras. This will not change the font for the vanilla HUD or for the HP display. <i>Hover over options for larger preview.</i>
 		<ul class="fontList">
-			<li><span class="fontName">Classic</span><span class="fontPreview font1"></span></li>
-			<li><span class="fontName">Normal</span><span class="fontPreview font2"></span></li>
-			<li><span class="fontName">Italic</span><span class="fontPreview font3"></span></li>
-			<li><span class="fontName">Mario World</span><span class="fontPreview font4"></span></li>
-			<li><span class="fontName">DKC <i>(Donkey Kong Country)</i></span><span class="fontPreview font5"></span></li>
-			<li><span class="fontName">ZAMN <i>(Zombies Ate My Neighbors)</i></span><span class="fontPreview font6"></span></li>
-			<li><span class="fontName">SMT <i>(Shin Megami Tensei)</i></span><span class="fontPreview font7"></span></li>
-			<li><span class="fontName">Earthbound</span><span class="fontPreview font8"></span></li>
-			<li><span class="fontName">FF6 <i>(Final Fantasy VI)</i></span><span class="fontPreview font9"></span></li>
-			<li><span class="fontName">Lufia 2</span><span class="fontPreview font10"></span></li>
-			<li><span class="fontName">Goonies 2</span><span class="fontPreview font11"></span></li>
-			<li><span class="fontName">Emerald <i>(Pokémon Emerald)</i></span><span class="fontPreview font12"></span></li>
-			<li><span class="fontName">Klonoa</span><span class="fontPreview font13"></span></li>
-			<li><span class="fontName">TI-83</span><span class="fontPreview font14"></span></li>
-			<li><span class="fontName">Shin-chan</span><span class="fontPreview font15"></span></li>
-			<li><span class="fontName">Pac-Man <i>(Pac-Man Arrangement)</i></span><span class="fontPreview font16"></span></li>
-			<li><span class="fontName">DOOM <i>(GBA version)</i></span><span class="fontPreview font17"></span></li>
-			<li><span class="fontName">Undertale</span><span class="fontPreview font18"></span></li>
-			<li><span class="fontName">Planet X-3</span><span class="fontPreview font19"></span></li>
-			<li><span class="fontName">Skyroads</span><span class="fontPreview font20"></span></li>
-			<li><span class="fontName">Yoshi's <i>(Island)</i></span><span class="fontPreview font21"></span></li>
-			<li><span class="fontName">S. Metroid <i>(Super Metroid)</i></span><span class="fontPreview font22"></span></li>
-			<li><span class="fontName">Tazmani</span><span class="fontPreview font23"></span></li>
+			<li><span class="fontName">Shop</span><span class="fontPreview font1"></span></li>
+			<li><span class="fontName">Klonoa</span><span class="fontPreview font2"></span></li>
+			<li><span class="fontName">TI-83</span><span class="fontPreview font3"></span></li>
+			<li><span class="fontName">Shin-chan</span><span class="fontPreview font4"></span></li>
+			<li><span class="fontName">SMT <i>(Shin Megami Tensei)</i></span><span class="fontPreview font5"></span></li>
+			<li><span class="fontName">Mario World</span><span class="fontPreview font6"></span></li>
+			<li><span class="fontName">DKC <i>(Donkey Kong Country)</i></span><span class="fontPreview font7"></span></li>
+			<li><span class="fontName">ZAMN <i>(Zombies Ate My Neighbors)</i></span><span class="fontPreview font8"></span></li>
+			<li><span class="fontName">Emerald <i>(Pokémon Emerald)</i></span><span class="fontPreview font9"></span></li>
+			<li><span class="fontName">Earthbound</span><span class="fontPreview font10"></span></li>
+			<li><span class="fontName">FF6 <i>(Final Fantasy VI)</i></span><span class="fontPreview font11"></span></li>
+			<li><span class="fontName">Lufia 2</span><span class="fontPreview font12"></span></li>
+			<li><span class="fontName">Goonies 2</span><span class="fontPreview font13"></span></li>
+			<li><span class="fontName">Pac-Man <i>(Pac-Man Arrangement)</i></span><span class="fontPreview font14"></span></li>
+			<li><span class="fontName">DOOM <i>(GBA version)</i></span><span class="fontPreview font15"></span></li>
+			<li><span class="fontName">Undertale</span><span class="fontPreview font16"></span></li>
+			<li><span class="fontName">Planet X-3</span><span class="fontPreview font17"></span></li>
+			<li><span class="fontName">Skyroads</span><span class="fontPreview font18"></span></li>
+			<li><span class="fontName">Yoshi's <i>(Island)</i></span><span class="fontPreview font19"></span></li>
+			<li><span class="fontName">S. Metroid <i>(Super Metroid)</i></span><span class="fontPreview font20"></span></li>
+			<li><span class="fontName">Tazmani</span><span class="fontPreview font21"></span></li>
+			<li><span class="fontName">Black Bass (Super Black Bass 3)</span><span class="fontPreview font22"></span></li>
 		</ul>
 	</dd>
 	<dt>Color config</dt>

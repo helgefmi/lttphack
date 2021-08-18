@@ -15,6 +15,8 @@ org $01D2DE : JSL UpdateOnBombableFloor
 org $01CA56 : JSL UpdateOnMovingWallStart : NOP
 org $01C927 : JSL UpdateOnMovingWallEndPodMire
 org $01C9DB : JSL UpdateOnMovingWallEndDesert
+org $01C78C : JSL UpdateOnGanonKill
+org $01F6A7 : JSL UpdateOnTriforceDoor
 
 ; This causes some double triggers, but always on the same frame
 ; so it should be fine
@@ -100,7 +102,7 @@ UpdateOnSwitchPress:
 	RTL
 
 UpdateOnUWMirror:
-	STA $11 : STZ $0B
+	STA $11 : STZ $B0
 	%reset_timer()
 	RTL
 
@@ -154,6 +156,18 @@ UpdateOnExplodingWall:
 	%update_timer()
 	STZ $50
 	LDA $EE
+	RTL
+
+UpdateOnGanonKill:
+	%update_timer()
+	STZ.b $B0
+	STZ.b $AE
+	RTL
+
+UpdateOnTriforceDoor:
+	%update_timer()
+	STZ.b $11
+	STZ.b $B0
 	RTL
 
 UpdateOnMovingWallStart:
@@ -273,9 +287,9 @@ UpdateOnReceiveItem:
 	LDA $4D
 	RTL
 
-;==============================================================================
+;===================================================================================================
 ; Idle frames
-;==============================================================================
+;===================================================================================================
 macro inc_idle()
 	REP #$21
 	SED

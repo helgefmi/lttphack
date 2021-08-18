@@ -22,6 +22,7 @@ CMDO_SAVE_ADDRESS_LONG:
 
 ACTION_EXIT:
 CMDO_HEADER:
+CMDO_LABEL:
 	RTS
 
 ;===================================================================================================
@@ -192,6 +193,7 @@ CMDO_TOGGLE_LONG:
 	BRA CMDO_TOGGLE_SAVE_B
 
 ;===================================================================================================
+
 CMDO_TOGGLE_FUNC:
 	JSR CMDO_TOGGLE
 	BRA CMDO_PERFORM_FUNC
@@ -218,6 +220,7 @@ CMDO_FUNC_FILTERED:
 	ASL
 	BCC .exit
 
+#CMDO_PERFORM_FUNC_FILTERED:
 	JSR CMDO_SAVE_ADDRESS_LONG
 
 	PHD
@@ -286,9 +289,10 @@ CMDO_CHOICE_LONG_FUNC_FILTERED:
 	INY
 	INY
 	INY
-	BRA CMDO_FUNC_FILTERED
+	BRA CMDO_PERFORM_FUNC_FILTERED
 
 ;===================================================================================================
+
 CMDO_NUMFIELD_FUNC:
 CMDO_NUMFIELD_FUNC_HEX:
 CMDO_NUMFIELD_FUNC_PRGTEXT:
@@ -390,7 +394,6 @@ CMDO_SUBMENU:
 .no
 	RTS
 
-
 #CMDO_SUBMENU_VARIABLE:
 	BIT.b SA1IRAM.cm_ax
 	BPL .no
@@ -405,10 +408,13 @@ CMDO_SUBMENU:
 	JSR CMDO_PERFORM_FUNC
 	BRA .drawmenu
 
+;===================================================================================================
+
 CMDO_PRESET_UW:
 CMDO_PRESET_OW:
 	BIT.b SA1IRAM.cm_ax
 	BMI .go
+
 	RTS
 
 .go
@@ -423,16 +429,15 @@ CMDO_PRESET_OW:
 	STA.b SA1IRAM.preset_addr+0
 
 	JSL CM_Exiting
+
 	SEP #$30
-	STZ.w $4200
 
 	LDA.b SA1IRAM.cm_current_menu+2
 	STA.b SA1IRAM.preset_addr+2
 
-	LDA.b #$80
-	STA.w $2100
-
 	JML preset_load
+
+;===================================================================================================
 
 CMDO_CTRL_SHORTCUT_FINAL:
 	LDA.b SA1IRAM.cm_ax
@@ -440,8 +445,11 @@ CMDO_CTRL_SHORTCUT_FINAL:
 	BEQ .no
 
 	JSL CM_MenuSFX_error
+
 .no
 	RTS
+
+;===================================================================================================
 
 CMDO_CTRL_SHORTCUT:
 	JSR CMDO_SAVE_ADDRESS_00
@@ -469,6 +477,7 @@ CMDO_CTRL_SHORTCUT:
 	RTS
 
 ;===================================================================================================
+
 CMDO_TOGGLE_ROOMFLAG:
 	SEP #$20
 
@@ -487,11 +496,8 @@ CMDO_TOGGLE_ROOMFLAG:
 .toggle
 .enable
 
-
-
-
-
 ;===================================================================================================
+; TODO
 CMDO_NUMFIELD_PRESSFUNC_HEX:
 	LDA.b SA1IRAM.cm_ax
 	ASL

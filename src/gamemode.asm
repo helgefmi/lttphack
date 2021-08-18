@@ -21,13 +21,58 @@ org $008051
 
 pullpc
 
+;===================================================================================================
+
+ResetGameStack:
+	REP #$30
+
+	LDA.w #$01FF : TCS
+	LDA.w #$0000 : TCD
+
+	STZ.b $F0 : STZ.w SA1IRAM.CopyOf_F0
+	STZ.b $F2 : STZ.w SA1IRAM.CopyOf_F2
+	STZ.b $F4 : STZ.w SA1IRAM.CopyOf_F4
+	STZ.b $F6 : STZ.w SA1IRAM.CopyOf_F6
+
+	STZ.w SA1IRAM.SHORTCUT_USED
+
+	SEP #$30
+
+	PHA : PLB
+
+	STZ.b $12
+	LDA.b #$81 : STA.w $4200
+
+	JML $008034
+
+;---------------------------------------------------------------------------------------------------
+
 UseShortCut:
+	REP #$20
+	; kill controller so SA-1 doesn't get confused next frame
+	STZ.b $F0 : STZ.w SA1IRAM.CopyOf_F0
+	STZ.b $F2 : STZ.w SA1IRAM.CopyOf_F2
+	STZ.b $F4 : STZ.w SA1IRAM.CopyOf_F4
+	STZ.b $F6 : STZ.w SA1IRAM.CopyOf_F6
+
+	SEP #$20
+
+	LDA.b $10
+	CMP.b #$06 : BCC shortcuts_banned
+	CMP.b #$19 : BCS shortcuts_banned
+	CMP.b #$14 : BEQ shortcuts_banned
+
 	JMP.w (SA1IRAM.SHORTCUT_USED)
 
 UseShortCutSA1:
 	DEC
 	PHA
 	RTS
+
+shortcuts_banned:
+	SEP #$20
+
+	LDA.b #$3C : STA.w $2142
 
 gamemode_sa1_side_shortcut:
 	RTL
@@ -42,14 +87,11 @@ gamemode_custom_menu:
 
 ; Load previous preset
 gamemode_load_previous_preset:
-	SEP #$30
-
 	; Loading during text mode makes the text stay or the item menu bug
-	LDA $10 : CMP #$0E : BEQ .no_load_preset
 	REP #$20
 	LDA.w SA1IRAM.preset_addr
-	SEP #$20
-	BEQ .no_load_preset
+	; catchings half of potential garbage values
+	BPL .no_load_preset
 
 	JML preset_load_last_preset
 
@@ -76,25 +118,18 @@ gamemode_replay_last_movie:
 gamemode_savestate_save:
 	PHK
 	PLB
+
 	SEP #$20
 	REP #$10
 	; Remember which song bank was loaded before load stating
 	; I put it here too, since `end` code runs both on save and load state..
-	LDA $0136 : STA.w SA1RAM.ss_old_music_bank
+	LDA.w $0136 : STA.w SA1RAM.ss_old_music_bank
 
-	; store DMA to SRAM
-	LDX #$0000
---	LDY #$0000
--	LDA $4300,X : STA.w SA1RAM.ss_dma_buffer,X
-	INX
-	INY : CPY #$000B : BNE -
-	CPX #$007B : BCS +
-	INX #5
-	BRA --
-	; end of DMA to SRAM
+	STZ.w $4200
+	STZ.w $420C
 
-+	JSL ppuoff
-	LDA #$80 : STA $4310 ; B to A
+	LDA.b #$80 : STA.w $2100
+	STA.w $4350 ; B to A
 	JSR DMA_BWRAMSRAM
 
 	JMP savestate_end
@@ -102,8 +137,16 @@ gamemode_savestate_save:
 ;---------------------------------------------------------------------------------------------------
 
 gamemode_savestate_load:
-	PHK
+	; music bank should only ever be 0 or 1
+	; assume any other value means there's no save state
+	LDA.w SA1RAM.ss_old_music_bank
+	CMP.b #$02 : BCC ++
+
+	JMP shortcuts_banned
+
+++	PHK
 	PLB
+
 	SEP #$20
 	REP #$10
 	; Remember which song bank was loaded before load stating (so we can change if needed)
@@ -123,9 +166,11 @@ gamemode_savestate_load:
 	; Mute ambient sounds
 	LDA #$05 : STA $2141
 
-	STZ $420C
-	JSL ppuoff
-	LDA.b #$00 : STA.w $4310
+	LDA.b #$80 : STA.w $2100
+	STZ.w $420C
+	STZ.w $4200
+
+	LDA.b #$00 : STA.w $4350
 	JSR DMA_BWRAMSRAM
 
 	LDX $1C : STX $212C
@@ -151,9 +196,6 @@ gamemode_savestate_load:
 	LDA $98 : STA $2125
 	LDA $9B : STA $420C
 
-	LDA #$01 : STA $4310
-	LDA #$18 : STA $4311
-
 	LDA.w !ram_rerandomize_toggle : BEQ .dont_rerandomize_2
 
 	LDA.w SA1RAM.frame_cache : STA $1A
@@ -172,29 +214,16 @@ gamemode_savestate_load:
 
 ;---------------------------------------------------------------------------------------------------
 
-ppuoff:
-	LDA.b #$80 : STA.w $2100
-	STZ.w $4200
-	STZ.w $420C
-	RTL
-
-ppuon:
-	LDA.b #$0F : STA.b $13
-	LDA.b #$81 : STA.w $4200
-	RTL
-
-;---------------------------------------------------------------------------------------------------
-
 DMA_BWRAMSRAM:
-	PLX : STX.w $4328
+	PLX : STX.w SA1IRAM.preset_scratch
 
-	STA.w $4310 ; direction
-	LDA.b #$80 : STA.w $4311 ; wram
-	LDA.b #$41 : STA.w $4314
+	STA.w $4350 ; direction
+	LDA.b #$80 : STA.w $4351 ; wram
+	LDA.b #$41 : STA.w $4354
 
 	LDX.w #$0000
 	TXA : XBA ; top byte 0
-	STX.w $4312 ; bottom of bank
+	STX.w $4352 ; bottom of bank
 
 .next
 	LDA.w .address_size+2,X ; get bank
@@ -206,9 +235,9 @@ DMA_BWRAMSRAM:
 	STY.w $2181
 
 	LDY.w .address_size+3,X
-	STY.w $4315
+	STY.w $4355
 
-	LDA.b #$02 : STA.w $420B
+	LDA.b #$20 : STA.w $420B
 
 	TXA
 	CLC
@@ -218,34 +247,69 @@ DMA_BWRAMSRAM:
 
 .sa1stuff
 	PHB
-	LDA.b #$00
-	XBA
-	LDA.b #(SA1IRAM.savethis_end-SA1IRAM.savethis_start)-1
-	BIT.w $4310 ; which way to transfer?
+	REP #$20
+
+	LDA.w #(SA1IRAM.savethis_end-SA1IRAM.savethis_start)-1
+
+	BIT.w $4350-1 ; which way to transfer?
 	BPL .loading
 
 .saving
 	LDX.w #SA1IRAM.savethis_start
-	LDY.w $4312 ; get location last written
+	LDY.w $4352 ; get location last written
 	%MVN($00, $41)
+
+	LDA.l HUD_NMI_DMA_SIZE : DEC
+	LDX.w #SA1RAM.HUD
+	%MVN($00, $41)
+
+	; LDA.w #$004F ; DMAs
+	; LDX.w #$4300 ; DMA location
+	; %MVN($41, $00)
+
+	; HDMA
+	LDA.w #$001F ; DMAs
+	LDX.w #$4360 ; DMA location
+	%MVN($41, $00)
+
 	BRA .done
 
 .loading
 	LDY.w #SA1IRAM.savethis_start
-	LDX.w $4312 ; get location last written
+	LDX.w $4352 ; get location last written
+	%MVN($41, $00)
+
+	LDA.l HUD_NMI_DMA_SIZE : DEC
+	LDY.w #SA1RAM.HUD
+	%MVN($41, $00)
+
+	; LDA.w #$004F ; DMAs
+	; LDY.w #$4300 ; DMA location
+	; %MVN($41, $00)
+
+	; HDMA
+	LDA.w #$001F ; DMAs
+	LDY.w #$4360 ; DMA location
 	%MVN($41, $00)
 
 .done
 	PLB
-	LDX.w $4328 : PHX
+
+	SEP #$20
+
+	LDX.w SA1IRAM.preset_scratch : PHX
+
 	RTS
 
 .address_size
 	dl $7E0000 : dw $6000
-	dl $7EC000 : dw $0900
+	dl $7EA680 : dw $0C00
+	dl $7EC000 : dw $0700
+	dl $7EC880 : dw $0080
 	dl $7EE800 : dw $1800
 
-	dl $7F0000 : dw $6000
+	dl $7F2000 : dw $2000
+	dl $7F5800 : dw $0700
 	dl $7FDD80 : dw $1200
 	dl $7FF800 : dw $0800
 
@@ -254,9 +318,9 @@ DMA_BWRAMSRAM:
 ;---------------------------------------------------------------------------------------------------
 
 savestate_end:
-	LDA.w $4310
+	LDA.w $4350
 	ORA.b #$01
-	STA.w $4310
+	STA.w $4350
 	BMI .saving
 
 .loading
@@ -267,50 +331,40 @@ savestate_end:
 	LDA.b #$39
 
 .continue
-	STA.w $4311
+	STA.w $4351
 
 	LDX.w #$0000
-	STX.w $4312
+	STX.w $4352
 	LDA.b #$42
-	STA.w $4314
+	STA.w $4354
 
-	STX.w $4315
+	STX.w $4355
 	STX.w $2116
-	LDA.w $4311 : CMP.b #$39 : BNE ++
+	LDA.w $4351 : CMP.b #$39 : BNE ++
 	LDY.w $2139 ; necessary dummy read
 
-++	LDA.b #$02 : STA.w $420B
+++	LDA.b #$20 : STA.w $420B
 
-	; load DMA from SRAM
--	LDY.w #$0000
-	LDA.w SA1RAM.ss_dma_buffer,X : STA.w $4300,X
-	INX
-	INY : CPY #$000B : BNE -
-	CPX #$007B : BCS +
-	INX #5
-	BRA -
+	LDA.w SA1RAM.ss_old_music_bank : CMP $0136 : BEQ .songBankNotChanged
 
-+	LDA.w SA1RAM.ss_old_music_bank : CMP $0136 : BEQ .songBankNotChanged
-	JSL music_reload
+	SEP #$34 ; I flag too
+	STZ $4200
+	STZ $420C
+
+	LDA #$FF : STA $2140
+
+	LDA $1B : STA $0136
+	BEQ .indoors
+	JSL $008925
+	BRA ++
+
+.indoors
+	JSL $008913
 
 .songBankNotChanged
 	; i hope this works
 	; now we just reset to the main game loop
-	REP #$20
-	LDA.w #$0000
-	TCD
-	PHA
-	PLB
-
-	STZ.w SA1IRAM.SHORTCUT_USED
-
-	LDA.w #$01FF
-	TCS
-
-	SEP #$30
-	STZ.b $12
-	LDA.b #$81 : STA.w $4200
-	JML.l $008034
+++	JML ResetGameStack
 
 ;---------------------------------------------------------------------------------------------------
 
@@ -388,11 +442,11 @@ gamemode_fill_everything:
 	LDA.w $040C ; are we in a dungeon?
 	BMI .no_keys
 
-	LDA.b #$09 : STA.l !ram_equipment_keys
+	LDA.b #$09 : STA.l $7EF36F
 
 .no_keys
-	LDA.l !ram_game_progress : BNE .ignoreprogress
-	LDA #$01 : STA.l !ram_game_progress
+	LDA.l $7EF3C5 : BNE .ignoreprogress
+	LDA #$01 : STA.l $7EF3C5
 
 .ignoreprogress
 
@@ -408,7 +462,7 @@ gamemode_fill_everything:
 	RTL
 
 .table
-	db 4   ; $F340 - bow: silvers w/ arrows
+	db 4   ; $F340 - silver bow w/ arrows
 	db 2   ; $F341 - red boomerang
 	db 1   ; $F342 - hookshot
 	db 30  ; $F343 - max bombs
@@ -542,7 +596,6 @@ fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics - pc: $56F19
 	STZ $045C
 
 .drawQuadrants
-
 	JSL $0091C4
 	JSL $0090E3
 	JSL $00913F
@@ -566,7 +619,7 @@ gamemode_somaria_pits_wrapper:
 	LDA $1B : BEQ ++ ; don't do this outdoors
 
 	LDA #$80 : STA $13 : STA $2100 ; keep fblank on while we do stuff
-	JSR gamemode_somaria_pits
+	JSL gamemode_somaria_pits
 	LDA #$0F : STA $13
 
 ++	RTL
@@ -744,3 +797,5 @@ BottleMenuButtonPress:
 ++	BIT.b $F6 : BVC ++
 	LDA.b #$07 : STA.w $0200
 ++	RTL
+
+;===================================================================================================

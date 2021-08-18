@@ -1,9 +1,9 @@
 pushpc
-;======================================================================================
+;===================================================================================================
 ; Improves the speed of OAM clearing by 2 scanlines; credit: MathOnNapkins
 ; Has no effect on anything
 ; But it gives us consistent improvements to account for practice hack lag
-;======================================================================================
+;===================================================================================================
 org $00805D
 	JML WasteTimeIfNeeded
 
@@ -18,10 +18,23 @@ org $00841E
 
 	REP #$10
 
-	; TODO recalc
 	; 246,16 : 250,18
-	; Vanilla OAM cycles: 4 scanlines - 10 H
-	; improved to: 2 scanlines + 28H
+	; Vanilla OAM cycles: 4 scanlines - 10
+	;
+	; Improved to: 2 scanlines + 87
+	; SA1 thing is 1 scanline + 69
+	; Waste time check is 38
+	; total is 3 scanlines + 194
+	;
+	; 145 left to waste
+	;
+	; NMI JSL+RTL = ~28 dots
+	; NMI cache = ~44+14+14 dots
+	; so NMI is ~100 dots
+	;
+	; 45 left to waste
+	;
+	; HUD uses ~38 dots
 
 	; set up
 	LDA.b #OAM_Cleaner>>16 : STA.w $4354
@@ -64,6 +77,7 @@ warnpc $008489
 ;===================================================================================================
 org $083D1
 	REP #$20
+
 	LDA.w $421A
 	STA.w SA1IRAM.JOYPAD2_NEW
 
@@ -99,12 +113,9 @@ org $0080D5
 	; 0080D7 SEP #$30
 	JSL nmi_expand
 
-org $008174
-	; skip TM and TS writes
-	; they're done later with extra logic
-	; LDA.b $1C : STA.w $212C
-	; LDA.b $1D : STA.w $212D
-	BRA ++ : skip 3+2+3 : ++
+; TM and TS writes
+ org $008176 : STA.w SA1RAM.layer_writer+0
+ org $00817B : STA.w SA1RAM.layer_writer+1
 
 ;org $0081A0 ; save camera correction for NMI expansion
 ;	BRA + ; save time during NMI
@@ -129,18 +140,25 @@ nmi_expand:
 	PHA ; A is 0 from right before the hook
 	PLB ; and that happens to be the bank we want
 
-	LDA.w SA1RAM.disabled_layers : EOR.b $1C : STA.w $212C
-	LDA.w SA1RAM.disabled_layers : EOR.b $1D : STA.w $212D
+	LDA.w SA1RAM.disabled_layers
+	TRB.w SA1RAM.layer_writer+0
+	TRB.w SA1RAM.layer_writer+1
+
+	REP #$20
+	LDA.w SA1RAM.layer_writer
+	STA.w $212C
+	SEP #$20
 
 	LDA.b $12 : STA.w SA1IRAM.CopyOf_12
 
 	LDA.b #$12 ; timers NMI
 	STA.w $2200
+
 	RTL
 
-;===========================================
+;===================================================================================================
 ; OAM cleaner optimization
-;===========================================
+;===================================================================================================
 macro OAMVClear(pos)
 	db $F0, <pos>+$05, $F0, <pos>+$09, $F0, <pos>+$0D, $F0, <pos>+$11
 endmacro
@@ -200,6 +218,7 @@ NMI_RequestCurrentRowUpdateUnless:
 	SEP #$30
 	RTL
 
+;===================================================================================================
 
 NMI_UpdatePracticeHUD:
 .full
@@ -257,6 +276,8 @@ NMI_UpdatePracticeHUD:
 	LDA.w #$0040
 	BRA .start
 
+;===================================================================================================
+
 SNES_ENABLE_CUSTOM_NMI:
 	REP #$20
 
@@ -293,6 +314,8 @@ SNES_DISABLE_CUSTOM_NMI:
 	BNE --
 
 	RTL
+
+;===================================================================================================
 
 SNES_CUSTOM_NMI:
 	REP #$30

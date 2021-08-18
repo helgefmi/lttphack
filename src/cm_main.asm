@@ -4,8 +4,9 @@
 !HEADER = $3100
 
 ;===================================================================================================
+
 cm_mainmenu:
-%menu_header("LTTPHACK !VERSION", 10)
+%menu_header("LTTPHACK !VERSION", 11)
 	%submenu_variable("Presets", PRESET_SUBMENU)
 	%submenu("Y Items", ITEMS_SUBMENU)
 	%submenu("Equipment", EQUIPMENT_SUBMENU)
@@ -15,15 +16,17 @@ cm_mainmenu:
 	%submenu("RNG control", RNG_SUBMENU)
 	%submenu("HUD extras", HUDEXTRAS_SUBMENU)
 	%submenu("Shortcuts", SHORTCUTS_SUBMENU)
+	%submenu("Preset config", PRESET_CONFIG_SUBMENU)
 	%submenu("Configuration", CONFIG_SUBMENU)
 
 ;===================================================================================================
-cm_preset_data_banks:
+
 CM_Main:
 	PHB : PHK : PLB
 
-	PHD
+	LDA.b #$14 : STA.w $2142
 
+	PHD
 	PEA.w $3000
 	PLD
 
@@ -33,10 +36,11 @@ CM_Main:
 	JSR CM_CacheWRAM
 
 	REP #$20
-	STZ.b SA1IRAM.SHORTCUT_USED
 
+	STZ.b SA1IRAM.SHORTCUT_USED
 	STZ.w SA1IRAM.CONTROLLER_1
 	STZ.w SA1IRAM.CONTROLLER_1_FILTERED
+
 	LDA.w #15
 	STA.w SA1RAM.cm_input_timer
 
@@ -50,9 +54,11 @@ CM_Main:
 
 .fine
 	SEP #$20
+
 	LDA.w !ram_cm_save_place
 	BEQ .loop
 
+	JSR EmptyEntireMenu
 	JSR CM_ResetStackAndMenu
 	JSR DrawCurrentMenu
 	JSL NMI_RequestFullMenuUpdate
@@ -80,6 +86,8 @@ CM_Main:
 	dw CM_Return
 	dw CM_ShortcutConfig
 
+;===================================================================================================
+
 CM_DrawMenu:
 	LDX.b #$04
 	STX.b SA1IRAM.cm_submodule
@@ -89,11 +97,21 @@ CM_DrawMenu:
 
 	RTS
 
+;===================================================================================================
+
 CM_Return:
 	REP #$20
 	PLA ; remove the return of the JSR
 	PLD
 	PLB
+
+	JSL CM_Exiting
+
+	LDA.b #$81 : STA.w $4200
+
+	RTL
+
+;---------------------------------------------------------------------------------------------------
 
 CM_Exiting:
 	REP #$20
@@ -117,8 +135,9 @@ CM_Exiting:
 
 	JSL SNES_DISABLE_CUSTOM_NMI
 
-	LDA.b #$81 : STA.w $4200
 	RTL
+
+;===================================================================================================
 
 CM_ShortcutConfig:
 	REP #$30
@@ -152,6 +171,8 @@ CM_ShortcutConfig:
 
 	RTS
 
+;===================================================================================================
+
 CM_PrepPPU:
 	SEP #$30
 
@@ -172,50 +193,31 @@ CM_PrepPPU:
 	LDA.b #$20 : STA.w $420B ; initiate DMA (channel 1)
 	RTS
 
+;===================================================================================================
+
 ; save temp variables that the menu uses
 CM_CacheWRAM:
 	SEP #$30
 
 	; Bow
-	LDA.l !ram_item_bow : BEQ ++
+	LDA.l $7EF340 : BEQ ++
 	CMP #$03
 	LDA.b #$01
 	ADC.b #$00
 ++	STA.w SA1RAM.cm_item_bow
 
 	; MaxHP
-	LDA.l !ram_equipment_maxhp
+	LDA.l $7EF36C
 	LSR #3
 	STA.w SA1RAM.cm_equipment_maxhp
 
 	RTS
 
 CM_Init:
+	JSR EmptyEntireMenu
 	JSR CM_ResetStackAndMenu
 
-	; blank the whole menu
-	REP #$20
-	SEP #$10
-	LDX.b #$00
-
-	LDA #$002F
-
-.loop
-	STA.w SA1RAM.MENU+$0000,X : STA.w SA1RAM.MENU+$0080,X
-	STA.w SA1RAM.MENU+$0100,X : STA.w SA1RAM.MENU+$0180,X
-	STA.w SA1RAM.MENU+$0200,X : STA.w SA1RAM.MENU+$0280,X
-	STA.w SA1RAM.MENU+$0300,X : STA.w SA1RAM.MENU+$0380,X
-	STA.w SA1RAM.MENU+$0400,X : STA.w SA1RAM.MENU+$0480,X
-	STA.w SA1RAM.MENU+$0500,X : STA.w SA1RAM.MENU+$0580,X
-	STA.w SA1RAM.MENU+$0600,X : STA.w SA1RAM.MENU+$0680,X
-	STA.w SA1RAM.MENU+$0700,X : STA.w SA1RAM.MENU+$0780,X
-
-	INX
-	INX
-	BPL .loop
-
 	SEP #$20
-	LDA.b #$14 : STA.w $012E
 
 	LDA.b #$02 : STA.b SA1IRAM.cm_submodule
 	STZ.w SA1RAM.cm_input_timer
@@ -297,6 +299,8 @@ CM_MenuSFX:
 	PLP
 	RTL
 
+;===================================================================================================
+
 CM_BackToTipTop:
 	JSR EmptyCurrentMenu
 	JSR CM_ResetStackAndMenu
@@ -304,10 +308,14 @@ CM_BackToTipTop:
 	JSL NMI_RequestFullMenuUpdate
 	RTS
 
+;===================================================================================================
+
 CM_ExitTime:
 	LDA.b #$06
 	STA.b SA1IRAM.cm_submodule
 	RTS
+
+;===================================================================================================
 
 CM_Active:
 	SEP #$30
@@ -321,7 +329,7 @@ CM_Active:
 	BMI .pressed_up
 	BVS .pressed_down
 
-	; start is lowest priority
+	; start / select is lowest priority
 	LDA.b SA1IRAM.CopyOf_F4
 	BIT.b #$10
 	BNE CM_ExitTime
@@ -350,6 +358,8 @@ CM_Active:
 	JSR DrawCurrentRow_ShiftY
 	JSL NMI_RequestCurrentRowUpdateUnless
 	RTS
+
+;===================================================================================================
 
 CM_AdjustForWrap:
 	PHY
@@ -407,6 +417,8 @@ CM_AdjustForWrap:
 
 .moved_cursor
 	JSL CM_MenuSFX_boop
+
+;===================================================================================================
 
 CM_ReDrawCursorPosition:
 	PHY
@@ -528,6 +540,7 @@ CM_getcontroller:
 ;===================================================================================================
 CM_ResetStackAndMenu:
 	REP #$20
+
 	STZ.w SA1RAM.CM_SubMenuIndex
 
 	LDA.w #cm_mainmenu<<8
@@ -539,6 +552,7 @@ CM_ResetStackAndMenu:
 CM_UpdateCurrentSelection:
 	REP #$20
 	SEP #$10
+
 	LDA.b SA1IRAM.cm_cursor
 	INC
 	ASL
@@ -551,6 +565,7 @@ CM_UpdateCurrentSelection:
 	STY.b SA1IRAM.cm_current_selection+2
 	RTS
 
+;===================================================================================================
 
 CM_PushMenuToStack:
 	PHX
@@ -581,8 +596,10 @@ CM_PushMenuToStack:
 	PLX
 	RTS
 
+;===================================================================================================
+
 ; carry = successful pull
-#CM_PullMenuFromStack:
+CM_PullMenuFromStack:
 	PHX
 	PHY
 

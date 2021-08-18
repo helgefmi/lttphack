@@ -7,71 +7,83 @@ ITEMS_SUBMENU:
 	%list_item("Silver")
 
 #cm_set_bow:
+	LDA.w SA1RAM.cm_item_bow
 	ASL
 	TAX
 	BEQ ++
 
-	LDA.l !ram_equipment_arrows
+	LDA.l $7EF377
 	BNE ++
 
 	DEX
 
 ++	TXA
-	STA.l !ram_item_bow
+	STA.l $7EF340
 	RTL
 
 ;===================================================================================================
-%choice_long_here("Boomerang", !ram_item_boom, 3)
+%choice_long_here("Boomerang", $7EF341, 3)
 	%list_item("No")
 	%list_item("Blue")
 	%list_item("Red")
 
 ;===================================================================================================
-%toggle_long("Hookshot", !ram_item_hook)
+%toggle_long("Hookshot", $7EF342)
 
 ;===================================================================================================
 #BOMBS_SETTER:
-%numfield_long_2digits("Bombs", !ram_item_bombs, 0, 30, 5)
+%numfield_long_2digits("Bombs", $7EF343, 0, 30, 5)
 
 ;===================================================================================================
-%choice_long_here("Powder", !ram_item_powder, 3)
+%choice_long_here("Powder", $7EF344, 3)
 	%list_item("No")
 	%list_item("Shroom")
 	%list_item("Powder")
 
 ;===================================================================================================
-%toggle_long("Fire rod", !ram_item_fire_rod)
-%toggle_long("Ice rod", !ram_item_ice_rod)
-%toggle_long("Bombos", !ram_item_bombos)
-%toggle_long("Ether", !ram_item_ether)
-%toggle_long("Quake", !ram_item_quake)
+%toggle_long("Fire rod", $7EF345)
+
+%toggle_long("Ice rod", $7EF346)
+
+%toggle_long("Bombos", $7EF347)
+
+%toggle_long("Ether", $7EF348)
+
+%toggle_long("Quake", $7EF349)
 
 ;===================================================================================================
-%toggle_long("Lamp", !ram_item_lantern)
-%toggle_long("Hammer", !ram_item_hammer)
+%toggle_long("Lamp", $7EF34A)
+%toggle_long("Hammer", $7EF34B)
 
 ;===================================================================================================
-%choice_long_here("Flute", !ram_item_flute, 4)
+%choice_long_here("Flute", $7EF34C, 4)
 	%list_item("No")
 	%list_item("Shovel")
 	%list_item("Flute (off)")
 	%list_item("Flute")
 
 ;===================================================================================================
-%toggle_long("Net", !ram_item_net)
-%toggle_long("Book", !ram_item_book)
+%toggle_long("Net", $7EF34D)
+
+%toggle_long("Book", $7EF34E)
 
 ;===================================================================================================
-%choice_long("Bottle 1", !ram_item_bottle_1, 9, bottle_items)
-%choice_long("Bottle 2", !ram_item_bottle_2, 9, bottle_items)
-%choice_long("Bottle 3", !ram_item_bottle_3, 9, bottle_items)
-%choice_long("Bottle 4", !ram_item_bottle_4, 9, bottle_items)
+%choice_long("Bottle 1", $7EF35C, 9, bottle_items)
+
+%choice_long("Bottle 2", $7EF35D, 9, bottle_items)
+
+%choice_long("Bottle 3", $7EF35E, 9, bottle_items)
+
+%choice_long("Bottle 4", $7EF35F, 9, bottle_items)
 
 ;===================================================================================================
-%toggle_long("Somaria", !ram_item_somaria)
-%toggle_long("Byrna", !ram_item_byrna)
-%toggle_long("Cape", !ram_item_cape)
-%toggle_bit_long("Mirror", !ram_item_mirror, 1)
+%toggle_long("Somaria", $7EF350)
+
+%toggle_long("Byrna", $7EF351)
+
+%toggle_long("Cape", $7EF352)
+
+%toggle_bit_long("Mirror", $7EF353, 1)
 
 ;===================================================================================================
 #bottle_items:

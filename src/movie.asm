@@ -5,7 +5,7 @@ pushpc
 ; compact movieformat (not implemented, not sure if I will)
 ; BYST udlr | AXLR Pnnn | NNNN NNNN
 
-;org RandomNumGen
+;org GetRandomInt
 ;    PHX : PHP
 ;    JSL movie_rng
 ;    PLP : PLX

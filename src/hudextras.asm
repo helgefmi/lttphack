@@ -24,7 +24,9 @@ function char(n) = $2150+n
 !HAMMER = char($12)|!BROWN_PAL
 
 pushpc
+
 org $008B7D
+HUD_NMI_DMA_SIZE:
 	dw $200 ; make hud bigger, doesn't seem to cost any cycles
 
 org $0EFD3E
@@ -75,9 +77,8 @@ org $05A40E
 warnpc $0DDB3F
 
 pullpc
-;==============================================================================
-; 
-;==============================================================================
+;===================================================================================================
+
 UpdateLanmoCycles:
 	INC.w $0D80,X
 	INC.w SA1IRAM.LanmoCycles,X
@@ -89,52 +90,51 @@ ResetLanmoCycles:
 	STZ.w SA1IRAM.LanmoCycles,X
 	RTL
 
-;==============================================================================
+;===================================================================================================
 ; A = address
 ; Y = color
-;==============================================================================
+;===================================================================================================
 Draw:
-.all
-..one
+.all_one
 	STA.b SA1IRAM.SCRATCH+10
 	STY.b SA1IRAM.SCRATCH+12
 	BRA .digit1
 
-..two
+.all_two
 	STA.b SA1IRAM.SCRATCH+10
 	STY.b SA1IRAM.SCRATCH+12
-	SEP #$41 ; set overflow and carry flags for unconditional draws
-	BRA .digit10
+	BRA .digit10_always
 
-..three
+.all_three
 	STA.b SA1IRAM.SCRATCH+10
 	STY.b SA1IRAM.SCRATCH+12
-	SEP #$41 ; set overflow and carry flags for unconditional draws
-	BRA .digit100
+	BRA .digit100_always
 
-.short
-..two
-	STA.b SA1IRAM.SCRATCH+10
-	STY.b SA1IRAM.SCRATCH+12
-	JSR .set_conditional_flags_d2
-	BRA .digit10
-
-..three
+.short_three
 	STA.b SA1IRAM.SCRATCH+10
 	STY.b SA1IRAM.SCRATCH+12
 	JSR .set_conditional_flags_d3
-	BRA .digit100
 
 .digit100
 	BVC .digit10
+
+.digit100_always
 	LDA.b (SA1IRAM.SCRATCH+10)
 	XBA
 	AND.w #$000F
 	ORA.b SA1IRAM.SCRATCH+12
 	STA.w SA1RAM.HUD+10,X
+	BRA .digit10_always
+
+.short_two
+	STA.b SA1IRAM.SCRATCH+10
+	STY.b SA1IRAM.SCRATCH+12
+	JSR .set_conditional_flags_d2
 
 .digit10
 	BCC .digit1
+
+.digit10_always
 	LDA.b (SA1IRAM.SCRATCH+10)
 	AND.w #$00F0
 	LSR
@@ -153,42 +153,29 @@ Draw:
 .done
 	RTS
 
-.set_conditional_flags
-..d3
+.set_conditional_flags_d3
 	LDA.b (SA1IRAM.SCRATCH+10)
-	SEP #$21 ; carry set for fewer cycles
-	XBA
-	ADC.b #$7E ; overflow set if digit 3 exists
+	CLC
+	ADC.w #$7F00 ; overflow set if digit 3 exists
 
-	REP #$20
-
-..d2
+.set_conditional_flags_d2
 	LDA.b (SA1IRAM.SCRATCH+10)
 	CMP.w #$0010 ; carry set if digit 2 or 3 exists
 	RTS
 
-;==============================================================================
-; 
-;==============================================================================
-hex_to_dec_snes:
-	REP #$10
-	ASL : TAX
-	LDA.l hex_to_dec_fast_table,X
-	SEP #$20 ; slightly faster overall to use this
-	TAY : AND #$0F : STA.w SA1RAM.hex2dec_third_digit
-	TYA : AND #$F0 : LSR #4 : STA.w SA1RAM.hex2dec_second_digit
-	XBA : AND #$0F : STA.w SA1RAM.hex2dec_first_digit
-	REP #$20 : TYA
-	RTL
+;===================================================================================================
 
 hex_to_dec_fast:
 	PHP
 	REP #$30
+
 	ASL : TAX
+
 	LDA.w hex_to_dec_fast_table,X
 	TAY : AND.w #$000F : STA.b SA1IRAM.SCRATCH+4
 	TYA : AND.w #$00F0 : LSR #4 : STA.b SA1IRAM.SCRATCH+2
 	XBA : AND.w #$000F : STA.b SA1IRAM.SCRATCH+0
+
 	PLP
 	RTS
 
@@ -294,9 +281,8 @@ hex_to_dec_fast_table:
 	dw $980, $981, $982, $983, $984, $985, $986, $987, $988, $989
 	dw $990, $991, $992, $993, $994, $995, $996, $997, $998, $999
 
-;==============================================================================
-; 
-;==============================================================================
+;===================================================================================================
+
 draw_hud_extras:
 	PHP
 	PHB
@@ -305,9 +291,6 @@ draw_hud_extras:
 
 	; clear up counters
 	REP #$20
-
-	LDA.w #$0001 ; start at 1 so that 0 can be a dummy write
-	STA.b SA1IRAM.SCRATCH+8
 
 	LDA.b SA1IRAM.TIMER_FLAG
 	AND.w #$FF7F
@@ -329,10 +312,16 @@ draw_hud_extras:
 	BPL --
 
 	LDX.b #62
---	STA.w SA1RAM.HUD+10+($40*5),X ; +10 to not erase magic ba
+--	STA.w SA1RAM.HUD+10+($40*5),X ; +10 to not erase magic bar
 	STA.w SA1RAM.HUD+($40*6),X
 	STA.w SA1RAM.HUD+($40*7),X
 	STA.w SA1RAM.HUD+($40*8),X
+	DEX
+	DEX
+	BPL --
+
+	LDX.b #14
+--	STA.w SA1RAM.HUD+$90,X
 	DEX
 	DEX
 	BPL --
@@ -351,35 +340,35 @@ draw_hud_counters:
 	PHA
 	PHX
 
-	LDA.b SA1IRAM.CNTVAL1,X ; get counter value
+	LDA.b SA1IRAM.CNTVAL1,X
 	PHA
 
-	LDA.w !ram_counter1,X ; get counter type
+	LDA.w !ram_counter1,X
 	ASL
 	TAY
-	LDA.w counters,Y ; get routine
+	LDA.w counter_routines,Y
 	TAY
 
 	LDA 5,S ; get write spot
 	TAX
 
-	PLA ; get value back
+	PLA
 
-	PEA.w ..return-1 ; return address
+	PEA.w .return-1
 
-	DEY ;our jump address
+	DEY ; jump address
 	PHY
 
 	RTS ; call routine
 
-..return
+.return
 	REP #$31
 	PLX
 
 	PLA ; next row
 	ADC.w #$0040
 
-	INX ; next counter
+	INX
 	INX
 	CPX.w #10
 	BCC .next_counter
@@ -391,8 +380,6 @@ draw_hud_linecounters:
 	LDY.w #$0000
 
 	; later rows should be further left
-	; so push this for later rows
-	;PEA.w 5*64+4
 	PEA.w 5*64+10
 	BRA .start
 
@@ -404,15 +391,15 @@ draw_hud_linecounters:
 
 	TAX ; get spot
 
-	LDA.w !ram_linecounter1,Y ; get counter type
+	LDA.w !ram_linecounter1,Y
 
 	ASL
 	TAY
 
-	LDA.w linecounters,Y ; get routine
+	LDA.w linecounter_routines,Y
 	DEC
 
-	PEA.w ..return-1 ; return address
+	PEA.w .return-1
 
 	PHA
 
@@ -424,28 +411,30 @@ draw_hud_linecounters:
 
 	RTS ; call routine
 
-..return
+.return
 	REP #$31
 	PLY
 
 	PLA ; next row
 	ADC.w #$0040
 
-	INY ; next counter
+	INY
 	INY
 	CPY.w #6
 	BCC .next_counter
 
-;==============================================================================
+;===================================================================================================
 hud_draw_input_display:
 	LDA.w !ram_input_display
 	AND #$0003
 	ASL : TAX
+
 	LDA.b SA1IRAM.CONTROLLER_1
 	XBA
+
 	JSR (.options,X)
 
-;==============================================================================
+;===================================================================================================
 ; clean up the stuff right under items
 	REP #$30
 	LDA.w #$207F
@@ -458,7 +447,7 @@ hud_draw_input_display:
 	BCC draw_quickwarp
 
 draw_lanmo_cycles:
-	LDA.w !ram_toggle_lanmola_cycles
+	LDA.w !ram_toggle_boss_cycles
 	LSR
 	BCC .skip
 
@@ -481,7 +470,7 @@ draw_lanmo_cycles:
 
 	BRA .skip
 
-;==============================================================================
+;===================================================================================================
 #draw_quickwarp:
 	SEP #$30
 	LDA.w !ram_qw_toggle
@@ -576,12 +565,12 @@ draw_timer:
 	STA.w SA1RAM.HUD+$E8
 
 .skip
-;==============================================================================
+;===================================================================================================
 done_extras:
 	PLB : PLP
 	RTL
 
-;==============================================================================
+;===================================================================================================
 draw_hearts_options:
 	dw .practicehack
 	dw .vanilla
@@ -747,7 +736,6 @@ draw_hearts_options:
 ..done
 	RTS
 
-
 GetHeartLagTile:
 	LDA.w !ram_heartlag_spinner
 	BNE .doheartlag
@@ -906,7 +894,7 @@ hud_draw_input_display_options:
 	dw $28+8  ; X
 	dw $68+8  ; A
 
-;==============================================================================
+;===================================================================================================
 
 DrawCoordinates:
 	PHY ; y coordinate first as it's right-to-left
@@ -1088,7 +1076,7 @@ DrawHEX4ForwardSaveY:
 ;===================================================================================================
 ; Various counters
 ;===================================================================================================
-counters:
+counter_routines:
 	dw counter_nothing
 	dw counter_room
 	dw counter_lag
@@ -1098,6 +1086,7 @@ counters:
 	dw counter_subpixels
 	dw counter_roomid
 	dw counter_quadrant
+	dw counter_screenid
 	dw counter_tile
 	dw counter_spooky
 	dw counter_arcvar
@@ -1106,6 +1095,7 @@ counters:
 	dw counter_hookslot
 	dw counter_pit
 	dw counter_bosshp
+	dw counter_hover
 
 ;===================================================================================================
 
@@ -1126,6 +1116,8 @@ counter_room:
 	LDY.w #!white ; color
 	LDA.w #SA1IRAM.ROOM_TIME_S_DISPLAY ; address
 	JMP Draw_short_three
+
+;---------------------------------------------------------------------------------------------------
 
 counter_lag:
 	LDY.w #!red ; color
@@ -1162,14 +1154,9 @@ counter_segment:
 	LDA.w #SA1IRAM.SEG_TIME_M_DISPLAY
 	JMP Draw_short_three
 
-counter_coords3:
-	LDY.w #3
-	JMP DrawCoordinates
-
 ;---------------------------------------------------------------------------------------------------
 
 counter_coords:
-counter_coords4:
 	LDY.w #4
 	JMP DrawCoordinates
 
@@ -1208,6 +1195,11 @@ counter_roomid:
 	LDA.b SA1IRAM.CopyOf_23 : AND #$00FE : LSR ; bit 0 is off, so it clears carry
 	ADC.b SA1IRAM.SCRATCH+14 : STA.b SA1IRAM.SCRATCH+14
 
+	LDA.b SA1IRAM.CopyOf_1B
+	AND.w #$00FF
+	BEQ .overworld
+
+	LDA.b SA1IRAM.SCRATCH+14
 	CMP.b SA1IRAM.CopyOf_A0
 	BNE .desync
 
@@ -1219,6 +1211,21 @@ counter_roomid:
 .desync
 	PEA.w !DESYNC
 	LDA.w #!red
+	BRA .draw
+
+.overworld
+	PEA.w char($11)|!GRAY_PAL
+
+	LDA.w #$608B
+	STA.w SA1RAM.HUD+14,X
+	STA.w SA1RAM.HUD+12,X
+	STA.w SA1RAM.HUD+10,X
+
+	TXA
+	SEC
+	SBC.w #$0006
+	TAX
+	BRA ++
 
 .draw
 	STA.b SA1IRAM.SCRATCH+10
@@ -1227,7 +1234,7 @@ counter_roomid:
 	LDY.w #3
 	JSR DrawHex
 
-	PLA
+++	PLA
 	STA.w SA1RAM.HUD+14,X
 	DEX
 	DEX
@@ -1238,7 +1245,135 @@ counter_roomid:
 
 ;---------------------------------------------------------------------------------------------------
 
+counter_screenid:
+	STA.b SA1IRAM.SCRATCH+4
+
+	LDA.b SA1IRAM.CopyOf_1B
+	AND.w #$00FF
+	BNE NoDisplayCounter
+
+	LDA.b SA1IRAM.CopyOf_20
+	AND.w #$1E00
+	ASL A
+	ASL A
+	ASL A
+	STA.b SA1IRAM.SCRATCH+12
+
+	LDA.b SA1IRAM.CopyOf_22
+	AND.w #$1E00
+	ORA.b SA1IRAM.SCRATCH+12
+
+	XBA
+	LSR
+
+	PHX
+
+	TAX
+
+	LDA.b SA1IRAM.CopyOf_20 : ORA.b SA1IRAM.CopyOf_22
+	CMP.w #$1000
+
+	LDA.l $02A4E3,X
+	PLX
+
+	AND.w #$00FF
+	ORA.b SA1IRAM.CopyOf_7EF3CA
+
+	STA.b SA1IRAM.SCRATCH+6
+	BCS .way_off_screen
+
+	CMP.b SA1IRAM.SCRATCH+4
+	BNE .wrong
+
+.match
+	PEA.w !SYNCED
+	LDA.w #!gray
+	BRA .draw
+
+.wrong
+.way_off_screen
+	PEA.w !DESYNC
+	LDA.w #!red
+
+.draw
+	STA.b SA1IRAM.SCRATCH+10
+
+	LDA.b SA1IRAM.SCRATCH+6
+	LDY.w #2
+	JSR DrawHex
+
+	PLA
+	STA.w SA1RAM.HUD+14,X
+	DEX
+	DEX
+
+	LDY.w #2
+	LDA.b SA1IRAM.SCRATCH+4
+	JMP DrawHex_white
+
+;---------------------------------------------------------------------------------------------------
+
+counter_pit:
+	TAY
+
+	LDA.b SA1IRAM.CopyOf_1B
+	AND.w #$00FF
+	BEQ NoDisplayCounter
+
+	TYA
+
+	AND.w #$00FF
+	LDY.w #2
+	JSR DrawHex_white
+
+	PHX
+	LDX.b SA1IRAM.CopyOf_A0
+	LDA.l RoomHasPitDamage,X
+	PLX
+
+	LSR
+	BCS .pitdamage
+
+.warphole
+	LDA.w #char($16)|!GRAY_PAL
+	BRA .drawflag
+
+.pitdamage
+	LDA.w #char($16)|!YELLOW_PAL
+
+.drawflag
+	STA.w SA1RAM.HUD+14,X
+	RTS
+
+;---------------------------------------------------------------------------------------------------
+
+NoDisplayCounter:
+	LDA.w #$608B : STA.w SA1RAM.HUD+12,X
+	STA.w SA1RAM.HUD+14,X
+	RTS
+
+counter_tile:
+	AND.w #$00FF
+	TAY
+
+	LDA.b SA1IRAM.CopyOf_1B
+	AND.w #$00FF
+	BEQ NoDisplayCounter
+
+	TYA
+	LDY.w #2
+	JMP DrawHex_white
+
+;---------------------------------------------------------------------------------------------------
+
 counter_quadrant:
+	TAY
+
+	LDA.b SA1IRAM.CopyOf_1B
+	AND.w #$00FF
+	BEQ NoDisplayCounter
+
+	TYA
 	LSR
 	BCS .east
 	; $AA is 0 or 2, and will be the only bit remaining, no matter what
@@ -1326,9 +1461,9 @@ counter_quadrant:
 
 ;---------------------------------------------------------------------------------------------------
 
+counter_bosshp:
 counter_index:
 counter_spooky:
-counter_tile:
 counter_hookslot:
 	AND.w #$00FF
 	LDY.w #2
@@ -1355,45 +1490,45 @@ counter_westsom:
 
 ;---------------------------------------------------------------------------------------------------
 
-counter_pit:
+counter_hover:
 	AND.w #$00FF
-	LDY.w #2
-	JSR DrawHex_white
+
+	CMP.w #$0000
+	BEQ ++
+
+	; carry guaranteed to be set since CMP #0
+	PHA
+	LDA.w #$001E
+	SBC 1,S
+	PLY
 
 	PHX
-	LDX.b SA1IRAM.CopyOf_A0
-	LDA.l RoomHasPitDamage,X
+	JSR hex_to_dec_fast
 	PLX
 
-	LSR
-	BCS .pitdamage
+	LDA.b SA1IRAM.SCRATCH+2
+	ASL
+	ASL
+	ASL
+	ASL
+	ORA.b SA1IRAM.SCRATCH+4
 
-.warphole
-	LDA.w #char($16)|!GRAY_PAL
-	BRA .drawflag
+++	STA.b SA1IRAM.SCRATCH
 
-.pitdamage
-	LDA.w #char($16)|!YELLOW_PAL
-
-.drawflag
-	STA.w SA1RAM.HUD+14,X
-	RTS
-
-;---------------------------------------------------------------------------------------------------
-
-counter_bosshp:
-	AND.w #$00FF
-	LDY.w #!white ; color
-	JMP Draw_short_three
+	LDY.w #!white
+	LDA.w #SA1IRAM.SCRATCH
+	JMP Draw_short_two
 
 ;===================================================================================================
 ; full line counters
 ;===================================================================================================
-linecounters:
+linecounter_routines:
 	dw linecounter_nothing
 	dw linecounter_roomdata
 	dw linecounter_camerax
 	dw linecounter_cameray
+	dw linecounter_owtranx
+	dw linecounter_owtrany
 	dw linecounter_ancilla04
 	dw linecounter_ancilla59
 	dw linecounter_ancillaIX
@@ -1429,13 +1564,10 @@ linecounter_roomdata:
 	BCS .on
 
 .off
+	AND.w #$E3FF
 	ORA.w #!GRAY_PAL
-	BRA .drawit
 
 .on
-	ORA.w .pal,Y
-
-.drawit
 	STA.w SA1RAM.HUD,X
 	INY
 	INY
@@ -1449,18 +1581,22 @@ linecounter_roomdata:
 !DOOR_TILE = char($1A)
 
 .char
-	dw $20A0 ; heart
-	dw $2071 ; key
-	dw $2071 ; key
-	dw !CHEST_TILE, !CHEST_TILE, !CHEST_TILE, !CHEST_TILE, !CHEST_TILE
-	dw !DOOR_TILE, !DOOR_TILE, !DOOR_TILE, !DOOR_TILE
-	dw !QUAD|!HFLIP, !QUAD, !QUAD|!HFLIP|!VFLIP, !QUAD|!VFLIP
-
-.pal
-	dw !RED_PAL, !YELLOW_PAL, !YELLOW_PAL
-	dw !RED_PAL, !RED_PAL, !RED_PAL, !RED_PAL, !RED_PAL
-	dw !BROWN_PAL, !BROWN_PAL, !BROWN_PAL, !BROWN_PAL
-	dw !BLUE_PAL, !RED_PAL, !GREEN_PAL, !YELLOW_PAL
+	dw $20A0|!RED_PAL
+	dw $2071|!YELLOW_PAL
+	dw $2071|!YELLOW_PAL
+	dw !CHEST_TILE|!RED_PAL
+	dw !CHEST_TILE|!RED_PAL
+	dw !CHEST_TILE|!RED_PAL
+	dw !CHEST_TILE|!RED_PAL
+	dw !CHEST_TILE|!RED_PAL
+	dw !DOOR_TILE|!BROWN_PAL
+	dw !DOOR_TILE|!BROWN_PAL
+	dw !DOOR_TILE|!BROWN_PAL
+	dw !DOOR_TILE|!BROWN_PAL
+	dw !QUAD|!HFLIP|!BLUE_PAL
+	dw !QUAD|!RED_PAL
+	dw !QUAD|!HFLIP|!VFLIP|!GREEN_PAL
+	dw !QUAD|!VFLIP|!YELLOW_PAL
 
 ;===================================================================================================
 
@@ -1497,13 +1633,23 @@ linecounter_cameray:
 
 	; +3 and +5 which are done first should be color of axis
 .set1
-	PEA.w 3 ; look at 3 and 5 for camera sync
+	LDA.w SA1IRAM.LINEVAL+3,Y
+	STA.b SA1IRAM.SCRATCH+4
+
+	LDA.w SA1IRAM.LINEVAL+5,Y
+	STA.b SA1IRAM.SCRATCH+6
+
 	LDA.b SA1IRAM.SCRATCH+12 
 	PEA.w !gray ; other set is gray
 	BRA .draw
 
 .set2
-	PEA.w 7 ; look at 7 and 9 for camera sync
+	LDA.w SA1IRAM.LINEVAL+7,Y
+	STA.b SA1IRAM.SCRATCH+4
+
+	LDA.w SA1IRAM.LINEVAL+9,Y
+	STA.b SA1IRAM.SCRATCH+6
+
 	PEI.b (SA1IRAM.SCRATCH+12) ; +3 and +5 should have gray
 	LDA.w #!gray 
 
@@ -1531,13 +1677,12 @@ linecounter_cameray:
 	JSR .draw1
 
 	PLA ; get camera position
-	PLY ; which set to compare against
 	PLX ; get HUD position of sync icon
 
-	CMP.w SA1IRAM.LINEVAL+0,Y
+	CMP.b SA1IRAM.SCRATCH+4
 	BCC .desync
 	DEC
-	CMP.w SA1IRAM.LINEVAL+2,Y
+	CMP.b SA1IRAM.SCRATCH+6
 	BCS .desync
 
 .sync
@@ -1564,6 +1709,104 @@ linecounter_cameray:
 	JMP DrawHEX4ForwardSaveY
 
 ;===================================================================================================
+
+linecounter_owtranx:
+	PEA.w $02A83B
+	PEA.w char(9)|!white
+	LDA.w #$FFFF
+	BRA linecounter_owtran
+
+linecounter_owtrany:
+	PEA.w $02A7BB
+	PEA.w char(11)|!yellow
+	LDA.w #$FFF0
+
+; 1,S - Bank
+; 2,S - table
+linecounter_owtran:
+	STA.b SA1IRAM.SCRATCH+6 ; increment amount
+	PLA : STA.b SA1IRAM.SCRATCH+8 ; icon
+	AND.w #$FC00 : ORA.w #$0010 : STA.b SA1IRAM.SCRATCH+10
+
+	LDA.b SA1IRAM.CopyOf_1B
+	AND.w #$00FF
+	BEQ ++
+
+	; gray if overworld
+	LDA.w #$1C00
+	TRB.b SA1IRAM.SCRATCH+8
+	TRB.b SA1IRAM.SCRATCH+10
+
+	LDA.w #!GRAY_PAL
+	TSB.b SA1IRAM.SCRATCH+8
+	TSB.b SA1IRAM.SCRATCH+10
+
+
+++	PHB
+
+	LDA.b SA1IRAM.CopyOf_20
+	AND.w #$1E00
+	ASL A
+	ASL A
+	ASL A
+	STA.b SA1IRAM.SCRATCH+12
+
+	LDA.b SA1IRAM.CopyOf_22
+	AND.w #$1E00
+	ORA.b SA1IRAM.SCRATCH+12
+	
+	XBA
+	STA.b SA1IRAM.SCRATCH+12
+
+	PEA.w $0202
+	PLB : PLB
+
+;---------------------------------------------------------------------------------------------------
+
+	STZ.b SA1IRAM.SCRATCH+4
+
+	JSR .draw_one
+
+	INC.b SA1IRAM.SCRATCH+8
+
+	LDA.b SA1IRAM.SCRATCH+6 : EOR.w #$FFFF : INC : STA.b SA1IRAM.SCRATCH+6
+	LDA.w $02A77B,Y : AND.w #$00FF : INC : XBA : STA.b SA1IRAM.SCRATCH+4
+
+	INX : INX : INX : INX
+	JSR .draw_one
+
+	PLB
+	PLA
+
+	RTS
+
+.draw_one
+	LDY.b SA1IRAM.SCRATCH+12
+
+	LDA (4,S),Y
+	CLC : ADC.b SA1IRAM.SCRATCH+4
+
+	JSR DrawHEX4ForwardSaveY
+
+	LDA.b SA1IRAM.SCRATCH+8
+	STA.w SA1RAM.HUD,X
+	INX
+	INX
+
+	TYA : AND.w #$00FF : LSR : PHA
+	CLC : ADC.b SA1IRAM.SCRATCH+6
+	AND.w #$00FF
+	TAY
+
+	LDA.w $02A4E3,Y
+	ORA.b SA1IRAM.CopyOf_7EF3CA
+	PLY
+
+	JMP DrawHEX2ForwardSaveY
+
+
+;===================================================================================================
+
 linecounter_ancilla04:
 linecounter_ancilla59:
 linecounter_ancillaIX:
@@ -1577,6 +1820,7 @@ linecounter_ancillaIX:
 
 	PLX
 	PHA
+
 	RTS
 
 .vectors
@@ -1589,8 +1833,8 @@ linecounter_ancillaIX:
 	dw linecounter_ancilla_tile-1
 	dw linecounter_ancilla_egcheck-1
 	dw linecounter_ancilla_direction-1
-	dw linecounter_ancilla_delta_y-1
 	dw linecounter_ancilla_delta_x-1
+	dw linecounter_ancilla_delta_y-1
 
 ;---------------------------------------------------------------------------------------------------
 
@@ -1615,8 +1859,10 @@ linecounter_ancilla_delta_x:
 
 .continue
 	INY
+
 	DEC.b SA1IRAM.SCRATCH+14
 	BNE .next_ancilla
+
 	RTS
 
 ;---------------------------------------------------------------------------------------------------
@@ -1643,8 +1889,10 @@ linecounter_ancilla_delta_y:
 
 .continue
 	INY
+
 	DEC.b SA1IRAM.SCRATCH+14
 	BNE .next_ancilla
+
 	RTS
 
 
@@ -1665,8 +1913,10 @@ linecounter_ancilla_altitude:
 
 .continue
 	INY
+
 	DEC.b SA1IRAM.SCRATCH+14
 	BNE .next_ancilla
+
 	RTS
 
 ;---------------------------------------------------------------------------------------------------
@@ -1681,8 +1931,10 @@ linecounter_ancilla_y:
 
 .continue
 	INY
+
 	DEC.b SA1IRAM.SCRATCH+14
 	BNE .next_ancilla
+
 	RTS
 
 ;---------------------------------------------------------------------------------------------------
@@ -1712,8 +1964,10 @@ linecounter_ancilla_id:
 
 .continue
 	INY
+
 	DEC.b SA1IRAM.SCRATCH+14
 	BNE .next_ancilla
+
 	RTS
 
 ;---------------------------------------------------------------------------------------------------
@@ -1735,6 +1989,8 @@ linecounter_ancilla_egcheck:
 
 .continue
 	INY
+
 	DEC.b SA1IRAM.SCRATCH+14
 	BNE .next_ancilla
+
 	RTS

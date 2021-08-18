@@ -1,5 +1,5 @@
 CONFIG_SUBMENU:
-%menu_header("CONFIGURATION", 7)
+%menu_header("CONFIGURATION", 5)
 
 ;===================================================================================================
 %toggle_onoff("Rerandomize", !ram_rerandomize_toggle)
@@ -47,51 +47,34 @@ CONFIG_SUBMENU:
 	PLD
 	RTS
 
-
-;===================================================================================================
-%toggle_onoff("Death reload", !ram_autoload_preset)
-
-;===================================================================================================
-%choice_here("Preset cat", !ram_preset_category, 7)
-	%list_item("NMG")
-	%list_item("Hundo")
-	%list_item("Low")
-	%list_item("Low Legacy")
-	%list_item("AD 2020")
-	%list_item("AD 2014")
-	%list_item("Any RMG")
-
 ;===================================================================================================
 %toggle_customtext_here("Menu open", !ram_cm_save_place)
 	%list_item("Main menu")
 	%list_item("Save place")
 
 ;===================================================================================================
-%choice_here("HUD font", !ram_hud_font, 23)
-	%list_item("Classic")
-	%list_item("Normal")
-	%list_item("Italic")
-	%list_item("Mario World")
-	%list_item("DKC")
-	%list_item("ZAMN")
-	%list_item("SMT")
-	%list_item("Earthbound")
-
-	%list_item("FF6")
-	%list_item("Lufia 2")
-	%list_item("Goonies 2")
-	%list_item("Emerald")
+%choice_here("HUD font", !ram_hud_font, 22)
+	%list_item("Shop")
 	%list_item("Klonoa")
 	%list_item("TI-83")
 	%list_item("Shin-chan")
+	%list_item("SMT")
+	%list_item("Mario World")
+	%list_item("DKC")
+	%list_item("ZAMN")
+	%list_item("Emerald")
+	%list_item("Earthbound")
+	%list_item("FF6")
+	%list_item("Lufia 2")
+	%list_item("Goonies 2")
 	%list_item("Pac-Man")
-
 	%list_item("DOOM")
 	%list_item("Undertale")
 	%list_item("Planet X-3")
 	%list_item("Skyroads")
 	%list_item("Yoshi's")
 	%list_item("S. Metroid")
+	%list_item("Black Bass")
 	%list_item("Tazmania")
 
 ;===================================================================================================
@@ -134,6 +117,7 @@ set_color:
 	TAX
 	ASL
 	TAY
+
 	LDA.l .defaults,X
 	STA.w !ram_hud_bg,Y
 
