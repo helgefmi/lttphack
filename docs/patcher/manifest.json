@@ -20,7 +20,8 @@
             "options": [
                 { "id": "customhud", "name": "Custom HUD" },
                 { "id": "vanillahud", "name": "Vanilla HUD" },
-                { "id": "sa1", "name": "v14 upsilon" }
+                { "id": "sa1", "name": "v14 upsilon" },
+                { "id": "sa1rando", "name": "v14 rando" }
             ]
         }
     ],
@@ -32,6 +33,8 @@
         { "platform": "sd2snes", "type": "vanillahud", "file": "patcher/files/sd2snes-vanillahud.bps"},
 
         { "platform": "sd2snes", "type": "sa1", "file": "patcher/files/sa1.bps"},
-        { "platform": "emulator", "type": "sa1", "file": "patcher/files/sa1.bps"}
+        { "platform": "emulator", "type": "sa1", "file": "patcher/files/sa1.bps"},
+        { "platform": "sd2snes", "type": "sa1rando", "file": "patcher/files/sa1rando.bps"},
+        { "platform": "emulator", "type": "sa1rando", "file": "patcher/files/sa1rando.bps"}
     ]
 }
