@@ -3,8 +3,6 @@ Big stuff
 
 timer trigger on ganon sword up
 
-room flags line is wrong
-
 Room tab:
 	room ID selector
 	"Set to current room"
@@ -47,11 +45,9 @@ Other stuff
 
 - Active movement speed counter. Like the above kinda but shows real time how fast you're going. Would help for things like understanding swim speeds or hidden bastard/rail type deals.
 
-- YBA lua like shortcut for collision mapping
-
 Low priority
 -------------
-- TT palette transparency problems: JSL.l $02FD68 sets to not transparent, find similar routine; it's in bank0E in US though
+- TT palette transparency problems: JSL.l $02FD68 sets to not transparent
 
 ======== MINIGAMES TODO ========
 

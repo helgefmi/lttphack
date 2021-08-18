@@ -301,6 +301,13 @@ CMDO_NUMFIELD_LONG_FUNC_PRGTEXT:
 	JSR CMDO_NUMFIELD_LONG
 	BRA CMDO_PERFORM_FUNC
 
+CMDO_NUMFIELD_HEX_UPDATEWHOLEMENU:
+	JSR CMDO_NUMFIELD
+	JSR EmptyCurrentMenu
+	JSR DrawCurrentMenu
+	JSL NMI_RequestFullMenuUpdate
+	RTS
+
 ;===================================================================================================
 
 CMDO_CHOICE_LONG:
@@ -356,6 +363,7 @@ CMDO_CHOICE_LONG_PRGTEXT:
 	BRA .clear
 
 ;===================================================================================================
+
 CMDO_SUBMENU:
 	BIT.b SA1IRAM.cm_ax
 	BPL .no
@@ -408,7 +416,8 @@ CMDO_PRESET_OW:
 
 	REP #$20
 	TXA
-	STX.b SA1IRAM.preset_type
+	AND.w #$00FF
+	STA.b SA1IRAM.preset_type
 
 	LDA.b SA1IRAM.cm_writer+0
 	STA.b SA1IRAM.preset_addr+0
@@ -458,6 +467,27 @@ CMDO_CTRL_SHORTCUT:
 
 .no
 	RTS
+
+;===================================================================================================
+CMDO_TOGGLE_ROOMFLAG:
+	SEP #$20
+
+	BIT.b SA1IRAM.cm_ax
+	BVS .clear
+	BMI .toggle
+
+	BIT.b SA1IRAM.cm_leftright
+	BMI .toggle
+	BVS .toggle
+
+	BIT.b SA1IRAM.cm_y
+	BMI .enable
+
+.clear
+.toggle
+.enable
+
+
 
 
 

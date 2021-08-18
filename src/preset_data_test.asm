@@ -3493,6 +3493,7 @@ dw $002E ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFF8 ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7EC167, $7D) ; Underworld exit cache
 %write8($7EC165, $23) ; Underworld exit cache
 %write8($7EC166, $51) ; Underworld exit cache
@@ -5565,10 +5566,10 @@ presetSRAM_adold:
 ..pyramid
 %write8($7EF36F, $FF) ; Keys
 %write8($7EF36C, $1818) ; Health (goal)
-%write8($7EF378, $F800) ; ????
+%write8($7EF377, $F8) ; abilities
 %write8($7EF3DC, $8C01) ; Player name
 %write8($7EF3E0, $AA01) ; Player name
-%write8($7EF400, $FF00) ; Deaths
+%write16sram($7EF401, $FFFF) ; Deaths
 %write8($7EF3DA, $8C01) ; Player name
 %write8($7EF3DE, $8C01) ; Player name
 %write8($7EF3E2, $55) ; Player name
@@ -5580,7 +5581,7 @@ presetSRAM_adold:
 %write8($7EF359, $01) ; Sword
 %write8($7EF3C5, $01) ; Game Phase 1
 %write8($7EF35A, $01) ; Shield
-%write8($7EF362, $01) ; Rupees (actual)
+%write16sram($7EF360, $01) ; Rupees (actual)
 %write8($7EF3C6, $11) ; Game Phase 2
 %write8($7EF36F, $00) ; Keys
 %write8($7EF341, $01) ; Boomerang
@@ -5590,7 +5591,7 @@ presetSRAM_adold:
 %write8($7EF3CC, $01) ; Tagalong
 %write8($7EF3E5, $00) ; Validity (checksum)
 %write8($7EF34A, $01) ; Torch
-%write8($7EF366, $4000) ; BigKey1
+%write16sram($7EF366, $4000) ; BigKey1
 %write8($7EF3C8, $04) ; Entrances Phase
 %write8($7EF29B, $20) ; Overworld $1B: Unknown (...?....)
 %write8($7EF36F, $FF) ; Keys
@@ -5609,7 +5610,7 @@ presetSRAM_adold:
 %write8($7EF36F, $00) ; Keys
 %write8($7EF377, $05) ; Arrows
 %write8($7EF36D, $0C) ; Health (actual)
-%write8($7EF366, $6000) ; BigKey1
+%write16sram($7EF366, $6000) ; BigKey1
 %write8($7EF377, $0F) ; Arrows
 %write8($7EF340, $02) ; Bow
 %write8($7EF34F, $00) ; Bottles
@@ -5632,7 +5633,7 @@ presetSRAM_adold:
 %write8($7EF3FF, $01) ; Deaths
 %write8($7EF354, $100) ; Gloves
 %write8($7EF36C, $1820) ; Health (goal)
-%write8($7EF378, $FC00) ; ????
+%write8($7EF377, $FC) ; abilities
 %write8($7EF355, $01) ; Boots
 %write8($7EF36D, $18) ; Health (actual)
 %write8($7EF375, $00) ; Bomb filler
@@ -5656,7 +5657,7 @@ presetSRAM_adold:
 %write8($7EF343, $05) ; Bombs
 %write8($7EF36F, $01) ; Keys
 %write8($7EF382, $01) ; Key for dungeon $06
-%write8($7EF366, $6200) ; BigKey1
+%write16sram($7EF366, $6200) ; BigKey1
 %write8($7EF36F, $00) ; Keys
 %write8($7EF343, $07) ; Bombs
 %write8($7EF34B, $01) ; Hammer
@@ -5669,7 +5670,7 @@ presetSRAM_adold:
 %write8($7EF376, $00) ; Arrow filler
 %write8($7EF377, $02) ; Arrows
 %write8($7EF36F, $00) ; Keys
-%write8($7EF362, $02) ; Rupees (actual)
+%write16sram($7EF360, $02) ; Rupees (actual)
 %write8($7EF36F, $FF) ; Keys
 %write8($7EF3C7, $07) ; Map Phase
 %write8($7EF3EF, $01) ; Deaths
@@ -5688,7 +5689,7 @@ presetSRAM_adold:
 %write8($7EF3EE, $100) ; Deaths
 %write8($7EF4FE, $6BA7) ; Inverse checksum
 %write8($7EF36F, $00) ; Keys
-%write8($7EF366, $6220) ; BigKey1
+%write16sram($7EF366, $6220) ; BigKey1
 %write8($7EF36E, $70) ; Magic Power
 %write8($7EF343, $0A) ; Bombs
 %write8($7EF357, $01) ; Moon Pearl
@@ -5703,7 +5704,7 @@ presetSRAM_adold:
 %write8($7EF3CA, $40) ; LW/DW
 %write8($7EF36F, $00) ; Keys
 %write8($7EF2D8, $20) ; Overworld $58: Unknown (...?....)
-%write8($7EF366, $6230) ; BigKey1
+%write16sram($7EF366, $6230) ; BigKey1
 %write8($7EF343, $09) ; Bombs
 %write8($7EF343, $0A) ; Bombs
 %write8($7EF343, $09) ; Bombs
@@ -5720,16 +5721,16 @@ presetSRAM_adold:
 %write8($7EF387, $00) ; Key for dungeon $0B
 %write8($7EF343, $08) ; Bombs
 %write8($7EF2D8, $22) ; Overworld $58: Unknown (...?...?)
-%write8($7EF362, $12E) ; Rupees (actual)
+%write16sram($7EF360, $12E) ; Rupees (actual)
 %write8($7EF3CC, $07) ; Tagalong
 %write8($7EF34E, $01) ; Book of Mudora
 %write8($7EF3CC, $00) ; Tagalong
 %write8($7EF359, $03) ; Sword
 %write8($7EF3C9, $20) ; Game Phase 3
-%write8($7EF362, $124) ; Rupees (actual)
-%write8($7EF362, $250) ; Rupees (actual)
+%write16sram($7EF360, $124) ; Rupees (actual)
+%write16sram($7EF360, $250) ; Rupees (actual)
 %write8($7EF377, $0C) ; Arrows
-%write8($7EF366, $62B0) ; BigKey1
+%write16sram($7EF366, $62B0) ; BigKey1
 %write8($7EF343, $07) ; Bombs
 %write8($7EF36F, $00) ; Keys
 %write8($7EF345, $01) ; Fire Rod
@@ -5761,13 +5762,13 @@ presetSRAM_adold:
 %write8($7EF4FE, $9709) ; Inverse checksum
 %write8($7EF348, $01) ; Ether Medallion
 %write8($7EF3FF, $02) ; Deaths
-%write8($7EF378, $FE00) ; ????
+%write8($7EF377, $FE) ; abilities
 %write8($7EF379, $FE) ; Ability Flags
 %write8($7EF356, $101) ; Flippers
-%write8($7EF362, $A1) ; Rupees (actual)
+%write16sram($7EF360, $A1) ; Rupees (actual)
 %write8($7EF3FE, $200) ; Deaths
 %write8($7EF4FE, $9797) ; Inverse checksum
-%write8($7EF362, $5C) ; Rupees (actual)
+%write16sram($7EF360, $5C) ; Rupees (actual)
 %write8($7EF343, $06) ; Bombs
 %write8($7EF36D, $28) ; Health (actual)
 %write8($7EF3CA, $40) ; LW/DW
@@ -5776,7 +5777,7 @@ presetSRAM_adold:
 %write8($7EF377, $11) ; Arrows
 %write8($7EF376, $00) ; Arrow filler
 %write8($7EF37F, $00) ; Key for dungeon $03
-%write8($7EF366, $72B0) ; BigKey1
+%write16sram($7EF366, $72B0) ; BigKey1
 %write8($7EF377, $16) ; Arrows
 %write8($7EF36E, $50) ; Magic Power
 %write8($7EF36F, $FF) ; Keys
@@ -5795,7 +5796,7 @@ presetSRAM_adold:
 %write8($7EF36F, $02) ; Keys
 %write8($7EF36D, $38) ; Health (actual)
 %write8($7EF36F, $01) ; Keys
-%write8($7EF366, $73B0) ; BigKey1
+%write16sram($7EF366, $73B0) ; BigKey1
 %write8($7EF36E, $10) ; Magic Power
 %write8($7EF36E, $80) ; Magic Power
 %write8($7EF343, $05) ; Bombs
@@ -5807,7 +5808,7 @@ presetSRAM_adold:
 %write8($7EF36E, $60) ; Magic Power
 %write8($7EF350, $01) ; Cane of Somaria
 %write8($7EF36D, $40) ; Health (actual)
-%write8($7EF362, $5D) ; Rupees (actual)
+%write16sram($7EF360, $5D) ; Rupees (actual)
 %write8($7EF36E, $50) ; Magic Power
 %write8($7EF36F, $FF) ; Keys
 %write8($7EF377, $0E) ; Arrows
@@ -5864,7 +5865,7 @@ presetSRAM_adold:
 %write8($7EF36E, $78) ; Magic Power
 %write8($7EF36E, $70) ; Magic Power
 %write8($7EF388, $01) ; Key for dungeon $0C
-%write8($7EF366, $73B8) ; BigKey1
+%write16sram($7EF366, $73B8) ; BigKey1
 %write8($7EF36F, $00) ; Keys
 %write8($7EF36E, $60) ; Magic Power
 %write8($7EF36F, $FF) ; Keys
@@ -5892,7 +5893,7 @@ presetSRAM_adold:
 %write8($7EF376, $00) ; Arrow filler
 %write8($7EF377, $0B) ; Arrows
 %write8($7EF389, $01) ; Key for dungeon $0D
-%write8($7EF366, $73BC) ; BigKey1
+%write16sram($7EF366, $73BC) ; BigKey1
 %write8($7EF377, $0A) ; Arrows
 %write8($7EF36D, $28) ; Health (actual)
 %write8($7EF377, $02) ; Arrows
@@ -5921,7 +5922,7 @@ presetSRAM_adold:
 %write8($7EF36D, $48) ; Health (actual)
 %write8($7EF36E, $30) ; Magic Power
 %write8($7EF36E, $00) ; Magic Power
-%write8($7EF362, $63) ; Rupees (actual)
+%write16sram($7EF360, $63) ; Rupees (actual)
 %write8($7EF36F, $FF) ; Keys
 %write8($7EF3C7, $06) ; Map Phase
 %write8($7EF3EB, $00) ; Deaths

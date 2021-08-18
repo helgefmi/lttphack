@@ -116,7 +116,7 @@ function color(h) = ((((h&$FF)/8)<<10)|(((h>>8&$FF)/8)<<5)|(((h>>16&$FF)/8)<<0))
 ; 04CB[0x25] (04F0)
 
 ; old stuff
-!ram_extra_sa1_required = $6F
+!ram_extra_sa1_required = $35
 
 !offset = $407000
 !offsetinc = 0

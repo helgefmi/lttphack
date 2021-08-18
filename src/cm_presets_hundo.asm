@@ -49,6 +49,7 @@ db $FF ; Palace No
 db $00 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7EC167, $7D) ; Underworld exit cache
 %write8($7EC165, $23) ; Underworld exit cache
 %write8($7EC166, $51) ; Underworld exit cache
@@ -423,6 +424,7 @@ db $00 ; Palace No
 db $01 ; Door
 db $01 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0642, $01) ; Room puzzle state (?)
 %write8($7E0B09, $B0) ; Arc variable
 %write8($7E0B39, $00) ; Arc variable
@@ -460,6 +462,7 @@ db $00 ; Palace No
 db $00 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0642, $00) ; Room puzzle state (?)
 %write16_enable()
 %write16($7E0696, $0004) ; Overworld Door
@@ -543,6 +546,7 @@ db $04 ; Palace No
 db $00 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0B0C, $20) ; Arc variable
 %write16_enable()
 %write16($7E0696, $0005) ; Overworld Door
@@ -594,6 +598,7 @@ db $04 ; Palace No
 db $02 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0468, $00) ; Trap door state
 %write16_enable()
 %write16($7E0696, $0005) ; Overworld Door
@@ -684,6 +689,7 @@ db $04 ; Palace No
 db $01 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0641, $00) ; Room puzzle state (?)
 %write16_enable()
 %write16($7E0696, $0005) ; Overworld Door
@@ -745,6 +751,7 @@ db $04 ; Palace No
 db $02 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0468, $00) ; Trap door state
 %write16_enable()
 %write16($7E0696, $0005) ; Overworld Door
@@ -807,6 +814,7 @@ dw $005A ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFFA ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E0B09, $00) ; Arc variable
 %write8($7E02A1, $17) ; Arc variable
 %write8($7E0B08, $40) ; Arc variable
@@ -833,6 +841,7 @@ db $FF ; Palace No
 db $01 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7EC167, $05) ; Underworld exit cache
 %write8($7EC165, $20) ; Underworld exit cache
 %write8($7EC166, $25) ; Underworld exit cache
@@ -1212,6 +1221,7 @@ dw $0016 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $000E ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $17) ; Arc variable
 %write16_enable()
 %write16($7E0468, $0000) ; Trap door state
@@ -1329,6 +1339,7 @@ db $14 ; Palace No
 db $00 ; Door
 db $01 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $00) ; Arc variable
 %write16_enable()
 %write16($7E0696, $0005) ; Overworld Door
@@ -1386,6 +1397,7 @@ db $14 ; Palace No
 db $00 ; Door
 db $01 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E02A1, $00) ; Arc variable
 %write16_enable()
 %write16($7E0696, $0005) ; Overworld Door
@@ -1436,6 +1448,7 @@ db $14 ; Palace No
 db $00 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E029F, $19) ; Arc variable
 %write16_enable()
 %write16($7E0696, $0005) ; Overworld Door
@@ -1478,6 +1491,7 @@ dw $0050 ; Unknown 1
 dw $0006 ; Unknown 2
 dw $FFF4 ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $17) ; Arc variable
 %write_7F()
 %write8($7FDFCB, $F3) ; Overworld $25 persistent: Octorok Area
@@ -1794,6 +1808,7 @@ db $08 ; Palace No
 db $01 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $00) ; Arc variable
 %write16_enable()
 %write16($7E0696, $0004) ; Overworld Door
@@ -1916,6 +1931,7 @@ db $0C ; Palace No
 db $01 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0B0C, $D0) ; Arc variable
 %write16_enable()
 %write16($7E0696, $0007) ; Overworld Door
@@ -1939,6 +1955,7 @@ db $0C ; Palace No
 db $01 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E029F, $00) ; Arc variable
 %write16_enable()
 %write16($7E0696, $0007) ; Overworld Door
@@ -1987,6 +2004,7 @@ db $0C ; Palace No
 db $01 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0B3F, $01) ; Arc variable
 %write16_enable()
 %write16($7E0696, $0007) ; Overworld Door
@@ -2040,6 +2058,7 @@ db $0C ; Palace No
 db $01 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0642, $01) ; Room puzzle state (?)
 %write16_enable()
 %write16($7E0696, $0007) ; Overworld Door
@@ -2077,6 +2096,7 @@ db $0C ; Palace No
 db $01 ; Door
 db $01 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0642, $00) ; Room puzzle state (?)
 %write16_enable()
 %write16($7E0696, $0007) ; Overworld Door
@@ -2105,6 +2125,7 @@ db $0C ; Palace No
 db $00 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0468, $01) ; Trap door state
 %write16_enable()
 %write16($7E0696, $0007) ; Overworld Door
@@ -2197,6 +2218,7 @@ dw $005A ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFFA ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E0ABD, $00) ; Palette swap
 %write8($7E02A1, $17) ; Arc variable
 %write8($7E0B08, $08) ; Arc variable
@@ -2284,6 +2306,7 @@ dw $092A ; Unknown 1
 dw $000A ; Unknown 2
 dw $0004 ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E02A1, $23) ; Arc variable
 %write8($7E02A2, $FD) ; Arc variable
 %write_7F()
@@ -2442,6 +2465,7 @@ db $16 ; Palace No
 db $02 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0ABD, $01) ; Palette swap
 %write16_enable()
 %write16($7E0696, $000A) ; Overworld Door
@@ -2465,6 +2489,7 @@ db $16 ; Palace No
 db $02 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0ABD, $00) ; Palette swap
 %write8($7E0B3F, $00) ; Arc variable
 %write8($7E0B0C, $B0) ; Arc variable
@@ -2496,6 +2521,7 @@ db $16 ; Palace No
 db $00 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E029F, $01) ; Arc variable
 %write16_enable()
 %write16($7E0696, $000A) ; Overworld Door
@@ -2597,6 +2623,7 @@ db $16 ; Palace No
 db $02 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0B3F, $01) ; Arc variable
 %write16_enable()
 %write16($7E0696, $000A) ; Overworld Door
@@ -2736,6 +2763,7 @@ dw $0B2E ; Unknown 1
 dw $FFF6 ; Unknown 2
 dw $FFFA ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E02A1, $17) ; Arc variable
 %write8($7E02A2, $00) ; Arc variable
 %write_7F()
@@ -2757,6 +2785,7 @@ dw $183E ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFF2 ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E029F, $18) ; Arc variable
 %write16_enable()
 %write16($7E0540, $1B6C) ; Object tilemap state
@@ -2847,6 +2876,7 @@ dw $0F4E ; Unknown 1
 dw $0003 ; Unknown 2
 dw $000A ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E0B3F, $00) ; Arc variable
 %write16_enable()
 %write16($7E0542, $0420) ; Object tilemap state
@@ -2878,6 +2908,7 @@ db $10 ; Palace No
 db $02 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E029F, $00) ; Arc variable
 %write16_enable()
 %write16($7E0696, $0009) ; Overworld Door
@@ -3004,6 +3035,7 @@ db $10 ; Palace No
 db $02 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0468, $01) ; Trap door state
 %write16_enable()
 %write16($7E0696, $0009) ; Overworld Door
@@ -3056,6 +3088,7 @@ dw $0004 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0000 ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $D0) ; Arc variable
 %write8($7E02A2, $00) ; Altitude
 %write_end()
@@ -3287,6 +3320,7 @@ db $12 ; Palace No
 db $01 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0468, $01) ; Trap door state
 %write16_enable()
 %write16($7E0696, $000B) ; Overworld Door
@@ -3438,6 +3472,7 @@ dw $0BC6 ; Unknown 1
 dw $0003 ; Unknown 2
 dw $FFF2 ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $00) ; Arc variable
 %write_7F()
 %write8($7FDFF9, $42) ; Overworld $3C persistent: Great Swamp SE
@@ -3459,6 +3494,7 @@ dw $1600 ; Unknown 1
 dw $FFF6 ; Unknown 2
 dw $FFF3 ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $FE) ; Arc variable
 %write_7F()
 %write8($7FDFCB, $F3) ; Overworld $25 persistent: Octorok Area
@@ -3478,6 +3514,7 @@ dw $000A ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFFD ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $0F) ; Arc variable
 %write_end()
 
@@ -3495,6 +3532,7 @@ dw $1880 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFF4 ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $F7) ; Arc variable
 %write8($7E02A2, $8B) ; Altitude
 %write_end()
@@ -3513,6 +3551,7 @@ dw $0414 ; Unknown 1
 dw $000C ; Unknown 2
 dw $FFFA ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $8B) ; Arc variable
 %write_end()
 
@@ -3746,6 +3785,7 @@ db $0E ; Palace No
 db $01 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0B3F, $01) ; Arc variable
 %write16_enable()
 %write16($7E0696, $000C) ; Overworld Door
@@ -3820,6 +3860,7 @@ db $0E ; Palace No
 db $02 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $00) ; Arc variable
 %write8($7E02A2, $8B) ; Altitude
 %write16_enable()
@@ -3850,6 +3891,7 @@ db $0E ; Palace No
 db $02 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0B3F, $00) ; Arc variable
 %write8($7E02A2, $8B) ; Altitude
 %write16_enable()
@@ -3923,6 +3965,7 @@ dw $0608 ; Unknown 1
 dw $FFFB ; Unknown 2
 dw $0000 ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $FC) ; Arc variable
 %write_end()
 
@@ -3940,6 +3983,7 @@ dw $08A0 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0000 ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $A8) ; Arc variable
 %write_7F()
 %write8($7FE147, $AB) ; Overworld $E3 persistent: UNKNOWN
@@ -3981,6 +4025,7 @@ dw $0520 ; Unknown 1
 dw $000F ; Unknown 2
 dw $0006 ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E0B0C, $F0) ; Arc variable
 %write16_enable()
 %write16($7E0542, $193E) ; Object tilemap state
@@ -4106,6 +4151,7 @@ db $0A ; Palace No
 db $02 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0B0C, $A0) ; Arc variable
 %write16_enable()
 %write16($7E0696, $0008) ; Overworld Door
@@ -4385,6 +4431,7 @@ dw $049E ; Unknown 1
 dw $FFF4 ; Unknown 2
 dw $FFFC ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E0B09, $03) ; Arc variable
 %write8($7E0B39, $88) ; Arc variable
 %write8($7E0B3A, $81) ; Arc variable
@@ -4414,6 +4461,7 @@ dw $001E ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFFA ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $38) ; Arc variable
 %write_7F()
 %write8($7FE0D6, $0B) ; Overworld $AB persistent: UNKNOWN
@@ -4434,6 +4482,7 @@ dw $1600 ; Unknown 1
 dw $FFF6 ; Unknown 2
 dw $FFF3 ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E029F, $FF) ; Arc variable
 %write8($7E02A2, $FE) ; Arc variable
 %write_7F()
@@ -4458,6 +4507,7 @@ db $FF ; Palace No
 db $01 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $84) ; Arc variable
 %write16_enable()
 %write16($7E0696, $0006) ; Overworld Door
@@ -4522,6 +4572,7 @@ db $18 ; Palace No
 db $02 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $00) ; Arc variable
 %write16_enable()
 %write16($7E0696, $000D) ; Overworld Door
@@ -4706,6 +4757,7 @@ db $18 ; Palace No
 db $00 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0B3B, $00) ; Arc variable
 %write8($7E0B0C, $A0) ; Arc variable
 %write8($7E0B3C, $00) ; Arc variable
@@ -4788,6 +4840,7 @@ db $18 ; Palace No
 db $01 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E02A1, $00) ; Arc variable
 %write16_enable()
 %write16($7E0696, $000D) ; Overworld Door
@@ -4817,6 +4870,7 @@ dw $0712 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFFA ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E0B09, $60) ; Arc variable
 %write8($7E0B08, $78) ; Arc variable
 %write8($7E0B0C, $3C) ; Arc variable
@@ -4856,6 +4910,7 @@ db $1A ; Palace No
 db $02 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0468, $00) ; Trap door state
 %write8($7E0B0C, $50) ; Arc variable
 %write16_enable()
@@ -4893,6 +4948,7 @@ db $1A ; Palace No
 db $02 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0641, $00) ; Room puzzle state (?)
 %write16_enable()
 %write16($7E0696, $000E) ; Overworld Door
@@ -4949,6 +5005,7 @@ db $1A ; Palace No
 db $00 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E029F, $00) ; Arc variable
 %write16_enable()
 %write16($7E0696, $000E) ; Overworld Door
@@ -4972,6 +5029,7 @@ db $1A ; Palace No
 db $00 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0B09, $00) ; Arc variable
 %write8($7E0B08, $40) ; Arc variable
 %write16_enable()
@@ -4996,6 +5054,7 @@ db $1A ; Palace No
 db $01 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0468, $00) ; Trap door state
 %write16_enable()
 %write16($7E0696, $000E) ; Overworld Door
@@ -5029,6 +5088,7 @@ db $1A ; Palace No
 db $02 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0641, $00) ; Room puzzle state (?)
 %write16_enable()
 %write16($7E0696, $000E) ; Overworld Door
@@ -5055,6 +5115,7 @@ db $1A ; Palace No
 db $01 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0468, $01) ; Trap door state
 %write16_enable()
 %write16($7E0696, $000E) ; Overworld Door
@@ -5223,6 +5284,7 @@ db $1A ; Palace No
 db $02 ; Door
 db $00 ; Layer
 ;-----------------------------
+%write8_enable()
 %write8($7E0B3F, $01) ; Arc variable
 %write16_enable()
 %write16($7E0696, $000E) ; Overworld Door
@@ -5391,6 +5453,7 @@ dw $002E ; Unknown 1
 dw $FFF6 ; Unknown 2
 dw $FFF8 ; Unknown 3
 ;-----------------------------
+%write8_enable()
 %write8($7E02A2, $FC) ; Arc variable
 %write_end()
 
@@ -6387,15 +6450,8 @@ presetSRAM_hundo:
 ..bed
 %write8($7EF36F, $FF) ; Keys
 %write8($7EF36C, $1818) ; Health (goal)
-%write8($7EF378, $F800) ; ????
-%write8($7EF3DC, $8C01) ; Player name
-%write8($7EF3E0, $AA01) ; Player name
-%write8($7EF400, $FF00) ; Deaths
-%write8($7EF3DA, $8C01) ; Player name
-%write8($7EF3DE, $8C01) ; Player name
-%write8($7EF3E2, $55) ; Player name
-%write8($7EF402, $FF) ; Deaths
-%write8($7EF4FE, $D0EA) ; Inverse checksum
+%write8($7EF377, $F8) ; abilities
+%write16sram($7EF401, $FFFF) ; Deaths
 %writeroom($104, $0002) ; Room $0104: Unknown (...............q)
 %writeroom($106, $F000) ; Room $0106: Unknown (.dddb...........)
 %writeroom($107, $F000) ; Room $0107: Unknown (.dddb...........)
@@ -6408,7 +6464,7 @@ presetSRAM_hundo:
 %write8($7EF359, $01) ; Sword
 %write8($7EF3C5, $01) ; Game Phase 1
 %write8($7EF35A, $01) ; Shield
-%write8($7EF362, $01) ; Rupees (actual)
+%write16sram($7EF360, $01) ; Rupees (actual)
 %write8($7EF3C6, $11) ; Game Phase 2
 %writeroom($055, $000F) ; Room $0055: Castle Secret Entrance / Uncle Death Room (.............qqq)
 %writeroom($028, $0000) ; Room $0028: Swamp Palace (Entrance Room) (................)
@@ -6449,7 +6505,7 @@ presetSRAM_hundo:
 %write8($7EF3CC, $01) ; Tagalong
 %write8($7EF3E5, $00) ; Validity (checksum)
 %write8($7EF34A, $01) ; Torch
-%write8($7EF366, $4000) ; BigKey1
+%write16sram($7EF366, $4000) ; BigKey1
 %writeroom($080, $043C) ; Room $0080: Hyrule Castle (Jail Cell Room) (......K....cqqq.)
 ...end
 ;---------------------------------------------------------------------------------------------------
@@ -6529,14 +6585,14 @@ presetSRAM_hundo:
 ...end
 ;---------------------------------------------------------------------------------------------------
 ..big_key_dmg_boost
-%write8($7EF362, $15) ; Rupees (actual)
+%write16sram($7EF360, $15) ; Rupees (actual)
 %writeroom($0BA, $840C) ; Room $00BA: Eastern Palace (Dark Antifairy / Key Pot Room) (.d....K......qq.)
 %writeroom($0B9, $800F) ; Room $00B9: Eastern Palace (Lobby Cannonballs Room) (.d...........qqq)
 ...end
 ;---------------------------------------------------------------------------------------------------
 ..big_chest_room_2
 %write8($7EF36D, $0C) ; Health (actual)
-%write8($7EF366, $6000) ; BigKey1
+%write16sram($7EF366, $6000) ; BigKey1
 %write8($7EF36D, $14) ; Health (actual)
 %writeroom($0A8, $200F) ; Room $00A8: Eastern Palace (Stalfos Spawn Room) (...d.........qqq)
 %writeroom($0B8, $8015) ; Room $00B8: Eastern Palace (Big Key Room) (.d..........q.q.)
@@ -6549,7 +6605,7 @@ presetSRAM_hundo:
 ...end
 ;---------------------------------------------------------------------------------------------------
 ..pot_room
-%write8($7EF362, $1B) ; Rupees (actual)
+%write16sram($7EF360, $1B) ; Rupees (actual)
 %write8($7EF36E, $20) ; Magic Power
 %writeroom($099, $C403) ; Room $0099: Eastern Palace (Eyegore Key Room) (.dd...K........q)
 ...end
@@ -6563,7 +6619,7 @@ presetSRAM_hundo:
 ..armos
 %write8($7EF34F, $00) ; Bottles
 %write8($7EF377, $12) ; Arrows
-%write8($7EF362, $1C) ; Rupees (actual)
+%write16sram($7EF360, $1C) ; Rupees (actual)
 %writeroom($0D8, $0005) ; Room $00D8: Eastern Palace (Zeldagamer Room / Pre-Armos Knights Room) (..............q.)
 ...end
 ;---------------------------------------------------------------------------------------------------
@@ -6588,7 +6644,7 @@ presetSRAM_hundo:
 %write8($7EF355, $01) ; Boots
 %write8($7EF379, $FC) ; Ability Flags
 %write8($7EF343, $03) ; Bombs
-%write8($7EF362, $80) ; Rupees (actual)
+%write16sram($7EF360, $80) ; Rupees (actual)
 %write8($7EF375, $00) ; Bomb filler
 %writeroom($105, $0002) ; Room $0105: Unknown (...............q)
 ...end
@@ -6627,7 +6683,7 @@ presetSRAM_hundo:
 ;---------------------------------------------------------------------------------------------------
 ..pot_room
 %write8($7EF377, $0A) ; Arrows
-%write8($7EF366, $7000) ; BigKey1
+%write16sram($7EF366, $7000) ; BigKey1
 %writeroom($075, $0017) ; Room $0075: Desert Palace (Big Key Chest Room) (............q.qq)
 %writeroom($085, $400E) ; Room $0085: Desert Palace (East Entrance Room) (..d..........qqq)
 ...end
@@ -6714,7 +6770,7 @@ presetSRAM_hundo:
 ...end
 ;---------------------------------------------------------------------------------------------------
 ..beetles
-%write8($7EF366, $7020) ; BigKey1
+%write16sram($7EF366, $7020) ; BigKey1
 %write8($7EF36E, $70) ; Magic Power
 %write8($7EF386, $00) ; Key for dungeon $0A
 %writeroom($087, $041F) ; Room $0087: Tower of Hera (Tile Room) (......K.....qqqq)
@@ -6758,16 +6814,16 @@ presetSRAM_hundo:
 ;---------------------------------------------------------------------------------------------------
 ..lost_woods
 %write8($7EF377, $0A) ; Arrows
-%write8($7EF362, $26) ; Rupees (actual)
-%write8($7EF362, $80) ; Rupees (actual)
+%write16sram($7EF360, $26) ; Rupees (actual)
+%write16sram($7EF360, $80) ; Rupees (actual)
 ...end
 ;---------------------------------------------------------------------------------------------------
 ..after_lost_woods
 %write8($7EF3C7, $05) ; Map Phase
 %write8($7EF300, $40) ; Overworld $80: Unknown (..?.....)
 %write8($7EF359, $02) ; Sword
-%write8($7EF362, $76) ; Rupees (actual)
-%write8($7EF362, $80) ; Rupees (actual)
+%write16sram($7EF360, $76) ; Rupees (actual)
+%write16sram($7EF360, $80) ; Rupees (actual)
 %write8($7EF344, $01) ; Mushroom
 %write8($7EF36B, $02) ; Heart pieces
 ...end
@@ -6806,8 +6862,8 @@ presetSRAM_hundo:
 ;---------------------------------------------------------------------------------------------------
 ..pit_room
 %write8($7EF377, $07) ; Arrows
-%write8($7EF362, $77) ; Rupees (actual)
-%write8($7EF362, $80) ; Rupees (actual)
+%write16sram($7EF360, $77) ; Rupees (actual)
+%write16sram($7EF360, $80) ; Rupees (actual)
 %writeroom($040, $0001) ; Room $0040: Agahnim's Tower (Final Bridge Room) (................)
 %writeroom($0B0, $240F) ; Room $00B0: Agahnim's Tower (Circle of Pots) (...d..K......qqq)
 ...end
@@ -6835,8 +6891,8 @@ presetSRAM_hundo:
 ;---------------------------------------------------------------------------------------------------
 ..entrance
 %write8($7EF2DE, $20) ; Overworld $5E: Unknown (...?....)
-%write8($7EF362, $09) ; Rupees (actual)
-%write8($7EF362, $12) ; Rupees (actual)
+%write16sram($7EF360, $09) ; Rupees (actual)
+%write16sram($7EF360, $12) ; Rupees (actual)
 ...end
 ;---------------------------------------------------------------------------------------------------
 ..main_hub_small_key
@@ -6856,7 +6912,7 @@ presetSRAM_hundo:
 ;---------------------------------------------------------------------------------------------------
 ..main_hub_hammeryump
 %write8($7EF36F, $00) ; Keys
-%write8($7EF366, $7220) ; BigKey1
+%write16sram($7EF366, $7220) ; BigKey1
 %write8($7EF382, $00) ; Key for dungeon $06
 %writeroom($00A, $801F) ; Room $000A: Palace of Darkness (Stalfos Trap Room) (.d..........qqqq)
 %writeroom($03A, $801F) ; Room $003A: Palace of Darkness (Bombable Floor Room) (.d..........qqqq)
@@ -6926,7 +6982,7 @@ presetSRAM_hundo:
 ...end
 ;---------------------------------------------------------------------------------------------------
 ..grove
-%write8($7EF362, $13E) ; Rupees (actual)
+%write16sram($7EF360, $13E) ; Rupees (actual)
 ...end
 ;---------------------------------------------------------------------------------------------------
 ..usain_bolt
@@ -6944,7 +7000,7 @@ presetSRAM_hundo:
 %write8($7EF34D, $01) ; Net
 %write8($7EF34F, $01) ; Bottles
 %write8($7EF35C, $02) ; Bottle 1 (empty)
-%write8($7EF362, $1A4) ; Rupees (actual)
+%write16sram($7EF360, $1A4) ; Rupees (actual)
 %write8($7EF36B, $02) ; Heart pieces
 %write8($7EF3CA, $00) ; LW/DW
 ...end
@@ -6953,7 +7009,7 @@ presetSRAM_hundo:
 %write8($7EF3CA, $40) ; LW/DW
 %write8($7EF344, $02) ; Magic powder
 %write8($7EF35D, $02) ; Bottle 2 (empty)
-%write8($7EF362, $154) ; Rupees (actual)
+%write16sram($7EF360, $154) ; Rupees (actual)
 %write8($7EF36B, $00) ; Heart pieces
 %write8($7EF36C, $58) ; Health (goal)
 %write8($7EF36D, $58) ; Health (actual)
@@ -6961,15 +7017,15 @@ presetSRAM_hundo:
 ;---------------------------------------------------------------------------------------------------
 ..entrance
 %write8($7EF2D8, $20) ; Overworld $58: Unknown (...?....)
-%write8($7EF362, $0A) ; Rupees (actual)
+%write16sram($7EF360, $0A) ; Rupees (actual)
 %write8($7EF341, $02) ; Magic boomerang
-%write8($7EF362, $136) ; Rupees (actual)
+%write16sram($7EF360, $136) ; Rupees (actual)
 %write8($7EF36B, $01) ; Heart pieces
 ...end
 ;---------------------------------------------------------------------------------------------------
 ..after_big_key
 %write8($7EF36F, $00) ; Keys
-%write8($7EF366, $7230) ; BigKey1
+%write16sram($7EF366, $7230) ; BigKey1
 %writeroom($0CC, $000F) ; Room $00CC: Thieves Town (North East Entrance Room) (.............qqq)
 %writeroom($0DC, $000F) ; Room $00DC: Thieves Town (South East Entrance Room) (.............qqq)
 %writeroom($0CB, $000F) ; Room $00CB: Thieves Town (North West Entrance Room) (.............qqq)
@@ -7044,9 +7100,9 @@ presetSRAM_hundo:
 ..cursed_dwarf
 %write8($7EF343, $04) ; Bombs
 %write8($7EF2D8, $22) ; Overworld $58: Unknown (...?...?)
-%write8($7EF362, $136) ; Rupees (actual)
+%write16sram($7EF360, $136) ; Rupees (actual)
 %write8($7EF343, $05) ; Bombs
-%write8($7EF362, $262) ; Rupees (actual)
+%write16sram($7EF360, $262) ; Rupees (actual)
 %writeroom($106, $F012) ; Room $0106: Unknown (.dddb.......q..q)
 ...end
 ;---------------------------------------------------------------------------------------------------
@@ -7058,17 +7114,17 @@ presetSRAM_hundo:
 %write8($7EF3CC, $00) ; Tagalong
 %write8($7EF359, $03) ; Sword
 %write8($7EF3C9, $20) ; Game Phase 3
-%write8($7EF362, $12C) ; Rupees (actual)
-%write8($7EF362, $258) ; Rupees (actual)
+%write16sram($7EF360, $12C) ; Rupees (actual)
+%write16sram($7EF360, $258) ; Rupees (actual)
 %write8($7EF36B, $02) ; Heart pieces
 %write8($7EF37B, $01) ; 1/2 magic
 %writeroom($121, $0002) ; Room $0121: Unknown (...............q)
 ...end
 ;---------------------------------------------------------------------------------------------------
 ..dash_to_sw
-%write8($7EF362, $258) ; Rupees (actual)
+%write16sram($7EF360, $258) ; Rupees (actual)
 %write8($7EF35E, $02) ; Bottle 3 (empty)
-%write8($7EF362, $258) ; Rupees (actual)
+%write16sram($7EF360, $258) ; Rupees (actual)
 %writeroom($11C, $0011) ; Room $011C: Unknown (............q...)
 ...end
 ;---------------------------------------------------------------------------------------------------
@@ -7077,7 +7133,7 @@ presetSRAM_hundo:
 ;---------------------------------------------------------------------------------------------------
 ..bomb_jump
 %write8($7EF377, $10) ; Arrows
-%write8($7EF366, $72B0) ; BigKey1
+%write16sram($7EF366, $72B0) ; BigKey1
 %writeroom($057, $001A) ; Room $0057: Skull Woods (Big Key Room) (............qq.q)
 ...end
 ;---------------------------------------------------------------------------------------------------
@@ -7150,7 +7206,7 @@ presetSRAM_hundo:
 ..tiny_warp
 %write8($7EF379, $FE) ; Ability Flags
 %write8($7EF356, $01) ; Flippers
-%write8($7EF362, $64) ; Rupees (actual)
+%write16sram($7EF360, $64) ; Rupees (actual)
 %write8($7EF36B, $03) ; Heart pieces
 ...end
 ;---------------------------------------------------------------------------------------------------
@@ -7291,7 +7347,7 @@ presetSRAM_hundo:
 ;---------------------------------------------------------------------------------------------------
 ..spark_gamble
 %write8($7EF373, $00) ; Magic filler
-%write8($7EF366, $77B0) ; BigKey1
+%write16sram($7EF366, $77B0) ; BigKey1
 %write8($7EF36E, $40) ; Magic Power
 %writeroom($097, $010F) ; Room $0097: Misery Mire (Torch Puzzle / Moving Wall Room) (........c....qqq)
 %writeroom($0B1, $0007) ; Room $00B1: Misery Mire (Hourglass Room) (..............qq)
@@ -7316,7 +7372,7 @@ presetSRAM_hundo:
 ...end
 ;---------------------------------------------------------------------------------------------------
 ..basement
-%write8($7EF362, $65) ; Rupees (actual)
+%write16sram($7EF360, $65) ; Rupees (actual)
 %write8($7EF36D, $58) ; Health (actual)
 %writeroom($0A2, $800F) ; Room $00A2: Misery Mire (Bridge Key Chest Room) (.d...........qqq)
 %writeroom($0B2, $800D) ; Room $00B2: Misery Mire (Slug Room) (.d...........qq.)
@@ -7411,7 +7467,7 @@ presetSRAM_hundo:
 ...end
 ;---------------------------------------------------------------------------------------------------
 ..backtracking
-%write8($7EF366, $76B0) ; BigKey1
+%write16sram($7EF366, $76B0) ; BigKey1
 %writeroom($054, $000F) ; Room $0054: Swamp Palace (Upstairs Pits Room) (.............qqq)
 %writeroom($035, $849F) ; Room $0035: Swamp Palace (Big Key / BS Room) (.d....K..c..qqqq)
 ...end
@@ -7467,7 +7523,7 @@ presetSRAM_hundo:
 %write8($7EF352, $01) ; Magic Cape
 %write8($7EF359, $04) ; Golden Sword
 %write8($7EF35F, $01) ; Bottle 4 (empty)
-%write8($7EF362, $1D) ; Rupees (actual)
+%write16sram($7EF360, $1D) ; Rupees (actual)
 %write8($7EF36B, $02) ; Heart pieces
 %write8($7EF36C, $90) ; Health (goal)
 %write8($7EF36D, $90) ; Health (actual)
@@ -7537,8 +7593,8 @@ presetSRAM_hundo:
 ...end
 ;---------------------------------------------------------------------------------------------------
 ..pokeys_2
-%write8($7EF362, $79) ; Rupees (actual)
-%write8($7EF366, $77B8) ; BigKey1
+%write16sram($7EF360, $79) ; Rupees (actual)
+%write16sram($7EF366, $77B8) ; BigKey1
 %write8($7EF36E, $78) ; Magic Power
 %writeroom($014, $401F) ; Room $0014: Turtle Rock (Big Key Room) (..d.........qqqq)
 %writeroom($013, $8405) ; Room $0013: Turtle Rock (Hokku-Bokku Key Room 2) (.d....K.......q.)
@@ -7625,7 +7681,7 @@ presetSRAM_hundo:
 ..floor_2
 %write8($7EF377, $0E) ; Arrows
 %write8($7EF389, $01) ; Key for dungeon $0D
-%write8($7EF366, $77BC) ; BigKey1
+%write16sram($7EF366, $77BC) ; BigKey1
 %write8($7EF35B, $02) ; Red Mail
 %writeroom($01C, $0035) ; Room $001C: Ganon's Tower (Ice Armos) (...........cq.q.)
 ...end

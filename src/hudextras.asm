@@ -1405,37 +1405,14 @@ linecounter_nothing:
 ;===================================================================================================
 
 linecounter_roomdata:
-	; make room data
-	; do calculate the same as in bank02
-	LDA.w SA1IRAM.LINEVAL+1, Y
-	LSR
-	LSR
-	LSR
-	LSR
-	STA.b SA1IRAM.SCRATCH+14
-
-	LDA.w SA1IRAM.LINEVAL-1, Y : AND.w #$F000
-	ORA.w SA1IRAM.LINEVAL+3, Y
-	STA.b SA1IRAM.SCRATCH+14
+	LDA.w SA1IRAM.LINEVAL+1, Y : AND.w #$0FFF : STA.b SA1IRAM.SCRATCH+10
+	LDA.w SA1IRAM.LINEVAL-1, Y : AND.w #$F000 : ORA.b SA1IRAM.SCRATCH+10
 
 	; rearrange it into the order we want
-	; Start: dddd hkcc cccc qqqq
+	; Start: dddd qqqq hkcc cccc
 	; End:   hkcc cccc dddd qqqq
-	AND.b #$000F ; quadrants
+	XBA 
 	STA.b SA1IRAM.SCRATCH+10
-
-	LDA.b SA1IRAM.SCRATCH+14 ; boss and chests
-	AND.w #$0FF0
-	ASL
-	ASL
-	ASL
-	ASL
-	TSB.b SA1IRAM.SCRATCH+10
-
-	LDA.b SA1IRAM.SCRATCH+14
-	AND.w #$F000
-	XBA
-	TSB.b SA1IRAM.SCRATCH+10
 
 	LDA.w #char($19)|!RED_PAL : STA.w SA1RAM.HUD, X ; flag symbol
 

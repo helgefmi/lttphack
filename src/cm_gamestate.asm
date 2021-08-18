@@ -1,5 +1,5 @@
 GAMESTATE_SUBMENU:
-%menu_header("GAMESTATE", 12)
+%menu_header("GAME STATE", 10)
 
 ;===================================================================================================
 %func("Skip text", this)
@@ -12,26 +12,6 @@ GAMESTATE_SUBMENU:
 	SEP #$30
 	LDA #$22 : STA $012F
 	JML Sprite_DisableAll
-
-;===================================================================================================
-%func("Reset current room", this)
-	LDA $1B : BEQ ++
-
-	STZ $0400 : STZ $0401 : STZ $0402 : STZ $0403 : STZ $0408
-	LDA $A0 : ASL : TAX
-	LDA #$00 : STA $7EF000, X
-	BRA +
-
-++	LDX $8A
-	LDA #$00 : STA $7EF280, X
-
-+	LDA #$09 : STA $012F
-	RTL
-
-;===================================================================================================
-%numfield_pressfunc_hex("Load room", SA1RAM.loadroomid, $00, $FF, $10, this)
-	LDA.w SA1RAM.loadroomid
-	RTL
 
 ;===================================================================================================
 %submenu("Reset dungeons", cm_game_reset_dungeons_submenu)

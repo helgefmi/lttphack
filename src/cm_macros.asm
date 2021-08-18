@@ -226,6 +226,16 @@ macro toggle_long_func_customtext_here(name, addr, func)
 	%list_header(2)
 endmacro
 
+%MenuAction("TOGGLE_ROOMFLAG", 2, $6B)
+macro toggle_roomflag(name, bit)
+	%add_self()
+	db !CM_TOGGLE_ROOMFLAG
+	db <bit>
+	db "<name>", $FF
+
+#?here:
+endmacro
+
 ;---------------------------------------------------------------------------------------------------
 macro toggle_onoff(name, addr)
 	;%toggle_customtext(<name>, <addr>, CMDRAW_ONOFF)
@@ -274,6 +284,15 @@ endmacro
 
 %MenuAction("NUMFIELD_HEX", 6, $6D)
 macro numfield_hex(name, addr, start, end, increment)
+	%add_self()
+	db !CM_NUMFIELD_HEX
+	dw <addr>
+	db <start>, <end>, <increment>
+	db "<name>", $FF
+endmacro
+
+%MenuAction("NUMFIELD_HEX_UPDATEWHOLEMENU", 6, $6D)
+macro numfield_hex_update(name, addr, start, end, increment)
 	%add_self()
 	db !CM_NUMFIELD_HEX
 	dw <addr>

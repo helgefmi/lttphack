@@ -369,6 +369,9 @@ CMDRAW_ONOFF:
 	%list_item("Off")
 	%list_item("On")
 
+; TODO 3 digits for room ID
+CMDRAW_NUMFIELD_HEX_UPDATEWHOLEMENU:
+
 CMDRAW_HEX_2_DIGITS:
 	LDY.w #2
 	BRA CMDRAW_HEX
@@ -601,6 +604,49 @@ CMDRAW_TOGGLE_BIT1_LONG_CUSTOMTEXT:
 
 CMDRAW_TOGGLE_BIT0_LONG_CUSTOMTEXT:
 	LDA.b #$1<<0 : BRA CMDRAW_CHECK_BIT_LONG_CUSTOMTEXT
+
+;===================================================================================================
+CMDRAW_TOGGLE_ROOMFLAG:
+
+	LDA.b [SA1IRAM.cm_current_draw], Y
+	ASL
+	TAY
+
+	PHX
+
+	LDA.w SA1RAM.loadroomid : ASL : TAX
+	LDA.l $7EF000,X
+
+	PLX
+
+	LDY.w #'0'
+
+	AND.w .bits, Y
+	BEQ ++
+
+	LDY.w #'1'
+
+++	TYA
+	JSL CMDRAW_1_CHARACTER
+	RTS
+
+.bits
+	dw 1<<0
+	dw 1<<1
+	dw 1<<2
+	dw 1<<3
+	dw 1<<4
+	dw 1<<5
+	dw 1<<6
+	dw 1<<7
+	dw 1<<8
+	dw 1<<9
+	dw 1<<10
+	dw 1<<11
+	dw 1<<12
+	dw 1<<13
+	dw 1<<14
+	dw 1<<15
 
 ;===================================================================================================
 CMDRAW_NUMFIELD_LONG_2DIGITS: ; so bombs and arrows align better
