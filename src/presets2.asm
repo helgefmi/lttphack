@@ -213,7 +213,6 @@ preset_load:
 
 	; disable sound effects now
 	LDX.b #$05 : STX.b $2141
-
 	LDX.b #$80 : STX.b $2100
 
 	; clear text tile map
@@ -366,13 +365,17 @@ preset_load:
 
 	JSL $00FC62
 
+	PHY : PHB
+	JSR .writeSRAM
+
+	JSL $00FC62
+
 	REP #$30
 	PLB : PLY
 
 	LDA.b SA1IRAM.preset_type
 	AND.w #$00FF
 	TAX
-
 	PLA ; get ID back
 
 	PEA.w $7E80 ; push data banks we wanna use
@@ -847,6 +850,11 @@ preset_load:
 ..not_room
 	LDA.b [SA1IRAM.preset_prog],Y
 	STA.w $7EB000,X
+	BRA ..next_from_room
+
+..not_room
+	LDA.b [SA1IRAM.preset_prog], Y
+	STA.w $7EB000, X
 	BRA ..next_from_room
 
 ..done
