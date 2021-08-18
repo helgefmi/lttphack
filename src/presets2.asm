@@ -10,6 +10,10 @@ PresetLoadArea_UW:
 	JSR.w $02D854
 	JMP.w $028157
 
+LoadOverworldOverlay:
+	JSR.w $02FA71
+	RTL
+
 pullpc
 PRESET_SUBMENU:
 	SEP #$30
@@ -105,6 +109,10 @@ macro writeroom(room, n)
 	dw <room>*2 : dw <n>
 endmacro
 
+macro write16sram(addr, data)
+	dw <addr>&$4FFF|$4000 : dw <data>
+endmacro
+
 ;===================================================================================================
 ; Preset format:
 ;	%preset_ow("Name", pointer)
@@ -155,6 +163,10 @@ endmacro
 
 ; dw $000F - swap to bank 7F (write mode becomes 8 bit)
 
+emptybg3:
+	dw $7F20
+
+
 preset_load_last_preset:
 	REP #$20
 	LDA.w SA1IRAM.preset_addr
@@ -164,32 +176,10 @@ preset_load_last_preset:
 preset_load:
 	SEP #$30
 
-	PEA.w $0000
-	PLD
-
 	; clear camera shake offsets
 	REP #$20
 	STZ.w $011A : STZ.w $011C
 
-	; clear stuff for text if needed
-	LDA.b $10 : CMP.w #$020E
-	BNE .no_text
-
-	; TODO do this myself
-;	LDA.w $1CD2 : STA.w $1CD0
-;	XBA : STA.w $1002
-;	LDA.w #$2E42 : STA.w $1004
-;	LDA.w #$387F : STA.w $1006
-;	LDA.w #$FFFF : STA.w $1008
-;
-;	SEP #$20
-;	LDA.b #$01 : STA.b $14
-;	STZ $1CD8
-;
-;	STZ.b $12 ; wait for NMI to clear hud
-;--	LDA.b $12 : BEQ --
-
-.no_text
 	SEP #$30
 	STZ.w $0128 ; disable IRQ
 	STZ.w $4200 ; disable NMI
@@ -197,43 +187,68 @@ preset_load:
 	; big blocks of zeros clear tile map
 	REP #$20
 	LDA.w #$2100 : TCD
-
 	LDX.b #$80 : STX.b $2100
 
+	; clear text tile map
+	LDY.b #$00 : STY.b $2115
+
+	STA.w $4355
+	LDA.w #$1808 : STA.w $4350
+	LDA.w #$C240>>1 : STA.b $2116
+	LDA.w #emptybg3+1 : STA.w $4352
+	LDY.b #emptybg3>>16 : STY.w $4354
+	LDA.w #$05C0/2 : STA.w $4355
+
+	LDX.b #$20 : STX.w $420B
+
+	LDY.b #$80 : STY.b $2115
+
+	STA.w $4355
+	LDA.w #$1908 : STA.w $4350
+	LDA.w #$C240>>1 : STA.b $2116
+	LDA.w #emptybg3 : STA.w $4352
+
+	STX.w $420B
+
+	; clear stuff for text
+	LDA.w #$F800>>1 : STA.b $2116
 	LDA.w #ZeroLand+1 : STA.w $4352
 	LDX.b #ZeroLand>>16 : STX.w $4354
+	LDA.w #$0780 : STA.w $4355
+	LDA.w #$1809 : STA.w $4350
+
+	STX.w $420B
+
 	LDA.w #$8008 : STA.w $4350
 
 	LDY.b #$01
 	STY.b $2183 ; bank 7F to start
 
-	LDY.b #$20
-
 	; clear some sprite stuff
 	LDA.w #$F800 : STA.b $2181
 	LDA.w #$0020 : STA.w $4355
-	STY.w $420B
+	STX.w $420B
 
 	LDA.w #$DF80 : STA.b $2181
 	LDA.w #$1200 : STA.w $4355
-	STY.w $420B
+	STX.w $420B
 
 	; clear tile map
 	LDA.w #$2000 : STA.b $2181
 	STA.w $4355 ; happens to be number of bytes to write too
-	STY.w $420B
+	STX.w $420B
 
 	STZ.b $2182 ; bank 7E now
 
 	; clear sram mirror
 	LDA.w #$F000 : STA.b $2181
 	LDA.w #$0500 : STA.w $4355
-	STY.w $420B
+	STX.w $420B
 
 	; clear some wram
 	STA.w $4355 ; 0x500 bytes again, for wram
 	LDA.w #$0B00 : STA.b $2181
-	STY.w $420B
+	STX.w $420B
 
 	; no point in looping these
 	STZ.w $029E+0
@@ -246,9 +261,6 @@ preset_load:
 	STZ.w $02F0
 	STZ.w $0ABD
 
-
-
-
 	; start loading preset data
 	LDA.w #$3000 : TCD
 
@@ -257,14 +269,17 @@ preset_load:
 	PHA
 	PLB ; do stuff in bank 7E first
 
-	; resstore some standard SRAM stuff
+	; restore some standard SRAM stuff
 	LDA.b #$18 : STA.w $7EF36C : STA.w $7EF36D ; HP
 	LDA.b #$68 : STA.w $7EF379 ; Abilities
 
 	; Chompy face player name
 	REP #$20
 	LDA.w #$00CE : STA.w $7EF3D9
-	LDA.w #$018C : STA.w $7EF3DB : STA.w $7EF3DD : STA.w $7EF3E1
+	LDA.w #$018C : STA.w $7EF3DB : STA.w $7EF3DD : STA.w $7EF3DF
+
+	; checksum
+	LDA.w #$55AA : STA.w $7EF3E1
 
 	SEP #$20
 	; make the banks match just in case
@@ -305,7 +320,6 @@ preset_load:
 
 	; Camera V and H
 	LDA.b [SA1IRAM.preset_addr], Y : INY #2 : STA.w $00E6 : STA.w $00E8
-
 	LDA.b [SA1IRAM.preset_addr], Y : INY #2 : STA.w $00E0 : STA.w $00E2
 
 	SEP #$20
@@ -321,16 +335,28 @@ preset_load:
 	; Link's direction
 	LDA.b [SA1IRAM.preset_addr], Y : INY : STA.w $002F
 
+	PHY : PHB
+	JSR .writeSRAM
+
+	JSL $00FC62
+
 	REP #$30
+	PLB : PLY
+
 	PLA ; get ID back
 	LDX.b SA1IRAM.preset_type
+
+	PEA.w $7E80 ; push data banks we wanna use
+	PLB
 
 	JSR (.preset_types, X)
 
 	; do the arbitrary writes first
 	REP #$31
+	PLB
 	LDA.w #$0001
-	JSR .new_command_preload
+	;JSR .new_command_preload
+	JSR .start_arb
 
 	SEP #$30 ; bank 7E again
 	LDA.b #$7E
@@ -355,8 +381,6 @@ preset_load:
 	BCC .persist
 
 .skip_persist
-	JSR .writeSRAM
-
 	; time for some fixers
 	PHK
 	PLB
@@ -417,7 +441,7 @@ preset_load:
 	LDA.l $0D0006, X : STA.w SA1RAM.HUD+$08C
 
 	; make rupees match
-	LDA.l $7EF362 : STA.l $7EF360
+	LDA.l $7EF360 : STA.l $7EF362
 
 	; these are hardcoded
 	; DISGUSTING
@@ -653,6 +677,10 @@ preset_load:
 	BRA .new_command
 
 
+.start_arb_no_comm
+	LDA.b [SA1IRAM.preset_reader], Y
+	BRA .new_command_preload
+
 .start_arb
 	LDA.b [SA1IRAM.preset_reader], Y
 
@@ -757,12 +785,14 @@ preset_load:
 	dw .done_arb
 	dw .toBank7F
 
+;---------------------------------------------------------------------------------------------------
+
 .writeSRAM
-	SEP #$20
+	SEP #$21
 	LDA.b #$7E
 	PHA
 	PLB
-	REP #$21
+	REP #$20
 
 	LDA.b SA1IRAM.preset_prog_end
 	SBC.b SA1IRAM.preset_prog
@@ -786,7 +816,7 @@ preset_load:
 	BCS ..done
 
 	TAX
-	BPL ..write_room
+	BPL ..write_16
 
 	SEP #$20
 	LDA.b [SA1IRAM.preset_prog], Y
@@ -794,9 +824,16 @@ preset_load:
 	REP #$20
 	BRA ..next
 
-..write_room
+..write_16
+	BIT.w #$4000
+	BNE ..not_room
 	LDA.b [SA1IRAM.preset_prog], Y
 	STA.w $7EF000, X
+	BRA ..next_from_room
+
+..not_room
+	LDA.b [SA1IRAM.preset_prog], Y
+	STA.w $7EB000, X
 	BRA ..next_from_room
 
 ..done
@@ -829,7 +866,7 @@ presetload_overworld:
 	STZ.w $001B ; outdoors
 
 	BIT.w $008A ; do mirror portal?
-	BVC .lightworld
+	BVS .darkworld
 
 	LDA.b #$6C ; add portal to sprite list
 	STA.w $0E2F
@@ -837,25 +874,86 @@ presetload_overworld:
 	LDA.b #$08
 	STA.w $0DDF
 
-.lightworld
+.darkworld
 	JSR SaveALot
 
 	REP #$20
 	LDA.w #$0009 : STA.w $0010
 	LDA.w #$FFF8 : STA.w $00EC
 	STZ.w $0696 : STZ.w $0698
-
+	STZ.w $2116
+	
 	REP #$20
 	JSL $02EA30
 	SEP #$20
+
 	JSL $0AB911
-	JSL $02B116
+
+	JSL $02B116 : JSR OWToVRAM
+
+	LDA.w $0410 : PHA
+	LDA.w $0416 : PHA
+	LDA.w $0418 : PHA
+	PEI.b ($84)
+	PEI.b ($86)
+	PEI.b ($88)
+	PEI.b ($8A)
+
+	LDA.b $8C : STA.b $8A
+	LDA.w #$0390 : STA.b $84
+	LDA.w #$001F : STA.b $88
+	STZ.b $86
+
+	STZ.w $0410
+	STZ.w $0416
+	STZ.w $0418
+
+	JSL LoadOverworldOverlay : JSR OWToVRAM
+
+	PLA : STA.b $008A
+	PLA : STA.b $0088
+	PLA : STA.b $0086
+	PLA : STA.b $0084
+	PLA : STA.w $0418
+	PLA : STA.w $0416
+	PLA : STA.w $0410
+
+	SEP #$30
+	JSL $09C499
+
 	JSR PullALot
 
 	LDA.w #$0009 : STA.w $0010
 	SEP #$20
 	LDA.b #$0F : STA.w $0013
 	STZ.w $0200 : STZ.w $00B0
+
+	RTS
+;---------------------------------------------------------------------------------------------------
+
+OWToVRAM:
+	SEP #$30
+	STZ.b $17 : STZ.w $0710
+
+	LDA.b #$7F : STA.w $4304
+	LDA.b #$80 : STA.w $2115
+
+	REP #$31
+
+	LDA.w #$2000 : STA.w $4302
+	LDY.w #$0080 : LDX.w #$0000
+	LDA.w #$1801 : STA.w $4300
+
+.next_chunk
+	LDA.l $7F4000,X : STA.w $2116 : STY.w $4305 : LDA.w #$0001 : STA.w $420B
+	LDA.l $7F4002,X : STA.w $2116 : STY.w $4305 : LDA.w #$0001 : STA.w $420B
+	LDA.l $7F4004,X : STA.w $2116 : STY.w $4305 : LDA.w #$0001 : STA.w $420B
+	LDA.l $7F4006,X : STA.w $2116 : STY.w $4305 : LDA.w #$0001 : STA.w $420B
+
+	TXA : ADC.w #$0008 : TAX
+
+	CPX.w #$0080
+	BCC .next_chunk
 
 	RTS
 
@@ -945,17 +1043,17 @@ presetload_dungeon:
 
 	REP #$30
 	LDA.w #$000F : STA.w $0010
-	LDA.w #$FFFF : STA.l $7EF3C5
 
 	JSR SaveALot
 	JSL PresetLoadArea_UW
 	JSL $09C114
 	JSR PullALot
 
-	LDA.w #$0000 : STA.l $7EF3C5
 	LDA.w #$0007 : STA.w $0010
 
 	RTS
+
+;===================================================================================================
 
 SaveALot:
 	REP #$30

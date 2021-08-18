@@ -1881,16 +1881,9 @@ presetSRAM_anyrmg:
 ..bed
 %write8($7EF36F, $FF) ; Keys
 %write8($7EF36C, $1818) ; Health (goal)
-%write8($7EF378, $F800) ; ????
-%write8($7EF3D8, $4E00) ; 
-%write8($7EF3DC, $8C01) ; Player name
-%write8($7EF3E0, $AA01) ; Player name
-%write8($7EF400, $FF00) ; Deaths
-%write8($7EF3DA, $8C01) ; Player name
-%write8($7EF3DE, $8C01) ; Player name
+%write8($7EF377, $F8) ; abilities
+%write16sram($7EF401, $FFFF) ; Deaths
 %write8($7EF3E2, $55) ; Player name
-%write8($7EF402, $FF) ; Deaths
-%write8($7EF4FE, $CDEA) ; Inverse checksum
 %writeroom($104, $0002) ; Room $0104: Unknown (...............q)
 %writeroom($106, $F000) ; Room $0106: Unknown (.dddb...........)
 %writeroom($107, $F000) ; Room $0107: Unknown (.dddb...........)
@@ -1957,14 +1950,14 @@ presetSRAM_anyrmg:
 ...end
 ;---------------------------------------------------------------------------------------------------
 ..big_key_dmg_boost
-%write8($7EF362, $05) ; Rupees (actual)
+%write16sram($7EF360, $05) ; Rupees (actual)
 %writeroom($0BA, $840C) ; Room $00BA: Eastern Palace (Dark Antifairy / Key Pot Room) (.d....K......qq.)
 %writeroom($0B9, $800F) ; Room $00B9: Eastern Palace (Lobby Cannonballs Room) (.d...........qqq)
 ...end
 ;---------------------------------------------------------------------------------------------------
 ..big_chest_room_2
 %write8($7EF36D, $0C) ; Health (actual)
-%write8($7EF366, $2000) ; BigKey1
+%write16sram($7EF366, $2000) ; BigKey1
 %writeroom($0A8, $200F) ; Room $00A8: Eastern Palace (Stalfos Spawn Room) (...d.........qqq)
 %writeroom($0B8, $8015) ; Room $00B8: Eastern Palace (Big Key Room) (.d..........q.q.)
 ...end
@@ -1991,7 +1984,7 @@ presetSRAM_anyrmg:
 ;---------------------------------------------------------------------------------------------------
 ..armos
 %write8($7EF377, $1B) ; Arrows
-%write8($7EF362, $0B) ; Rupees (actual)
+%write16sram($7EF360, $0B) ; Rupees (actual)
 %writeroom($0D8, $0005) ; Room $00D8: Eastern Palace (Zeldagamer Room / Pre-Armos Knights Room) (..............q.)
 ...end
 ;---------------------------------------------------------------------------------------------------
@@ -2050,7 +2043,7 @@ presetSRAM_anyrmg:
 %write8($7EF343, $02) ; Bombs
 %write8($7EF36F, $FD) ; Keys
 %write8($7EF36D, $20) ; Health (actual)
-%write8($7EF366, $F020) ; BigKey1
+%write16sram($7EF366, $F020) ; BigKey1
 %writeroom($00A, $800F) ; Room $000A: Palace of Darkness (Stalfos Trap Room) (.d...........qqq)
 %writeroom($03A, $801F) ; Room $003A: Palace of Darkness (Bombable Floor Room) (.d..........qqqq)
 %writeroom($009, $000C) ; Room $0009: Palace of Darkness (.............qq.)
@@ -2067,7 +2060,7 @@ presetSRAM_anyrmg:
 %write8($7EF3FF, $01) ; Deaths
 %write8($7EF354, $100) ; Gloves
 %write8($7EF36C, $1820) ; Health (goal)
-%write8($7EF378, $FC00) ; ????
+%write8($7EF377, $FC) ; abilities
 %write8($7EF36D, $18) ; Health (actual)
 %write8($7EF342, $200) ; Hookshot
 %write8($7EF34A, $101) ; Torch
@@ -2172,13 +2165,13 @@ presetSRAM_anyrmg:
 ;---------------------------------------------------------------------------------------------------
 ..old_man_cave
 %write8($7EF3FF, $02) ; Deaths
-%write8($7EF358, $300) ; 
+%write8($7EF359, $03) ; 
 %write8($7EF3CC, $00) ; Tagalong
 %write8($7EF359, $03) ; Sword
 %write8($7EF36D, $20) ; Health (actual)
 %write8($7EF3C9, $20) ; Game Phase 3
 %write8($7EF356, $100) ; Flippers
-%write8($7EF362, $01) ; Rupees (actual)
+%write16sram($7EF360, $01) ; Rupees (actual)
 %write8($7EF36E, $FF80) ; Magic Power
 %write8($7EF3FE, $200) ; Deaths
 %write8($7EF4FE, $6B7D) ; Inverse checksum
@@ -2214,7 +2207,7 @@ presetSRAM_anyrmg:
 ..floor_2
 %write8($7EF377, $10) ; Arrows
 %write8($7EF389, $02) ; Key for dungeon $0D
-%write8($7EF366, $F024) ; BigKey1
+%write16sram($7EF366, $F024) ; BigKey1
 %writeroom($01C, $0035) ; Room $001C: Ganon's Tower (Ice Armos) (...........cq.q.)
 %writeroom($08C, $0489) ; Room $008C: Ganon's Tower (East and West Downstairs / Big Chest Room) (......K..c...q..)
 ...end

@@ -67,6 +67,8 @@ gamemode_replay_last_movie:
 ; Save state
 gamemode_savestate:
 .save
+	PHK
+	PLB
 	SEP #$20
 	REP #$10
 	; Remember which song bank was loaded before load stating
@@ -74,14 +76,14 @@ gamemode_savestate:
 	LDA $0136 : STA.w SA1RAM.ss_old_music_bank
 
 	; store DMA to SRAM
-	LDY #$0000 : LDX #$0000
+	LDX #$0000
+--	LDY #$0000
 -	LDA $4300, X : STA.w SA1RAM.ss_dma_buffer, X
 	INX
 	INY : CPY #$000B : BNE -
 	CPX #$007B : BCS +
 	INX #5
-	LDY #$0000
-	BRA -
+	BRA --
 	; end of DMA to SRAM
 
 +	JSL ppuoff
@@ -91,6 +93,8 @@ gamemode_savestate:
 	JMP savestate_end
 
 .load
+	PHK
+	PLB
 	SEP #$20
 	REP #$10
 	; Remember which song bank was loaded before load stating (so we can change if needed)
@@ -112,7 +116,6 @@ gamemode_savestate:
 
 	STZ $420C
 	JSL ppuoff
-	STZ $4310
 	LDA.b #$00 : STA.w $4310
 	JSR DMA_BWRAMSRAM
 
@@ -185,6 +188,7 @@ DMA_BWRAMSRAM:
 	BEQ .sa1stuff
 
 	STA.w $2183
+
 	LDY.w .address_size+0, X
 	STY.w $2181
 
@@ -219,9 +223,8 @@ DMA_BWRAMSRAM:
 	%MVN($41, $00)
 
 .done
-	LDX.w $4328 : PHX
-	LDA.w $4338 : PHA
 	PLB
+	LDX.w $4328 : PHX
 	RTS
 
 .address_size
