@@ -180,7 +180,7 @@ reset_dungeon_func:
 	PHD
 
 	LDY.b SA1IRAM.cm_cursor
-	LDX.w .list, Y
+	LDX.w .list,Y
 
 	REP #$30
 	LDA #$0000
@@ -189,9 +189,9 @@ reset_dungeon_func:
 
 	LDX.w #(256+40)*2 ; eg1 size + eg2 size, words
 
---	LDY.w supertile_dungeons, X
+--	LDY.w supertile_dungeons,X
 	CPY.b $00 : BNE ++
-	STA.l $7EF000, X
+	STA.l $7EF000,X
 ++	DEX #2 : BPL --
 
 	; check current room
@@ -199,7 +199,7 @@ reset_dungeon_func:
 	BIT.b $1B : BEQ ++ ; make sure we're indoors
 
 	LDA.b $A0 : ASL : TAX
-	LDA.w supertile_dungeons, X
+	LDA.w supertile_dungeons,X
 	CMP.b $00 : BNE ++
 	STZ.w $0400 : STZ.w $0402 : STZ.w $0408
 

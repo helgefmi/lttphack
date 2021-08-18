@@ -80,8 +80,8 @@ UpdateAncillaWindow:
 
 	; get ID color in top byte of A
 	SEP #$30
-	LDX.w SA1IRAM.CopyOf_0C4A, Y
-	LDA.l .replacable_color, X
+	LDX.w SA1IRAM.CopyOf_0C4A,Y
+	LDA.l .replacable_color,X
 	XBA
 
 	; write ID
@@ -94,7 +94,7 @@ UpdateAncillaWindow:
 
 	LDA.w #$3400 ; yellow pal
 	SEP #$20
-	LDA.w SA1IRAM.CopyOf_0C5E, Y
+	LDA.w SA1IRAM.CopyOf_0C5E,Y
 	JSR write_2hex_ancilla
 
 	DEY
@@ -223,7 +223,7 @@ DrawHexSW:
 	PHA ; remember coordinates
 	AND.w #$000F ; get digit
 	ORA.b SA1IRAM.SCRATCH+10 ; add in color
-	STA.w SA1RAM.SW_BUFFER+6, X
+	STA.w SA1RAM.SW_BUFFER+6,X
 	PLA ; recover value
 	DEX
 	DEX

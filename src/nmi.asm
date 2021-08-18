@@ -325,7 +325,7 @@ SNES_CUSTOM_NMI:
 
 .good_to_go
 	INC.b $12
-	JSR.w (SA1RAM.SNES_NMI_VECTOR, X)
+	JSR.w (SA1RAM.SNES_NMI_VECTOR,X)
 
 	PEA.w $0000 ; used to be D=0 later
 	PEA.w $2100
@@ -365,9 +365,9 @@ SNES_CUSTOM_NMI:
 	; handle music and sfx
 	LDX.b #3
 
---	LDA.w $012C, X
-	STA.b $40, X
-	STZ.w $012C, X
+--	LDA.w $012C,X
+	STA.b $40,X
+	STZ.w $012C,X
 	DEX
 	BPL --
 
@@ -379,13 +379,13 @@ SNES_CUSTOM_NMI:
 	LDY.w #0
 
 .next_color
-	LDA.w .cgrams, Y
+	LDA.w .cgrams,Y
 	BMI .done_color
 
 	INY
 	STA.w $2121
 
-	LDX.w .cgrams, Y
+	LDX.w .cgrams,Y
 	INY
 	INY
 
@@ -394,11 +394,11 @@ SNES_CUSTOM_NMI:
 	ASL
 	TAX
 
-	LDA.l COLORS_YAY, X
+	LDA.l COLORS_YAY,X
 	STA.w $2122
 
 	INX
-	LDA.l COLORS_YAY, X
+	LDA.l COLORS_YAY,X
 	STA.w $2122
 
 	BRA .next_color

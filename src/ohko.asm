@@ -97,7 +97,7 @@ org $1CF640
 
 ; 1ed6f7 lda #$01
 ; 1ed6f9 sta $0da0,y
-; LDA.b #$20 : STA $0DF0, Y
+; LDA.b #$20 : STA $0DF0,Y
 org $1ED6F7
 	JSL hook_blueball
 	NOP : NOP : NOP : NOP
@@ -153,13 +153,13 @@ hook_vitty:
 	LDY #$10
 .loop
 	DEY : BMI .no_active
-	LDA $0E20, Y : CMP #$18 : BNE .loop
-	LDA $0DD0, Y : BNE .done
+	LDA $0E20,Y : CMP #$18 : BNE .loop
+	LDA $0DD0,Y : BNE .done
 	BRA .loop
 
 .no_active
-	LDA #$18 : STA $0E20, X
-	LDA #$08 : STA $0E50, X
+	LDA #$18 : STA $0E20,X
+	LDA #$08 : STA $0E50,X
 	LDA $0ED0 : DEC : STA $0ED0
 
 .done
@@ -180,18 +180,18 @@ hook_dng_gfx:
 ; 01b64d sta $0aa3
 
 ; hook_arrgi:
-;     LDA #$18 : STA $0E20, X
+;     LDA #$18 : STA $0E20,X
 ;     RTL
 
 
 hook_khold:
-	LDA #$04 : STA $0DD0, X
+	LDA #$04 : STA $0DD0,X
 	PHX
 	LDX #$10
 .loop
 	DEX : BMI .done
-	LDA $0E20, X : CMP #$18 : BNE .loop
-	LDA #$00 : STA $0DD0, X
+	LDA $0E20,X : CMP #$18 : BNE .loop
+	LDA #$00 : STA $0DD0,X
 	BRA .loop
 .done
 	PLX
@@ -200,17 +200,17 @@ hook_khold:
 
 hook_blind:
 	LDA #$18 : JSL $1DF65D
-	LDA #$20 : STA $0E50, Y
+	LDA #$20 : STA $0E50,Y
 	RTL
 
 
 hook_mimics_dorm:
-	LDA $97DF, Y : STA $0D50, X
-	LDA $97EF, Y : STA $0D40, X
+	LDA $97DF,Y : STA $0D50,X
+	LDA $97EF,Y : STA $0D40,X
 	LDA $048E : CMP #$1B : BNE .done
 
-	LDA #$00 : STA $0D50, X : STA $0D40, X
-			   STA $0D60, X : STA $0D70, X
+	LDA #$00 : STA $0D50,X : STA $0D40,X
+			   STA $0D60,X : STA $0D70,X
 
 	LDA $F0 : BEQ .done
 	BIT #$01 : BNE .right
@@ -220,35 +220,35 @@ hook_mimics_dorm:
 	BRA .done
 
 .up
-	LDA #$40 : STA $0D50, X : BRA .done
+	LDA #$40 : STA $0D50,X : BRA .done
 .down
-	LDA #$C0 : STA $0D50, X : BRA .done
+	LDA #$C0 : STA $0D50,X : BRA .done
 .left
-	LDA #$40 : STA $0D40, X : BRA .done
+	LDA #$40 : STA $0D40,X : BRA .done
 .right
-	LDA #$C0 : STA $0D40, X : BRA .done
+	LDA #$C0 : STA $0D40,X : BRA .done
 
 .done
 	RTL
 
 hook_blueball:
-	LDA #$18 : STA $0E20, Y
-	LDA $EE : STA $0F20, Y
-	LDA #$10 : STA $0E50, Y
-	LDA #$00 : STA $0E60, Y
+	LDA #$18 : STA $0E20,Y
+	LDA $EE : STA $0F20,Y
+	LDA #$10 : STA $0E50,Y
+	LDA #$00 : STA $0E60,Y
 
 	RTL
 
 hook_beam:
 	LDA #$18 : JSL $1DF65D : BCS ++
 
-	LDA $22 : STA $0D10, Y
-	LDA $23 : STA $0D30, Y
+	LDA $22 : STA $0D10,Y
+	LDA $23 : STA $0D30,Y
 
-	LDA $20 : STA $0D00, Y
-	LDA $21 : STA $0D20, Y
+	LDA $20 : STA $0D00,Y
+	LDA $21 : STA $0D20,Y
 
-	LDA $EE : STA $0F20, Y
+	LDA $EE : STA $0F20,Y
 
 	LDA $2F
 	CMP #$00 : BEQ .up
@@ -257,20 +257,20 @@ hook_beam:
 	CMP #$06 : BEQ .right
 
 .up
-	LDA $0D00, Y : SEC : SBC #$20 : STA $0D00, Y
-	LDA $0D20, Y : SBC #$00 : STA $0D20, Y
+	LDA $0D00,Y : SEC : SBC #$20 : STA $0D00,Y
+	LDA $0D20,Y : SBC #$00 : STA $0D20,Y
 	BRA +
 .down
-	LDA $0D00, Y : CLC : ADC #$20 : STA $0D00, Y
-	LDA $0D20, Y : ADC #$00 : STA $0D20, Y
+	LDA $0D00,Y : CLC : ADC #$20 : STA $0D00,Y
+	LDA $0D20,Y : ADC #$00 : STA $0D20,Y
 	BRA +
 .left
-	LDA $0D10, Y : SEC : SBC #$20 : STA $0D10, Y
-	LDA $0D30, Y : SBC #$00 : STA $0D30, Y
+	LDA $0D10,Y : SEC : SBC #$20 : STA $0D10,Y
+	LDA $0D30,Y : SBC #$00 : STA $0D30,Y
 	BRA +
 .right
-	LDA $0D10, Y : CLC : ADC #$20 : STA $0D10, Y
-	LDA $0D30, Y : ADC #$00 : STA $0D30, Y
+	LDA $0D10,Y : CLC : ADC #$20 : STA $0D10,Y
+	LDA $0D30,Y : ADC #$00 : STA $0D30,Y
 	BRA +
 
 +	SEP #$30
@@ -288,7 +288,7 @@ hook_red_armos:
 +	RTL
 
 hook_armos:
-	LDA #$18 : STA $0E20, X
+	LDA #$18 : STA $0E20,X
 	RTL
 
 
@@ -297,11 +297,11 @@ sprite_hook_drops:
 	PHB : PHK : PLB
 	TAY
 	PHA : JSL $0DBA71 : AND #$07 : BNE +
-	PLA : LDA le_tbl, Y : BRA ++
+	PLA : LDA le_tbl,Y : BRA ++
 +	PLA
 ++	PLB
 	PLY
-	STA $0E20, X
+	STA $0E20,X
 	CMP #$E5
 	RTL
 
@@ -310,20 +310,20 @@ sprite_hook_dynamic:
 	CMP #$D8 : BEQ +
 	CMP #$41 : BEQ +
 	PHX : PHB : PHK : PLB
-	TAX : LDA le_tbl, X
+	TAX : LDA le_tbl,X
 	PLB : PLX
 
-+	STA $0E20, Y
-	LDA #$09 : STA $0DD0, Y
++	STA $0E20,Y
+	LDA #$09 : STA $0DD0,Y
 	RTL
 
 
 sprite_hook_ow:
 	DEC
 	PHX : PHB : PHK : PLB
-	TAX : LDA le_tbl, X
+	TAX : LDA le_tbl,X
 	PLB : PLX
-	STA $0E20, X
+	STA $0E20,X
 	RTL
 
 
@@ -331,19 +331,19 @@ sprite_hook_uw:
 	PHX
 	LDA ($00),y : TAX
 	PHB : PHK : PLB
-	LDA le_tbl, X
+	LDA le_tbl,X
 	PLB
 	PLX
-	STA $0E20, X
+	STA $0E20,X
 	RTL
 
 
 ; Not used
 moldorm_speed:
 	LDA $1A : AND #$0F : STA $00
-	LDA $97DF, Y : CLC : ADC $00 : STA $0D50, X
+	LDA $97DF,Y : CLC : ADC $00 : STA $0D50,X
 	LDA $1A : AND #$0F : STA $00
-	LDA $97EF, Y : CLC : ADC $00 : STA $0D40, X
+	LDA $97EF,Y : CLC : ADC $00 : STA $0D40,X
 	RTL
 
 

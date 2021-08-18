@@ -213,7 +213,7 @@ preset_load_overworld:
 	STZ $1B
 
 	LDA.w !ram_preset_category : TAX
-	LDA.l cm_preset_data_banks, X : STA $02
+	LDA.l cm_preset_data_banks,X : STA $02
 
 	REP #$30
 	LDA.w SA1RAM.preset_destination : STA $00
@@ -222,33 +222,33 @@ preset_load_overworld:
 	STZ $04AC
 
 	; Screen index
-	LDA [$00], Y : INY #2 : STA $8A : STA $040A
+	LDA [$00],Y : INY #2 : STA $8A : STA $040A
 
 	; Link X/Y
-	LDA [$00], Y : INY #2 : STA $22
-	LDA [$00], Y : INY #2 : STA $20
+	LDA [$00],Y : INY #2 : STA $22
+	LDA [$00],Y : INY #2 : STA $20
 
 	; BG scroll X/Y
-	LDA [$00], Y : INY #2 : STA $E6 : STA $0124
-	LDA [$00], Y : INY #2 : STA $E8 : STA $0122
-	LDA [$00], Y : INY #2 : STA $E0 : STA $0120
-	LDA [$00], Y : INY #2 : STA $E2 : STA $011E
+	LDA [$00],Y : INY #2 : STA $E6 : STA $0124
+	LDA [$00],Y : INY #2 : STA $E8 : STA $0122
+	LDA [$00],Y : INY #2 : STA $E0 : STA $0120
+	LDA [$00],Y : INY #2 : STA $E2 : STA $011E
 
 	; Camera scroll X/Y
-	LDA [$00], Y : INY #2 : STA $061C : DEC #2 : STA $061E
-	LDA [$00], Y : INY #2 : STA $0618 : DEC #2 : STA $061A
+	LDA [$00],Y : INY #2 : STA $061C : DEC #2 : STA $061E
+	LDA [$00],Y : INY #2 : STA $0618 : DEC #2 : STA $061A
 
 	; Unknown
-	LDA [$00], Y : INY #2 : STA $84 : SEC : SBC #$0400 : AND #$0F80 : ASL A : XBA : STA $88
+	LDA [$00],Y : INY #2 : STA $84 : SEC : SBC #$0400 : AND #$0F80 : ASL A : XBA : STA $88
 	LDA $84 : SEC : SBC #$0010 : AND #$003E : LSR A : STA $86
 
-	LDA [$00], Y : INY #2 : STA $0624
+	LDA [$00],Y : INY #2 : STA $0624
 	LDA #$0000 : SEC : SBC $0624 : STA $0626
 
-	LDA [$00], Y : INY #2 : STA $0628
+	LDA [$00],Y : INY #2 : STA $0628
 	LDA #$0000 : SEC : SBC $0628 : STA $062A
 
-	LDA [$00], Y : INY #2 : STA.w SA1RAM.preset_end_of_sram_state
+	LDA [$00],Y : INY #2 : STA.w SA1RAM.preset_end_of_sram_state
 
 	SEP #$30
 	; LW/DW
@@ -287,41 +287,41 @@ preset_load_dungeon:
 	PHB
 
 	LDA.w !ram_preset_category : TAX
-	LDA.l cm_preset_data_banks, X : STA $02
+	LDA.l cm_preset_data_banks,X : STA $02
 	REP #$30
 	LDA.w SA1RAM.preset_destination : STA $00
 	LDY #$0000
 
 	; Room index
-	LDA [$00], Y : INY : INY : STA $A0 : STA $048E
+	LDA [$00],Y : INY : INY : STA $A0 : STA $048E
 
 	; BG1/2 vertical and horizontal scroll
-	LDA [$00], Y : INY #2 : STA $E6 : STA $0124
-	LDA [$00], Y : INY #2 : STA $E8 : STA $0122
-	LDA [$00], Y : INY #2 : STA $E0 : STA $0120
-	LDA [$00], Y : INY #2 : STA $E2 : STA $011E
+	LDA [$00],Y : INY #2 : STA $E6 : STA $0124
+	LDA [$00],Y : INY #2 : STA $E8 : STA $0122
+	LDA [$00],Y : INY #2 : STA $E0 : STA $0120
+	LDA [$00],Y : INY #2 : STA $E2 : STA $011E
 
 	; Link X/Y
-	LDA [$00], Y : INY #2 : STA $22
-	LDA [$00], Y : INY #2 : STA $20
+	LDA [$00],Y : INY #2 : STA $22
+	LDA [$00],Y : INY #2 : STA $20
 
 	; Camera scroll X/Y
-	LDA [$00], Y : INY #2 : STA $061C : INC #2 : STA $061E
-	LDA [$00], Y : INY #2 : STA $0618 : INC #2 : STA $061A
+	LDA [$00],Y : INY #2 : STA $061C : INC #2 : STA $061E
+	LDA [$00],Y : INY #2 : STA $0618 : INC #2 : STA $061A
 	LDA #$01F8 : STA $EC
 
 	; Door settings
-	LDA [$00], Y : INY #2 : STA $0696 : STZ $0698
+	LDA [$00],Y : INY #2 : STA $0696 : STZ $0698
 
 	; Relative coordinates (scroll edges?)
-	LDA [$00], Y : INY #2 : STA $0600
-	LDA [$00], Y : INY #2 : STA $0602
-	LDA [$00], Y : INY #2 : STA $0604
-	LDA [$00], Y : INY #2 : STA $0606
-	LDA [$00], Y : INY #2 : STA $0608
-	LDA [$00], Y : INY #2 : STA $060A
-	LDA [$00], Y : INY #2 : STA $060C
-	LDA [$00], Y : INY #2 : STA $060E
+	LDA [$00],Y : INY #2 : STA $0600
+	LDA [$00],Y : INY #2 : STA $0602
+	LDA [$00],Y : INY #2 : STA $0604
+	LDA [$00],Y : INY #2 : STA $0606
+	LDA [$00],Y : INY #2 : STA $0608
+	LDA [$00],Y : INY #2 : STA $060A
+	LDA [$00],Y : INY #2 : STA $060C
+	LDA [$00],Y : INY #2 : STA $060E
 
 	LDA #$0000 : STA $0610
 	LDA #$0110 : STA $0612
@@ -329,8 +329,8 @@ preset_load_dungeon:
 	LDA #$0100 : STA $0616
 
 	; Quadrant stuff
-	LDA [$00], Y : INY #2 : STA $A6
-	LDA [$00], Y : INY #2 : STA $A9
+	LDA [$00],Y : INY #2 : STA $A6
+	LDA [$00],Y : INY #2 : STA $A9
 
 	SEP #$20
 
@@ -338,10 +338,10 @@ preset_load_dungeon:
 	LDA #$01 : STA $1B
 
 	; Main blockset value (main graphics)
-	LDA [$00], Y : REP #$20 : INY : SEP #$20 : STA $0AA1
+	LDA [$00],Y : REP #$20 : INY : SEP #$20 : STA $0AA1
 
 	; Music track value. Is it the beginning music?
-	LDA [$00], Y : REP #$20 : INY : SEP #$20 : STA $0132 : CMP #$03 : BNE .notBeginningMusic
+	LDA [$00],Y : REP #$20 : INY : SEP #$20 : STA $0132 : CMP #$03 : BNE .notBeginningMusic
 
 	; Check game status
 	; Is it less than first part?
@@ -360,21 +360,21 @@ preset_load_dungeon:
 	LDA $2140 : BNE .loop
 
 	; Starting floor
-	LDA [$00], Y : REP #$20 : INY : SEP #$20 : STA $A4
+	LDA [$00],Y : REP #$20 : INY : SEP #$20 : STA $A4
 
 	; Load the palace number.
-	LDA [$00], Y : REP #$20 : INY : SEP #$20 : STA $040C
+	LDA [$00],Y : REP #$20 : INY : SEP #$20 : STA $040C
 
 	; Doorway orientation
-	LDA [$00], Y : REP #$20 : INY : SEP #$20 : STA $6C
+	LDA [$00],Y : REP #$20 : INY : SEP #$20 : STA $6C
 
 	; Starting BG
 	; Set the position that Link starts at.
 	; NOTE that original code had a LSR #4 here that I removed, since I serialize this differently.
-	LDA [$00], Y : STA $EE
+	LDA [$00],Y : STA $EE
 
 	; Set Pseudo bg level
-	LDA [$00], Y : REP #$20 : INY : SEP #$20 : AND #$0F : STA $0476
+	LDA [$00],Y : REP #$20 : INY : SEP #$20 : AND #$0F : STA $0476
 
 	PHY
 
@@ -384,7 +384,7 @@ preset_load_dungeon:
 
 	REP #$30
 	PLY
-	LDA [$00], Y : INY #2 : STA.w SA1RAM.preset_end_of_sram_state
+	LDA [$00],Y : INY #2 : STA.w SA1RAM.preset_end_of_sram_state
 	JSR preset_load_state
 	SEP #$30
 	PLB
@@ -415,11 +415,11 @@ preset_load_state:
 
 	SEP #$20
 	LDA.w !ram_preset_category : TAX
-	PHB : LDA.l cm_preset_data_banks, X : PHA : PLB
+	PHB : LDA.l cm_preset_data_banks,X : PHA : PLB
 	REP #$20
 	LDA.w SA1RAM.preset_end_of_sram_state : STA $06
 	LDA.w !ram_preset_category : AND #$00FF : ASL : TAX
-	LDA.l preset_start_ptrs, X : STA $00
+	LDA.l preset_start_ptrs,X : STA $00
 
 .next_item
 	; Sets up $02-$04 with the long address we want to manipulate.
@@ -486,17 +486,17 @@ preset_clear_for_initial_preset:
 	LDA #$0000
 	LDX #$0000
 
--	STA $7EF000, X : STA $7EF100, X : STA $7EF200, X : STA $7EF300, X : STA $7EF400, X
-	STZ $0B00, X : STZ $0C00, X : STZ $0D00, X : STZ $0E00, X : STZ $0F00, X
+-	STA $7EF000,X : STA $7EF100,X : STA $7EF200,X : STA $7EF300,X : STA $7EF400,X
+	STZ $0B00,X : STZ $0C00,X : STZ $0D00,X : STZ $0E00,X : STZ $0F00,X
 	INX #2 : CPX #$0100 : BNE -
 
 	LDX #$0000
--	STZ $0FC7, X
+-	STZ $0FC7,X
 	INX #2 : CPX #$0010 : BNE -
 
 	LDX #$0000
 
--	STZ $029E, X
+-	STZ $029E,X
 	INX #2 : CPX #$000A : BNE -
 
 	STZ $0ABD
@@ -510,10 +510,10 @@ preset_clear_tilemap:
 	LDX #$0000
 
 .loop
-	STA $7F2000, X : STA $7F2200, X : STA $7F2400, X : STA $7F2600, X
-	STA $7F2800, X : STA $7F2A00, X : STA $7F2C00, X : STA $7F2E00, X
-	STA $7F3000, X : STA $7F3200, X : STA $7F3400, X : STA $7F3600, X
-	STA $7F3800, X : STA $7F3A00, X : STA $7F3C00, X : STA $7F3E00, X
+	STA $7F2000,X : STA $7F2200,X : STA $7F2400,X : STA $7F2600,X
+	STA $7F2800,X : STA $7F2A00,X : STA $7F2C00,X : STA $7F2E00,X
+	STA $7F3000,X : STA $7F3200,X : STA $7F3400,X : STA $7F3600,X
+	STA $7F3800,X : STA $7F3A00,X : STA $7F3C00,X : STA $7F3E00,X
 	INX #2 : CPX #$0200 : BNE .loop
 
 	RTS

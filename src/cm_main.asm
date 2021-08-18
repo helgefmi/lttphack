@@ -70,7 +70,7 @@ CM_Main:
 
 	LDX.b SA1IRAM.cm_submodule
 
-	JSR (.submodules, X)
+	JSR (.submodules,X)
 	BRA .loop
 
 .submodules
@@ -201,14 +201,14 @@ CM_Init:
 	LDA #$002F
 
 .loop
-	STA.w SA1RAM.MENU+$0000, X : STA.w SA1RAM.MENU+$0080, X
-	STA.w SA1RAM.MENU+$0100, X : STA.w SA1RAM.MENU+$0180, X
-	STA.w SA1RAM.MENU+$0200, X : STA.w SA1RAM.MENU+$0280, X
-	STA.w SA1RAM.MENU+$0300, X : STA.w SA1RAM.MENU+$0380, X
-	STA.w SA1RAM.MENU+$0400, X : STA.w SA1RAM.MENU+$0480, X
-	STA.w SA1RAM.MENU+$0500, X : STA.w SA1RAM.MENU+$0580, X
-	STA.w SA1RAM.MENU+$0600, X : STA.w SA1RAM.MENU+$0680, X
-	STA.w SA1RAM.MENU+$0700, X : STA.w SA1RAM.MENU+$0780, X
+	STA.w SA1RAM.MENU+$0000,X : STA.w SA1RAM.MENU+$0080,X
+	STA.w SA1RAM.MENU+$0100,X : STA.w SA1RAM.MENU+$0180,X
+	STA.w SA1RAM.MENU+$0200,X : STA.w SA1RAM.MENU+$0280,X
+	STA.w SA1RAM.MENU+$0300,X : STA.w SA1RAM.MENU+$0380,X
+	STA.w SA1RAM.MENU+$0400,X : STA.w SA1RAM.MENU+$0480,X
+	STA.w SA1RAM.MENU+$0500,X : STA.w SA1RAM.MENU+$0580,X
+	STA.w SA1RAM.MENU+$0600,X : STA.w SA1RAM.MENU+$0680,X
+	STA.w SA1RAM.MENU+$0700,X : STA.w SA1RAM.MENU+$0780,X
 
 	INX
 	INX
@@ -343,7 +343,7 @@ CM_Active:
 	ASL
 	TAX
 
-	JSR (ActionDoRoutines, X)
+	JSR (ActionDoRoutines,X)
 
 	SEP #$30
 	LDY.b SA1IRAM.cm_cursor
@@ -363,7 +363,7 @@ CM_AdjustForWrap:
 
 	; just check if we hit the end of the headers
 	REP #$20
-	LDA.b [SA1IRAM.cm_current_menu], Y
+	LDA.b [SA1IRAM.cm_current_menu],Y
 	SEP #$20
 	BNE .not_max
 	BRA .reset_too_far ; oops!
@@ -390,7 +390,7 @@ CM_AdjustForWrap:
 .next_check
 	INY
 	INY
-	LDA.b [SA1IRAM.cm_current_menu], Y
+	LDA.b [SA1IRAM.cm_current_menu],Y
 	BNE .next_check
 
 	SEP #$20
@@ -544,7 +544,7 @@ CM_UpdateCurrentSelection:
 	ASL
 	TAY
 
-	LDA.b [SA1IRAM.cm_current_menu], Y
+	LDA.b [SA1IRAM.cm_current_menu],Y
 	STA.b SA1IRAM.cm_current_selection+0
 
 	LDY.b SA1IRAM.cm_current_menu+2
@@ -563,12 +563,12 @@ CM_PushMenuToStack:
 	LDX.w SA1RAM.CM_SubMenuIndex
 
 	LDA.b SA1IRAM.cm_cursor+0
-	STA.w SA1RAM.CM_SubMenuStack, X
+	STA.w SA1RAM.CM_SubMenuStack,X
 
 	INX
 	INX
 	LDA.b SA1IRAM.cm_cursor+2
-	STA.w SA1RAM.CM_SubMenuStack, X
+	STA.w SA1RAM.CM_SubMenuStack,X
 
 	INX
 	INX
@@ -600,10 +600,10 @@ CM_PushMenuToStack:
 	DEX
 
 	REP #$20
-	LDA.w SA1RAM.CM_SubMenuStack+0, X
+	LDA.w SA1RAM.CM_SubMenuStack+0,X
 	STA.b SA1IRAM.cm_cursor+0
 
-	LDA.w SA1RAM.CM_SubMenuStack+2, X
+	LDA.w SA1RAM.CM_SubMenuStack+2,X
 	STA.b SA1IRAM.cm_cursor+2
 
 	STX.w SA1RAM.CM_SubMenuIndex

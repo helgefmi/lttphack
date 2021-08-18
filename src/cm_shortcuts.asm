@@ -53,7 +53,7 @@ gamemode_shortcuts:
 	REP #$20
 
 .nextcheck
-	LDA.w .shortcut_routine, X
+	LDA.w .shortcut_routine,X
 	BEQ ..nothingused
 
 	STA.b SA1IRAM.SCRATCH+0
@@ -66,7 +66,7 @@ gamemode_shortcuts:
 	AND.b SA1IRAM.CONTROLLER_1_FILTERED
 	BEQ ..fail
 
-	LDA.w .shortcut_routine+2, X
+	LDA.w .shortcut_routine+2,X
 	BPL ..forsnes
 
 ..forsa1
@@ -128,14 +128,14 @@ check_mode_safety:
 .notCustomMenu
 	ASL : TAX ; get index
 	REP #%01100000 ; clear V for checks and M for 16 bit accum
-	LDA.w Module_safety, X
+	LDA.w Module_safety,X
 	BEQ .neverSafe ; staying in 16 bit A is fine here
 
 	STA.b SA1IRAM.SCRATCH
 	LDY.b SA1IRAM.CopyOf_11 ; get submodule
 
 	SEP #$20
-	LDA.b (SA1IRAM.SCRATCH), Y ; get safety level of submodule
+	LDA.b (SA1IRAM.SCRATCH),Y ; get safety level of submodule
 	STA.b SA1IRAM.SCRATCH ; put it in $00
 	LDY.b SA1IRAM.CopyOf_7EC011 : BEQ .safe ; check mosaics
 

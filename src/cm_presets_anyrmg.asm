@@ -92,7 +92,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $09 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0803, $0709 ; Scroll X, Y
+dw $0803, $0709 ; Scroll X,Y
 dw $0530 ; Unknown 1
 dw $0004 ; Unknown 2
 dw $FFFA ; Unknown 3
@@ -133,7 +133,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $09 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $08B6, $098B ; Scroll X, Y
+dw $08B6, $098B ; Scroll X,Y
 dw $1846 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFFF ; Unknown 3
@@ -156,7 +156,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $09 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0C9B, $0A6D ; Scroll X, Y
+dw $0C9B, $0A6D ; Scroll X,Y
 dw $0002 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFF2 ; Unknown 3
@@ -172,7 +172,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $09 ; Item
 db $06 ; Link direction
 ;-----------------------------
-dw $0F57, $098D ; Scroll X, Y
+dw $0F57, $098D ; Scroll X,Y
 dw $185C ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0006 ; Unknown 3
@@ -497,7 +497,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $0F5B, $066D ; Scroll X, Y
+dw $0F5B, $066D ; Scroll X,Y
 dw $005A ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFFA ; Unknown 3
@@ -571,7 +571,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0685, $0582 ; Scroll X, Y
+dw $0685, $0582 ; Scroll X,Y
 dw $0880 ; Unknown 1
 dw $FFFB ; Unknown 2
 dw $0000 ; Unknown 3
@@ -610,7 +610,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0723, $038D ; Scroll X, Y
+dw $0723, $038D ; Scroll X,Y
 dw $1816 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFFC ; Unknown 3
@@ -626,7 +626,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $06 ; Link direction
 ;-----------------------------
-dw $0753, $038D ; Scroll X, Y
+dw $0753, $038D ; Scroll X,Y
 dw $181C ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFFC ; Unknown 3
@@ -751,7 +751,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $08D3, $058B ; Scroll X, Y
+dw $08D3, $058B ; Scroll X,Y
 dw $088A ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFFA ; Unknown 3
@@ -926,7 +926,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0906, $038D ; Scroll X, Y
+dw $0906, $038D ; Scroll X,Y
 dw $1854 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0009 ; Unknown 3
@@ -993,7 +993,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $090C, $0172 ; Scroll X, Y
+dw $090C, $0172 ; Scroll X,Y
 dw $0754 ; Unknown 1
 dw $FFFB ; Unknown 2
 dw $0003 ; Unknown 3
@@ -1009,7 +1009,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $14 ; Item
 db $06 ; Link direction
 ;-----------------------------
-dw $028D, $0A94 ; Scroll X, Y
+dw $028D, $0A94 ; Scroll X,Y
 dw $0180 ; Unknown 1
 dw $0009 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -1057,7 +1057,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0900, $038D ; Scroll X, Y
+dw $0900, $038D ; Scroll X,Y
 dw $1854 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $000F ; Unknown 3
@@ -1600,7 +1600,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $09 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $07F7, $066D ; Scroll X, Y
+dw $07F7, $066D ; Scroll X,Y
 dw $002E ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFF8 ; Unknown 3

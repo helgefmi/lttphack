@@ -51,22 +51,23 @@ endmacro
 	%new_counter($0B08, "Arc variable")
 	%new_counter($0690, "WEST SOMARIA")
 	%new_counter($03C4, "Anc index")
-	%new_counter($C000, "Pits")
 	%new_counter($039D, "Hookslot")
+	%new_counter($C000, "Pits")
 	%new_counter($0E50, "Boss HP")
 
 #reinit_counteraddr:
 	REP #$30
+
 	PHB
 	PHK
 	PLB
 	LDX.w #$0008
 
---	LDA.w !ram_counter1, X
+--	LDA.w !ram_counter1,X
 	ASL
 	TAY
-	LDA.w counter_address, Y
-	STA.w SA1IRAM.CNTADD1, X
+	LDA.w counter_address,Y
+	STA.w SA1IRAM.CNTADD1,X
 	DEX
 	DEX
 	BPL --

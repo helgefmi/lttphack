@@ -79,14 +79,14 @@ pullpc
 ; 
 ;==============================================================================
 UpdateLanmoCycles:
-	INC.w $0D80, X
-	INC.w SA1IRAM.LanmoCycles, X
+	INC.w $0D80,X
+	INC.w SA1IRAM.LanmoCycles,X
 	LDA.b #$18
 	RTL
 
 ResetLanmoCycles:
-	STA.l $7FF81E, X
-	STZ.w SA1IRAM.LanmoCycles, X
+	STA.l $7FF81E,X
+	STZ.w SA1IRAM.LanmoCycles,X
 	RTL
 
 ;==============================================================================
@@ -131,7 +131,7 @@ Draw:
 	XBA
 	AND.w #$000F
 	ORA.b SA1IRAM.SCRATCH+12
-	STA.w SA1RAM.HUD+10, X
+	STA.w SA1RAM.HUD+10,X
 
 .digit10
 	BCC .digit1
@@ -142,13 +142,13 @@ Draw:
 	LSR
 	LSR
 	ORA.b SA1IRAM.SCRATCH+12
-	STA.w SA1RAM.HUD+12, X
+	STA.w SA1RAM.HUD+12,X
 
 .digit1
 	LDA.b (SA1IRAM.SCRATCH+10)
 	AND.w #$000F
 	ORA.b SA1IRAM.SCRATCH+12
-	STA.w SA1RAM.HUD+14, X
+	STA.w SA1RAM.HUD+14,X
 
 .done
 	RTS
@@ -173,7 +173,7 @@ Draw:
 hex_to_dec_snes:
 	REP #$10
 	ASL : TAX
-	LDA.l hex_to_dec_fast_table, X
+	LDA.l hex_to_dec_fast_table,X
 	SEP #$20 ; slightly faster overall to use this
 	TAY : AND #$0F : STA.w SA1RAM.hex2dec_third_digit
 	TYA : AND #$F0 : LSR #4 : STA.w SA1RAM.hex2dec_second_digit
@@ -185,7 +185,7 @@ hex_to_dec_fast:
 	PHP
 	REP #$30
 	ASL : TAX
-	LDA.w hex_to_dec_fast_table, X
+	LDA.w hex_to_dec_fast_table,X
 	TAY : AND.w #$000F : STA.b SA1IRAM.SCRATCH+4
 	TYA : AND.w #$00F0 : LSR #4 : STA.b SA1IRAM.SCRATCH+2
 	XBA : AND.w #$000F : STA.b SA1IRAM.SCRATCH+0
@@ -318,21 +318,21 @@ draw_hud_extras:
 
 	LDA.w #$207F
 	LDX.b #$16
---	STA.w SA1RAM.HUD+$26+($40*0), X
-	STA.w SA1RAM.HUD+$26+($40*1), X
-	STA.w SA1RAM.HUD+$26+($40*2), X
-	STA.w SA1RAM.HUD+$26+($40*3), X
-	STA.w SA1RAM.HUD+$26+($40*4), X
+--	STA.w SA1RAM.HUD+$26+($40*0),X
+	STA.w SA1RAM.HUD+$26+($40*1),X
+	STA.w SA1RAM.HUD+$26+($40*2),X
+	STA.w SA1RAM.HUD+$26+($40*3),X
+	STA.w SA1RAM.HUD+$26+($40*4),X
 
 	DEX
 	DEX
 	BPL --
 
 	LDX.b #62
---	STA.w SA1RAM.HUD+10+($40*5), X ; +10 to not erase magic ba
-	STA.w SA1RAM.HUD+($40*6), X
-	STA.w SA1RAM.HUD+($40*7), X
-	STA.w SA1RAM.HUD+($40*8), X
+--	STA.w SA1RAM.HUD+10+($40*5),X ; +10 to not erase magic ba
+	STA.w SA1RAM.HUD+($40*6),X
+	STA.w SA1RAM.HUD+($40*7),X
+	STA.w SA1RAM.HUD+($40*8),X
 	DEX
 	DEX
 	BPL --
@@ -340,7 +340,7 @@ draw_hud_extras:
 	LDA.w !ram_heart_display
 	ASL
 	TAX
-	JSR (draw_hearts_options, X)
+	JSR (draw_hearts_options,X)
 
 draw_hud_counters:
 	REP #$30
@@ -351,13 +351,13 @@ draw_hud_counters:
 	PHA
 	PHX
 
-	LDA.b SA1IRAM.CNTVAL1, X ; get counter value
+	LDA.b SA1IRAM.CNTVAL1,X ; get counter value
 	PHA
 
-	LDA.w !ram_counter1, X ; get counter type
+	LDA.w !ram_counter1,X ; get counter type
 	ASL
 	TAY
-	LDA.w counters, Y ; get routine
+	LDA.w counters,Y ; get routine
 	TAY
 
 	LDA 5,S ; get write spot
@@ -404,12 +404,12 @@ draw_hud_linecounters:
 
 	TAX ; get spot
 
-	LDA.w !ram_linecounter1, Y ; get counter type
+	LDA.w !ram_linecounter1,Y ; get counter type
 
 	ASL
 	TAY
 
-	LDA.w linecounters, Y ; get routine
+	LDA.w linecounters,Y ; get routine
 	DEC
 
 	PEA.w ..return-1 ; return address
@@ -443,7 +443,7 @@ hud_draw_input_display:
 	ASL : TAX
 	LDA.b SA1IRAM.CONTROLLER_1
 	XBA
-	JSR (.options, X)
+	JSR (.options,X)
 
 ;==============================================================================
 ; clean up the stuff right under items
@@ -470,10 +470,10 @@ draw_lanmo_cycles:
 	LDY.w #$0004
 
 .nextlanmo
-	LDA.b SA1IRAM.LanmoCycles, X
+	LDA.b SA1IRAM.LanmoCycles,X
 	AND.w #$00FF
 	ORA.w #$2010
-	STA.w SA1RAM.HUD+$10A, Y
+	STA.w SA1RAM.HUD+$10A,Y
 	DEY
 	DEY
 	DEX
@@ -483,20 +483,23 @@ draw_lanmo_cycles:
 
 ;==============================================================================
 #draw_quickwarp:
-	SEP #$30 ; M=8 for just this is few cycles faster
-	LDA.w !ram_qw_toggle : LSR ; shift toggle into carry
-	LDA.b SA1IRAM.CopyOf_E2 : AND #$06 ; this tests the bits for camera
-	ORA.b SA1IRAM.CopyOf_1B ; make QW only display in overworld, where $1B = 0
-	ROL ; roll carry flag into bottom bit
-	; if we're on a quick warp on the overworld
-	; then we'll have $0D
-	; if the camera matches but we're in the underworld
-	; then we'll have $0F, and it will fail
-	CMP #$0D ; 6 shifted left once and with a carry flag in bottom bit
-	REP #$30 ; faster because it removes an AND #$00FF to get rid of leakage
+	SEP #$30
+	LDA.w !ram_qw_toggle
+	EOR.b #$01
+	ORA.b SA1IRAM.CopyOf_1B
 	BNE .skip
 
-	LDA #$340C ; 3
+	LDA.b SA1IRAM.CopyOf_E2 : AND #$06 : CMP #$06
+
+	REP #$30 : PHP
+
+	LDA.w #$300C
+
+	PLP : BNE .not_qw
+
+	ORA.w #$3800
+
+.not_qw
 	STA.w SA1RAM.HUD+$10A
 	INC
 	STA.w SA1RAM.HUD+$10C
@@ -537,10 +540,10 @@ draw_floor:
 .drawem
 	ASL
 	TAX
-	LDA.l $0AFD00, X
-	STA.w SA1RAM.HUD+$A8, Y
-	LDA.l $0AFD16, X
-	STA.w SA1RAM.HUD+$E8, Y
+	LDA.l $0AFD00,X
+	STA.w SA1RAM.HUD+$A8,Y
+	LDA.l $0AFD16,X
+	STA.w SA1RAM.HUD+$E8,Y
 
 .skip
 draw_timer:
@@ -557,9 +560,9 @@ draw_timer:
 
 ++	ASL
 	TAX
-	LDA.l $0AFD00-2, X
+	LDA.l $0AFD00-2,X
 	STA.w SA1RAM.HUD+$AA
-	LDA.l $0AFD16-2, X
+	LDA.l $0AFD16-2,X
 	STA.w SA1RAM.HUD+$EA
 
 
@@ -567,9 +570,9 @@ draw_timer:
 	BEQ .skip
 	ASL
 	TAX
-	LDA.l $0AFD00-2, X
+	LDA.l $0AFD00-2,X
 	STA.w SA1RAM.HUD+$E8
-	LDA.l $0AFD16-3, X
+	LDA.l $0AFD16-3,X
 	STA.w SA1RAM.HUD+$E8
 
 .skip
@@ -738,7 +741,7 @@ draw_hearts_options:
 	ASL
 	TAX
 	REP #$20
-	LDA.l $0DFA29, X
+	LDA.l $0DFA29,X
 	STA.b (SA1IRAM.SCRATCH+2)
 
 ..done
@@ -831,7 +834,7 @@ hud_draw_input_display_options:
 	LDX.w #$0000
 
 ..next_button
-	LDY.w .classic_locations, X
+	LDY.w .classic_locations,X
 	LSR.b SA1IRAM.SCRATCH
 	BCC ..nopress
 
@@ -839,7 +842,7 @@ hud_draw_input_display_options:
 	TXA
 	LSR
 	ORA.w #$2400
-	STA.w SA1RAM.HUD, Y
+	STA.w SA1RAM.HUD,Y
 
 ..nopress
 	INX
@@ -864,7 +867,7 @@ hud_draw_input_display_options:
 	LDX.w #$0000
 
 ..next_button
-	LDY.w .classic_locations, X
+	LDY.w .classic_locations,X
 	TXA
 	LSR
 
@@ -879,7 +882,7 @@ hud_draw_input_display_options:
 	ORA.w #$3000
 
 ..addchr
-	STA.w SA1RAM.HUD, Y
+	STA.w SA1RAM.HUD,Y
 	INX
 	INX
 	CPX.w #23
@@ -929,7 +932,7 @@ DrawHex:
 	PHA ; remember coordinates
 	AND.w #$000F ; get digit
 	ORA.b SA1IRAM.SCRATCH+10 ; add in color
-	STA.w SA1RAM.HUD+14, X
+	STA.w SA1RAM.HUD+14,X
 	PLA ; recover value
 	DEX
 	DEX
@@ -1100,8 +1103,8 @@ counters:
 	dw counter_arcvar
 	dw counter_westsom
 	dw counter_index
-	dw counter_pit
 	dw counter_hookslot
+	dw counter_pit
 	dw counter_bosshp
 
 ;===================================================================================================
@@ -1191,7 +1194,7 @@ counter_subpixels:
 	LDA.w #!EMPTY
 
 .drawdoor
-	STA.w SA1RAM.HUD+14, X
+	STA.w SA1RAM.HUD+14,X
 	RTS
 
 ;---------------------------------------------------------------------------------------------------
@@ -1225,7 +1228,7 @@ counter_roomid:
 	JSR DrawHex
 
 	PLA
-	STA.w SA1RAM.HUD+14, X
+	STA.w SA1RAM.HUD+14,X
 	DEX
 	DEX
 
@@ -1268,7 +1271,7 @@ counter_quadrant:
 .doQuadrant
 	STY.b SA1IRAM.SCRATCH+14
 
-	STA.w SA1RAM.HUD+10, X
+	STA.w SA1RAM.HUD+10,X
 
 .calc_correct_quadrant
 	LDA.w #$0100 ; checking the same bit on both coordinates
@@ -1308,17 +1311,17 @@ counter_quadrant:
 
 .desync
 	ORA.w #!TEXT_PAL
-	STA.w SA1RAM.HUD+14, X
+	STA.w SA1RAM.HUD+14,X
 
 	LDA.w #!DESYNC
 	BRA .drawSync
 
 .sync
-	STA.w SA1RAM.HUD+14, X
+	STA.w SA1RAM.HUD+14,X
 	LDA.w #!SYNCED
 
 .drawSync
-	STA.w SA1RAM.HUD+12, X
+	STA.w SA1RAM.HUD+12,X
 	RTS
 
 ;---------------------------------------------------------------------------------------------------
@@ -1359,7 +1362,7 @@ counter_pit:
 
 	PHX
 	LDX.b SA1IRAM.CopyOf_A0
-	LDA.l RoomHasPitDamage, X
+	LDA.l RoomHasPitDamage,X
 	PLX
 
 	LSR
@@ -1373,7 +1376,7 @@ counter_pit:
 	LDA.w #char($16)|!YELLOW_PAL
 
 .drawflag
-	STA.w SA1RAM.HUD+14, X
+	STA.w SA1RAM.HUD+14,X
 	RTS
 
 ;---------------------------------------------------------------------------------------------------
@@ -1405,8 +1408,8 @@ linecounter_nothing:
 ;===================================================================================================
 
 linecounter_roomdata:
-	LDA.w SA1IRAM.LINEVAL+1, Y : AND.w #$0FFF : STA.b SA1IRAM.SCRATCH+10
-	LDA.w SA1IRAM.LINEVAL-1, Y : AND.w #$F000 : ORA.b SA1IRAM.SCRATCH+10
+	LDA.w SA1IRAM.LINEVAL+1,Y : AND.w #$0FFF : STA.b SA1IRAM.SCRATCH+10
+	LDA.w SA1IRAM.LINEVAL-1,Y : AND.w #$F000 : ORA.b SA1IRAM.SCRATCH+10
 
 	; rearrange it into the order we want
 	; Start: dddd qqqq hkcc cccc
@@ -1414,14 +1417,14 @@ linecounter_roomdata:
 	XBA 
 	STA.b SA1IRAM.SCRATCH+10
 
-	LDA.w #char($19)|!RED_PAL : STA.w SA1RAM.HUD, X ; flag symbol
+	LDA.w #char($19)|!RED_PAL : STA.w SA1RAM.HUD,X ; flag symbol
 
 	LDY.w #0
 
 .next_flag
 	INX
 	INX
-	LDA.w .char, Y
+	LDA.w .char,Y
 	ASL.b SA1IRAM.SCRATCH+10
 	BCS .on
 
@@ -1430,10 +1433,10 @@ linecounter_roomdata:
 	BRA .drawit
 
 .on
-	ORA.w .pal, Y
+	ORA.w .pal,Y
 
 .drawit
-	STA.w SA1RAM.HUD, X
+	STA.w SA1RAM.HUD,X
 	INY
 	INY
 	CPY.w #32
@@ -1478,17 +1481,17 @@ linecounter_cameray:
 
 
 	LDA.w #char($13)|!GRAY_PAL ; camera icon
-	STA.w SA1RAM.HUD, X
+	STA.w SA1RAM.HUD,X
 	INX
 	INX
 
-	LDA.w SA1IRAM.LINEVAL+1, Y : JSR DrawHEX4ForwardSaveY
+	LDA.w SA1IRAM.LINEVAL+1,Y : JSR DrawHEX4ForwardSaveY
 	PHX ; save X for sync icon
 	INX
 	INX
 
 	; check which set to use
-	LDA.w SA1IRAM.LINEVAL+0, Y
+	LDA.w SA1IRAM.LINEVAL+0,Y
 	BIT.w #$0002
 	BNE .set2
 
@@ -1509,7 +1512,7 @@ linecounter_cameray:
 	PLA
 	STA.b SA1IRAM.SCRATCH+12 ; save set 2 color to here (don't need axis color anymore)
 
-	LDA.w SA1IRAM.LINEVAL+1, Y ; save camera position
+	LDA.w SA1IRAM.LINEVAL+1,Y ; save camera position
 	PHA
 
 	INY ; so we start at the +3
@@ -1531,10 +1534,10 @@ linecounter_cameray:
 	PLY ; which set to compare against
 	PLX ; get HUD position of sync icon
 
-	CMP.w SA1IRAM.LINEVAL+0, Y
+	CMP.w SA1IRAM.LINEVAL+0,Y
 	BCC .desync
 	DEC
-	CMP.w SA1IRAM.LINEVAL+2, Y
+	CMP.w SA1IRAM.LINEVAL+2,Y
 	BCS .desync
 
 .sync
@@ -1545,7 +1548,7 @@ linecounter_cameray:
 	LDA.w #!DESYNC
 
 .drawsync
-	STA.w SA1RAM.HUD, X
+	STA.w SA1RAM.HUD,X
 	RTS
 
 .draw1
@@ -1553,15 +1556,14 @@ linecounter_cameray:
 	INY
 	LDA.b SA1IRAM.SCRATCH+10
 	ORA.b SA1IRAM.SCRATCH+14
-	STA.w SA1RAM.HUD, X
+	STA.w SA1RAM.HUD,X
 	INX
 	INX
 
-	LDA.w SA1IRAM.LINEVAL, Y
+	LDA.w SA1IRAM.LINEVAL,Y
 	JMP DrawHEX4ForwardSaveY
 
 ;===================================================================================================
-; TODO make sure LINEVAL+8 for prop ID works
 linecounter_ancilla04:
 linecounter_ancilla59:
 linecounter_ancillaIX:
@@ -1570,8 +1572,8 @@ linecounter_ancillaIX:
 
 	PHX
 
-	LDX.w SA1IRAM.LINEVAL+8, Y
-	LDA.w .vectors, X
+	LDX.w SA1IRAM.LINEVAL+8,Y
+	LDA.w .vectors,X
 
 	PLX
 	PHA
@@ -1599,7 +1601,7 @@ linecounter_ancilla_delta_x:
 
 	SEP #$21
 	LDA.b SA1IRAM.CopyOf_22
-	SBC.w SA1IRAM.LINEVAL, Y
+	SBC.w SA1IRAM.LINEVAL,Y
 
 	REP #$20
 	AND.w #$00FF
@@ -1612,7 +1614,6 @@ linecounter_ancilla_delta_x:
 ++	JSR DrawHEX2ForwardSaveY_gray
 
 .continue
-	INY
 	INY
 	DEC.b SA1IRAM.SCRATCH+14
 	BNE .next_ancilla
@@ -1627,7 +1628,7 @@ linecounter_ancilla_delta_y:
 
 	SEP #$21
 	LDA.b SA1IRAM.CopyOf_20
-	SBC.w SA1IRAM.LINEVAL, Y
+	SBC.w SA1IRAM.LINEVAL,Y
 
 	REP #$20
 	AND.w #$00FF
@@ -1641,7 +1642,6 @@ linecounter_ancilla_delta_y:
 ++	JSR DrawHEX2ForwardSaveY_gray
 
 .continue
-	INY
 	INY
 	DEC.b SA1IRAM.SCRATCH+14
 	BNE .next_ancilla
@@ -1660,11 +1660,10 @@ linecounter_ancilla_altitude:
 	INX
 	INX
 
-	LDA.w SA1IRAM.LINEVAL, Y
+	LDA.w SA1IRAM.LINEVAL,Y
 	JSR DrawHEX2ForwardSaveY_white
 
 .continue
-	INY
 	INY
 	DEC.b SA1IRAM.SCRATCH+14
 	BNE .next_ancilla
@@ -1677,11 +1676,10 @@ linecounter_ancilla_y:
 	INX
 	INX
 
-	LDA.w SA1IRAM.LINEVAL, Y
+	LDA.w SA1IRAM.LINEVAL,Y
 	JSR DrawHEX2ForwardSaveY_yellow
 
 .continue
-	INY
 	INY
 	DEC.b SA1IRAM.SCRATCH+14
 	BNE .next_ancilla
@@ -1694,7 +1692,7 @@ linecounter_ancilla_id:
 	INX
 	INX
 
-	LDA.w SA1IRAM.LINEVAL, Y
+	LDA.w SA1IRAM.LINEVAL,Y
 	AND.w #$00FF : BEQ .zero
 
 	CMP.w #$0A : BEQ .replace
@@ -1714,7 +1712,6 @@ linecounter_ancilla_id:
 
 .continue
 	INY
-	INY
 	DEC.b SA1IRAM.SCRATCH+14
 	BNE .next_ancilla
 	RTS
@@ -1726,7 +1723,7 @@ linecounter_ancilla_egcheck:
 	INX
 	INX
 
-	LDA.w SA1IRAM.LINEVAL, Y
+	LDA.w SA1IRAM.LINEVAL,Y
 	AND.w #$00FF : BEQ .zero
 
 .bad
@@ -1737,7 +1734,6 @@ linecounter_ancilla_egcheck:
 	JSR DrawHEX2ForwardSaveY_gray
 
 .continue
-	INY
 	INY
 	DEC.b SA1IRAM.SCRATCH+14
 	BNE .next_ancilla

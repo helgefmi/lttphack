@@ -106,7 +106,7 @@ UpdateOnUWMirror:
 
 UpdateOnUWPitTransition:
 	%reset_timer()
-	LDA $01C31F, X
+	LDA $01C31F,X
 	RTL
 
 UpdateOnKillRoom:
@@ -177,7 +177,7 @@ UpdateOnMovingWallEndPodMire:
 
 .slowwalls
 	LDY #$02 : STY.w SA1IRAM.TIMER_FLAG
-	LDY #$00 : STY $AE, X
+	LDY #$00 : STY $AE,X
 	RTL
 
 ; desert: 918->10
@@ -195,7 +195,7 @@ UpdateOnMovingWallEndDesert:
 
 .slowwalls
 	LDY #$02 : STY.w SA1IRAM.TIMER_FLAG
-	LDY #$00 : STY $AE, X
+	LDY #$00 : STY $AE,X
 	RTL
 
 ; Overworld updates

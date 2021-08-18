@@ -117,16 +117,16 @@ rng_pokey_hook:
 	LDA.w SA1RAM.rng_counter : ASL : STA $72
 	LDA.w SA1RAM.pokey_rng : DEC : ASL #2 : CLC : ADC $72 : TAY
 
-	LDA.w tbl_pokey_speed+0, Y : STA $0D40, X
-	LDA.w tbl_pokey_speed+1, Y : STA $0D50, X
+	LDA.w tbl_pokey_speed+0,Y : STA $0D40,X
+	LDA.w tbl_pokey_speed+1,Y : STA $0D50,X
 
 	LDA.w SA1RAM.rng_counter : INC : STA.w SA1RAM.rng_counter
 	BRA .done
 
 .random
 	JSL RandomNumGen : AND #$03 : TAY
-	LDA.w tbl_real_pokey_x, Y : STA $0D50, X
-	LDA.w tbl_real_pokey_y, Y : STA $0D40, X
+	LDA.w tbl_real_pokey_x,Y : STA $0D50,X
+	LDA.w tbl_real_pokey_y,Y : STA $0D40,X
 
 .done
 	PLB
@@ -180,7 +180,7 @@ rng_arrghus:
 	LDA.w SA1RAM.arrghus_rng : BEQ JML_to_RNG
 	PHX
 	DEC
-	TAX : LDA.l arrghus_speeds, X
+	TAX : LDA.l arrghus_speeds,X
 	PLX
 	RTL
 
@@ -216,9 +216,9 @@ rng_conveyor_belt:
 ; Vitreous
 choose_vitty_eye:
 	LDA.w SA1RAM.vitreous_rng : BEQ JML_to_RNG
-	LDA $0E70, X : BNE JML_to_RNG
+	LDA $0E70,X : BNE JML_to_RNG
 
-	INC : STA $0E70, X ; set to 1
+	INC : STA $0E70,X ; set to 1
 	LDA.w SA1RAM.vitreous_rng
 	DEC
 	RTL

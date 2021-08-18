@@ -67,7 +67,7 @@ CONFIG_SUBMENU:
 	%list_item("Save place")
 
 ;===================================================================================================
-%choice_here("HUD font", !ram_hud_font, 24)
+%choice_here("HUD font", !ram_hud_font, 23)
 	%list_item("Classic")
 	%list_item("Normal")
 	%list_item("Italic")
@@ -83,9 +83,10 @@ CONFIG_SUBMENU:
 	%list_item("Emerald")
 	%list_item("Klonoa")
 	%list_item("TI-83")
+	%list_item("Shin-chan")
 	%list_item("Pac-Man")
-	%list_item("DOOM")
 
+	%list_item("DOOM")
 	%list_item("Undertale")
 	%list_item("Planet X-3")
 	%list_item("Skyroads")
@@ -133,8 +134,8 @@ set_color:
 	TAX
 	ASL
 	TAY
-	LDA.l .defaults, X
-	STA.w !ram_hud_bg, Y
+	LDA.l .defaults,X
+	STA.w !ram_hud_bg,Y
 
 .dontreset
 	RTL

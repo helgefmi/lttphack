@@ -8,57 +8,57 @@ save_preset_data:
 	LDA.b #!sram_pss_offset>>8 : STA $01
 	LDA.b #!sram_pss_offset>>16 : STA $02
 
-	LDA $1B : INC : STA [$00], Y : INY
+	LDA $1B : INC : STA [$00],Y : INY
 	CMP #$02 : BEQ .dungeon
 
 	REP #$20
 	; overworld
-	LDA $040A : STA [$00], Y : INY #2
-	LDA $22 : STA [$00], Y : INY #2
-	LDA $20 : STA [$00], Y : INY #2
-	LDA $E6 : STA [$00], Y : INY #2
-	LDA $E8 : STA [$00], Y : INY #2
-	LDA $E0 : STA [$00], Y : INY #2
-	LDA $E2 : STA [$00], Y : INY #2
-	LDA $061C : STA [$00], Y : INY #2
-	LDA $0618 : STA [$00], Y : INY #2
-	LDA $84 : STA [$00], Y : INY #2
-	LDA $0624 : STA [$00], Y : INY #2
-	LDA $0628 : STA [$00], Y : INY #2
-	LDA #$FFFF : STA [$00], Y : INY #2
+	LDA $040A : STA [$00],Y : INY #2
+	LDA $22 : STA [$00],Y : INY #2
+	LDA $20 : STA [$00],Y : INY #2
+	LDA $E6 : STA [$00],Y : INY #2
+	LDA $E8 : STA [$00],Y : INY #2
+	LDA $E0 : STA [$00],Y : INY #2
+	LDA $E2 : STA [$00],Y : INY #2
+	LDA $061C : STA [$00],Y : INY #2
+	LDA $0618 : STA [$00],Y : INY #2
+	LDA $84 : STA [$00],Y : INY #2
+	LDA $0624 : STA [$00],Y : INY #2
+	LDA $0628 : STA [$00],Y : INY #2
+	LDA #$FFFF : STA [$00],Y : INY #2
 	JMP .end
 
 .dungeon:
 	REP #$20
-	LDA $048E : STA [$00], Y : INY #2
-	LDA $E6 : STA [$00], Y : INY #2
-	LDA $E8 : STA [$00], Y : INY #2
-	LDA $E0 : STA [$00], Y : INY #2
-	LDA $E2 : STA [$00], Y : INY #2
-	LDA $22 : STA [$00], Y : INY #2
-	LDA $20 : STA [$00], Y : INY #2
-	LDA $061C : STA [$00], Y : INY #2
-	LDA $0618 : STA [$00], Y : INY #2
-	LDA $0696 : STA [$00], Y : INY #2
-	LDA $0600 : STA [$00], Y : INY #2
-	LDA $0602 : STA [$00], Y : INY #2
-	LDA $0604 : STA [$00], Y : INY #2
-	LDA $0606 : STA [$00], Y : INY #2
-	LDA $0608 : STA [$00], Y : INY #2
-	LDA $060A : STA [$00], Y : INY #2
-	LDA $060C : STA [$00], Y : INY #2
-	LDA $060E : STA [$00], Y : INY #2
-	LDA $A6 : STA [$00], Y : INY #2
-	LDA $A9 : STA [$00], Y : INY #2
+	LDA $048E : STA [$00],Y : INY #2
+	LDA $E6 : STA [$00],Y : INY #2
+	LDA $E8 : STA [$00],Y : INY #2
+	LDA $E0 : STA [$00],Y : INY #2
+	LDA $E2 : STA [$00],Y : INY #2
+	LDA $22 : STA [$00],Y : INY #2
+	LDA $20 : STA [$00],Y : INY #2
+	LDA $061C : STA [$00],Y : INY #2
+	LDA $0618 : STA [$00],Y : INY #2
+	LDA $0696 : STA [$00],Y : INY #2
+	LDA $0600 : STA [$00],Y : INY #2
+	LDA $0602 : STA [$00],Y : INY #2
+	LDA $0604 : STA [$00],Y : INY #2
+	LDA $0606 : STA [$00],Y : INY #2
+	LDA $0608 : STA [$00],Y : INY #2
+	LDA $060A : STA [$00],Y : INY #2
+	LDA $060C : STA [$00],Y : INY #2
+	LDA $060E : STA [$00],Y : INY #2
+	LDA $A6 : STA [$00],Y : INY #2
+	LDA $A9 : STA [$00],Y : INY #2
 	SEP #$20
-	LDA $0AA1 : STA [$00], Y : INY
-	LDA $0132 : STA [$00], Y : INY
-	LDA $A4 : STA [$00], Y : INY
-	LDA $040C : STA [$00], Y : INY
-	LDA $6C : STA [$00], Y : INY
-	LDA $EE : STA [$00], Y : INY
+	LDA $0AA1 : STA [$00],Y : INY
+	LDA $0132 : STA [$00],Y : INY
+	LDA $A4 : STA [$00],Y : INY
+	LDA $040C : STA [$00],Y : INY
+	LDA $6C : STA [$00],Y : INY
+	LDA $EE : STA [$00],Y : INY
 	REP #$20
-	LDA #$FFFF : STA [$00], Y : INY #2
+	LDA #$FFFF : STA [$00],Y : INY #2
 
 .end:
 	JSR save_poverty_state
@@ -85,12 +85,12 @@ save_poverty_state:
 	LDA #!sram_pss_offset>>16 : STA $4314
 
 .fetch
-	LDA pss_data, Y : CMP #$FF : BEQ .done
+	LDA pss_data,Y : CMP #$FF : BEQ .done
 	STA $2181
 	REP #$20
-	LDA pss_data+1, Y : STA $2182
+	LDA pss_data+1,Y : STA $2182
 	LDA #!sram_pss_offset : CLC : ADC $03 : STA $4312
-	LDA pss_data+3, Y : INC : STA $4315
+	LDA pss_data+3,Y : INC : STA $4315
 	CLC : ADC $03 : STA $03
 	SEP #$20
 	LDA #$02 : STA $420B
@@ -121,12 +121,12 @@ load_poverty_state:
 	LDA #!sram_pss_offset>>16 : STA $4314
 
 .fetch
-	LDA pss_data, Y : CMP #$FF : BEQ .done
+	LDA pss_data,Y : CMP #$FF : BEQ .done
 	STA $2181
 	REP #$20
-	LDA pss_data+1, Y : STA $2182
+	LDA pss_data+1,Y : STA $2182
 	LDA #!sram_pss_offset : CLC : ADC $03 : STA $4312
-	LDA pss_data+3, Y : INC : STA $4315
+	LDA pss_data+3,Y : INC : STA $4315
 	CLC : ADC $03 : STA $03
 	SEP #$20
 	LDA #$02 : STA $420B

@@ -5,7 +5,7 @@ EmptyCurrentMenu:
 
 	; clean every row listed
 .nextclean
-	LDA.b [SA1IRAM.cm_current_menu], Y
+	LDA.b [SA1IRAM.cm_current_menu],Y
 	BPL .doneclean ; if we hit a 0, we're done
 
 	JSR EmptyCurrentRow
@@ -22,7 +22,7 @@ EmptyCurrentMenu:
 	LDY.w #0
 
 .nextdraw
-	LDA.b [SA1IRAM.cm_current_menu], Y
+	LDA.b [SA1IRAM.cm_current_menu],Y
 	BPL .donedraw
 
 	JSR DrawCurrentRow
@@ -44,7 +44,7 @@ EmptyCurrentRow:
 .next_clean
 	LDA.w #$002F
 	ORA.b SA1IRAM.cm_draw_color
-	STA.w SA1RAM.MENU, X
+	STA.w SA1RAM.MENU,X
 	INX
 	INX
 	TXA
@@ -73,7 +73,7 @@ CM_YRowToXOffset:
 	TAX
 	RTS
 
-; in this case, Y holds the cursor index, not the message index
+; in this case,Y holds the cursor index, not the message index
 DrawCurrentRow_ShiftY:
 	SEP #$10 ; clear top of Y, just in case
 	REP #$30
@@ -93,7 +93,7 @@ DrawCurrentRow:
 	LDA.b SA1IRAM.cm_current_menu+1
 	STA.b SA1IRAM.cm_current_draw+1
 
-	LDA.b [SA1IRAM.cm_current_menu], Y
+	LDA.b [SA1IRAM.cm_current_menu],Y
 	STA.b SA1IRAM.cm_current_draw+0
 
 	TYA
@@ -130,7 +130,7 @@ DrawCurrentRow:
 	STA.b SA1IRAM.cm_draw_color
 
 	ORA.w #$002F ; fill first character
-	STA.w SA1RAM.MENU, X
+	STA.w SA1RAM.MENU,X
 	INX
 	INX
 
@@ -147,15 +147,15 @@ DrawCurrentRow:
 	ASL
 	STA.b SA1IRAM.cm_draw_type_offset ; remember the type for drawing
 
-	LDA.w ActionLengths, X ; this is how many bytes the header is for the item
+	LDA.w ActionLengths,X ; this is how many bytes the header is for the item
 	AND.w #$00FF
 	TAY ; location of name
 
-	LDA.w ActionIcons, X ; get the icon, obviously
+	LDA.w ActionIcons,X ; get the icon, obviously
 	AND.w #$00FF
 	ORA.b SA1IRAM.cm_draw_color
 	PLX
-	STA.w SA1RAM.MENU, X
+	STA.w SA1RAM.MENU,X
 
 	LDA.w #16 ; for determining the filler size
 	STA.b SA1IRAM.cm_draw_filler
@@ -164,13 +164,13 @@ DrawCurrentRow:
 
 	; write out item name
 .next_letter
-	LDA.b [SA1IRAM.cm_current_draw], Y
+	LDA.b [SA1IRAM.cm_current_draw],Y
 	AND.w #$00FF
 	CMP.w #$00FF
 	BEQ .done_row_name
 
 	ORA.b SA1IRAM.cm_draw_color
-	STA.w SA1RAM.MENU, X
+	STA.w SA1RAM.MENU,X
 
 	INY
 
@@ -188,7 +188,7 @@ DrawCurrentRow:
 	ORA.b SA1IRAM.cm_draw_color
 
 .next_mid_fill
-	STA.w SA1RAM.MENU, X
+	STA.w SA1RAM.MENU,X
 
 	INX
 	INX
@@ -200,7 +200,7 @@ DrawCurrentRow:
 	PHX
 
 	LDX.b SA1IRAM.cm_draw_type_offset
-	LDA.w ActionDrawRoutines, X
+	LDA.w ActionDrawRoutines,X
 
 	PLX
 
@@ -226,7 +226,7 @@ DrawCurrentRow:
 CMDRAW_SAVE_ADDRESS_LONG:
 	JSR .continue
 
-	LDA.b [SA1IRAM.cm_current_draw], Y
+	LDA.b [SA1IRAM.cm_current_draw],Y
 	STA.b SA1IRAM.cm_writer+2
 	INY
 	RTS
@@ -237,7 +237,7 @@ CMDRAW_SAVE_ADDRESS_LONG:
 
 .continue
 	REP #$20
-	LDA.b [SA1IRAM.cm_current_draw], Y
+	LDA.b [SA1IRAM.cm_current_draw],Y
 	INY
 	INY
 
@@ -305,7 +305,7 @@ CMDRAW_WORD_START:
 	BEQ .done
 
 	ORA.b SA1IRAM.cm_draw_color
-	STA.w SA1RAM.MENU, X
+	STA.w SA1RAM.MENU,X
 	INX
 	INX
 	INY
@@ -388,7 +388,7 @@ CMDRAW_HEX:
 
 	LDA.w #'$' ; first add hex prefix to menu
 	ORA.b SA1IRAM.cm_draw_color
-	STA.w SA1RAM.MENU, X
+	STA.w SA1RAM.MENU,X
 
 	TYA
 	ASL
@@ -413,7 +413,7 @@ CMDRAW_HEX:
 
 	AND.w #$000F
 	ORA.b SA1IRAM.cm_draw_color
-	STA.w SA1RAM.MENU, X
+	STA.w SA1RAM.MENU,X
 
 	PLA
 
@@ -436,7 +436,7 @@ CMDRAW_1_CHARACTER:
 	AND.w #$00FF
 	ORA.b SA1IRAM.cm_draw_color
 
-	STA.w SA1RAM.MENU, X
+	STA.w SA1RAM.MENU,X
 	INX
 	INX
 
@@ -574,7 +574,7 @@ CMDRAW_CHECK_BIT_LONG_CUSTOMTEXT:
 
 .on
 	REP #$20
-	LDA.b [SA1IRAM.cm_writer], Y
+	LDA.b [SA1IRAM.cm_writer],Y
 	JMP CMDRAW_WORD_LONG
 
 CMDRAW_TOGGLE_LONG_CUSTOMTEXT:
@@ -608,7 +608,7 @@ CMDRAW_TOGGLE_BIT0_LONG_CUSTOMTEXT:
 ;===================================================================================================
 CMDRAW_TOGGLE_ROOMFLAG:
 
-	LDA.b [SA1IRAM.cm_current_draw], Y
+	LDA.b [SA1IRAM.cm_current_draw],Y
 	ASL
 	TAY
 
@@ -621,7 +621,7 @@ CMDRAW_TOGGLE_ROOMFLAG:
 
 	LDY.w #'0'
 
-	AND.w .bits, Y
+	AND.w .bits,Y
 	BEQ ++
 
 	LDY.w #'1'
@@ -679,7 +679,7 @@ CMDRAW_NUMBER_DEC:
 .hundo
 	ORA.b SA1IRAM.cm_draw_color
 
-	STA.w SA1RAM.MENU, X
+	STA.w SA1RAM.MENU,X
 	INX
 	INX
 
@@ -695,7 +695,7 @@ CMDRAW_NUMBER_DEC:
 .tens
 	ORA.b SA1IRAM.cm_draw_color
 
-	STA.w SA1RAM.MENU, X
+	STA.w SA1RAM.MENU,X
 	INX
 	INX
 
@@ -703,7 +703,7 @@ CMDRAW_NUMBER_DEC:
 	AND.w #$00FF
 	ORA.b SA1IRAM.cm_draw_color
 
-	STA.w SA1RAM.MENU, X
+	STA.w SA1RAM.MENU,X
 	INX
 	INX
 
@@ -732,7 +732,7 @@ CMDRAW_HEX_TO_DEC:
 	ASL
 	TAX
 
-	LDA.l hex_to_dec_fast_table, X
+	LDA.l hex_to_dec_fast_table,X
 
 	CMP.w #$0010 ; compare 10s
 	AND.w #$0F0F ; now get the 100s and 1s
@@ -743,7 +743,7 @@ CMDRAW_HEX_TO_DEC:
 .tiny_number
 	STA.b SA1IRAM.cm_writer+1
 
-	LDA.l hex_to_dec_fast_table, X
+	LDA.l hex_to_dec_fast_table,X
 	LSR
 	LSR
 	LSR
@@ -803,7 +803,7 @@ CMDRAW_CTRL_SHORTCUT_FINAL:
 
 	TYA
 	ORA.b SA1IRAM.cm_draw_color
-	STA.w SA1RAM.MENU, X
+	STA.w SA1RAM.MENU,X
 	INX
 	INX
 
@@ -878,7 +878,7 @@ CMDRAW_CHOICE_FUNC:
 
 .continue
 	LDA.b [SA1IRAM.cm_writer]
-	CMP.b [SA1IRAM.cm_current_draw], Y
+	CMP.b [SA1IRAM.cm_current_draw],Y
 	BEQ .fine
 	BCS .bad
 
@@ -892,7 +892,7 @@ CMDRAW_CHOICE_FUNC:
 	TAY
 
 	REP #$20
-	LDA.b [SA1IRAM.cm_writer], Y
+	LDA.b [SA1IRAM.cm_writer],Y
 
 	JMP CMDRAW_WORD_LONG
 

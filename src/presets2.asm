@@ -27,11 +27,11 @@ PRESET_SUBMENU:
 	TAX
 
 	REP #$21
-	LDA.l .pointers-1, X
+	LDA.l .pointers-1,X
 	AND.w #$FF00
 	STA.b SA1IRAM.cm_cursor+0
 
-	LDA.l .pointers+1, X
+	LDA.l .pointers+1,X
 	STA.b SA1IRAM.cm_cursor+2
 
 	; put bank in appropriate places
@@ -62,8 +62,7 @@ PRESET_SUBMENU:
 
 
 
-; TODO?
-; command for writing palette
+; TODO command for writing palette? check lag times wrt sprite 0 pal
 !PRESET_WRITE_END   = $0000
 !PRESET_WRITE_8     = $0001
 !PRESET_WRITE_16    = $0002
@@ -72,7 +71,6 @@ PRESET_SUBMENU:
 !PRESET_WRITE_2N1   = $0005
 
 !PRESET_WRITE_7F    = $000F
-
 
 macro write_end()
 	dw !PRESET_WRITE_END
@@ -113,7 +111,7 @@ macro writeroom(room, n)
 endmacro
 
 macro write16sram(addr, data)
-	dw <addr>&$4FFF|$4000 : dw <data>
+	dw <addr>&$0FFF|$4000 : dw <data>
 endmacro
 
 ;===================================================================================================
@@ -179,17 +177,43 @@ preset_load_last_preset:
 preset_load:
 	SEP #$30
 
-	; clear camera shake offsets
+	; clear stuff that needs cleaning prior to loading values
 	REP #$20
 	STZ.w $011A : STZ.w $011C
+
+	STZ.b $EA
+	STZ.w $12C
+	STZ.w $12E
+
+
+	SEP #$30
+	JSL Player_ResetState
+
+	STZ.w $02E4
+	STZ.w $0112
+	STZ.w $0345
+	STZ.w $0216
+	STZ.w $03F3
+	STZ.w $0322
+
+	STZ.w $0057
+	STZ.w $005D
+	STZ.w $00EF
+
+	STZ.w SA1IRAM.LanmoCycles+0
+	STZ.w SA1IRAM.LanmoCycles+1
+	STZ.w SA1IRAM.LanmoCycles+2
 
 	SEP #$30
 	STZ.w $0128 ; disable IRQ
 	STZ.w $4200 ; disable NMI
-
 	; big blocks of zeros clear tile map
 	REP #$20
 	LDA.w #$2100 : TCD
+
+	; disable sound effects now
+	LDX.b #$05 : STX.b $2141
+
 	LDX.b #$80 : STX.b $2100
 
 	; clear text tile map
@@ -297,46 +321,45 @@ preset_load:
 	LDA.b SA1IRAM.preset_addr
 	STA.b SA1IRAM.preset_reader
 
-	;print pc
 	LDY.w #$0002 ; start getting data for the preset
 
 	; get the persistence data location
 	LDA.b [SA1IRAM.preset_addr]
 	STA.b SA1IRAM.preset_pert
 
-	LDA.b [SA1IRAM.preset_addr], Y
+	LDA.b [SA1IRAM.preset_addr],Y
 	STA.b SA1IRAM.preset_pert_end
 	INY : INY
 
-	LDA.b [SA1IRAM.preset_addr], Y
+	LDA.b [SA1IRAM.preset_addr],Y
 	STA.b SA1IRAM.preset_prog_end
 	INY : INY
 
 	; get stuff every preset has
 
 	; Room/Screen ID
-	LDA.b [SA1IRAM.preset_addr], Y : INY : INY : PHA ; save this
+	LDA.b [SA1IRAM.preset_addr],Y : INY : INY : PHA ; save this
 
 	; Link X and Y
-	LDA.b [SA1IRAM.preset_addr], Y : INY #2 : STA.w $0022
-	LDA.b [SA1IRAM.preset_addr], Y : INY #2 : STA.w $0020
+	LDA.b [SA1IRAM.preset_addr],Y : INY #2 : STA.w $0022
+	LDA.b [SA1IRAM.preset_addr],Y : INY #2 : STA.w $0020
 
 	; Camera V and H
-	LDA.b [SA1IRAM.preset_addr], Y : INY #2 : STA.w $00E6 : STA.w $00E8
-	LDA.b [SA1IRAM.preset_addr], Y : INY #2 : STA.w $00E0 : STA.w $00E2
+	LDA.b [SA1IRAM.preset_addr],Y : INY #2 : STA.w $00E6 : STA.w $00E8
+	LDA.b [SA1IRAM.preset_addr],Y : INY #2 : STA.w $00E0 : STA.w $00E2
 
 	SEP #$20
 	; mirror portal
-	LDA.b [SA1IRAM.preset_addr], Y : INY : STA.w $1ABF
-	LDA.b [SA1IRAM.preset_addr], Y : INY : STA.w $1ACF
-	LDA.b [SA1IRAM.preset_addr], Y : INY : STA.w $1ADF
-	LDA.b [SA1IRAM.preset_addr], Y : INY : STA.w $1AEF
+	LDA.b [SA1IRAM.preset_addr],Y : INY : STA.w $1ABF
+	LDA.b [SA1IRAM.preset_addr],Y : INY : STA.w $1ACF
+	LDA.b [SA1IRAM.preset_addr],Y : INY : STA.w $1ADF
+	LDA.b [SA1IRAM.preset_addr],Y : INY : STA.w $1AEF
 
 	; Item
-	LDA.b [SA1IRAM.preset_addr], Y : INY : STA.w $0303
+	LDA.b [SA1IRAM.preset_addr],Y : INY : STA.w $0303
 
 	; Link's direction
-	LDA.b [SA1IRAM.preset_addr], Y : INY : STA.w $002F
+	LDA.b [SA1IRAM.preset_addr],Y : INY : STA.w $002F
 
 	PHY : PHB
 	JSR .writeSRAM
@@ -355,7 +378,7 @@ preset_load:
 	PEA.w $7E80 ; push data banks we wanna use
 	PLB
 
-	JSR (.preset_types, X)
+	JSR (.preset_types,X)
 
 	; do the arbitrary writes first
 	REP #$31
@@ -396,7 +419,7 @@ preset_load:
 	LDA.b #$7E : STA.b SA1IRAM.preset_reader+2
 
 	LDY.w $0303
-	LDA.w .item_to_menu, Y
+	LDA.w .item_to_menu,Y
 	STA.w $0202
 
 	CPY.b #$00
@@ -408,10 +431,10 @@ preset_load:
 	ASL : ASL ; get offset for this
 	TAY
 
-	LDX.w .item_HUD-4, Y ; bank0D offset
+	LDX.w .item_HUD-4,Y ; bank0D offset
 	STX.b SA1IRAM.preset_reader2
 
-	LDA.w .item_HUD-2, Y ; bank7E SRAM val
+	LDA.w .item_HUD-2,Y ; bank7E SRAM val
 	STA.b SA1IRAM.preset_reader+0
 
 	LDA.b [SA1IRAM.preset_reader]
@@ -422,7 +445,7 @@ preset_load:
 
 .bottle_adjust
 	TAX
-	LDA.l $7EF35C-1, X
+	LDA.l $7EF35C-1,X
 	AND.w #$00FF
 
 .normal_item
@@ -441,10 +464,10 @@ preset_load:
 	LDX.w #$FEE7 ; value happens to have $207F x4
 
 .draw_item
-	LDA.l $0D0000, X : STA.w SA1RAM.HUD+$04A
-	LDA.l $0D0002, X : STA.w SA1RAM.HUD+$04C
-	LDA.l $0D0004, X : STA.w SA1RAM.HUD+$08A
-	LDA.l $0D0006, X : STA.w SA1RAM.HUD+$08C
+	LDA.l $0D0000,X : STA.w SA1RAM.HUD+$04A
+	LDA.l $0D0002,X : STA.w SA1RAM.HUD+$04C
+	LDA.l $0D0004,X : STA.w SA1RAM.HUD+$08A
+	LDA.l $0D0006,X : STA.w SA1RAM.HUD+$08C
 
 	; make rupees match
 	LDA.l $7EF360 : STA.l $7EF362
@@ -466,7 +489,7 @@ preset_load:
 	AND.w #$00FF
 	BEQ .nosanc
 
-	LDA.l $7EF36C : CLC : ADC.w #$0807 ; carry is set here
+	LDA.l $7EF36C : ADC.w #$0807 ; carry is set here
 	STA.l $7EF36C
 
 	LDA.b SA1IRAM.preset_addr
@@ -476,6 +499,7 @@ preset_load:
 	BCC .noitembonus
 
 	SEP #$10
+
 	LDX.w !ram_nmg_powder
 
 	; if nothing or shroom, just add it in as is
@@ -542,29 +566,14 @@ preset_load:
 	JSL Tagalong_LoadGfx
 
 .no_tagalong
-	SEP #$30
-	JSL Player_ResetState
 
-	STZ.w $02E4
-	STZ.w $0112
-	STZ.w $0345
-	STZ.w $0216
-	STZ.w $03F3
-	STZ.w $0322
-
-	STZ.b $57
-	STZ.b $5D
-	STZ.b $EF
-
-	STZ.w SA1IRAM.LanmoCycles+0
-	STZ.w SA1IRAM.LanmoCycles+1
-	STZ.w SA1IRAM.LanmoCycles+2
+	REP #$20
 
 	JSL SNES_DISABLE_CUSTOM_NMI
 
 	;REP #$20
 	;LDX.w SA1IRAM.preset_type
-	;JSR (.after_func, X)
+	;JSR (.after_func,X)
 
 	REP #$30
 	LDA.w #$01FF
@@ -631,8 +640,6 @@ preset_load:
 	dw $0DF7D9, $7EF352 ; $13 - Cape
 	dw $0DF7E9, $7EF353 ; $14 - Magic Mirror
 
-
-
 ;===================================================================================================
 
 .write8bit
@@ -640,12 +647,12 @@ preset_load:
 	INY
 
 	SEP #$20
-	LDA.b [SA1IRAM.preset_reader], Y
+	LDA.b [SA1IRAM.preset_reader],Y
 	STA.b (SA1IRAM.preset_writer)
 	REP #$20
 
 	INY
-	LDA.b [SA1IRAM.preset_reader], Y
+	LDA.b [SA1IRAM.preset_reader],Y
 	CMP.w #$0010
 	BCC .new_command
 
@@ -657,12 +664,12 @@ preset_load:
 	INY
 	INY
 
-	LDA.b [SA1IRAM.preset_reader], Y
+	LDA.b [SA1IRAM.preset_reader],Y
 	STA.b (SA1IRAM.preset_writer)
 
 	INY
 	INY
-	LDA.b [SA1IRAM.preset_reader], Y
+	LDA.b [SA1IRAM.preset_reader],Y
 	CMP.w #$0010
 	BCC .new_command
 
@@ -677,18 +684,18 @@ preset_load:
 	REP #$20
 	INY
 	INY
-	LDA.b [SA1IRAM.preset_reader], Y
+	LDA.b [SA1IRAM.preset_reader],Y
 	CMP.w #$0010
 	BCS .start_8bit
 	BRA .new_command
 
 
 .start_arb_no_comm
-	LDA.b [SA1IRAM.preset_reader], Y
+	LDA.b [SA1IRAM.preset_reader],Y
 	BRA .new_command_preload
 
 .start_arb
-	LDA.b [SA1IRAM.preset_reader], Y
+	LDA.b [SA1IRAM.preset_reader],Y
 
 .new_command
 	INY
@@ -697,10 +704,10 @@ preset_load:
 .new_command_preload
 	ASL
 	TAX
-	LDA.b [SA1IRAM.preset_reader], Y
+	LDA.b [SA1IRAM.preset_reader],Y
 	STA.b SA1IRAM.preset_writer
 
-	JMP (.commands, X)
+	JMP (.commands,X)
 
 .write2N
 	INY
@@ -709,7 +716,7 @@ preset_load:
 	JSR .setupAndDo2N
 
 	PLY
-	LDA.b [SA1IRAM.preset_reader], Y
+	LDA.b [SA1IRAM.preset_reader],Y
 	CMP.w #$0010
 	BCC .new_command
 
@@ -724,13 +731,13 @@ preset_load:
 
 	; one last byte
 	SEP #$20
-	LDA.b [SA1IRAM.preset_reader2], Y
-	STA.b (SA1IRAM.preset_writer), Y
+	LDA.b [SA1IRAM.preset_reader2],Y
+	STA.b (SA1IRAM.preset_writer),Y
 	REP #$20
 
 	PLY
 	INY ; account for the last byte
-	LDA.b [SA1IRAM.preset_reader], Y
+	LDA.b [SA1IRAM.preset_reader],Y
 	CMP.w #$0010
 	BCC .new_command
 
@@ -738,7 +745,7 @@ preset_load:
 	BRA .write2Nplus1
 
 .setupAndDo2N
-	LDA.b [SA1IRAM.preset_reader], Y
+	LDA.b [SA1IRAM.preset_reader],Y
 	AND.b #$00FF
 	STA.b SA1IRAM.preset_scratch+0
 
@@ -760,8 +767,8 @@ preset_load:
 	TAY
 
 ..next
-	LDA.b [SA1IRAM.preset_reader2], Y
-	STA.b (SA1IRAM.preset_writer), Y
+	LDA.b [SA1IRAM.preset_reader2],Y
+	STA.b (SA1IRAM.preset_writer),Y
 	INY
 	INY
 	DEX
@@ -814,7 +821,7 @@ preset_load:
 	INY
 
 ..start
-	LDA.b [SA1IRAM.preset_prog], Y
+	LDA.b [SA1IRAM.preset_prog],Y
 
 	INY
 	INY
@@ -825,21 +832,21 @@ preset_load:
 	BPL ..write_16
 
 	SEP #$20
-	LDA.b [SA1IRAM.preset_prog], Y
-	STA.w $7E0000, X
+	LDA.b [SA1IRAM.preset_prog],Y
+	STA.w $7E0000,X
 	REP #$20
 	BRA ..next
 
 ..write_16
 	BIT.w #$4000
 	BNE ..not_room
-	LDA.b [SA1IRAM.preset_prog], Y
-	STA.w $7EF000, X
+	LDA.b [SA1IRAM.preset_prog],Y
+	STA.w $7EF000,X
 	BRA ..next_from_room
 
 ..not_room
-	LDA.b [SA1IRAM.preset_prog], Y
-	STA.w $7EB000, X
+	LDA.b [SA1IRAM.preset_prog],Y
+	STA.w $7EB000,X
 	BRA ..next_from_room
 
 ..done
@@ -852,20 +859,20 @@ presetload_overworld:
 	; preloaded with screen ID
 	STA.w $008A : STA.w $040A
 
-	LDA.b [SA1IRAM.preset_addr], Y : INY #2
+	LDA.b [SA1IRAM.preset_addr],Y : INY #2
 	STA.w $061C : DEC : DEC : STA.w $061E
 
-	LDA.b [SA1IRAM.preset_addr], Y : INY #2
+	LDA.b [SA1IRAM.preset_addr],Y : INY #2
 	STA.w $0618 : DEC : DEC : STA.w $061A
 
-	LDA.b [SA1IRAM.preset_addr], Y : INY #2 : STA.w $0084
+	LDA.b [SA1IRAM.preset_addr],Y : INY #2 : STA.w $0084
 	SEC : SBC.w #$0400 : AND.w #$0F80 : ASL : XBA : STA.w $0088
 	LDA.w $0084 : SEC : SBC.w #$0010 : AND.w #$003E : LSR : STA.w $0086
 
-	LDA.b [SA1IRAM.preset_addr], Y : INY #2 : STA.w $0624
+	LDA.b [SA1IRAM.preset_addr],Y : INY #2 : STA.w $0624
 	EOR.w #$FFFF : INC : STA.w $0626
 
-	LDA.b [SA1IRAM.preset_addr], Y : INY #2 : STA.w $0628
+	LDA.b [SA1IRAM.preset_addr],Y : INY #2 : STA.w $0628
 	EOR.w #$FFFF : INC : STA.w $062A
 
 	SEP #$30
@@ -973,7 +980,7 @@ presetload_dungeon:
 
 	; entrance
 	SEP #$20
-	LDA.b [SA1IRAM.preset_addr], Y : INY
+	LDA.b [SA1IRAM.preset_addr],Y : INY
 	STA.w $010E
 
 	LDA.b #$01 : STA.w $001B
@@ -985,7 +992,7 @@ presetload_dungeon:
 	; c bit that goes in $A9
 	; d bit that goes in $AA
 	SEP #$20
-	LDA.b [SA1IRAM.preset_addr], Y
+	LDA.b [SA1IRAM.preset_addr],Y
 	INY
 
 	STA.b SA1IRAM.preset_writer
@@ -995,10 +1002,10 @@ presetload_dungeon:
 	LDA.b SA1IRAM.preset_writer : AND.b #$02 : STA.w $00AA
 
 	; graphics
-	LDA.b [SA1IRAM.preset_addr], Y : INY : STA.w $0AA1
+	LDA.b [SA1IRAM.preset_addr],Y : INY : STA.w $0AA1
 
 	; Music
-	LDA.b [SA1IRAM.preset_addr], Y : INY : STA.w $0132
+	LDA.b [SA1IRAM.preset_addr],Y : INY : STA.w $0132
 	CMP.b #$03 : BNE .notbeginning
 
 	LDA.l $7EF3C5 : CMP.b #$02 : BCC .nozelda
@@ -1011,16 +1018,16 @@ presetload_dungeon:
 .notbeginning
 
 	; Floor
-	LDA.b [SA1IRAM.preset_addr], Y : INY : STA.w $00A4
+	LDA.b [SA1IRAM.preset_addr],Y : INY : STA.w $00A4
 
 	; Dungeon ID
-	LDA.b [SA1IRAM.preset_addr], Y : INY : STA.w $040C
+	LDA.b [SA1IRAM.preset_addr],Y : INY : STA.w $040C
 
 	; Door
-	LDA.b [SA1IRAM.preset_addr], Y : INY : STA.w $006C
+	LDA.b [SA1IRAM.preset_addr],Y : INY : STA.w $006C
 
 	; Layer
-	LDA.b [SA1IRAM.preset_addr], Y : INY : STA.w $00EE
+	LDA.b [SA1IRAM.preset_addr],Y : INY : STA.w $00EE
 	AND.b #$0F : STA.w $0476
 
 	REP #$20

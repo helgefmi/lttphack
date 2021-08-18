@@ -80,12 +80,12 @@ calc_room_flags:
 	LDX #(2*(16-1))
 	LDA.w SA1IRAM.CopyOf_0401 : ORA.w SA1IRAM.CopyOf_0408 : STA.b SA1IRAM.SCRATCH+0 ; not sure if I need $0400 at all?
 	LDA.w SA1IRAM.CopyOf_0403 : STA.b SA1IRAM.SCRATCH+1
---	LDA.l .tiles, X : LSR.b SA1IRAM.SCRATCH+0 : BCS .flagSet
+--	LDA.l .tiles,X : LSR.b SA1IRAM.SCRATCH+0 : BCS .flagSet
 	ORA.w #!GRAY_PAL : BRA +
 
 .flagSet
-	ORA.l .palettes, X
-+	STA SA1RAM.SW_BUFFER_r1+2+4, X
+	ORA.l .palettes,X
++	STA SA1RAM.SW_BUFFER_r1+2+4,X
 	DEX #2 : BPL --
 
 	LDA.w #char($19)|!RED_PAL : STA SA1RAM.SW_BUFFER_r1+4
@@ -176,7 +176,7 @@ draw_pits:
 	REP #$30
 	LDX.b SA1IRAM.CopyOf_A0
 
-	LDA.l RoomHasPitDamage, X
+	LDA.l RoomHasPitDamage,X
 	SEP #$10
 	LSR ; carry set if room has pit damage
 	BCS .pitdamage
@@ -221,8 +221,8 @@ draw_camera:
 	LDX.b #(64+64+64)+6 : LDA.b SA1IRAM.CopyOf_E8 : JSR DrawHexSW_four_yellow
 
 	LDX.w SA1IRAM.CopyOf_A6
-	LDA.w SA1IRAM.CopyOf_0608, X : STA.b SA1IRAM.SCRATCH+0 ; cache X camera for desync check
-	LDA.w SA1IRAM.CopyOf_060C, X : STA.b SA1IRAM.SCRATCH+2
+	LDA.w SA1IRAM.CopyOf_0608,X : STA.b SA1IRAM.SCRATCH+0 ; cache X camera for desync check
+	LDA.w SA1IRAM.CopyOf_060C,X : STA.b SA1IRAM.SCRATCH+2
 	CPX #$02 : BEQ .XSet2
 
 .XSet1
@@ -270,8 +270,8 @@ draw_camera:
 	STA SA1RAM.SW_BUFFER_r2+14
 
 	LDX.w SA1IRAM.CopyOf_A7
-	LDA.w SA1IRAM.CopyOf_0600, X : STA.b SA1IRAM.SCRATCH+0 ; cache Y camera for desync check
-	LDA.w SA1IRAM.CopyOf_0604, X : STA.b SA1IRAM.SCRATCH+2
+	LDA.w SA1IRAM.CopyOf_0600,X : STA.b SA1IRAM.SCRATCH+0 ; cache Y camera for desync check
+	LDA.w SA1IRAM.CopyOf_0604,X : STA.b SA1IRAM.SCRATCH+2
 	CPX #$02 : BEQ .YSet2
 
 .YSet1

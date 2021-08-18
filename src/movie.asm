@@ -95,8 +95,8 @@ movie_record:
 	RTS
 
 .save_input
-	LDA !ram_movie_timer : STA !ram_movie, X
-	LDA.l !ram_prev_ctrl : STA !ram_movie+2, X
+	LDA !ram_movie_timer : STA !ram_movie,X
+	LDA.l !ram_prev_ctrl : STA !ram_movie+2,X
 
 	INX #4 : STX !ram_movie_index : STX !ram_movie_length
 	LDA.w SA1IRAM.CONTROLLER_1 : STA.l !ram_prev_ctrl
@@ -113,14 +113,14 @@ movie_playback:
 
 	LDX !ram_movie_index : CPX !ram_movie_length : BCS .stop_playback
 
-	LDA !ram_movie+2, X : XBA : STA $00
+	LDA !ram_movie+2,X : XBA : STA $00
 	DEC !ram_movie_timer : BMI .nextInput
 	SEP #$30
 	RTS
 
 .nextInput
 	INX #4 : STX !ram_movie_index
-	LDA !ram_movie, X : STA !ram_movie_timer
+	LDA !ram_movie,X : STA !ram_movie_timer
 	SEP #$30
 	RTS
 
@@ -139,7 +139,7 @@ movie_rng:
 	REP #$30
 	DEC !ram_movie_rng_index
 	LDX !ram_movie_rng_index
-	LDA !ram_movie, X
+	LDA !ram_movie,X
 	RTL
 
 .recording
@@ -149,7 +149,7 @@ movie_rng:
 	INC !ram_movie_rng_length
 
 	SEP #$20
-	JSL .RandomNum : STA !ram_movie, X
+	JSL .RandomNum : STA !ram_movie,X
 	RTL
 
 .RandomNum
@@ -187,7 +187,7 @@ movie_preset_loaded:
 	LDX #$0004 : STX !ram_movie_index
 
 .done
-	LDA !ram_movie, X : STA !ram_movie_timer
+	LDA !ram_movie,X : STA !ram_movie_timer
 	PLP
 	RTL
 
@@ -230,7 +230,7 @@ movie_hud:
 
 	  .draw
 		SEC : SBC $02 : TAY
-		LDA $06 : STA !ram_movie_hud+46, X
+		LDA $06 : STA !ram_movie_hud+46,X
 		INX #2 : CPX #$0010 : BCC .loop
 	}
 
@@ -241,6 +241,6 @@ movie_clear_hud:
 	LDA #$007F
 	LDX #$0040
 .loop
-	STA !ram_movie_hud, X
+	STA !ram_movie_hud,X
 	DEX #2 : BPL .loop
 	RTL

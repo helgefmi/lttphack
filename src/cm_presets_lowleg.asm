@@ -98,7 +98,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $00 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0804, $0718 ; Scroll X, Y
+dw $0804, $0718 ; Scroll X,Y
 dw $05B2 ; Unknown 1
 dw $0005 ; Unknown 2
 dw $0009 ; Unknown 3
@@ -478,7 +478,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $09 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0B1B, $078B ; Scroll X, Y
+dw $0B1B, $078B ; Scroll X,Y
 dw $0894 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0002 ; Unknown 3
@@ -499,7 +499,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $09 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0C7D, $0A6D ; Scroll X, Y
+dw $0C7D, $0A6D ; Scroll X,Y
 dw $0000 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -518,7 +518,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $09 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $0F5B, $066F ; Scroll X, Y
+dw $0F5B, $066F ; Scroll X,Y
 dw $005A ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFF2 ; Unknown 3
@@ -810,7 +810,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $0F5B, $066D ; Scroll X, Y
+dw $0F5B, $066D ; Scroll X,Y
 dw $005A ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFFA ; Unknown 3
@@ -885,7 +885,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0C85, $0A78 ; Scroll X, Y
+dw $0C85, $0A78 ; Scroll X,Y
 dw $0000 ; Unknown 1
 dw $FFF5 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -904,7 +904,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $04 ; Link direction
 ;-----------------------------
-dw $0485, $0B8D ; Scroll X, Y
+dw $0485, $0B8D ; Scroll X,Y
 dw $0900 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -927,7 +927,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $08DD, $0B8D ; Scroll X, Y
+dw $08DD, $0B8D ; Scroll X,Y
 dw $090C ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -952,7 +952,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0485, $0F8B ; Scroll X, Y
+dw $0485, $0F8B ; Scroll X,Y
 dw $0880 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -973,7 +973,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $04 ; Link direction
 ;-----------------------------
-dw $012F, $0CC3 ; Scroll X, Y
+dw $012F, $0CC3 ; Scroll X,Y
 dw $0294 ; Unknown 1
 dw $0008 ; Unknown 2
 dw $FFF6 ; Unknown 3
@@ -1217,7 +1217,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $09 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $012F, $0C6D ; Scroll X, Y
+dw $012F, $0C6D ; Scroll X,Y
 dw $0016 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $000E ; Unknown 3
@@ -1237,7 +1237,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $097D, $0F8B ; Scroll X, Y
+dw $097D, $0F8B ; Scroll X,Y
 dw $0820 ; Unknown 1
 dw $FFF2 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -1281,7 +1281,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0729, $038D ; Scroll X, Y
+dw $0729, $038D ; Scroll X,Y
 dw $1816 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFF6 ; Unknown 3
@@ -1299,7 +1299,7 @@ db $00, $00, $00, $00 ; Mirror portal
 db $03 ; Item
 db $06 ; Link direction
 ;-----------------------------
-dw $0824, $0143 ; Scroll X, Y
+dw $0824, $0143 ; Scroll X,Y
 dw $0638 ; Unknown 1
 dw $000A ; Unknown 2
 dw $000B ; Unknown 3
@@ -1315,7 +1315,7 @@ db $1C, $08, $38, $01 ; Mirror portal
 db $14 ; Item
 db $04 ; Link direction
 ;-----------------------------
-dw $08FB, $0090 ; Scroll X, Y
+dw $08FB, $0090 ; Scroll X,Y
 dw $00D0 ; Unknown 1
 dw $000D ; Unknown 2
 dw $FFF4 ; Unknown 3
@@ -1487,7 +1487,7 @@ db $1C, $08, $38, $01 ; Mirror portal
 db $03 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $08FB, $0087 ; Scroll X, Y
+dw $08FB, $0087 ; Scroll X,Y
 dw $0050 ; Unknown 1
 dw $0006 ; Unknown 2
 dw $FFF4 ; Unknown 3
@@ -1536,7 +1536,7 @@ db $1C, $08, $38, $01 ; Mirror portal
 db $03 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $048D, $0085 ; Scroll X, Y
+dw $048D, $0085 ; Scroll X,Y
 dw $0100 ; Unknown 1
 dw $0008 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -1554,7 +1554,7 @@ db $1C, $08, $38, $01 ; Mirror portal
 db $03 ; Item
 db $04 ; Link direction
 ;-----------------------------
-dw $00A7, $00DA ; Scroll X, Y
+dw $00A7, $00DA ; Scroll X,Y
 dw $0306 ; Unknown 1
 dw $FFF3 ; Unknown 2
 dw $000E ; Unknown 3
@@ -1575,7 +1575,7 @@ db $1C, $08, $38, $01 ; Mirror portal
 db $03 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0385, $038D ; Scroll X, Y
+dw $0385, $038D ; Scroll X,Y
 dw $1860 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -1596,7 +1596,7 @@ db $1C, $08, $38, $01 ; Mirror portal
 db $03 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $057D, $0737 ; Scroll X, Y
+dw $057D, $0737 ; Scroll X,Y
 dw $0620 ; Unknown 1
 dw $FFF6 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -1617,7 +1617,7 @@ db $1C, $08, $38, $01 ; Mirror portal
 db $03 ; Item
 db $06 ; Link direction
 ;-----------------------------
-dw $0803, $066D ; Scroll X, Y
+dw $0803, $066D ; Scroll X,Y
 dw $002E ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFF2 ; Unknown 3
@@ -1630,7 +1630,7 @@ dw $FFF2 ; Unknown 3
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Fairy Skip", "lowleg", "aga", "fairy_skip")
+%preset_UW("Prize Pack Guards", "lowleg", "aga", "prize_pack_guards")
 dw $00E0 ; Screen ID
 dw $00DA, $1C78 ; Link Coords
 dw $1C0B, $0000 ; Camera VH
@@ -1793,7 +1793,7 @@ db $00 ; Layer
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Pit Room", "lowleg", "aga", "pit_room")
+%preset_UW("Catwalk", "lowleg", "aga", "catwalk")
 dw $0040 ; Screen ID
 dw $012C, $0978 ; Link Coords
 dw $090B, $0100 ; Camera VH
@@ -1862,7 +1862,7 @@ db $1C, $08, $38, $01 ; Mirror portal
 db $03 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $07F7, $066F ; Scroll X, Y
+dw $07F7, $066F ; Scroll X,Y
 dw $002E ; Unknown 1
 dw $FFFE ; Unknown 2
 dw $FFF8 ; Unknown 3
@@ -1878,7 +1878,7 @@ db $1C, $08, $38, $01 ; Mirror portal
 db $03 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0C7D, $0A6D ; Scroll X, Y
+dw $0C7D, $0A6D ; Scroll X,Y
 dw $0000 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -1900,7 +1900,7 @@ db $1C, $08, $38, $01 ; Mirror portal
 db $03 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $0F5B, $066F ; Scroll X, Y
+dw $0F5B, $066F ; Scroll X,Y
 dw $005A ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFF2 ; Unknown 3
@@ -2230,7 +2230,7 @@ db $00 ; Layer
 ;---------------------------------------------------------------------------------------------------
 ;===================================================================================================
 presetmenu_lowleg_thieves:
-%menu_header("Thieves' Town", 19)
+%menu_header("Thieves' Town", 18)
 
 ;---------------------------------------------------------------------------------------------------
 %preset_OW("Outside PoD", "lowleg", "thieves", "outside_pod")
@@ -2241,7 +2241,7 @@ db $1C, $08, $38, $01 ; Mirror portal
 db $04 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $0F5B, $066D ; Scroll X, Y
+dw $0F5B, $066D ; Scroll X,Y
 dw $005A ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFFA ; Unknown 3
@@ -2264,7 +2264,7 @@ db $1C, $08, $38, $01 ; Mirror portal
 db $04 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0C85, $0A79 ; Scroll X, Y
+dw $0C85, $0A79 ; Scroll X,Y
 dw $0000 ; Unknown 1
 dw $FFF4 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -2286,7 +2286,7 @@ db $1C, $08, $38, $01 ; Mirror portal
 db $04 ; Item
 db $04 ; Link direction
 ;-----------------------------
-dw $04E1, $0C6D ; Scroll X, Y
+dw $04E1, $0C6D ; Scroll X,Y
 dw $000C ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0004 ; Unknown 3
@@ -2306,7 +2306,7 @@ db $1C, $08, $38, $01 ; Mirror portal
 db $04 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $0485, $0B8D ; Scroll X, Y
+dw $0485, $0B8D ; Scroll X,Y
 dw $0900 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -2329,7 +2329,7 @@ db $9D, $04, $9C, $0A ; Mirror portal
 db $08 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $01D1, $07A3 ; Scroll X, Y
+dw $01D1, $07A3 ; Scroll X,Y
 dw $092A ; Unknown 1
 dw $000A ; Unknown 2
 dw $0004 ; Unknown 3
@@ -2351,7 +2351,7 @@ db $9D, $04, $9C, $0A ; Mirror portal
 db $08 ; Item
 db $04 ; Link direction
 ;-----------------------------
-dw $0168, $0562 ; Scroll X, Y
+dw $0168, $0562 ; Scroll X,Y
 dw $079E ; Unknown 1
 dw $FFFB ; Unknown 2
 dw $000D ; Unknown 3
@@ -2371,7 +2371,7 @@ db $9D, $04, $9C, $0A ; Mirror portal
 db $04 ; Item
 db $04 ; Link direction
 ;-----------------------------
-dw $0203, $07D1 ; Scroll X, Y
+dw $0203, $07D1 ; Scroll X,Y
 dw $0BAE ; Unknown 1
 dw $000C ; Unknown 2
 dw $FFF2 ; Unknown 3
@@ -2634,7 +2634,7 @@ db $00 ; Layer
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Gloves", "lowleg", "thieves", "after_gloves")
+%preset_UW("After mitts", "lowleg", "thieves", "after_mitts")
 dw $0044 ; Screen ID
 dw $08DC, $0978 ; Link Coords
 dw $090B, $0800 ; Camera VH
@@ -2671,28 +2671,6 @@ db $00 ; Layer
 %write_7F()
 %write16_enable()
 %write16($7FE00A, $0162) ; Room $45 persistent: Thieves Town (Jail Cells Room)
-%write_end()
-
-;---------------------------------------------------------------------------------------------------
-%preset_UW("Backtracking", "lowleg", "thieves", "backtracking_2")
-dw $0044 ; Screen ID
-dw $08E4, $0978 ; Link Coords
-dw $090B, $0800 ; Camera VH
-db $9D, $04, $9C, $0A ; Mirror portal
-db $04 ; Item
-db $06 ; Link direction
-;-----------------------------
-db $34 ; Entrance
-db $02 ; Room layout
-db $0A ; Main GFX
-db $16 ; Music
-db $FE ; Floor
-db $16 ; Palace No
-db $02 ; Door
-db $00 ; Layer
-;-----------------------------
-%write16_enable()
-%write16($7E0696, $000A) ; Overworld Door
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
@@ -2786,7 +2764,7 @@ db $9D, $04, $9C, $0A ; Mirror portal
 db $04 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $0203, $07D7 ; Scroll X, Y
+dw $0203, $07D7 ; Scroll X,Y
 dw $0B2E ; Unknown 1
 dw $FFF6 ; Unknown 2
 dw $FFFA ; Unknown 3
@@ -2808,7 +2786,7 @@ db $9D, $04, $9C, $0A ; Mirror portal
 db $04 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $028B, $098B ; Scroll X, Y
+dw $028B, $098B ; Scroll X,Y
 dw $183E ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFF2 ; Unknown 3
@@ -2828,7 +2806,7 @@ db $9D, $04, $9C, $0A ; Mirror portal
 db $01 ; Item
 db $06 ; Link direction
 ;-----------------------------
-dw $038D, $0925 ; Scroll X, Y
+dw $038D, $0925 ; Scroll X,Y
 dw $1560 ; Unknown 1
 dw $0008 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -2844,7 +2822,7 @@ db $9D, $04, $9C, $0A ; Mirror portal
 db $14 ; Item
 db $06 ; Link direction
 ;-----------------------------
-dw $047D, $0915 ; Scroll X, Y
+dw $047D, $0915 ; Scroll X,Y
 dw $0400 ; Unknown 1
 dw $FFF8 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -2862,7 +2840,7 @@ db $D8, $04, $78, $08 ; Mirror portal
 db $14 ; Item
 db $04 ; Link direction
 ;-----------------------------
-dw $034F, $066F ; Scroll X, Y
+dw $034F, $066F ; Scroll X,Y
 dw $005A ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0006 ; Unknown 3
@@ -2881,7 +2859,7 @@ db $D8, $04, $78, $08 ; Mirror portal
 db $14 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $024F, $025F ; Scroll X, Y
+dw $024F, $025F ; Scroll X,Y
 dw $0EBA ; Unknown 1
 dw $FFFE ; Unknown 2
 dw $0006 ; Unknown 3
@@ -2899,7 +2877,7 @@ db $D8, $04, $78, $08 ; Mirror portal
 db $14 ; Item
 db $04 ; Link direction
 ;-----------------------------
-dw $02F3, $026A ; Scroll X, Y
+dw $02F3, $026A ; Scroll X,Y
 dw $0F4E ; Unknown 1
 dw $0003 ; Unknown 2
 dw $000A ; Unknown 3
@@ -2966,7 +2944,7 @@ db $D8, $04, $78, $08 ; Mirror portal
 db $01 ; Item
 db $04 ; Link direction
 ;-----------------------------
-dw $009F, $00D3 ; Scroll X, Y
+dw $009F, $00D3 ; Scroll X,Y
 dw $0282 ; Unknown 1
 dw $000A ; Unknown 2
 dw $FFFE ; Unknown 3
@@ -3093,7 +3071,7 @@ db $D8, $04, $78, $08 ; Mirror portal
 db $05 ; Item
 db $06 ; Link direction
 ;-----------------------------
-dw $00A3, $00D6 ; Scroll X, Y
+dw $00A3, $00D6 ; Scroll X,Y
 dw $0282 ; Unknown 1
 dw $0007 ; Unknown 2
 dw $FFFA ; Unknown 3
@@ -3111,7 +3089,7 @@ db $98, $00, $CB, $00 ; Mirror portal
 db $14 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $089F, $0A6D ; Scroll X, Y
+dw $089F, $0A6D ; Scroll X,Y
 dw $0004 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -3130,7 +3108,7 @@ db $98, $00, $CB, $00 ; Mirror portal
 db $08 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $0B7D, $058D ; Scroll X, Y
+dw $0B7D, $058D ; Scroll X,Y
 dw $0920 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -3151,7 +3129,7 @@ db $98, $00, $CB, $00 ; Mirror portal
 db $08 ; Item
 db $06 ; Link direction
 ;-----------------------------
-dw $0F7B, $046F ; Scroll X, Y
+dw $0F7B, $046F ; Scroll X,Y
 dw $009E ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFF2 ; Unknown 3
@@ -3172,7 +3150,7 @@ db $98, $00, $CB, $00 ; Mirror portal
 db $14 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $0F4A, $026F ; Scroll X, Y
+dw $0F4A, $026F ; Scroll X,Y
 dw $0098 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFF3 ; Unknown 3
@@ -3191,7 +3169,7 @@ db $9D, $0E, $A6, $02 ; Mirror portal
 db $14 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $0F4A, $026F ; Scroll X, Y
+dw $0F4A, $026F ; Scroll X,Y
 dw $0098 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFF3 ; Unknown 3
@@ -3207,7 +3185,7 @@ db $9D, $0E, $A6, $02 ; Mirror portal
 db $14 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0CBF, $0DD6 ; Scroll X, Y
+dw $0CBF, $0DD6 ; Scroll X,Y
 dw $0BC6 ; Unknown 1
 dw $0007 ; Unknown 2
 dw $FFFE ; Unknown 3
@@ -3495,7 +3473,7 @@ db $9D, $0E, $A6, $02 ; Mirror portal
 db $04 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0CC3, $0DDA ; Scroll X, Y
+dw $0CC3, $0DDA ; Scroll X,Y
 dw $0BC6 ; Unknown 1
 dw $0003 ; Unknown 2
 dw $FFF2 ; Unknown 3
@@ -3517,7 +3495,7 @@ db $9D, $0E, $A6, $02 ; Mirror portal
 db $14 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $08BF, $0B32 ; Scroll X, Y
+dw $08BF, $0B32 ; Scroll X,Y
 dw $0608 ; Unknown 1
 dw $FFFB ; Unknown 2
 dw $0000 ; Unknown 3
@@ -3535,7 +3513,7 @@ db $B8, $0C, $CB, $0D ; Mirror portal
 db $08 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0785, $0D93 ; Scroll X, Y
+dw $0785, $0D93 ; Scroll X,Y
 dw $08A0 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0000 ; Unknown 3
@@ -3557,7 +3535,7 @@ db $B8, $0C, $CB, $0D ; Mirror portal
 db $04 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $077F, $0EFE ; Scroll X, Y
+dw $077F, $0EFE ; Scroll X,Y
 dw $0520 ; Unknown 1
 dw $000F ; Unknown 2
 dw $0006 ; Unknown 3
@@ -3577,7 +3555,7 @@ db $7C, $07, $07, $0F ; Mirror portal
 db $14 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $077F, $0EFE ; Scroll X, Y
+dw $077F, $0EFE ; Scroll X,Y
 dw $0520 ; Unknown 1
 dw $000F ; Unknown 2
 dw $0006 ; Unknown 3
@@ -3983,7 +3961,7 @@ db $7C, $07, $07, $0F ; Mirror portal
 db $0E ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $0781, $0F09 ; Scroll X, Y
+dw $0781, $0F09 ; Scroll X,Y
 dw $049E ; Unknown 1
 dw $FFF4 ; Unknown 2
 dw $FFFC ; Unknown 3
@@ -4013,7 +3991,7 @@ db $7C, $07, $07, $0F ; Mirror portal
 db $05 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0682, $0337 ; Scroll X, Y
+dw $0682, $0337 ; Scroll X,Y
 dw $1600 ; Unknown 1
 dw $FFF6 ; Unknown 2
 dw $FFF3 ; Unknown 3
@@ -4033,7 +4011,7 @@ db $7C, $07, $FD, $0E ; Mirror portal
 db $0E ; Item
 db $06 ; Link direction
 ;-----------------------------
-dw $06C8, $006D ; Scroll X, Y
+dw $06C8, $006D ; Scroll X,Y
 dw $000A ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFFD ; Unknown 3
@@ -4051,7 +4029,7 @@ db $1C, $08, $3D, $01 ; Mirror portal
 db $0C ; Item
 db $06 ; Link direction
 ;-----------------------------
-dw $0099, $0F8D ; Scroll X, Y
+dw $0099, $0F8D ; Scroll X,Y
 dw $1880 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFF4 ; Unknown 3
@@ -4070,7 +4048,7 @@ db $1C, $08, $3D, $01 ; Mirror portal
 db $08 ; Item
 db $06 ; Link direction
 ;-----------------------------
-dw $0133, $0CF1 ; Scroll X, Y
+dw $0133, $0CF1 ; Scroll X,Y
 dw $0414 ; Unknown 1
 dw $000C ; Unknown 2
 dw $FFFA ; Unknown 3
@@ -4468,7 +4446,7 @@ db $1C, $08, $3D, $01 ; Mirror portal
 db $03 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $0133, $0CE9 ; Scroll X, Y
+dw $0133, $0CE9 ; Scroll X,Y
 dw $0414 ; Unknown 1
 dw $0004 ; Unknown 2
 dw $FFFA ; Unknown 3
@@ -4484,7 +4462,7 @@ db $1C, $08, $3D, $01 ; Mirror portal
 db $14 ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0F7B, $0E6D ; Scroll X, Y
+dw $0F7B, $0E6D ; Scroll X,Y
 dw $001E ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFFA ; Unknown 3
@@ -4505,7 +4483,7 @@ db $28, $01, $DA, $0C ; Mirror portal
 db $08 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $0682, $0337 ; Scroll X, Y
+dw $0682, $0337 ; Scroll X,Y
 dw $1600 ; Unknown 1
 dw $FFF6 ; Unknown 2
 dw $FFF3 ; Unknown 3
@@ -4553,7 +4531,7 @@ db $28, $01, $DA, $0C ; Mirror portal
 db $0E ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $0D7D, $0082 ; Scroll X, Y
+dw $0D7D, $0082 ; Scroll X,Y
 dw $0060 ; Unknown 1
 dw $000B ; Unknown 2
 dw $0000 ; Unknown 3
@@ -4575,7 +4553,7 @@ db $28, $01, $DA, $0C ; Mirror portal
 db $0E ; Item
 db $06 ; Link direction
 ;-----------------------------
-dw $0F13, $014A ; Scroll X, Y
+dw $0F13, $014A ; Scroll X,Y
 dw $0614 ; Unknown 1
 dw $0003 ; Unknown 2
 dw $000A ; Unknown 3
@@ -4893,7 +4871,7 @@ db $28, $01, $DA, $0C ; Mirror portal
 db $12 ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $0F13, $014D ; Scroll X, Y
+dw $0F13, $014D ; Scroll X,Y
 dw $0712 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $FFFA ; Unknown 3
@@ -4913,7 +4891,7 @@ db $28, $01, $DA, $0C ; Mirror portal
 db $0E ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $08FF, $006D ; Scroll X, Y
+dw $08FF, $006D ; Scroll X,Y
 dw $0050 ; Unknown 1
 dw $0000 ; Unknown 2
 dw $0006 ; Unknown 3
@@ -5476,7 +5454,7 @@ db $28, $01, $DA, $0C ; Mirror portal
 db $0E ; Item
 db $00 ; Link direction
 ;-----------------------------
-dw $07F7, $0677 ; Scroll X, Y
+dw $07F7, $0677 ; Scroll X,Y
 dw $002E ; Unknown 1
 dw $FFF6 ; Unknown 2
 dw $FFF8 ; Unknown 3
@@ -5494,7 +5472,7 @@ db $28, $01, $DA, $0C ; Mirror portal
 db $0E ; Item
 db $02 ; Link direction
 ;-----------------------------
-dw $07F7, $0678 ; Scroll X, Y
+dw $07F7, $0678 ; Scroll X,Y
 dw $002E ; Unknown 1
 dw $FFF5 ; Unknown 2
 dw $FFF8 ; Unknown 3
@@ -5771,7 +5749,7 @@ presetpersistent_lowleg_aga:
 .entrance
 ..end
 ;-----------------------------
-.fairy_skip
+.prize_pack_guards
 %write8_enable()
 %write8($7E0FC8, $07) ; Prize pack index
 %write_end()
@@ -5792,7 +5770,7 @@ presetpersistent_lowleg_aga:
 %write_end()
 ..end
 ;-----------------------------
-.pit_room
+.catwalk
 ..end
 ;-----------------------------
 .agahnim
@@ -5917,15 +5895,9 @@ presetpersistent_lowleg_thieves:
 .prison
 ..end
 ;-----------------------------
-.after_gloves
+.after_mitts
 %write8_enable()
 %write8($7E0B37, $0E) ; Arc variable
-%write_end()
-..end
-;-----------------------------
-.backtracking_2
-%write8_enable()
-%write8($7E0B37, $0C) ; Arc variable
 %write_end()
 ..end
 ;-----------------------------
@@ -6852,7 +6824,7 @@ presetSRAM_lowleg:
 %write8($7EF29B, $60) ; Overworld $1B: Unknown (..??....)
 ...end
 ;---------------------------------------------------------------------------------------------------
-..fairy_skip
+..prize_pack_guards
 %write8($7EF36F, $00) ; Keys
 %write8($7EF377, $08) ; Arrows
 %writeroom($0E0, $000A) ; Room $00E0: Agahnim's Tower (Entrance Room) (.............q.q)
@@ -6877,7 +6849,7 @@ presetSRAM_lowleg:
 %writeroom($0B0, $000C) ; Room $00B0: Agahnim's Tower (Circle of Pots) (.............qq.)
 ...end
 ;---------------------------------------------------------------------------------------------------
-..pit_room
+..catwalk
 %write8($7EF377, $07) ; Arrows
 %write16sram($7EF360, $77) ; Rupees (actual)
 %write16sram($7EF360, $149) ; Rupees (actual)
@@ -7060,14 +7032,11 @@ presetSRAM_lowleg:
 %writeroom($045, $000A) ; Room $0045: Thieves Town (Jail Cells Room) (.............q.q)
 ...end
 ;---------------------------------------------------------------------------------------------------
-..after_gloves
+..after_mitts
 %write8($7EF354, $02) ; Gloves
 %write8($7EF3CC, $06) ; Tagalong
 %writeroom($044, $4017) ; Room $0044: Thieves Town (Big Chest Room) (..d.........q.qq)
 %writeroom($045, $00FF) ; Room $0045: Thieves Town (Jail Cells Room) (.........cccqqqq)
-...end
-;---------------------------------------------------------------------------------------------------
-..backtracking_2
 ...end
 ;---------------------------------------------------------------------------------------------------
 ..pot_hammerdash

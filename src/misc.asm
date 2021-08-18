@@ -96,9 +96,9 @@ swordbeams:
 
 ; sets some oam properties for the guard search beams
 set_probe_gfx:
-	TXA : STA $0DE0, Y
+	TXA : STA $0DE0,Y
 	LDA #%00001110 ; oam : vhoopppN
-	STA $0F50, Y
+	STA $0F50,Y
 	RTL
 
 ; basically just the normal draw routine, except
@@ -114,7 +114,7 @@ probe_draw:
 
 	LDA.w !ram_probe_toggle : BEQ .skip
 
-	LDA $00 : STA ($90), Y
+	LDA $00 : STA ($90),Y
 	LDA $01 : CMP #$01
 	LDA #$01 : ROL : STA ($92)
 
@@ -122,11 +122,11 @@ probe_draw:
 	LDA $02 : INY
 	CLC : ADC #$0010 : CMP #$0100 : SEP #$20 : BCS .skip
 
-	SBC #$0F : STA ($90), Y
+	SBC #$0F : STA ($90),Y
 	INY
-	LDA.l !sparks_gfx : STA ($90), Y
+	LDA.l !sparks_gfx : STA ($90),Y
 	INY
-	LDA $05 : STA ($90), Y
+	LDA $05 : STA ($90),Y
 
 .skip
 	PLP
@@ -136,14 +136,14 @@ absorbable_check:
 	LDA.w !ram_bonk_items_toggle : BNE .alwaysdraw ; always draw, if on
 
 .vanilla
-	LDA $0E90, X : BNE ++
+	LDA $0E90,X : BNE ++
 	JML absorbexit_continue
 
 ++	PLA : PLA
 	JML absorbexit_stop ; leads to an RTS
 
 .alwaysdraw
-	LDA $0E90, X : BEQ ++
+	LDA $0E90,X : BEQ ++
 
 	PLA : PLA
 ++	JML absorbexit_continue

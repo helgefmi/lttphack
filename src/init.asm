@@ -219,14 +219,14 @@ init_initialize:
 	PLB
 
 .next
-	LDX.w $0000, Y
+	LDX.w $0000,Y
 	BEQ .done
 
 	INY
 	INY
 
-	LDA.w $0000, Y
-	STA.l $400000, X
+	LDA.w $0000,Y
+	STA.l $400000,X
 
 	INY
 	INY

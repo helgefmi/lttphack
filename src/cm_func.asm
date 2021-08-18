@@ -1,7 +1,7 @@
 CMDO_SAVE_ADDRESS_LONG:
 	JSR .continue
 
-	LDA.b [SA1IRAM.cm_current_selection], Y
+	LDA.b [SA1IRAM.cm_current_selection],Y
 	STA.b SA1IRAM.cm_writer+2
 	INY
 	RTS
@@ -12,7 +12,7 @@ CMDO_SAVE_ADDRESS_LONG:
 
 .continue
 	REP #$20
-	LDA.b [SA1IRAM.cm_current_selection], Y
+	LDA.b [SA1IRAM.cm_current_selection],Y
 	INY
 	INY
 
@@ -337,7 +337,7 @@ CMDO_CHOICE_LONG_PRGTEXT:
 	BNE .not_max
 
 	; the max value needs to be decremented too
-	LDA.b [SA1IRAM.cm_current_selection], Y
+	LDA.b [SA1IRAM.cm_current_selection],Y
 
 .not_max
 	DEC
@@ -345,7 +345,7 @@ CMDO_CHOICE_LONG_PRGTEXT:
 
 .increment
 	INC
-	CMP.b [SA1IRAM.cm_current_selection], Y
+	CMP.b [SA1IRAM.cm_current_selection],Y
 	BCC .set
 
 .clear
@@ -377,7 +377,7 @@ CMDO_SUBMENU:
 	STA.b SA1IRAM.cm_cursor+0
 
 	LDY.w #$02
-	LDA.b [SA1IRAM.cm_current_selection], Y
+	LDA.b [SA1IRAM.cm_current_selection],Y
 	STA.b SA1IRAM.cm_cursor+2
 
 .drawmenu
@@ -543,7 +543,7 @@ CMDO_NUMFIELD_HEX:
 	BRA .get_max_min
 
 .increment
-	CMP.b [SA1IRAM.cm_current_selection], Y
+	CMP.b [SA1IRAM.cm_current_selection],Y
 	INC
 	BCC .in_range_max
 
@@ -551,7 +551,7 @@ CMDO_NUMFIELD_HEX:
 	DEY ; point to min
 
 .clear_min
-	LDA.b [SA1IRAM.cm_current_selection], Y
+	LDA.b [SA1IRAM.cm_current_selection],Y
 
 .in_range_min
 	INY ; point to max
@@ -574,7 +574,7 @@ CMDO_NUMFIELD_HEX:
 	DEC
 
 	; now our new value against the minimum
-	CMP.b [SA1IRAM.cm_current_selection], Y
+	CMP.b [SA1IRAM.cm_current_selection],Y
 	INY ; point this to max, just in case we need it
 	BCS .in_range_max
 	BRA .get_max_max ; since we're already pointed there
@@ -583,26 +583,26 @@ CMDO_NUMFIELD_HEX:
 	INY
 
 .get_max_max
-	LDA.b [SA1IRAM.cm_current_selection], Y
+	LDA.b [SA1IRAM.cm_current_selection],Y
 	BRA .in_range_max
 
 .dec_big ; also these shouldn't wrap on overflow
 	SEC
-	SBC.b [SA1IRAM.cm_current_selection], Y
+	SBC.b [SA1IRAM.cm_current_selection],Y
 	DEY ; pointing to max
 	BCC .clear_max ; if we borrowed here, we need to floor ourselves
 
 	DEY ; pointing to min
-	CMP.b [SA1IRAM.cm_current_selection], Y
+	CMP.b [SA1IRAM.cm_current_selection],Y
 	BCS .in_range_min ; we're fine
 	BRA .clear_min ; don't go past the minimum
 
 .inc_big
 	CLC
-	ADC.b [SA1IRAM.cm_current_selection], Y
+	ADC.b [SA1IRAM.cm_current_selection],Y
 	DEY ; pointing to max
 	BCS .get_max_max ; if we went too high, cap now
 
-	CMP.b [SA1IRAM.cm_current_selection], Y
+	CMP.b [SA1IRAM.cm_current_selection],Y
 	BCS .get_max_max ; will cap if we match, but that's fine
 	BRA .in_range_max

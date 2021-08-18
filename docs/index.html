@@ -33,11 +33,10 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 	<li>Pressing Y on a bottle in the menu will select the next bottle</li>
 	<li>Quick swap</li>
 	<li>Hammerable Ganon</li>
-	<li></li>
 </ul>
 
-<h3>v13.5</h3>
-<p>v13.5 is a snapshot of the pre-SA-1 practice hack. It will no longer be updated, as it only serves as a fallback for incompatible systems.</p>
+<h3>v13.6</h3>
+<p>This is a snapshot of the pre-SA-1 practice hack. It will no longer be updated, as it only serves as a fallback for incompatible systems.</p>
 
 <h4 class="listheader">List of shame:</h4>
 <ul>
@@ -52,7 +51,7 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 <h2>Latest update</h2>
 <h3><a href="https://github.com/spannerisms/lttphack/releases/tag/14.0.0">v14.0.0</a> <span class="releaseDate"></span></h3>
 <h4>FULL SA-1 REFACTOR</h4>
-<p>This is the biggest and most defining of change of v14. From here on, the accessibility of the practice hack has been tightened a bit, now requiring decent SA-1 emulation. Fortunately, support is fairly widespread. Pretty much the only people left behind are Everdrive users, who will still be able to download v13.5.0 from this page; however, support for non-SA-1 versions will be discontinued.</p>
+<p>This is the biggest and most defining change of v14. From here on, the accessibility of the practice hack has been tightened a bit, now requiring decent SA-1 emulation. Fortunately, support is fairly widespread. Pretty much the only people left behind are Everdrive users, who will still be able to download v13.6.0 from this page; however, support for non-SA-1 versions will be discontinued.</p>
 <p>The SA-1's on-board RAM allows every system to include large save files, so fully fledged savestates are now available to everyone, eliminating the need for a separate SDSNES version. And while we're at it, the vanilla HUD variants are being removed too.</p>
 
 <ul class="changes">
@@ -75,14 +74,28 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 		<ul>
 			<li>Room loading</li>
 			<li>Follower option</li>
-			<li>Removed crystal switch color in lieu of the shortcut.</li>
+			<li>Removed crystal switch color in lieu of the shortcut (it was causing problems).</li>
 		</ul>
 	</li>
 	<li>HUD extras:
 		<ul>
-			<li>Vanilla hearts for those who want it for whatever reason. I don't understand you guys, honestly. But, if you want it, this is where it is now.</li>
+			<li>Vanilla hearts is now here for those who want it for whatever reason. I don't understand you guys, honestly. But, if you want it, this is where it is now.</li>
 			<li>Added "Classic Gray" input display.</li>
 			<li>Condensed the timers and ram watches into a single system.</li>
+			<li>Replaced super watches with line counters and expanded functionality.</li>
+			<li>Added some more ram watches:
+				<ul>
+					<li>Room ID</li>
+					<li>Quadrant</li>
+					<li>Tile prop</li>
+					<li>West somaria timer</li>
+					<li>Ancilla index (no longer found in general ancilla watch)</li>
+					<li>Hookslot (no longer found in general ancilla watch)</li>
+					<li>Pit destination</li>
+					<li>Boss HP (to replace enemy HP)</li>
+				</ul>
+			</li>
+			<li>The quick warp icon is now gray when you will not quick warp.</li>
 		</ul>
 	</li>
 	<li>Shortcuts:
@@ -92,6 +105,7 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 	</li>
 	<li>Configuration:
 		<ul>
+			<li>Added a <i>Crayon Shin-chan</i> font</li>
 			<li>Added a choice for where the menu opens to.</li>
 			<li>Menu colors can now be customized</li>
 		</ul>
@@ -542,7 +556,7 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 		</ol>
 	</dd>
 	<dt>World</dt>
-	<dd>Switch between Light World and Dark World. Intended for experimenting with fake worlds.</dd>
+	<dd>Switch between Light World and Dark World. Does not change screen ID.</dd>
 	<dt>Progress</dt>
 	<dd>Game mode selector:
 		<dl class="subDefinition">
@@ -619,7 +633,6 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 			<li>Strong</li>
 			<li>Weak</li>
 		</ul>
-		<strong class="lag"><b>NOTE:</b> this toggle cannot overpower the strength of the current room.</strong>
 	</dd>
 </dl>
 <h3 id="menuGameplay">Gameplay</h3>
@@ -671,7 +684,7 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 			<dt>Never</dt>
 			<dd>No enemy drops prize packs, ever.</dd>
 		</dl>
-		<strong class="lag"><b>WARNING:</b> toggling this option will reset existing fairy luck.</strong>
+		<strong class="lag"><b>NOTE:</b> toggling this option will reset existing fairy luck.</strong>
 	</dd>
 	<dt>Frame rule</dt>
 	<dd>Forces the frame counter to a specific value on preset or savestate load.</dd>
@@ -764,7 +777,7 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 	</dd>
 </dl>
 <div class="center">
-	<img src="vitreouseyes.png"width="288">
+	<img src="vitreouseyes.png" width="288">
 </div>
 
 <h3 id="menuHUD">HUD extras</h3>
@@ -847,13 +860,13 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 			<dt>Ancilla 5-9</dt>
 			<dd>Custom ancilla property for slots 5&ndash;9</dd>
 			<dt>Ancilla IXd</dt>
-			<dd>Custom ancilla property for the 5 slots preceding the current research index ($03C4)</dd>
+			<dd>Custom ancilla property for the 5 slots preceding the current search index ($03C4)</dd>
 		</dl>
 	</dd>
 	<dt>Ancilla Prop 1<dt>
 	<dt>Ancilla Prop 2<dt>
 	<dt>Ancilla Prop 3<dt>
-	<dd>Custom property for ancillae corresponding to counter #
+	<dd>Custom property # for ancillae corresponding to counter #
 		<dl class="subDefinition">
 			<dt>ID</dt>
 			<dd>Ancilla ID from $03C4,X (includes coloring for 00 and replacable particles).</dd>
@@ -868,7 +881,7 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 			<dt>Extension</dt>
 			<dd>Used both for hookshot length and item receipt ID, among other less interesting properties; address: $7E0C5E,X</dd>
 			<dt>Tile prop</dt>
-			<dd>Tile interaction ID; address: $7E03E4,X</dd>
+			<dd>Tile interaction; address: $7E03E4,X</dd>
 			<dt>EG check</dt>
 			<dd>Something; address: $7E03A4,X</dd>
 			<dt>Direction</dt>
@@ -876,18 +889,17 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 			<dt>Delta Y</dt>
 			<dt>Delta X</dt>
 			<dd>Difference between Link's coordinates and the ancillae's.</dd>
+		</dl>
 	</dd>
 	<dt>Heart lag<sup class="badge sa1-badge">SA1</sup></dt>
 	<dd>Animated spinning square that indicates there is heart lag present.</dd>
 	<dt>QW indicator<sup class="badge sa1-badge">SA1</sup></dt>
-	<dd>Displays an icon on the HUD when the current camera will produce a quickwarp.</dd>
+	<dd>Displays an icon on the HUD when the current camera will effect a quickwarp.</dd>
 	<dt>Lanmola cycs<sup class="badge sa1-badge">SA1</sup></dt>
 	<dd>Displays a counter for the cycle count of the three Lanmolas individually.</dd>
 <!----
 	<dt>Lagometer</dt>
 	<dd>Shows a rough calculation of the amount of lag a frame has. The more the bar is filled, the closer a frame was to producing a lag frame. Lag from one frame does not affect the next, but trends in the lagometer can be used to gauge how laggy an area is.</dd>
-	<dt>Enemy HP</dt>
-	<dd>Shows the exact health of a single enemy. Attempts to find the most relevant enemy as you play. <strong class="lag"><b>WARNING:</b> this feature can be laggy.</strong></dd>
 ---->
 </dl>
 
@@ -914,9 +926,9 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 	<dt>Fill everything</dt>
 	<dd>Maxes out equipment, rupees, items, and health.</dd>
 	<dt>VRAM repair</dt>
-	<dd>Attempts to fix important graphics registers and VRAM data that have been corrupted by door glitches.<strong class="lag"><b>WARNING:</b> If this shortcut is triggered during a text box, the text box will disappear, but the game will remain in text mode.</strong><strong class="lag"><b>WARNING:</b> this feature only repairs registers and VRAM; other areas of RAM may result in vanilla game crashes unrelated to this feature, but which are never normally encountered in vanilla.</strong></dd>
+	<dd>Attempts to fix important graphics registers and VRAM data that have been corrupted by door glitches.<strong class="lag"><b>WARNING:</b> If this shortcut is triggered during a text box, the text box will disappear, but the game will remain in text mode.</strong><strong class="lag"><b>WARNING:</b> this feature only repairs registers and VRAM; other areas of RAM may result in game crashes unrelated to this feature, but which are never normally encountered in vanilla.</strong></dd>
 	<dt>Show somaria pits</dt>
-	<dd>Modifies the upper layer tilemap to mark pits.<strong class="lag"><b>NOTE:</b> this feature is intended for finding pits created by door glitches, but it will mark all standard pit tiles the same way.</strong></dd>
+	<dd>Modifies the upper layer tilemap to mark pits.<strong class="lag"><b>NOTE:</b> this feature is intended for finding pits created by overlay corruption, but it will mark all standard pit tiles the same way.</strong></dd>
 </dl>
 
 <h3 id="menuConfiguration">Configuration</h3>
@@ -924,7 +936,7 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 	<dt>Rerandomize</dt>
 	<dd>When using built-in savestates and presets, this will run the RNG function to create a new value on each load.</dd>
 	<dt>Music</dt>
-	<dd>Sets the volume of every track in every song to 0. The size of the SPC transfers remains the same, so this feature does not affect lag.</dd>
+	<dd>Sets the ADSR envelope of every instrument used by music to 0 (except the saw used by mirror warps). The size of the SPC transfers remains the same, so this feature does not affect lag.</dd>
 	<dt>Death reload</dt>
 	<dd>Reloads the last preset upon death.</dd>
 	<dt>Preset cat</dt>
@@ -932,7 +944,7 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 	<dt>Menu open</dt>
 	<dd>Select whether the practice menu opens up to where you left off or resets to the top.</dd>
 	<dt>HUD font</dt>
-	<dd>Change the font used by HUD extras. This will not change the font for the vanilla HUD or for the HP, max HP, and enemy HP displays. <i>Hover over options for larger preview.</i>
+	<dd>Change the font used by HUD extras. This will not change the font for the vanilla HUD or for the HP display. <i>Hover over options for larger preview.</i>
 		<ul class="fontList">
 			<li><span class="fontName">Classic</span><span class="fontPreview font1"></span></li>
 			<li><span class="fontName">Normal</span><span class="fontPreview font2"></span></li>
@@ -948,14 +960,15 @@ title: LTTPHack - A Practice ROM for ALttP Runners
 			<li><span class="fontName">Emerald <i>(Pokémon Emerald)</i></span><span class="fontPreview font12"></span></li>
 			<li><span class="fontName">Klonoa</span><span class="fontPreview font13"></span></li>
 			<li><span class="fontName">TI-83</span><span class="fontPreview font14"></span></li>
-			<li><span class="fontName">Pac-Man <i>(Pac-Man Arrangement)</i></span><span class="fontPreview font15"></span></li>
-			<li><span class="fontName">DOOM <i>(GBA version)</i></span><span class="fontPreview font16"></span></li>
-			<li><span class="fontName">Undertale</span><span class="fontPreview font17"></span></li>
-			<li><span class="fontName">Planet X-3</span><span class="fontPreview font18"></span></li>
-			<li><span class="fontName">Skyroads</span><span class="fontPreview font19"></span></li>
-			<li><span class="fontName">Yoshi's <i>(Island)</i></span><span class="fontPreview font20"></span></li>
-			<li><span class="fontName">S. Metroid <i>(Super Metroid)</i></span><span class="fontPreview font21"></span></li>
-			<li><span class="fontName">Tazmani</span><span class="fontPreview font22"></span></li>
+			<li><span class="fontName">Shin-chan</span><span class="fontPreview font15"></span></li>
+			<li><span class="fontName">Pac-Man <i>(Pac-Man Arrangement)</i></span><span class="fontPreview font16"></span></li>
+			<li><span class="fontName">DOOM <i>(GBA version)</i></span><span class="fontPreview font17"></span></li>
+			<li><span class="fontName">Undertale</span><span class="fontPreview font18"></span></li>
+			<li><span class="fontName">Planet X-3</span><span class="fontPreview font19"></span></li>
+			<li><span class="fontName">Skyroads</span><span class="fontPreview font20"></span></li>
+			<li><span class="fontName">Yoshi's <i>(Island)</i></span><span class="fontPreview font21"></span></li>
+			<li><span class="fontName">S. Metroid <i>(Super Metroid)</i></span><span class="fontPreview font22"></span></li>
+			<li><span class="fontName">Tazmani</span><span class="fontPreview font23"></span></li>
 		</ul>
 	</dd>
 	<dt>Color config</dt>

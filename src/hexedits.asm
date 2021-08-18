@@ -78,8 +78,9 @@ org $0CDB79
 
 macro what_item_is_this()
 	fillword !BLANK_TILE : fill 16
+	fillword !BLANK_TILE : fill 4
 	fillword !QMARK : fill 8
-	fillword !BLANK_TILE : fill 8
+	fillword !BLANK_TILE : fill 4
 endmacro
 
 org $0DE876 ; Japanese "PENDANTS" text

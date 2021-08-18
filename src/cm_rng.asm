@@ -80,7 +80,7 @@ RNG_SUBMENU:
 	JML CMDRAW_RANDOM
 
 ..slot
-	db "Slot ", $FF ; with a space, yes
+	db "Slot ", $FF ; with a space,yes
 
 ;===================================================================================================
 %choice_here("Ganon warps", SA1RAM.ganon_warp_rng, 3)

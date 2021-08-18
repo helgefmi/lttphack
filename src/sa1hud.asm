@@ -13,12 +13,12 @@ org $008B77 : LDA.b #SA1RAM.HUD>>16
 ;org $0AFDC1 : STA.l SA1RAM.HUD+$0EC
 
 ; move timer locations (not just to iram, but also a different location)
-;org $0AFE25 : STA.l SA1RAM.HUD+$0F2, X
-;org $0AFE2C : STA.l SA1RAM.HUD+$132, X
+;org $0AFE25 : STA.l SA1RAM.HUD+$0F2,X
+;org $0AFE2C : STA.l SA1RAM.HUD+$132,X
 
 ; vanilla stuff to leave alone, so it writes nowhere useful
-;org $0AFD9F : STA.l SA1RAM.HUD+$0F2, X
-;org $0AFDA6 : STA.l SA1RAM.HUD+$132, X
+;org $0AFD9F : STA.l SA1RAM.HUD+$0F2,X
+;org $0AFDA6 : STA.l SA1RAM.HUD+$132,X
 ;org $0AFD48 : STA.l SA1RAM.HUD+$0F2
 ;org $0AFD4D : STA.l SA1RAM.HUD+$134
 ;org $0AFD52 : STA.l SA1RAM.HUD+$132
@@ -51,17 +51,17 @@ org $0DFCDC : STA.l SA1RAM.HUD+$05E
 org $0DFCE8 : STA.l SA1RAM.HUD+$060
 org $0DFD0A : STA.l SA1RAM.HUD+$064
 org $0DFD13 : STA.l SA1RAM.HUD+$024
-org $0DFD5D : STA.l SA1RAM.HUD+$042, X
-org $0DFD73 : STA.l SA1RAM.HUD+$042, X
-org $0DFD7C : STA.l SA1RAM.HUD+$044, X
-org $0DFD8E : STA.l SA1RAM.HUD+$042, X
-org $0DFD97 : STA.l SA1RAM.HUD+$044, X
-org $0DFDA2 : STA.l SA1RAM.HUD+$042, X
-org $0DFDAB : STA.l SA1RAM.HUD+$044, X
-org $0DFDB4 : STA.l SA1RAM.HUD+$046, X
+org $0DFD5D : STA.l SA1RAM.HUD+$042,X
+org $0DFD73 : STA.l SA1RAM.HUD+$042,X
+org $0DFD7C : STA.l SA1RAM.HUD+$044,X
+org $0DFD8E : STA.l SA1RAM.HUD+$042,X
+org $0DFD97 : STA.l SA1RAM.HUD+$044,X
+org $0DFDA2 : STA.l SA1RAM.HUD+$042,X
+org $0DFDAB : STA.l SA1RAM.HUD+$044,X
+org $0DFDB4 : STA.l SA1RAM.HUD+$046,X
 
 ; HP stuff we leave writing to vanilla WRAM
-; org $0DFDC1 : STA.l SA1RAM.HUD+$042, X
+; org $0DFDC1 : STA.l SA1RAM.HUD+$042,X
 
 ; tracking stuff related to heart refill, but leaving it alone
 ;org $0DF151 : LDA.b #SA1RAM.HUD+$068>>0
