@@ -14,11 +14,11 @@
                 { "id": "rando", "name": "Randomizer (SA-1)" },
                 { "id": "old", "name": "v13.6.0 (Old)"}
             ]
-        },
+        }
     ],
     "patches": [
         { "version": "current", "file": "patcher/files/sa1.bps"},
         { "version": "rando", "file": "patcher/files/sa1rando.bps"},
-        { "version": "old", "file": "patcher/files/old13.bps"},
+        { "version": "old", "file": "patcher/files/old13.bps"}
     ]
 }

@@ -585,3 +585,60 @@ ul.colorList > li.colorDefine > .colorBlock {
 	text-align: center;
 	height: 20px;
 }
+
+/**************************************
+
+**************************************/
+div#patcher-app {
+	margin: auto;
+	width: 40%;
+	min-width: 300px;
+	font-size: .9em;
+	background: #EEEEFF;
+	border: 3px solid #A0A0FF;
+	border-radius: 20px 20px 0 0;
+}
+
+div#patcher-app div.patch-header {
+	text-align: center;
+	margin: auto;
+	background: #CCCCFF;
+	font-weight: bold;
+	font-size: 1.4em;
+	padding: 7px 0;
+	border-radius: 16px 16px 0 0;
+}
+
+div#patcher-app div.patch-body {
+    padding: 13px;
+}
+
+div#patcher-app div.patch-body > p {
+	text-align: center;
+	margin: 0 2px 9px 2px;
+}
+
+div#patcher-app div.patch-body > div.custom-file {
+    width: 70%;
+    margin: 10px auto;
+}
+
+div#patcher-app div.patch-body > div.custom-file input {
+	   cursor: pointer;
+}
+
+div#patcher-app div.patch-body > button {
+	display: block;
+	margin: auto;
+	width: 70%
+}
+
+div#patcher-app div.patch-body div.choosev {
+	margin: 0 auto 10px;
+	width: 70%;
+	text-align: center;
+}
+
+div#patcher-app div.patch-body div.choosev label {
+	font-weight: bold;
+}

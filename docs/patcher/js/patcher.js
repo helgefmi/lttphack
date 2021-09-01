@@ -108,23 +108,15 @@ Vue.component('file-uploader', {
 	},
 	props: ['manifest'],
 	template: `
-	<div>
+	<div class="patchdiv">
 		<template v-if="manifest !== null">
-			<div class="card">
-				<div class="card-header bg-dark text-white">{{ manifest.name }} - {{ manifest.version }}</div>
-				<div class="card-body">
-					<p>Select your <strong>{{ manifest.base.name }}</strong> ROM with CRC <i>{{ manifest.base.crc }}</i><br />
-					<div class="input-group mb-3">
-						<div class="input-group-prepend">
-							<span class="input-group-text">Select ROM</span>
-						</div>
-						<div class="custom-file">
-							<input type="file" style="text-indent: -999px; cursor: pointer;" class="custom-file-input" id="selected-file" @change="fileSelected" />
-							<label class="custom-file-label" for="selected-file">{{ selectedFile ? selectedFile.name : "" }}</label>
-						</div>
-					</div>
-					<button type="button" v-on:click="upload" class="btn btn-primary">Use selected ROM</button>
+			<div class="patch-header">{{ manifest.name }} - {{ manifest.version }}</div>
+			<div class="patch-body">
+				<p>Select your <i>{{ manifest.base.name }}</i> ROM with CRC <strong>{{ manifest.base.crc }}</strong>
+				<div class="custom-file">
+						<input type="file" class="chooserom" id="selected-file" @change="fileSelected" />
 				</div>
+				<button type="button" v-on:click="upload">Use selected ROM</button>
 			</div>
 		</template>
 	</div>
@@ -186,27 +178,19 @@ Vue.component('file-downloader', {
 		}
 	},
 	template: `
-	<div>
+	<div class="patchdiv">
 		<template v-if="manifest !== null">
-			<div class="card">
-				<div class="card-header bg-dark text-white">{{ manifest.name }} - {{ manifest.version }}</div>
-				<div class="card-body">
-					<template v-for="configuration in manifest.configurations">
-						<div class="row">
-							<div class="col">
-								<div class="input-group mb-3">
-									<div class="input-group-prepend"><span class="input-group-text">{{ configuration.name }}</span></div>
-									<select v-model="options[configuration.id]" class="form-control" style="cursor: pointer;" :id="configuration.id" >
-										<option v-for="option in configuration.options" :id="option.id" :value="option.id">{{ option.name }}</option>
-									</select>
-								</div>
-							</div>
-						</div>
-					</template>
-					<div class="input-group mb-3">
-						<button v-on:click="download" type="button" class="btn btn-primary">Save ROM</button>
+			<div class="patch-header">{{ manifest.name }} v{{ manifest.version }}</div>
+			<div class="patch-body">
+				<template v-for="configuration in manifest.configurations">
+					<div class="choosev">
+						<label for="version">Version:</label>
+						<select name="version" v-model="options[configuration.id]" :id="configuration.id" >
+							<option v-for="option in configuration.options" :id="option.id" :value="option.id">{{ option.name }}</option>
+						</select>
 					</div>
-				</div>
+				</template>
+				<button v-on:click="download" type="button">Save ROM</button>
 			</div>
 		</template>
 	</div>
@@ -236,15 +220,13 @@ Vue.component('patcher', {
 	props: ['manifest-path'],
 	template: `
 		<div>
-			<br />
-				<template v-if="manifest">
-					<file-downloader v-if="file" :manifest="manifest" />
-					<file-uploader v-else-if="file == null" :manifest="manifest" v-on:file-uploaded="fileUploaded" />
+			<template v-if="manifest">
+				<file-downloader v-if="file" :manifest="manifest" />
+				<file-uploader v-else-if="file == null" :manifest="manifest" v-on:file-uploaded="fileUploaded" />
 				</template>
-				<template v-else-if="manifest == null">
-					<h3>Loading patch information...</h3>
-				</template>
-			<br />
+			<template v-else-if="manifest == null">
+				<h3>Loading patch information...</h3>
+			</template>
 		</div>
 	`
 });

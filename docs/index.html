@@ -5,7 +5,7 @@ title: LTTPHack - A Practice ROM for ALttP
 <section id="download">
 
 <h2>Download</h2>
-<div id="patcher-app" class="col-md-12" >
+<div id="patcher-app" >
 	<patcher id="prachack" manifest-path="patcher/manifest.json" />
 </div>
 
@@ -943,3 +943,14 @@ title: LTTPHack - A Practice ROM for ALttP
 	<li>tewtal - JavaScript patcher</li>
 </ul>
 </section>
+
+	<!-- Scripts for the JS patcher -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.11/core.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.8.4/babel.min.js"></script>
+	<script src="https://cdn.polyfill.io/v2/polyfill.js?features=fetch"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/localforage@1.7.3/dist/localforage.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.2/dist/FileSaver.min.js"></script>
+	<script type="text/babel" data-presets="env" src="patcher/js/patcher.js"></script>
+	<script type="text/babel" data-presets="env, typescript" src="patcher/js/bps.ts"></script>
+	<!-- // Scripts for the JS patcher -->
