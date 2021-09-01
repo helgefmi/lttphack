@@ -1,0 +1,22 @@
+@ Lanmo RTA
+
+= Escape
+738 Link's Bed
+2410 Lamp
+2936 Outside
+4434 Uncle
+5402 Courtyard
+6013 Entrance
+6809 Stair Clip
+7284 Arm EG
+
+= Desert
+8646 Tile Room
+9077 Backtracking
+9438 Reverse Genocide
+10134 Tile Room 2
+10977 Dungeon Reload
+12034 Dark Room
+13336 Lanmolas
+
+= End

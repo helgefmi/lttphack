@@ -105,27 +105,28 @@ tbl_pokey_speed:
 
 tbl_real_pokey_x:
 	db 16, -16,  16, -16
+
 tbl_real_pokey_y:
 	db 16,  16, -16, -16
 
 rng_pokey_hook:
 	PHB : PHK : PLB
 
-	LDA !ram_pokey_rng : BEQ .random
+	LDA.w SA1RAM.pokey_rng : BEQ .random
 
-	LDA !ram_rng_counter : ASL : STA !lowram_draw_tmp
-	LDA !ram_pokey_rng : DEC : ASL #2 : CLC : ADC !lowram_draw_tmp : TAY
+	LDA.w SA1RAM.rng_counter : ASL : STA $72
+	LDA.w SA1RAM.pokey_rng : DEC : ASL #2 : CLC : ADC $72 : TAY
 
-	LDA tbl_pokey_speed, Y : STA $0D40, X
-	LDA tbl_pokey_speed+1, Y : STA $0D50, X
+	LDA.w tbl_pokey_speed+0,Y : STA $0D40,X
+	LDA.w tbl_pokey_speed+1,Y : STA $0D50,X
 
-	LDA !ram_rng_counter : INC : STA !ram_rng_counter
+	LDA.w SA1RAM.rng_counter : INC : STA.w SA1RAM.rng_counter
 	BRA .done
 
 .random
-	JSL !RandomNumGen : AND #$03 : TAY
-	LDA tbl_real_pokey_x, Y : STA $0D50, X
-	LDA tbl_real_pokey_y, Y : STA $0D40, X
+	JSL GetRandomInt : AND #$03 : TAY
+	LDA.w tbl_real_pokey_x,Y : STA $0D50,X
+	LDA.w tbl_real_pokey_y,Y : STA $0D40,X
 
 .done
 	PLB
@@ -134,14 +135,10 @@ rng_pokey_hook:
 ; == Agahnim ==
 
 rng_agahnim_hook:
-	LDA !ram_agahnim_rng : BEQ .random
+	LDA.w SA1RAM.agahnim_rng : BEQ JML_to_RNG
+
 	CMP #$01 : BEQ .done
 	LDA #$00
-	RTL
-
-.random
-	JSL !RandomNumGen
-	RTL
 
 .done
 	RTL
@@ -149,45 +146,29 @@ rng_agahnim_hook:
 ; == Helmasaur ==
 
 rng_helmasaur_hook:
-	LDA !ram_helmasaur_rng : BEQ .random
+	LDA.w SA1RAM.helmasaur_rng : BEQ JML_to_RNG
 	DEC
-	RTL
-
-.random
-	JSL !RandomNumGen
 	RTL
 
 ; == Ganon Warp Location ==
 
 rng_ganon_warp_location:
-	LDA !ram_ganon_warp_location_rng : BEQ .random
+	LDA.w SA1RAM.ganon_warp_location_rng : BEQ JML_to_RNG
 	DEC
-	RTL
-
-.random
-	JSL !RandomNumGen
 	RTL
 
 ; == Ganon Warp ==
 
 rng_ganon_warp:
-	LDA !ram_ganon_warp_rng : BEQ .random
+	LDA.w SA1RAM.ganon_warp_rng : BEQ JML_to_RNG
 	DEC
-	RTL
-
-.random
-	JSL !RandomNumGen
 	RTL
 
 ; == Eyegore ==
 
 rng_eyegore:
-	LDA !ram_eyegore_rng : BEQ .random
+	LDA.w SA1RAM.eyegore_rng : BEQ JML_to_RNG
 	DEC
-	RTL
-
-.random
-	JSL !RandomNumGen
 	RTL
 
 ; == Arrghus ==
@@ -196,66 +177,49 @@ arrghus_speeds:
 	db $00, $10, $20, $30, $3F
 
 rng_arrghus:
-	LDA.l !ram_arrghus_rng : BEQ .random
-	PHX : PHB : PHK : PLB
+	LDA.w SA1RAM.arrghus_rng : BEQ JML_to_RNG
+	PHX
 	DEC
-	TAX : LDA arrghus_speeds, X
-	PLB : PLX
+	TAX : LDA.l arrghus_speeds,X
+	PLX
 	RTL
 
-.random
-	JSL !RandomNumGen
-	RTL
+; In the middle for best access
+JML_to_RNG:
+	JML GetRandomInt
 
 ; == Turtles ==
 
 rng_turtles:
-	LDA !ram_turtles_rng : BEQ .random
+	LDA.w SA1RAM.turtles_rng : BEQ JML_to_RNG
 	DEC
-	RTL
-
-.random
-	JSL !RandomNumGen
 	RTL
 
 ; == Lanmola ==
 
 rng_lanmola_1:
-	LDA !ram_lanmola_rng : BEQ .random
+	LDA.w SA1RAM.lanmola_rng : BEQ JML_to_RNG
 	DEC
 	RTL
 
-.random
-	JSL !RandomNumGen
-	RTL
-
 rng_lanmola_2:
-	LDA !ram_lanmola_rng : BEQ .random
+	LDA.w SA1RAM.lanmola_rng : BEQ JML_to_RNG
 	DEC : LSR #3
-	RTL
-
-.random
-	JSL !RandomNumGen
 	RTL
 
 ; Conveyor Belt
 rng_conveyor_belt:
-	LDA !ram_conveyor_rng : BEQ .random
+	LDA.w SA1RAM.conveyor_rng : BEQ JML_to_RNG
 	DEC
-	RTL
-
-.random
-	JSL !RandomNumGen
 	RTL
 
 ; Vitreous
 choose_vitty_eye:
-	LDA !ram_vitreous_rng : BEQ .vanilla
-	LDA $0E70, X : BNE .vanilla
-	LDA #$01 : STA $0E70, X
-	LDA !ram_vitreous_rng
+	LDA.w SA1RAM.vitreous_rng : BEQ JML_to_RNG
+	LDA $0E70,X : BNE JML_to_RNG
+
+	INC : STA $0E70,X ; set to 1
+	LDA.w SA1RAM.vitreous_rng
 	DEC
 	RTL
 
-.vanilla
-	JML !RandomNumGen

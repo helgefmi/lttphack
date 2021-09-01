@@ -1,702 +1,1681 @@
+; TODO command system for killing sprites in previous rooms
+; db roomid : dw list
+; populates $0B80
+
+;===================================================================================================
+
 pushpc
-; Replaces `JSL BirdTravel_LoadTargetAreaData` from BirdTravel_LoadTargetArea.
-org $0AB90D
-	JSL preset_load_overworld
 
-org $0AB9A6
-	JSL preset_duck_dropoff_hook
+org $0098AB
+	db $FF, $FF, $FF, $FF, $FF ; kept here intentionally
 
-; Replaces `JSL Sprite_ResetAll` from BirdTravel_LoadTargetAreaData.
-org $02EA33
-	JSL preset_sprite_reset_all
-
-
-; Replaces `JSL Sprite_ResetAll` from Module_PreOverworld:.
-org $028252
-	JSL preset_sprite_reset_all
-
-
-; Replaces `JSL Dungeon_LoadEntrance` from Module_PreDungeon.
-org $028154
-	JSR load_entrance_local
-
-; When Link dies
-org $0780E1
-	; 0780e1 lda $10
-	; 0780e3 sta $010c
-	; 0780e6 lda #$12
-	; 0780e8 sta $10
-	; 0780ea lda #$01
-	; 0780ec sta $11
-
-	; 0780ee lda #$00
-	; 0780f0 sta $031f
-	; 0780f3 sta $7ef372
-	JSL preset_autoload_preset
-	NOP             ; STA $010C
-	NOP : NOP       ; LDA #$12
-	NOP : NOP       ; STA $10
-	NOP : NOP       ; LDA #$01
-	NOP : NOP       ; STA $11
-
-; 0ab944 lda #$10
-; 0ab946 sta $012f
-; 0ab949 lda $8a
-; 0ab94b and #$bf
-; 0ab94d ldx #$02
-; 0ab94f cmp #$18
-; 0ab951 bne $b95d
-; 0ab95d cpx $0130
-; 0ab960 bne $b968
-; 0ab968 stx $012c
-org $0AB944
-	JSL music_overworld_track
-	BCC .runLogic
+RefreshPegs:
+	JSR.w $00908B
 	RTL
-.runLogic
 
+org $02FFC7
+PresetLoadArea_UW:
+	SEP #$30
 
-org $02C240
-load_entrance_local:
-	; Enters AI=8
-	; This is called without using presets too, so need to redirect to the correct code.
-	LDA !ram_preset_type : BNE .custom
+	LDA.b #$00
+	PHA
+	PLB
 
-	JSR !Dungeon_LoadEntrance
-	%ai8()
-	RTS
+	JSR.w $02D854
+	JMP.w $028157
 
-.custom
-	LDA #$00 : STA !ram_preset_type
-	JSR !Dungeon_LoadEntrance
-	JSL preset_load_dungeon
-	%ai8()
-	RTS
-warnpc $02C270
+LoadOverworldOverlay:
+	JSR.w $02FA71
 
-
-; Module_CloseSpotlight
-; This is called first
-org $02987D
-	;02987d jsl $068328
-	;029881 lda $11
-	;029883 asl a
-	;029884 tax
-	JSL preset_did_we_load_preset
-	BCC +
 	RTL
-+	NOP
 
+;---------------------------------------------------------------------------------------------------
 
-; Module_Dungeon -> Spotlight_Open
-; This is called last
-org $02922F
-	JSL preset_spotlight_open_hook
-	NOP #2
-	;02922f jsl $00f290
-	;029233 inc $b0
-	;029235 rts
+org $09F253
+CheckForDeathReload:
+	LDA.w !ram_death_reload : BEQ GameOver01
+
+	LDX.b #$03
+	LDA.b #$06
+
+--	CMP.l $7EF35C,X
+	BEQ GameOver01
+
+	DEX
+	BPL --
+
+	JSL preset_load_last_preset
+	BRA GameOver01
+
+warnpc $09F270
+org $09F272 : dw CheckForDeathReload
+
+GameOver01 = $09F2A4
 
 pullpc
-preset_load_next_frame:
-	; This subroutine is used for any preset loading (load last, replay movie, from menu, autopreset)
-	%ai8()
-	JSR preset_deinit_current_state
-	%ai16()
-	JSR preset_clear_tilemap
 
-	%ai8()
+;===================================================================================================
 
-	LDA #$F0 : STA $012C
-	LDA #$05 : STA $012D
+PRESET_SUBMENU:
+	SEP #$30
 
-	LDA !ram_preset_type : CMP #$02 : BEQ .dungeon
+	LDA.w !ram_preset_category
+	ASL
+	CLC
+	ADC.w !ram_preset_category
+	TAX
 
-	; "Moving floor" flag that needs to be reset to prevent overworld bugs
-	; when loading preset from Mothula, Conveyor rooms etc.
-	STZ $046C
+	REP #$21
 
-	; Jumps to Bird Menu module
-	LDA #$0E : STA $10
-	LDA #$0A : STA $11
+	LDA.l .pointers-1,X
+	AND.w #$FF00
+	STA.b SA1IRAM.cm_cursor+0
 
-	; Make sure we're back into light word after the Messaging module is done.
-	LDA #$09 : STA $010C
+	LDA.l .pointers+1,X
+	STA.b SA1IRAM.cm_cursor+2
 
-	; Skip the opening of overworld map and such. We want instaport.
-	LDA #$06 : STA $0200
+#SetPresetMenuArea:
+	; put bank in appropriate places
+	STA.b SA1IRAM.preset_addr+1
+	STA.b SA1IRAM.preset_prog+1
+	STA.b SA1IRAM.preset_pert+1
+	STA.b SA1IRAM.preset_reader+1
+	STA.b SA1IRAM.preset_reader2+1
 
-	RTL
+	LDA.b [SA1IRAM.cm_current_menu] ; save data pointer
+	STA.b SA1IRAM.preset_prog
 
-.dungeon
-	LDA #$08 : STA !ram_preset_spotlight_timer
+	LDY.b #$02
+	LDA.b [SA1IRAM.cm_current_menu],Y ; save data pointer
+	STA.b SA1IRAM.preset_pert
 
-	; Makes PreDungeon not use a smaller "entrance only" table for data.
-	STZ $04AA
-	; We didn't die
-	STZ $010A
-
-	; Put us in Spotlight_close Module.
-	LDA #$0F : STA $10
-	STZ $11
-
-	; Puts us in PreDungeon after Spotlight_close is done.
-	LDA #$06 : STA $010C
+	; adjust the pointer to be in the correct spot for the menu
+	LDA.b SA1IRAM.cm_current_menu
+	ADC.w #$0004
+	STA.b SA1IRAM.cm_current_menu
 
 	RTL
 
+; PRESET LIST
+.pointers
+	dl presetheader_nmg
+	dl presetheader_hundo
+	dl presetheader_lownmg
+	dl presetheader_lowleg
+	dl presetheader_ad2020
+	dl presetheader_adold
+	dl presetheader_anyrmg
+	dl BOSSRTA_SUBMENU-4
 
-preset_deinit_current_state:
-	; Enters: AI=8
-	; Leaves: AI=8
+;===================================================================================================
 
-	; This is mainly needed to stop interactions with nearby sprites (e.g. talking to Kiki)
-	JSL !Sprite_ResetAll
+!PRESET_WRITE_END     = $0000
+!PRESET_WRITE_8       = $0001
+!PRESET_WRITE_16      = $0002
 
-	; Clears the warp vortex.
-	STZ $1ABF
-	STZ $1ACF
-	STZ $1ADF
-	STZ $1AEF
+!PRESET_WRITE_DIE     = $0008
 
-	; clears camera shake offsets
-	STZ $011A : STZ $011B
-	STZ $011C : STZ $011D
+!PRESET_WRITE_7F      = $000E
+!PRESET_WRITE_7F_16   = $000F
 
-	LDA #$81 : STA $4200 ; disable IRQ
+macro write_end()
+	dw !PRESET_WRITE_END
+endmacro
 
-	LDA !ram_cm_old_gamemode : CMP #$0E : BNE .not_message_module
-	LDA !ram_cm_old_submode : CMP #$02 : BNE .not_message_module
+macro write_7F()
+	dw !PRESET_WRITE_7F
+endmacro
 
-	JSR preset_deinit_dialog_mode
+macro write_7F_16()
+	dw !PRESET_WRITE_7F_16
+endmacro
 
-.not_message_module
-	RTS
+macro write8_enable()
+	dw !PRESET_WRITE_8
+endmacro
 
+macro write16_enable()
+	dw !PRESET_WRITE_16
+endmacro
 
-preset_deinit_dialog_mode:
-	; Enters: AI=8
-	; Leaves: AI=8
+macro write_deaths_enable()
+	dw !PRESET_WRITE_DIE
+endmacro
 
-	%ai16()
-	; Clears HUD3 VRAM in case there's text present.
-	LDA $1CD2 : STA $1CD0
+macro write_deaths(r, k)
+	db <r> : dw <k>
+endmacro
 
-	LDA $1CD0 : XBA : STA $1002
-	LDA #$2E42 : STA $1004
-	LDA #$387F : STA $1006
+macro write8(addr, data)
+	dw <addr> : db <data>
+endmacro
 
-	LDA #$FFFF : STA $1008
+macro write16(addr, data)
+	dw <addr> : dw <data>
+endmacro
 
-	%ai8()
-	LDA #$01 : STA $14
+macro writeroom(room, n)
+	dw <room>*2 : dw <n>
+endmacro
 
-	STZ $1CD8
+macro write16sram(addr, data)
+	dw <addr>&$0FFF|$4000 : dw <data>
+endmacro
 
-	RTS
+;---------------------------------------------------------------------------------------------------
 
-; ------------
-; Load Preset
-; ------------
+!PERTWRITE_SQ       = $0000
+!PERTWRITE_MIRROR   = $0001
 
-preset_load_overworld:
-	; Enters: AI=8
-	LDA !ram_preset_type : BNE .preset
+macro write_sq()
+	dw !PERTWRITE_SQ
+endmacro
 
-	; This means we got here from the actual Bird menu (how boring),
-	; so lets just jump to the original function.
-	JML !BirdTravel_LoadTargetAreaData
+macro write_mirror(xl, xh, yl, yh)
+	dw !PERTWRITE_MIRROR
+	db <xl>, <xh>, <yl>, <yh>
+endmacro
 
-.preset
-	PHB : PHK : PLB
-	; Set link to be in the Overworld
-	STZ $1B
+;===================================================================================================
 
-	; sram or rom
-	LDA !lowram_is_poverty_load : BEQ .from_rom
-	LDA #$70 : STA $02
-	BRA +
+emptybg3:
+	dw $7F20
 
-.from_rom
-	LDA !ram_preset_category : TAX
-	LDA.l cm_preset_data_banks, X : STA $02
+;===================================================================================================
+; Preset format:
+;	%preset_ow("Name", pointer)
+;===================================================================================================
+; taken care of by macros:
+;	dw SRAM endpoint
+;	dw Persistence End
+;
+; Preset data:
+;	dw Room/Screen ID
+;	dw Link X
+;	dw Link Y
+;	dw Camera V
+;	dw Camera H
+;	db Item
+;	db Link direction
+;
+;	UW ONLY
+;	db $00 ; Entrance
+;	db $00 ; Room layout
+;	db $00 ; Floor
+;	db $02 ; Door / Peg state
+;		s..p..dd
+;		  s - shutter state ($0468)
+;		  p - peg state ($7EC172)
+;		  d - door ($6C)
+;	db $00 ; Layer
+;	dw $0000 ; Dead sprites
+preset_load_last_preset:
+	REP #$20
 
-+	%ai16()
-	LDA !ram_preset_destination : STA $00
-	LDY #$0000
+	LDA.w SA1IRAM.preset_addr
+	BMI preset_load
 
-	STZ $04AC
+	SEP #$20
+	RTL
 
-	; Screen index
-	LDA [$00], Y : INY #2 : STA $8A : STA $040A
+preset_load:
+	JSR ResetBeforeLoading
 
-	; Link X/Y
-	LDA [$00], Y : INY #2 : STA $22
-	LDA [$00], Y : INY #2 : STA $20
+	; clear sram mirror
+	LDA.w #$F000 : STA.b $2181
+	LDA.w #$0500 : STA.w $4355
+	STX.w $420B
 
-	; BG scroll X/Y
-	LDA [$00], Y : INY #2 : STA $E6 : STA $0124
-	LDA [$00], Y : INY #2 : STA $E8 : STA $0122
-	LDA [$00], Y : INY #2 : STA $E0 : STA $0120
-	LDA [$00], Y : INY #2 : STA $E2 : STA $011E
+	; start loading preset data
+	LDA.w #$3000 : TCD
 
-	; Camera scroll X/Y
-	LDA [$00], Y : INY #2 : STA $061C : DEC #2 : STA $061E
-	LDA [$00], Y : INY #2 : STA $0618 : DEC #2 : STA $061A
+	SEP #$20
+	LDA.b #$7E
+	PHA
+	PLB ; do stuff in bank 7E first
 
-	; Unknown
-	LDA [$00], Y : INY #2 : STA $84 : SEC : SBC #$0400 : AND #$0F80 : ASL A : XBA : STA $88
-	LDA $84 : SEC : SBC #$0010 : AND #$003E : LSR A : STA $86
+	; restore some standard SRAM stuff
+	LDA.b #$18 : STA.w $7EF36C : STA.w $7EF36D ; HP
+	LDA.b #$F8 : STA.w $7EF379 ; Abilities
 
-	LDA [$00], Y : INY #2 : STA $0624
-	LDA #$0000 : SEC : SBC $0624 : STA $0626
+	; Chompy face player name
+	REP #$20
+	LDA.w #$00CE : STA.w $7EF3D9
+	LDA.w #$018C : STA.w $7EF3DB : STA.w $7EF3DD : STA.w $7EF3DF
 
-	LDA [$00], Y : INY #2 : STA $0628
-	LDA #$0000 : SEC : SBC $0628 : STA $062A
+	; checksum
+	LDA.w #$55AA : STA.w $7EF3E1
 
-	LDA [$00], Y : INY #2 : STA !ram_preset_end_of_sram_state
+	LDA.w #$FFFF : STA.l $7EF401
+	LDA.w #$F000 : STA.l $7EF20C : STA.l $7EF20E
 
-	LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
-	LDA !ram_preset_category : AND #$00FF : ASL : TAX
-	LDA.l preset_end_of_base_states, X : STA !ram_preset_end_of_sram_state
+	SEP #$20
+	; make the banks match just in case
+	LDA.b SA1IRAM.preset_addr+2
+	STA.b SA1IRAM.preset_prog+2
+	STA.b SA1IRAM.preset_pert+2
+	STA.b SA1IRAM.preset_reader+2
+	STA.b SA1IRAM.preset_reader2+2
 
-+	%ai8()
-	; LW/DW
-	LDA $8A : AND #$40 : STA $7EF3CA
+	; fill up addresses from preset header
+	REP #$31
+	LDA.b SA1IRAM.preset_addr
+	STA.b SA1IRAM.preset_reader
 
-	; Reset which BG to interact with (can be set to 1 during falling animations and more)
-	STZ $EE
+	LDY.w #$0002 ; start getting data for the preset
 
-	JSR preset_reset_state_after_loading
-	JSR preset_reset_counters
-%ai16()
-	JSR preset_load_state
-	LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
-	JSL load_poverty_state
+	LDA.b [SA1IRAM.preset_addr]
+	STA.b SA1IRAM.preset_pert_end
 
-+	%i8()
+	LDA.b [SA1IRAM.preset_addr],Y
+	STA.b SA1IRAM.preset_prog_end
+	INY : INY
 
-	; Makes it possible to spawn in the middle of a field/not inside doorway?
-	STZ $0696
+	; get stuff every preset has
 
-	; Clears RAM in case it's needed (used for when lifting big rocks?).
-	STZ $0698
+	; Room/Screen ID
+	LDA.b [SA1IRAM.preset_addr],Y : INY : INY : PHA ; save this
 
-	LDA $0136 : BEQ .dontNeedNewMusicBank
+	; Link X and Y
+	LDA.b [SA1IRAM.preset_addr],Y : INY #2 : STA.w $0022
+	LDA.b [SA1IRAM.preset_addr],Y : INY #2 : STA.w $0020
 
-	JSL music_reload
+	; Camera H and V
+	LDA.b [SA1IRAM.preset_addr],Y : INY #2
+	STA.w $00E0 : STA.w $0120 : STA.w $00E2 : STA.w $011E
 
-	%a16()
+	LDA.b [SA1IRAM.preset_addr],Y : INY #2
+	STA.w $00E6 : STA.w $0124 : STA.w $00E8 : STA.w $0122
 
-.dontNeedNewMusicBank
+	SEP #$20
+
+	; Item
+	LDA.b [SA1IRAM.preset_addr],Y : INY : STA.w $0303
+
+	; Link's direction
+	LDA.b [SA1IRAM.preset_addr],Y : INY : STA.w $002F
+
+	PHY : PHB
+
+	JSR presetload_write_sram
+
+	LDA.l !ram_use_custom_load : BEQ .no_loadout
+
+	LDX.w #$0021
+--	LDA.l !ram_custom_load,X
+	STA.l $7EF340,X
+
+	DEX
+	BPL --
+
+	LDA.l !ram_custom_load_2+0 : STA.l $7EF36C
+	LDA.l !ram_custom_load_2+1 : STA.l $7EF36D
+	LDA.l !ram_custom_load_2+2 : STA.l $7EF36E
+	LDA.l !ram_custom_load_2+3 : STA.l $7EF37B
+	LDA.l !ram_custom_load_2+4 : STA.l $7E0303
+
+	LDA.b #$F8 : STA.l $7EF379
+	LDA.l $7EF355 : CMP.b #$01
+	LDA.b #$00 : ROL
+	PHA
+	LDA.l $7EF356 : CMP.b #$01
+	PLA
+	ROL
+	ROL
+	ORA.l $7EF379
+	STA.l $7EF379
+	BRA .done_loadout
+
+.no_loadout
+	JSR presetload_safeties
+
+.done_loadout
+	JSL $00FC62
+
+	; prevent NMI from flashing screen
+	SEP #$20
+
+	LDA.b #$80 : STA.w $0013
+
+	REP #$30
+
+	PLB : PLY
+
+	LDA.b SA1IRAM.preset_type
+	AND.w #$00FF
+	TAX
+	PLA ; get ID back
+
+	PEA.w $7E80 ; push data banks we wanna use
+	PLB
+
+	JSR (.preset_types,X)
+
+	; prevent NMI again
+	SEP #$20
+
+	STZ.w $4200
+
+	; do the arbitrary writes
+	REP #$31
 
 	PLB
-	JML !BirdTravel_LoadTargetAreaData_AfterData
+	JSR .start_arb
 
+	JSR presetload_write_persist
 
-preset_load_dungeon:
-	; Can leave with anything.
-	PHB : PHB : PLB
+	; time for some fixers
+	PHK
+	PLB
 
-	; sram or rom
-	LDA !lowram_is_poverty_load : BEQ .from_rom
-	LDA #$70 : STA $02
-	BRA +
+	; do hud items from the items we have
+	SEP #$30
+	LDA.b #$7E : STA.b SA1IRAM.preset_reader+2
 
-.from_rom
-	LDA !ram_preset_category : TAX
-	LDA.l cm_preset_data_banks, X : STA $02
+	LDY.w $0303
+	LDA.w .item_to_menu,Y
+	STA.w $0202
 
-+	%ai16()
-	LDA !ram_preset_destination : STA $00
-	LDY #$0000
+	CPY.b #$00
+	REP #$30
+	BEQ .no_item
 
-	; Room index
-	LDA [$00], Y : INY : INY : STA $A0 : STA $048E
+.have_item
+	TYA
+	ASL : ASL
+	TAY
 
-	; BG1/2 vertical and horizontal scroll
-	LDA [$00], Y : INY #2 : STA $E6 : STA $0124
-	LDA [$00], Y : INY #2 : STA $E8 : STA $0122
-	LDA [$00], Y : INY #2 : STA $E0 : STA $0120
-	LDA [$00], Y : INY #2 : STA $E2 : STA $011E
+	LDX.w .item_HUD-4,Y ; bank0D offset
+	STX.b SA1IRAM.preset_reader2
 
-	; Link X/Y
-	LDA [$00], Y : INY #2 : STA $22
-	LDA [$00], Y : INY #2 : STA $20
+	LDA.w .item_HUD-2,Y ; bank7E SRAM val
+	STA.b SA1IRAM.preset_reader+0
 
-	; Camera scroll X/Y
-	LDA [$00], Y : INY #2 : STA $061C : INC #2 : STA $061E
-	LDA [$00], Y : INY #2 : STA $0618 : INC #2 : STA $061A
-	LDA #$01F8 : STA $EC
+	LDA.b [SA1IRAM.preset_reader]
+	AND.w #$00FF
+	BEQ .missing_item
 
-	; Door settings
-	LDA [$00], Y : INY #2 : STA $0696 : STZ $0698
+	CPY.w #$0001*4 : BEQ .bombs_adjust
+	CPY.w #$000B*4 : BNE .normal_item
 
-	; Relative coordinates (scroll edges?)
-	LDA [$00], Y : INY #2 : STA $0600
-	LDA [$00], Y : INY #2 : STA $0602
-	LDA [$00], Y : INY #2 : STA $0604
-	LDA [$00], Y : INY #2 : STA $0606
-	LDA [$00], Y : INY #2 : STA $0608
-	LDA [$00], Y : INY #2 : STA $060A
-	LDA [$00], Y : INY #2 : STA $060C
-	LDA [$00], Y : INY #2 : STA $060E
+.bottle_adjust
+	TAX
+	LDA.l $7EF35C-1,X
+	AND.w #$00FF
 
-	LDA #$0000 : STA $0610
-	LDA #$0110 : STA $0612
-	LDA #$0000 : STA $0614
-	LDA #$0100 : STA $0616
+.normal_item
+	ASL
+	ASL
+	ASL
+	ADC.b SA1IRAM.preset_reader2
+	TAX
+	BRA .draw_item
 
-	; Quadrant stuff
-	LDA [$00], Y : INY #2 : STA $A6
-	LDA [$00], Y : INY #2 : STA $A9
+.missing_item
+	SEP #$30
 
-	%a8()
+	TYA
+	LSR
+	LSR
+	STA.b SA1IRAM.preset_reader2
 
-	; Set link to be in the Overworld
-	LDA #$01 : STA $1B
+	TAX
 
-	; Main blockset value (main graphics)
-	LDA [$00], Y : %a16() : INY : %a8() : STA $0AA1
+--	DEX
+	BPL ++
 
-	; Music track value. Is it the beginning music?
-	LDA [$00], Y : %a16() : INY : %a8() : STA $0132 : CMP #$03 : BNE .notBeginningMusic
+	LDX.b #$13
 
-	; Check game status
-	; Is it less than first part?
-	LDA $7EF3C5 : CMP #$02 : BCC .haventSavedZelda
+++	CPX.b SA1IRAM.preset_reader2
+	BEQ .no_item_at_all
 
-	; Play the cave music if it's first or second part.
-	LDA #$12
+	LDA.l $7EF340,X
+	BEQ --
 
-.haventSavedZelda
+	REP #$30
+	TXY
+	BRA .have_item
 
-	STA $0132
+.bombs_adjust
+	CMP.w #$0001
+	BCC .no_item
 
-.notBeginningMusic
+	LDA.w #$0001
+	BRA .normal_item
 
-.loop
-	LDA $2140 : BNE .loop
+.no_item_at_all
+	REP #$30
 
-	; Starting floor
-	LDA [$00], Y : %a16() : INY : %a8() : STA $A4
+.no_item
+	LDX.w #$FEE7 ; value happens to have $207F x4
 
-	; Load the palace number.
-	LDA [$00], Y : %a16() : INY : %a8() : STA $040C
+.draw_item
+	LDA.l $0D0000,X : STA.w SA1RAM.HUD+$04A
+	LDA.l $0D0002,X : STA.w SA1RAM.HUD+$04C
+	LDA.l $0D0004,X : STA.w SA1RAM.HUD+$08A
+	LDA.l $0D0006,X : STA.w SA1RAM.HUD+$08C
 
-	; Doorway orientation
-	LDA [$00], Y : %a16() : INY : %a8() : STA $6C
+	; make rupees match
+	LDA.l $7EF360 : STA.l $7EF362
 
-	; Starting BG
-	; Set the position that Link starts at.
-	; NOTE that original code had a LSR #4 here that I removed, since I serialize this differently.
-	LDA [$00], Y : STA $EE
+	LDA.w #$0000
+	TCD
 
-	; Set Pseudo bg level
-	LDA [$00], Y : %a16() : INY : %a8() : AND #$0F : STA $0476
+	SEP #$30
+
+	PHA
+	PLB
+
+	; reset stuff before preset goes
+
+	; Reload graphics and palette for sword, shield and armor
+	JSL DecompSwordGfx
+	JSL Palette_Sword
+	JSL DecompShieldGfx
+	JSL Palette_Shield
+	JSL Palette_Armor
+
+	JSR ApplyAfterLoading
+
+	SEP #$30
+
+	LDA.w SA1RAM.ganon_bats
+	BEQ ++
+
+	JSL GetRandomInt : STA.w $0B08
+	JSL GetRandomInt : STA.w $0B09
+
+++	JMP TriggerTimerAndReset
+
+;---------------------------------------------------------------------------------------------------
+
+.preset_types
+	dw preset_abort_fast
+	dw presetload_dungeon
+	dw presetload_overworld
+
+; $0303 -> $0202
+.item_to_menu
+	db $00 ; $00 - Nothing
+	db $04 ; $01 - Bombs
+	db $02 ; $02 - Boomerang
+	db $01 ; $03 - Bow
+	db $0C ; $04 - Hammer
+	db $06 ; $05 - Fire Rod
+	db $07 ; $06 - Ice Rod
+	db $0E ; $07 - Bug catching net
+	db $0D ; $08 - Flute
+	db $0B ; $09 - Lamp
+	db $05 ; $0A - Magic Powder
+	db $10 ; $0B - Bottle
+	db $0F ; $0C - Book of Mudora
+	db $12 ; $0D - Cane of Byrna
+	db $03 ; $0E - Hookshot
+	db $08 ; $0F - Bombos Medallion
+	db $09 ; $10 - Ether Medallion
+	db $0A ; $11 - Quake Medallion
+	db $11 ; $12 - Cane of Somaria
+	db $13 ; $13 - Cape
+	db $14 ; $14 - Magic Mirror
+
+; dw bank0D address, SRAM address
+.item_HUD
+	dw $0DF699, $7EF343 ; $01 - Bombs
+	dw $0DF671, $7EF341 ; $02 - Boomerang
+	dw $0DF649, $7EF340 ; $03 - Bow
+	dw $0DF721, $7EF34B ; $04 - Hammer
+	dw $0DF6C1, $7EF345 ; $05 - Fire Rod
+	dw $0DF6D1, $7EF346 ; $06 - Ice Rod
+	dw $0DF751, $7EF34D ; $07 - Bug catching net
+	dw $0DF731, $7EF34C ; $08 - Flute
+	dw $0DF711, $7EF34A ; $09 - Lamp
+	dw $0DF6A9, $7EF344 ; $0A - Magic Powder
+	dw $0DF771, $7EF34F ; $0B - Bottle
+	dw $0DF761, $7EF34E ; $0C - Book of Mudora
+	dw $0DF7C9, $7EF351 ; $0D - Cane of Byrna
+	dw $0DF689, $7EF342 ; $0E - Hookshot
+	dw $0DF6E1, $7EF347 ; $0F - Bombos Medallion
+	dw $0DF701, $7EF348 ; $10 - Ether Medallion
+	dw $0DF6F1, $7EF349 ; $11 - Quake Medallion
+	dw $0DF7B9, $7EF350 ; $12 - Cane of Somaria
+	dw $0DF7D9, $7EF352 ; $13 - Cape
+	dw $0DF7E9, $7EF353 ; $14 - Magic Mirror
+
+;===================================================================================================
+
+.write8bit
+	INY
+	INY
+
+	SEP #$20
+	LDA.b [SA1IRAM.preset_reader],Y
+	STA.b (SA1IRAM.preset_writer)
+	REP #$20
+
+	INY
+	LDA.b [SA1IRAM.preset_reader],Y
+	CMP.w #$0010
+	BCC .new_command
+
+.start_8bit
+	STA.b SA1IRAM.preset_writer
+	BRA .write8bit
+
+.write16bit
+	INY
+	INY
+
+	LDA.b [SA1IRAM.preset_reader],Y
+	STA.b (SA1IRAM.preset_writer)
+
+	INY
+	INY
+	LDA.b [SA1IRAM.preset_reader],Y
+	CMP.w #$0010
+	BCC .new_command
+
+.start_16bit
+	STA.b SA1IRAM.preset_writer
+	BRA .write16bit
+
+.toBank7F
+	SEP #$20
+
+	LDA.b #$7F
+	PHA
+	PLB
+
+	REP #$20
+
+	LDA.b [SA1IRAM.preset_reader],Y
+	CMP.w #$0010
+	BCC .new_command
+
+	CPX.w #!PRESET_WRITE_7F*2
+	BEQ .start_8bit
+	BRA .start_16bit
+
+.start_arb
+	LDA.b [SA1IRAM.preset_reader],Y
+
+.new_command
+	INY
+	INY
+
+	ASL
+	TAX
+	LDA.b [SA1IRAM.preset_reader],Y
+	STA.b SA1IRAM.preset_writer
+
+	JMP (.commands,X)
+
+.write_deaths
+	SEP #$20
+
+	LDA.b #$7E
+	PHA
+	PLB
+
+	REP #$20
+
+	LDX.w #$FFFE
+
+..next
+	LDA.b [SA1IRAM.preset_reader],Y
+	CMP.w #$0010 : BCC .new_command
+
+	; can only kill 4 rooms worth of sprites
+	INX : INX : CPX.w #$0008
+	INY
+
+	BCS ..skip
+
+	PHX
+
+	AND.w #$00FF
+	STA.w $0B80,X
+	
+	ASL : TAX
+
+	LDA.b [SA1IRAM.preset_reader],Y
+
+	STA.l $7FFD80,X
+
+	PLX
+
+..skip
+	INY : INY
+
+	BRA ..next
+
+.done_arb
+
+#preset_abort_fast:
+	RTS
+
+.commands
+	dw .done_arb
+	dw .write8bit
+	dw .write16bit
+	dw .done_arb
+
+	dw .done_arb
+	dw .done_arb
+	dw .done_arb
+	dw .done_arb
+
+	dw .write_deaths
+	dw .done_arb
+	dw .done_arb
+	dw .done_arb
+
+	dw .done_arb
+	dw .done_arb
+	dw .toBank7F
+	dw .toBank7F
+
+;---------------------------------------------------------------------------------------------------
+
+presetload_write_sram:
+	SEP #$21
+
+	LDA.b #$7E
+	PHA
+	PLB
+
+	REP #$20
+
+	LDA.b SA1IRAM.preset_prog_end
+	SBC.b SA1IRAM.preset_prog
+	STA.b SA1IRAM.preset_writer
+
+	LDY.w #$0000
+	BRA .start
+
+.next_from_room
+	INY
+
+.next
+	INY
+
+.start
+	LDA.b [SA1IRAM.preset_prog],Y
+
+	INY
+	INY
+	CPY.b SA1IRAM.preset_writer
+	BCS .done
+
+	TAX
+	BPL .write_16
+
+	SEP #$20
+	LDA.b [SA1IRAM.preset_prog],Y
+	STA.w $7E0000,X
+	REP #$20
+	BRA .next
+
+.write_16
+	BIT.w #$4000
+	BNE .not_room
+	LDA.b [SA1IRAM.preset_prog],Y
+	STA.w $7EF000,X
+	BRA .next_from_room
+
+.not_room
+	LDA.b [SA1IRAM.preset_prog],Y
+	STA.w $7EB000,X
+	BRA .next_from_room
+
+.done
+	RTS
+
+;---------------------------------------------------------------------------------------------------
+
+presetload_write_persist:
+	SEP #$21
+	REP #$10
+
+	LDA.b #$7E
+	PHA
+	PLB
+
+	REP #$20
+
+	LDA.b SA1IRAM.preset_pert_end
+	SBC.b SA1IRAM.preset_pert
+	STA.b SA1IRAM.preset_writer
+
+	LDY.w #$0000
+
+.next
+	REP #$20
+
+	LDA.b [SA1IRAM.preset_pert],Y
+
+	INY
+	INY
+
+	CMP.w #$0010
+	BCC .command
+
+	CPY.b SA1IRAM.preset_writer
+	BCS .done
+
+	TAX
+
+	SEP #$20
+
+	LDA.b [SA1IRAM.preset_pert],Y
+	STA.w $7E0000,X
+
+	INY
+	BRA .next
+
+.done
+	RTS
+
+.command
+	ASL
+	TAX
+
+	JMP (.vectors,X)
+
+.write_mirror
+	SEP #$20
+	LDA.b [SA1IRAM.preset_pert],Y : INY : STA.w $7E1ABF
+	LDA.b [SA1IRAM.preset_pert],Y : INY : STA.w $7E1ACF
+	LDA.b [SA1IRAM.preset_pert],Y : INY : STA.w $7E1ADF
+	LDA.b [SA1IRAM.preset_pert],Y : INY : STA.w $7E1AEF
+
+	BRA .next
+
+.vectors
+	dw .save_and_quit
+	dw .write_mirror
+	dw .nothing
+	dw .nothing
+
+	dw .nothing
+	dw .nothing
+	dw .nothing
+	dw .nothing
+
+	dw .nothing
+	dw .nothing
+	dw .nothing
+	dw .nothing
+
+	dw .nothing
+	dw .nothing
+	dw .nothing
+	dw .nothing
+
+	; clear things that may be important that are cleared during save and quit
+.save_and_quit
+	; prize packs
+	STZ.w $0FC7
+	STZ.w $0FC9
+	STZ.w $0FCB
+	STZ.w $0FCD
+	STZ.w $0FDE
+
+	STZ.w $0FA1
+
+	; mirror portal
+	STZ.w $1ABF
+	STZ.w $1ACF
+	STZ.w $1ADF
+	STZ.w $1AEF
+
+.nothing
+	JMP .next
+
+;===================================================================================================
+
+presetload_safeties:
+	PHB
+	PHK
+	PLB
+
+	LDA.w !ram_preset_category
+	AND.w #$00FF
+	ASL
+	TAX
+
+	SEP #$20
+
+	LDY.b SA1IRAM.preset_addr
+
+	JSR.w (.vectors,X)
+
+	PLB
+	RTS
+
+; PRESET LIST
+.vectors
+	dw .nmg
+	dw .hundo
+	dw .lownmg
+	dw .lowleg
+	dw .ad2020
+	dw .adold
+	dw .anyrmg
+	dw .bossrta
+
+; No safeties
+.bossrta
+.lownmg
+.lowleg
+-- RTS
+
+;---------------------------------------------------------------------------------------------------
+
+.nmg
+	; sanc heart
+	CPY.w #presetmenu_nmg_eastern_octorok : BCC --
+
+	LDA.w !ram_safeties_nmg_sanc_heart : BEQ ..no_sanc
+
+	REP #$21
+
+	LDA.l $7EF36C : ADC.w #$0808 : STA.l $7EF36C
+
+	SEP #$20
+
+..no_sanc
+	; mushroom / powder / half magic
+	LDA.w !ram_safeties_nmg_powder
+	BEQ ..no_powder
+
+	CPY.w #presetmenu_nmg_aga_after_lost_woods : BCC ..no_powder
+
+	CMP.b #$02 : BCC ..mushroom_only
+
+	CPY.w #presetmenu_nmg_thieves_after_activating_flute : BCC ..mushroom_only
+
+	CMP.b #$03
+
+	LDA.b #$01
+	BCC ..no_half_magic
+
+	CPY.w #presetmenu_nmg_skull_fence_dash : BCC ..no_half_magic
+
+	STA.l $7EF37B
+
+..no_half_magic
+	; add ether if powder
+	STA.l $7EF348
+	INC
+
+..mushroom_only
+	STA.l $7EF344
+
+..no_powder
+	; bottles
+	LDA.w !ram_safeties_nmg_bottles : BEQ ..no_bottles
+
+	CMP.b #$01 : BEQ ..early
+
+..late
+	CPY.w #presetmenu_nmg_thieves_after_activating_flute : BCC ..no_bottles
+	BRA ..set_bottles
+
+..early
+	CPY.w #presetmenu_nmg_desert_water_dash : BCC ..no_bottles
+
+..set_bottles
+	LDA.b #$02 : STA.l $7EF34F ; select 2nd bottle
+	DEC : STA.l $7EF34D ; bug net
+	LDA.b #$06 : STA.l $7EF35C : STA.l $7EF35D ; fairy bottles
+
+..no_bottles
+	; red mail
+	LDA.w !ram_safeties_nmg_red_mail : BEQ ..no_red_mail
+	CPY.w #presetmenu_nmg_gtower_floor_2 : BCC ..no_red_mail
+
+	LDA.b #$02 : STA.l $7EF35B
+
+..no_red_mail
+	; gold/silvers
+	CPY.w #presetmenu_nmg_trock_icerod_overworld : BCC ..no_gs
+	LDA.w !ram_safeties_nmg_gs : BEQ ..no_gs
+	CMP.b #$01 : BEQ ..silvers_only
+
+..gold_sword
+	LDA.b #$04 : STA.l $7EF359
+
+..silvers_only
+	LDA.b #$03 : STA.l $7EF340
+
+..no_gs
+	RTS
+
+;---------------------------------------------------------------------------------------------------
+
+.ad2020
+	CPY.w #presetmenu_ad2020_pod_kiki_skip : BCC ..no
+	LDA.w !ram_safeties_ad2020_silvers : BEQ ..no
+
+	LDA.b #$03 : STA.l $7EF340
+
+..no
+	RTS
+
+;---------------------------------------------------------------------------------------------------
+
+.adold
+	CPY.w #presetmenu_adold_pod_kiki_skip : BCC ..no
+	LDA.w !ram_safeties_adold_silvers : BEQ ..no
+
+	LDA.b #$03 : STA.l $7EF340
+
+..no
+	RTS
+
+;---------------------------------------------------------------------------------------------------
+
+.anyrmg
+	CPY.w #presetmenu_anyrmg_tempered_frog_dmd : BCC ..no
+	LDA.w !ram_safeties_anyrmg_hook : BEQ ..no
+
+	LDA.b #$01 : STA.l $7EF342
+
+..no
+	RTS
+
+;---------------------------------------------------------------------------------------------------
+
+.hundo
+	LDA.w !ram_safeties_hundo_trinexx_boom : BEQ ..no
+
+	LDA.b #$01
+	CPY.w #presetmenu_hundo_escape_ball_n_chains : BCC ..no
+
+	CPY.w #presetmenu_hundo_ice_zoras_domain : BCC ..set_boom
+
+	INC
+
+..set_boom
+	STA.l $7EF341
+
+..no
+	RTS
+
+;===================================================================================================
+
+presetload_overworld:
+	; preloaded with screen ID
+	STA.w $008A : STA.w $040A
+
+	LDA.b [SA1IRAM.preset_addr],Y : INY #2
+	STA.w $061C : DEC : DEC : STA.w $061E
+
+	LDA.b [SA1IRAM.preset_addr],Y : INY #2
+	STA.w $0618 : DEC : DEC : STA.w $061A
+
+	LDA.b [SA1IRAM.preset_addr],Y : INY #2 : STA.w $0084
+	SEC : SBC.w #$0400 : AND.w #$0F80 : ASL : XBA : STA.w $0088
+	LDA.w $0084 : SEC : SBC.w #$0010 : AND.w #$003E : LSR : STA.w $0086
+
+	; TODO setting these to 0 seems perfectly fine
+	;LDA.b [SA1IRAM.preset_addr],Y : INY #2 : STA.w $0624
+	;EOR.w #$FFFF : INC : STA.w $0626
+
+	;LDA.b [SA1IRAM.preset_addr],Y : INY #2 : STA.w $0628
+	;EOR.w #$FFFF : INC : STA.w $062A
+
+	STZ.w $0624
+	STZ.w $0626
+	STZ.w $0628
+	STZ.w $062A
+
+	SEP #$30
+
+	STZ.w $00EE ; layer
+	STZ.w $001B ; outdoors
+
+	BIT.w $008A ; do mirror portal?
+	BVS .darkworld
+
+	LDA.b #$6C ; add portal to sprite list
+	STA.w $0E2F
+
+	LDA.b #$08
+	STA.w $0DDF
+
+.darkworld
+	JSR SaveALot
+
+	REP #$20
+	LDA.w #$0009 : STA.w $0010
+	LDA.w #$FFF8 : STA.w $00EC
+	STZ.w $0696 : STZ.w $0698
+	STZ.w $2116
+	
+	REP #$20
+	JSL $02EA30
+	SEP #$20
+
+	JSL $0AB911
+
+	JSL $02B116 : JSR OWToVRAM
+
+	LDA.w $0410 : PHA
+	LDA.w $0416 : PHA
+	LDA.w $0418 : PHA
+	PEI.b ($84)
+	PEI.b ($86)
+	PEI.b ($88)
+	PEI.b ($8A)
+
+	LDA.b $8C : STA.b $8A
+	LDA.w #$0390 : STA.b $84
+	LDA.w #$001F : STA.b $88
+	STZ.b $86
+
+	STZ.w $0410
+	STZ.w $0416
+	STZ.w $0418
+
+	JSL LoadOverworldOverlay : JSR OWToVRAM
+
+	PLA : STA.b $008A
+	PLA : STA.b $0088
+	PLA : STA.b $0086
+	PLA : STA.b $0084
+	PLA : STA.w $0418
+	PLA : STA.w $0416
+	PLA : STA.w $0410
+
+	SEP #$30
+
+	JSL $09C499
+
+	SEP #$30
+
+	LDA.b #$FF : STA.l $7EF36F ; no keys
+
+	; load overworld music
+	SEI
+	STZ.w $4200
+	STZ.w $0136
+	STA.w $2140
+
+	JSL $008913
+
+	JSL SetOverworldMusic
+
+	JSR PullALot
+
+	LDA.w #$0009 : STA.w $0010
+	SEP #$20
+	LDA.b #$0F : STA.w $0013
+	STZ.w $0200 : STZ.w $00B0
+
+	RTS
+
+;---------------------------------------------------------------------------------------------------
+
+OWToVRAM:
+	SEP #$30
+
+	STZ.b $17 : STZ.w $0710
+
+	LDA.b #$7F : STA.w $4304
+	LDA.b #$80 : STA.w $2115
+
+	REP #$31
+
+	LDA.w #$2000 : STA.w $4302
+	LDY.w #$0080 : LDX.w #$0000
+	LDA.w #$1801 : STA.w $4300
+
+.next_chunk
+	LDA.l $7F4000,X : STA.w $2116 : STY.w $4305 : LDA.w #$0001 : STA.w $420B
+	LDA.l $7F4002,X : STA.w $2116 : STY.w $4305 : LDA.w #$0001 : STA.w $420B
+	LDA.l $7F4004,X : STA.w $2116 : STY.w $4305 : LDA.w #$0001 : STA.w $420B
+	LDA.l $7F4006,X : STA.w $2116 : STY.w $4305 : LDA.w #$0001 : STA.w $420B
+
+	TXA : ADC.w #$0008 : TAX
+
+	CPX.w #$0080
+	BCC .next_chunk
+
+	RTS
+
+;===================================================================================================
+
+SetOverworldMusic:
+	SEP #$30
+
+	LDY.b $8A
+
+	; DM
+	LDX.b #$02
+	CPY.b #$40 : BCS .dark_world
+
+	; kakariko
+	CPY.b #$18 : BNE .not_kak
+	LDA.l $7EF3C5 : CMP.b #$03 : BCS .continue
+	LDX.b #$07 : BRA .save
+
+.not_kak
+	CMP.b #$00 : BNE .continue
+
+	LDA.l $7EF300 : AND.b #$40 : BEQ .continue
+	LDX.b #$05 : BRA .continue
+
+.dark_world
+	LDA.l $7EF3CA : BEQ .continue
+
+	LDX.b #$09
+	LDA.l $7EF357 : BNE .pearl
+
+	LDX.b #$04 : BRA .save
+
+.pearl
+	CPY.b #$40 : BEQ .sw
+	CPY.b #$43 : BEQ .sw
+	CPY.b #$45 : BEQ .sw
+	CPY.b #$47 : BNE .save
+
+.sw
+	LDX.b #$0D : BRA .save
+
+.continue
+	LDA.l $7EF3C5 : CMP.b #$02 : BCS .save
+
+	LDX.b #$03
+
+.save
+	STX.w $012C
+	STX.w $2140
+
+	RTL
+
+;===================================================================================================
+
+presetload_dungeon:
+	; we come preloaded with room ID
+	JSR SetLoadedRoomID
+
+	; entrance
+	SEP #$20
+	LDA.b [SA1IRAM.preset_addr],Y : INY
+
+	JSR SetDungeonEntranceAndProperties
+
+	SEP #$20
+	; quadrants
+
+	; ab.. ..cd
+	; a bit that goes in $A6
+	; b bit that goes in $A7
+	; c bit that goes in $A9
+	; d bit that goes in $AA
+	LDA.b [SA1IRAM.preset_addr],Y
+	INY
+	STA.b SA1IRAM.preset_writer
+
+	ASL : ROL.w $00A6 : ASL.w $00A6
+	ASL : ROL.w $00A7 : ASL.w $00A7
+	LDA.b SA1IRAM.preset_writer : AND.b #$01 : STA.w $00A9
+	LDA.b SA1IRAM.preset_writer : AND.b #$02 : STA.w $00AA
+
+	; Floor
+	LDA.b [SA1IRAM.preset_addr],Y : INY : STA.w $00A4
+
+	; Door
+	LDA.b [SA1IRAM.preset_addr],Y : INY
+	PHA ; save for shutter and peg state later
+	AND.b #$03 : STA.w $006C
+
+	; Layer
+	LDA.b [SA1IRAM.preset_addr],Y : AND.b #$0F : STA.w $00EE
+	LDA.b [SA1IRAM.preset_addr],Y : LSR : LSR : LSR : LSR : STA.w $0476
+
+	INY
+
+	JSR ConfigureCameraToCoordinates
+
+;---------------------------------------------------------------------------------------------------
+
+	SEP #$20
+
+	LDA.l $7EF36F : PHA
+
+	JSR SaveALot
+
+	JSL PresetLoadArea_UW
+
+	STZ.w $4200
+
+	SEP #$20
+	; get shutter door state
+	LDA 10,S : AND.b #$80 : EOR.b #$80 : ASL : ROL
+
+	JSR HandleOpenShutters
+
+	SEP #$20
+	; get crystal switch state
+	LDA 10,S : AND.b #$10
+	LSR : LSR : LSR : LSR
+
+	JSR HandlePegState
+
+	JSR PullALot
+
+;---------------------------------------------------------------------------------------------------
+
+	LDA.w #$0007 : STA.w $0010
+
+	; kill sprites that shouldn't be alive
+	LDA.b [SA1IRAM.preset_addr],Y : INY : INY
+
+	JSR KillSpritesInRoom
+
+	SEP #$20
+	; get keys
+	PLA : STA.l $7EF36F
+
+	; remove door properties
+	PLA
+
+	RTS
+
+;===================================================================================================
+
+SaveALot:
+	REP #$30
+	PLA
+
+	PHP
+	PHD
+	PHY
+	PHX
+	PHB
+
+	PHA
+	LDA.w #$0000
+	TCD
+	SEP #$30
+
+	RTS
+
+PullALot:
+	REP #$30
+	PLA
+
+	PLB
+	PLX
+	PLY
+	PLD
+	PLP
+
+	PHA
+	RTS
+
+;===================================================================================================
+
+OpenShutterDoors:
+	REP #$30
+
+	PHB
+
+	LDY.w #$0000
 
 	PHY
+	PLB
+	PLB
 
-	%ai8()
-	JSR preset_reset_state_after_loading
-	JSR preset_reset_counters
+--	LDA.w $19A0,Y
+	BEQ ++
 
-	%ai16()
+	PHY
+	JSR .open
 	PLY
-	LDA [$00], Y : INY #2 : STA !ram_preset_end_of_sram_state
-	LDA !lowram_is_poverty_load : AND #$00FF :  BEQ +
-	LDA !ram_preset_category : AND #$00FF : ASL : TAX
-	LDA.l preset_end_of_base_states, X : STA !ram_preset_end_of_sram_state
 
-+	JSR preset_load_state
-	LDA !lowram_is_poverty_load : AND #$00FF : BEQ +
-	JSL load_poverty_state
+++	INY
+	INY
+	CPY.w #$0020
+	BCC --
 
-+	%ai8()
 	PLB
-	RTL
+--	RTS
 
+.open
+	LDA.w $1980,Y
+	AND.w #$00FE
+	TAX
 
-preset_sprite_reset_all:
-	; Enters AI=8
-	; Call the original routine
-	JSL !Sprite_ResetAll
+	CMP.w #$0018
+	BEQ .shutter
 
-	; Check if we want to load our own state.
-	%ai16()
-	LDA !ram_preset_end_of_sram_state : BEQ .end
+	CMP.w #$0044
+	BNE --
 
-	JSR preset_load_state
-	LDA #$0000 : STA !ram_preset_end_of_sram_state
-	LDA !lowram_is_poverty_load : AND #$00FF : BEQ .notPoverty
-	JSL load_poverty_state
+.shutter
+	LDA.l $009A52,X
+	STA.b $00
 
-.notPoverty
-	;JSL movie_preset_loaded
-.end
-	%ai8()
-	RTL
+	LDA.l $009A02,X
+	STA.b $02
 
+	LDA.w $19C0,Y
+	AND.w #$0003
+	ASL
+	TAX
 
-preset_load_state:
-	; Enters AI=16
-
-	JSR preset_clear_for_initial_preset
-
-	%a8()
-	LDA !ram_preset_category : TAX
-	PHB : LDA.l cm_preset_data_banks, X : PHA : PLB
-	%a16()
-	LDA !ram_preset_end_of_sram_state : STA $06
-	LDA !ram_preset_category : AND #$00FF : ASL : TAX
-	LDA.l preset_start_ptrs, X : STA $00
-
-.next_item
-	; Sets up $02-$04 with the long address we want to manipulate.
-	LDA $00 : CMP $06 : BEQ .done_with_state
-	LDA ($00) : INC $00 : INC $00 : STA $02
-	LDA ($00) : INC $00 : INC $00 : STA $04
-
-	; High byte of A = How many bytes to copy over.
-	XBA : AND #$00FF : CMP #$0001 : BEQ .one_byte
-
-	LDA ($00) : INC $00 : INC $00 : STA [$02]
-	BRA .next_item
-
-.one_byte
-	%a8()
-	LDA ($00) : STA [$02]
-	%a16()
-	INC $00
-	BRA .next_item
-
-.done_with_state
-	PLB
-
-	%ai16()
-	JSL !Sprite_LoadGfxProperties
-
-	%ai8()
-	; Reload graphics and palette for sword, shield and armor
-	JSL !DecompSwordGfx
-	JSL !Palette_Sword
-	JSL !DecompShieldGfx
-	JSL !Palette_Shield
-	JSL !Palette_Armor
-
-	; Check if we're in overworld
-	LDA $1B : BEQ .in_overworld
-
-	JSL !UpdateBarrierTileChr
-
-	LDA $11 : PHA
-	LDA #$07 : STA $0690
-	JSL !Dungeon_AnimateTrapDoors
-	PLA : STA $11
-
-.in_overworld
-	; Check if we currently have a tagalong
-	LDA $7EF3CC : BEQ .no_tagalong
-	JSL !Tagalong_LoadGfx
-
-.no_tagalong
-	LDA !ram_game_progress : CMP #$02 : BMI .done
-
-	LDA !ram_sanctuary_heart : BEQ .done
-	LDA !ram_equipment_maxhp : CLC : ADC #$08 : STA !ram_equipment_maxhp
-	LDA !ram_equipment_curhp : CLC : ADC #$08 : STA !ram_equipment_curhp
-
-.done
-	%ai16()
-	RTS
-
-
-preset_clear_for_initial_preset:
-	; Enters AI=16
-	LDA #$0000
-	LDX #$0000
-
--	STA $7EF000, X : STA $7EF100, X : STA $7EF200, X : STA $7EF300, X : STA $7EF400, X
-	STZ $0B00, X : STZ $0C00, X : STZ $0D00, X : STZ $0E00, X : STZ $0F00, X
-	INX #2 : CPX #$0100 : BNE -
-
-	LDX #$0000
--	STZ $0FC7, X
-	INX #2 : CPX #$0010 : BNE -
-
-	LDX #$0000
--	STZ $029E, X
-	INX #2 : CPX #$000A : BNE -
-
-	STZ $0ABD
-	STZ $0B09
-
-	RTS
-
-preset_clear_tilemap:
-	; Enteres AI=16
-	LDA #$0000
-	LDX #$0000
-
-.loop
-	STA $7F2000, X : STA $7F2200, X : STA $7F2400, X : STA $7F2600, X
-	STA $7F2800, X : STA $7F2A00, X : STA $7F2C00, X : STA $7F2E00, X
-	STA $7F3000, X : STA $7F3200, X : STA $7F3400, X : STA $7F3600, X
-	STA $7F3800, X : STA $7F3A00, X : STA $7F3C00, X : STA $7F3E00, X
-	INX #2 : CPX #$0200 : BNE .loop
-
-	RTS
-
-
-preset_reset_state_after_loading:
-	; Assumes A=8
-
-	; Reset a bunch of Link state (sleeping, falling in hole etc).
-	JSL !Player_ResetState
-
-	; Resets "Link Immovable" flag
-	STZ $02E4
-
-	; Makes Link able to use pause/select menu (reset during medallion usage)
-	STZ $0112
-
-	; Resets some state variable that makes Link "jump off" water after the first movement into land.
-	STZ $0345
-
-	; Link general state (makes him not sleep..)
-	STZ $5D
-
-	; Resets a scroll value for intra-room transitions
-	STZ $0126
-
-	; I think maybe this resets being on a conveyorbelt? At least the first one ..
-	STZ $03F3 : STZ $0322
-
-	; Remove stair lag
-	STZ $57
-	
-	; Room transition flags (change layer, alter dungeon ID)
-	STZ $EF
-
-	RTS
-
-
-preset_reset_counters:
-	%a16()
-	LDA #$0000
-	STA !ram_lanmola_cycles
-	%a8()
-	STA !ram_lanmola_cycles+2
-	LDA #$41 : STA !timer_allowed
-	RTS
-
-
-preset_load_last_preset:
-	%a16()
-	LDA !ram_previous_preset_destination : STA !ram_preset_destination
-	%a8()
-	LDA !ram_previous_preset_type : STA !ram_preset_type
-	LDA #12 : STA $10
-	LDA #05 : STA $11
-	RTL
-
-
-preset_duck_dropoff_hook:
+	LDA.l .vectors,X
 	PHA
-	LDA !ram_preset_type : BNE .custom
 
-	PLA
-	JML $099509
+	LDA.w $19A0,Y
+	STA.b $04
 
-.custom
-	LDA #$00 : STA !ram_preset_type
+	RTS
 
-	LDA $02E0 : ORA $56 : BEQ .notBunny
-
-	; Fixes bunny graphics after Palette_ArmorAndGloves messes it up
-	JSL !LoadGearPalettes_bunny
-
-.notBunny
-	PLA
-	RTL
+.vectors
+	dw .north-1
+	dw .south-1
+	dw .west-1
+	dw .east-1
 
 
-preset_autoload_preset:
-	LDA !ram_autoload_preset : BEQ .die
+.north
+	LSR
+	AND.w #$783F
+	TAX
 
-	STZ !lowram_is_poverty_load
-	JSL preset_load_last_preset
-	RTL
+	LDA.b $00
+	STA.l $7F2001,X
+	STA.l $7F2041,X
+	STA.l $7F2081,X
+	STA.l $7F20C1,X
+	STA.l $7F2101,X
+	STA.l $7F2141,X
+	STA.l $7F2181,X
 
-.die
-	LDA $10 : STA $010C
-	LDA #$12 : STA $10
-	LDA #$01 : STA $11
-	RTL
+	LDA.w #$0000
+	STA.l $7F21C1,X
+
+	LDX.b $02
+	LDA.l $00CD9E,X
+	TAY
+
+	LDX.b $04
+
+	LDA.w #$0004
+	STA.b $0E
+
+--	TXA
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+0,Y
+	STA.l $7E2000,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0080
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+2,Y
+	STA.l $7E2080,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0100
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+4,Y
+	STA.l $7E2100,X
+	STA.w $2118
 
 
-preset_did_we_load_preset:
-	LDA !ram_preset_spotlight_timer : BEQ .not_preset
-	DEC : STA !ram_preset_spotlight_timer : BEQ .done
-	STA $2100 : STA $13
-	SEC
-	RTL
+	TYA
+	CLC
+	ADC.w #$0006
+	TAY
 
-.done
-.muted
+	INX
+	INX
 
-	LDA $010C : STA $10
-	STZ $11
-	LDA #$80 : STA $2100 : STA $13
-	LDA #$08 : STA !ram_preset_spotlight_timer
-	SEC : RTL
+	DEC.b $0E
+	BNE --
 
-.not_preset
-	LDA $11 : ASL : TAX
-	CLC : RTL
+	RTS
+
+.south
+	LSR
+	TAX
+
+	LDA.b $00
+	STA.l $7F2041,X
+	STA.l $7F2081,X
+	STA.l $7F20C1,X
+	STA.l $7F2101,X
+	STA.l $7F2141,X
+
+	LDX.b $02
+	LDA.l $00CE06,X
+	TAY
+
+	LDX.b $04
+
+	LDA.w #$0004
+	STA.b $0E
+
+--	TXA
+	CLC
+	ADC.w #$0080
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+0,Y
+	STA.l $7E2080,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0100
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+2,Y
+	STA.l $7E2100,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0180
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+4,Y
+	STA.l $7E2180,X
+	STA.w $2118
 
 
-preset_spotlight_open_hook:
-	LDA !ram_preset_spotlight_timer : BEQ .not_preset
-	DEC : STA !ram_preset_spotlight_timer : BEQ .done
-	LDA #$0F : SEC : SBC !ram_preset_spotlight_timer : STA $2100 : STA $13
-	RTL
+	TYA
+	CLC
+	ADC.w #$0006
+	TAY
 
-.done
-	LDA $0132 : CMP #$FF : BEQ .muted
-	STA $012C
+	INX
+	INX
 
-.muted
-	LDA $02E0 : ORA $56 : BEQ .notBunny
+	DEC.b $0E
+	BNE --
 
-	; Fixes bunny graphics after Palette_ArmorAndGloves messes it up
-	JSL !LoadGearPalettes_bunny
 
-.notBunny
-	LDA $010C : STA $10
-	STZ $11
-	LDA #$0F : STA $2100 : STA $13
-	RTL
+	RTS
 
-.not_preset
-	JSL $00F290
-	INC $B0
-	RTL
+.west
+	LSR
+	AND.w #$FFE0
+	TAX
 
-preset_start_ptrs:
-	dw sram_nmg_esc_bed
-	dw sram_hundo_esc_bed
-	dw sram_lownmg_esc_bed
-	dw sram_low_esc_bed
-	dw sram_ad2020_east_bed
-	dw sram_ad_esc_links_bed
-	dw sram_anyrmg_east_bed
+	LDA.b $00
+	CLC
+	ADC.w #$0101
+	STA.l $7F2040,X
+	STA.l $7F2042,X
+	STA.l $7F2080,X
+	STA.l $7F2082,X
 
-preset_end_of_base_states:
-	dw sram_nmg_esc_bed_after
-	dw sram_hundo_esc_bed_after
-	dw sram_lownmg_esc_bed_after
-	dw sram_low_esc_bed_after
-	dw sram_ad2020_east_bed_after
-	dw sram_ad_esc_links_bed_after
-	dw sram_anyrmg_east_bed_after
+	AND.w #$00FF
+	STA.l $7F2044,X
+	STA.l $7F2084,X
+
+	LDX.b $02
+	LDA.l $00CE66,X
+	TAY
+
+	LDX.b $04
+
+	LDA.w #$0003
+	STA.b $0E
+
+--	TXA
+	CLC
+	ADC.w #$0000
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+0,Y
+	STA.l $7E2000,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0080
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+2,Y
+	STA.l $7E2080,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0100
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+4,Y
+	STA.l $7E2100,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0180
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+6,Y
+	STA.l $7E2180,X
+	STA.w $2118
+
+	TYA
+	CLC
+	ADC.w #$0008
+	TAY
+
+	INX
+	INX
+
+	DEC.b $0E
+	BNE --
+
+	RTS
+
+.east
+	LSR
+	TAX
+
+	LDA.b $00
+	CLC
+	ADC.w #$0101
+	STA.l $7F2042,X
+	STA.l $7F2044,X
+	STA.l $7F2082,X
+	STA.l $7F2084,X
+
+	AND.w #$FF00
+	STA.l $7F2040,X
+	STA.l $7F2080,X
+
+	LDX.b $02
+	LDA.l $00CEC6,X
+
+	TAY
+
+	LDX.b $04
+
+	LDA.w #$0003
+	STA.b $0E
+
+--	TXA
+	CLC
+	ADC.w #$0002
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+0,Y
+	STA.l $7E2002,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0082
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+2,Y
+	STA.l $7E2082,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0102
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+4,Y
+	STA.l $7E2102,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0182
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+6,Y
+	STA.l $7E2182,X
+	STA.w $2118
+
+	TYA
+	CLC
+	ADC.w #$0008
+	TAY
+
+	INX
+	INX
+
+	DEC.b $0E
+	BNE --
+
+	RTS
+
+.toVRAMAddr
+	STA.b $08
+	AND.w #$0040
+	LSR : LSR : LSR : LSR
+	XBA
+	STA.b $0A
+
+	LDA.b $08
+	AND.w #$303F
+	LSR
+	TSB.b $0A
+
+	LDA.b $08
+	AND.w #$0F80
+	LSR : LSR
+	ORA.b $0A
+
+	STA.w $2116
+
+	RTS

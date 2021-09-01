@@ -1,40 +1,24 @@
 {
     "name": "LTTPHack",
-    "version": "13.6.0",
+    "version": "14.0.0",
     "base": {
         "name": "A Link to the Past (J) 1.0",
         "crc": "3322EFFC"
     },
     "configurations" : [
         {
-            "id": "platform",
-            "name": "Platform",
+            "id": "version",
+            "name": "Version",
             "options": [
-                { "id": "emulator", "name": "Emulator, Everdrive, SNES Classic" },
-                { "id": "sd2snes", "name": "SD2SNES"}
+                { "id": "current", "name": "Latest (SA-1)" },
+                { "id": "rando", "name": "Randomizer (SA-1)" },
+                { "id": "old", "name": "v13.6.0 (Old)"}
             ]
         },
-        {
-            "id": "type",
-            "name": "Type",
-            "options": [
-                { "id": "customhud", "name": "Custom HUD" },
-                { "id": "vanillahud", "name": "Vanilla HUD" },
-                { "id": "sa1", "name": "v14 upsilon" },
-                { "id": "sa1rando", "name": "v14 rando" }
-            ]
-        }
     ],
     "patches": [
-        { "platform": "emulator", "type": "customhud", "file": "patcher/files/emulator-customhud.bps"},
-        { "platform": "emulator", "type": "vanillahud", "file": "patcher/files/emulator-vanillahud.bps"},
-
-        { "platform": "sd2snes", "type": "customhud", "file": "patcher/files/sd2snes-customhud.bps"},
-        { "platform": "sd2snes", "type": "vanillahud", "file": "patcher/files/sd2snes-vanillahud.bps"},
-
-        { "platform": "sd2snes", "type": "sa1", "file": "patcher/files/sa1.bps"},
-        { "platform": "emulator", "type": "sa1", "file": "patcher/files/sa1.bps"},
-        { "platform": "sd2snes", "type": "sa1rando", "file": "patcher/files/sa1rando.bps"},
-        { "platform": "emulator", "type": "sa1rando", "file": "patcher/files/sa1rando.bps"}
+        { "version": "current", "file": "patcher/files/sa1.bps"},
+        { "version": "rando", "file": "patcher/files/sa1rando.bps"},
+        { "version": "old", "file": "patcher/files/old13.bps"},
     ]
 }

@@ -1,85 +1,66 @@
-lorom
+math pri on
 
-!FEATURE_HUD ?= 1
-!FEATURE_SD2SNES ?= 1
+sa1rom
+
 !VERSION ?= "ALEPH 1"
 
 incsrc defines.asm
 incsrc hexedits.asm
 
-org $A08000
-incsrc gamemode.asm
+org $208000
+incsrc init.asm
+incsrc sa1hooks.asm
 incsrc nmi.asm
 incsrc timers.asm
+incsrc gamemode.asm
+incsrc misc.asm
 incsrc hudextras.asm
+incsrc rng.asm
+incsrc presets.asm
+incsrc roomload.asm
 
-if !FEATURE_HUD
-	incsrc hud.asm
-endif
-
-org $A28000
+org $218000
 incsrc tiles.asm
 
-org $A38000
-incsrc init.asm
-incsrc rng.asm
-incsrc misc.asm
-incsrc idle.asm
-incsrc glitchedwindow.asm
-incsrc ancillawindow.asm
+org $228000
+table resources/menu.tbl
+incsrc cm_macros.asm
+incsrc cm_main.asm
+incsrc cm_draw.asm
+incsrc cm_func.asm
+incsrc cm_items.asm
+incsrc cm_equipment.asm
+incsrc cm_gamestate.asm
+incsrc cm_linkstate.asm
+incsrc cm_gameplay.asm
+incsrc cm_rng.asm
+incsrc cm_hud.asm
+incsrc cm_shortcuts.asm
+incsrc cm_config.asm
+incsrc cm_presetconfig.asm
 
-org $A48000
-incsrc custom_menu.asm
-print "Custom menu size: ", pc
+org $268000
 
-org $A68000
-incsrc presets.asm
+print ""
+print "Preset data:"
+print "--------------------"
 
-org $A78000
-incsrc poverty_states.asm
+;===================================================================================================
+; GREP FOR "PRESET LIST" WHEN ADDING NEW PRESETS
+;===================================================================================================
+org $308000
+incsrc cm_presets_nmg.asm
+incsrc cm_presets_hundo.asm
+incsrc cm_presets_lanmorta.asm
 
-org $A88000
-incsrc music.asm
+org $318000
+incsrc cm_presets_lownmg.asm
+incsrc cm_presets_lowleg.asm
 
-org $A98000
-incsrc movie.asm
-
-; ---- data ----
-
-org $B08000
-incsrc preset_data_nmg.asm
-
-org $B18000
-incsrc preset_data_hundo.asm
-
-org $B28000
-incsrc preset_data_lowleg.asm
-
-org $B38000
-incsrc preset_data_ad.asm
-
-org $B48000
-incsrc preset_data_anyrmg.asm
-incsrc preset_data_ad2020.asm
-
-org $B58000
-incsrc preset_data_lownmg.asm
-
-org !SPC_DATA_OVERWORLD
-incbin ../resources/spc_overworld.bin
-
-org !SPC_DATA_UNDERWORLD
-incbin ../resources/spc_underworld.bin
-
-org !SPC_DATA_CREDITS
-incbin ../resources/spc_credits.bin
-
-;========================================================================
-; LEAVE THIS HERE
-; it's needed for calculating when certain data comes from a possibly
-; non-vanilla source, which requires knowing the last bank we write to
-;========================================================================
-EndOfPracticeROM:
+org $328000
+incsrc cm_presets_adold.asm
+incsrc cm_presets_ad2020.asm
+incsrc cm_presets_anyrmg.asm
 
 ; pad rom to 2mb
 org $3FFFFF

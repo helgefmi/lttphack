@@ -1,223 +1,183 @@
-; Line 0 never transfers, can be used for dummy writes
-; Using macros instead of routines is stupid, yes
-; but we really need to save as many cycles as we can
-
-!CURRENT_ROW = $0A
-
 !white = $3C10
 !blue = $2C10
 !yellow = $3410
 !red = $3810
 !gray = $2010
 
-!HUD_EXTRAS_BUFFER = $7EC700
+function char(n) = $2150+n
 
-; shouldn't actually need to clear every frame
-; only when counters are messed with
-macro draw_all_three(address, color, Xoff)
-;first_digit
-	LDA <address>+1 : AND #$000F
-	ORA.w #<color>
-	STA !HUD_EXTRAS_BUFFER+10+<Xoff>, X
+!BROWN_PAL #= (0<<10)
+!RED_PAL #= (1<<10)
+!YELLOW_PAL #= (2<<10)
+!BLUE_PAL #= (3<<10)
+!GRAY_PAL #= (4<<10)
+!REDYELLOW #= (5<<10)
+!TEXT_PAL #= (6<<10)
+!GREEN_PAL #= (7<<10)
 
-;second_digit
-	LDA <address>+0 : AND #$00F0
-	LSR #4
-	ORA.w #<color>
-	STA !HUD_EXTRAS_BUFFER+12+<Xoff>, X
+!VFLIP #= (1<<15)
+!HFLIP #= (1<<14)
 
-;third_digit
-	LDA <address>+0
-	AND #$000F
-	ORA.w #<color>
-	STA !HUD_EXTRAS_BUFFER+14+<Xoff>, X
-endmacro
+!P3 = $2000
+!SYNCED = char($10)|!BLUE_PAL
+!DESYNC = char($11)|!RED_PAL
+!HAMMER = char($12)|!BROWN_PAL
 
-macro draw_all_two(address, color, Xoff)
-;second_digit
-	LDA <address>
-	LSR #4
-	ORA.w #<color>
-	STA !HUD_EXTRAS_BUFFER+12+<Xoff>, X
+pushpc
 
-;third_digit
-	LDA <address>
-	AND #$000F
-	ORA.w #<color>
-	STA !HUD_EXTRAS_BUFFER+14+<Xoff>, X
-endmacro
+org $008B7D
+HUD_NMI_DMA_SIZE:
+	dw $200 ; make hud bigger, doesn't seem to cost any cycles
 
-macro draw_three(address, color, Xoff)
-	SEP #$21
-	LDA <address>+1
-	ADC.b #$7E ; overflow set if 2 or 3 digits; carry is set for fewer cycles
+org $0EFD3E
+	dw $6145, $6244 ; make the higher textbox slightly lower
 
-	LDA <address>
-	AND #$F0
-	ORA <address>+1
-	CMP.b #1 ; carry set if 2 or 3 digits
-	REP #$20
-?templabel:
-?.first_digit
-	LDA <address>+1 : AND #$000F
-	BVC ?..blank
+org $0DFAAE
+	JMP fire_hud_irq
 
-?..draw
-	ORA.w #<color> ; 3 cycles
-	BNE ?..continue ; 3 cycles
-	; 6 cycles total
-
-?..blank ; 1 for branch
-	NOP ; 2 cycles
-	LDA #$207F ; 3 cycles
-	; 6 cycles total
-
-?..continue
-	STA !HUD_EXTRAS_BUFFER+10+<Xoff>, X
-
-	; match cycles
-?.second_digit
-	LDA <address> : AND #$00F0
-	BCC ?..blank
-
-	; can't LSR first or we lose carry flag
-?..draw
-	LSR #4 ; 8 cycles
-	ORA.w #<color> ; 3 cycles
-	BNE ?..continue ; 3 cycles
-	; 14 cycles total
-
-?..blank ; 1 for branch
-	NOP ; 2 cycles
-	NOP #4 ; 8 cycles
-	LDA #$207F ; 3 cycles
-	; 14 cycles total
-
-?..continue
-	STA !HUD_EXTRAS_BUFFER+12+<Xoff>, X
-
-?.third_digit
-	LDA <address>
-	AND #$000F
-	ORA.w #<color> : STA !HUD_EXTRAS_BUFFER+14+<Xoff>, X
-endmacro
-
-macro draw_two(address, color, Xoff)
-	LDA <address> : AND #$00F0
-	CMP.w #1
-?templabel:
-	; match cycles
-?.second_digit
-	BCC ?..blank
-
-	; can't LSR first or we lose carry flag
-?..draw
-	LSR #4 ; 8 cycles
-	ORA.w #<color> ; 3 cycles
-	BNE ?..continue ; 3 cycles
-	; 14 cycles total
-
-?..blank ; 1 for branch
-	NOP #4 ; 8 cycles
-	NOP ; 2 cycles
-	LDA #$207F ; 3 cycles
-	; 14 cycles total
-
-?..continue
-	STA !HUD_EXTRAS_BUFFER+12+<Xoff>, X
-
-?.third_digit
-	LDA <address>
-	AND #$000F
-	ORA.w #<color> : STA !HUD_EXTRAS_BUFFER+14+<Xoff>, X
-endmacro
-
-draw2_white_lttp:
-	LDA !ram_hex2dec_second_digit : ORA #$3C90 : STA $7EC700, X
-	LDA !ram_hex2dec_third_digit : ORA #$3C90 : STA $7EC702, X
+org $0DDD24
+	JSR fire_hud_irq
+	PLB
 	RTL
 
-draw3_white_aligned_left_lttp:
-	; Clear "leading" 0's
-	LDA #$207F : STA $7EC702, X
-	LDA #$207F : STA $7EC704, X
-
-	LDA !ram_hex2dec_first_digit : BEQ .draw_second_digit
-	ORA #$3C90 : STA $7EC700, X
-	INX #2
-
-.draw_second_digit
-	LDA !ram_hex2dec_second_digit : ORA #$3C90 : STA $7EC700, X
-	INX #2
-
-.draw_third_digit
-	LDA !ram_hex2dec_third_digit : ORA #$3C90 : STA $7EC700, X
+org $0DDD14
+	JSR fire_hud_irq
+	PLB
 	RTL
 
-macro update_counter_line()
-	SEP #$10
-	LSR ; A will hold whether or not this counter is active
-	BCC ++ ; if clear, load 0 to X for a dummy write
+; some nice free rom here
+org $0DDB07
+fire_hud_irq:
+	JSL CacheSA1Stuff ; cache the big boy stuff we need for hud
 
-	; need to match cycles here
-;.normalwrite
-	LDX !CURRENT_ROW ; 3
-	TXA ; 2
-	BRA + ; 2
-	; 7 total
+	; don't want to be transferring too much
+	; certain things will get designated as slow
+	LDA.b !ram_extra_sa1_required
+	BEQ .noextra
 
-++ ; 1 for branch taken
-	LDA !CURRENT_ROW ; 4
-	LDX #$00 ; 2
-	; 7 total
+	JSL Extra_SA1_Transfers
+	SEP #$30
 
-+
-	ADC.w #$0000 : STA !CURRENT_ROW ; if carry was clear, this won't increment
+.noextra
+	LDA.b #$83 ; request a hud update from SA-1
+	STA.w $2200
+	INC $16
+	RTS
 
-	;TXA : ASL #4 : TAX ; multiply X by 16
-	;TXA : DEC : ASL #6; multiply X by 64
-	;REP #$11
-	;ADC #$0030
-	;TAX
-	TXA : ASL : TAY
-	REP #$10
-	LDX counter_line, Y 
+warnpc $0DDB3F
 
-endmacro
+; for lanmo counters
+org $05A39B
+	JML ResetLanmoCycles
 
-counter_line:
-	dw $0200 ; to write to nowhere useful
-	dw 0<<6+$2E
-	dw 1<<6+$2E
-	dw 2<<6+$2E
-	dw 3<<6+$2E
-	dw 4<<6+$2E
+org $05A40E
+	JSL UpdateLanmoCycles
+	NOP
 
-hex_to_hex_lol: ; this exists purely to keep coords even
+warnpc $0DDB3F
 
-hex_to_dec:
-	REP #$10
-	ASL : TAX
-	LDA.l hex_to_dec_fast_table, X
-	SEP #$20 ; slightly faster overall to use this
-	TAY : AND #$0F : STA !ram_hex2dec_third_digit
-	TYA : AND #$F0 : LSR #4 : STA !ram_hex2dec_second_digit
-	XBA : AND #$0F : STA !ram_hex2dec_first_digit
-	REP #$20 : TYA
+pullpc
+;===================================================================================================
+
+UpdateLanmoCycles:
+	INC.w $0D80,X
+	INC.w SA1IRAM.LanmoCycles,X
+	LDA.b #$18
 	RTL
 
-macro hex_to_dec_fast()
+ResetLanmoCycles:
+	STA.l $7FF81E,X
+	STZ.w SA1IRAM.LanmoCycles,X
+	RTL
+
+;===================================================================================================
+; A = address
+; Y = color
+;===================================================================================================
+Draw:
+.all_one
+	STA.b SA1IRAM.SCRATCH+10
+	STY.b SA1IRAM.SCRATCH+12
+	BRA .digit1
+
+.all_two
+	STA.b SA1IRAM.SCRATCH+10
+	STY.b SA1IRAM.SCRATCH+12
+	BRA .digit10_always
+
+.all_three
+	STA.b SA1IRAM.SCRATCH+10
+	STY.b SA1IRAM.SCRATCH+12
+	BRA .digit100_always
+
+.short_three
+	STA.b SA1IRAM.SCRATCH+10
+	STY.b SA1IRAM.SCRATCH+12
+	JSR .set_conditional_flags_d3
+
+.digit100
+	BVC .digit10
+
+.digit100_always
+	LDA.b (SA1IRAM.SCRATCH+10)
+	XBA
+	AND.w #$000F
+	ORA.b SA1IRAM.SCRATCH+12
+	STA.w SA1RAM.HUD+10,X
+	BRA .digit10_always
+
+.short_two
+	STA.b SA1IRAM.SCRATCH+10
+	STY.b SA1IRAM.SCRATCH+12
+	JSR .set_conditional_flags_d2
+
+.digit10
+	BCC .digit1
+
+.digit10_always
+	LDA.b (SA1IRAM.SCRATCH+10)
+	AND.w #$00F0
+	LSR
+	LSR
+	LSR
+	LSR
+	ORA.b SA1IRAM.SCRATCH+12
+	STA.w SA1RAM.HUD+12,X
+
+.digit1
+	LDA.b (SA1IRAM.SCRATCH+10)
+	AND.w #$000F
+	ORA.b SA1IRAM.SCRATCH+12
+	STA.w SA1RAM.HUD+14,X
+
+.done
+	RTS
+
+.set_conditional_flags_d3
+	LDA.b (SA1IRAM.SCRATCH+10)
+	CLC
+	ADC.w #$7F00 ; overflow set if digit 3 exists
+
+.set_conditional_flags_d2
+	LDA.b (SA1IRAM.SCRATCH+10)
+	CMP.w #$0010 ; carry set if digit 2 or 3 exists
+	RTS
+
+;===================================================================================================
+
+hex_to_dec_fast:
 	PHP
-	REP #$10
-	ASL : TAY
-	LDA.w hex_to_dec_fast_table, Y
-	SEP #$20 ; slightly faster overall to use this
-	TAY : AND #$0F : STA !ram_hex2dec_third_digit
-	TYA : AND #$F0 : LSR #4 : STA !ram_hex2dec_second_digit
-	XBA : AND #$0F : STA !ram_hex2dec_first_digit
-	REP #$20 : TYA
+	REP #$30
+
+	ASL : TAX
+
+	LDA.w hex_to_dec_fast_table,X
+	TAY : AND.w #$000F : STA.b SA1IRAM.SCRATCH+4
+	TYA : AND.w #$00F0 : LSR #4 : STA.b SA1IRAM.SCRATCH+2
+	XBA : AND.w #$000F : STA.b SA1IRAM.SCRATCH+0
+
 	PLP
-endmacro
+	RTS
 
 hex_to_dec_fast_table:
 	dw $000, $001, $002, $003, $004, $005, $006, $007, $008, $009
@@ -321,373 +281,1716 @@ hex_to_dec_fast_table:
 	dw $980, $981, $982, $983, $984, $985, $986, $987, $988, $989
 	dw $990, $991, $992, $993, $994, $995, $996, $997, $998, $999
 
-empty_char_dma: ; can't use 1 word, since DMA won't increment
-	fillword !EMPTY : fill !EXTRAS_SIZE
+;===================================================================================================
 
-draw_counters:
+draw_hud_extras:
 	PHP
-	PHB : PHK : PLB
-	%a16()
-	%i8()
-	; counters will never decrease, so I think this is fine
-	;STZ $2182 ; to be bank $7E
-	;LDA.w #!HUD_EXTRAS_BUFFER+16 : STA $2181
-	;LDY.b #empty_char_dma>>16 : STY $4304 ; source bank
-	;LDA.w #empty_char_dma : STA $4302 ; source address
-	;LDA #$8000 : STA $4300
-	;LDA.w #!EXTRAS_SIZE : STA $4305
-	;LDY #$01 : STY $420B
+	PHB
+	PHK
+	PLB
 
-	LDA #$0001 : STA !CURRENT_ROW ; start at 1 so that 0 can be a dummy write
+	; clear up counters
+	REP #$20
 
-	LDA !timer_allowed : BIT #$0080 : BNE .roomtime
-	JMP .calccoordposition
+	LDA.b SA1IRAM.TIMER_FLAG
+	AND.w #$FF7F
+	STA.b SA1IRAM.TIMER_FLAG
 
-.roomtime
-	AND #$FF7F : STA !timer_allowed
-	LDA !ram_counters_real : %update_counter_line()
-	%draw_all_two(!room_time_F_disp, !yellow, 0)
-	%draw_three(!room_time_S_disp, !white, -4)
+	; clean up these first
+	SEP #$10
 
-.lagtime
-	LDA !ram_counters_lag : %update_counter_line()
-	%draw_three(!lag_frames_disp, !red, 0)
+	LDA.w #$207F
+	LDX.b #$16
+--	STA.w SA1RAM.HUD+$26+($40*0),X
+	STA.w SA1RAM.HUD+$26+($40*1),X
+	STA.w SA1RAM.HUD+$26+($40*2),X
+	STA.w SA1RAM.HUD+$26+($40*3),X
+	STA.w SA1RAM.HUD+$26+($40*4),X
 
-.idletime
-	LDA !ram_counters_idle : %update_counter_line()
-	%draw_three(!idle_frames_disp, !white, 0)
+	DEX
+	DEX
+	BPL --
 
-.segmenttime
-	LDA !ram_counters_segment : BNE .doseg
-	JMP .coordinates
+	LDX.b #62
+--	STA.w SA1RAM.HUD+10+($40*5),X ; +10 to not erase magic bar
+	STA.w SA1RAM.HUD+($40*6),X
+	STA.w SA1RAM.HUD+($40*7),X
+	STA.w SA1RAM.HUD+($40*8),X
+	DEX
+	DEX
+	BPL --
 
-.doseg
-	%update_counter_line()
-	%draw_all_two(!seg_time_F_disp, !gray, 0)
-	%draw_all_two(!seg_time_S_disp, !yellow, -4)
-	%draw_three(!seg_time_M_disp, !white, -8)
-	BRA .coordinates
-.calccoordposition
-	CLC : LDA #$0001
-	ADC !ram_counters_real
-	ADC !ram_counters_lag
-	ADC !ram_counters_idle
-	ADC !ram_counters_segment
-	STA !CURRENT_ROW
+	LDX.b #14
+--	STA.w SA1RAM.HUD+$90,X
+	DEX
+	DEX
+	BPL --
 
-.coordinates
-	LDA !ram_xy_toggle : %update_counter_line()
-	; can't macro this, since 1 byte for each part
+	LDA.w !ram_heart_display
+	ASL
+	TAX
+	JSR (draw_hearts_options,X)
 
-	; Y coord
-;first_digit
-	LDA $21 : AND #$000F
-	ORA.w #!yellow
-	STA !HUD_EXTRAS_BUFFER+10, X
+draw_hud_counters:
+	REP #$30
+	LDA.w #$002E ; start place
+	LDX.w #$0000
 
-;second_digit
-	LDA $20 : AND #$00F0 : LSR #4
-	ORA.w #!yellow
-	STA !HUD_EXTRAS_BUFFER+12, X
+.next_counter
+	PHA
+	PHX
 
-;third_digit
-	LDA $20 : AND #$000F
-	ORA.w #!yellow
-	STA !HUD_EXTRAS_BUFFER+14, X
+	LDA.b SA1IRAM.CNTVAL1,X
+	PHA
 
-	; X coord
-;first_digit
-	LDA $23 : AND #$000F
-	ORA.w #!white
-	STA !HUD_EXTRAS_BUFFER+04, X
+	LDA.w !ram_counter1,X
+	ASL
+	TAY
+	LDA.w counter_routines,Y
+	TAY
 
-;second_digit
-	LDA $22 : AND #$00F0 : LSR #4
-	ORA.w #!white
-	STA !HUD_EXTRAS_BUFFER+06, X
+	LDA 5,S ; get write spot
+	TAX
 
-;third_digit
-	LDA $22 : AND #$000F
-	ORA.w #!white
-	STA !HUD_EXTRAS_BUFFER+08, X
+	PLA
 
-;-----------------------------------------------------------------
-; Input display stuff
-;-----------------------------------------------------------------
-; this will always write to its buffer, but
-; NMI will be cycle controlled to not always draw this on bg3
-; the rest of the time it will just draw all blanks
+	PEA.w .return-1
+
+	DEY ; jump address
+	PHY
+
+	RTS ; call routine
+
+.return
+	REP #$31
+	PLX
+
+	PLA ; next row
+	ADC.w #$0040
+
+	INX
+	INX
+	CPX.w #10
+	BCC .next_counter
+
+;===================================================================================================
+draw_hud_linecounters:
+	REP #$30
+	LDA.w #5*64+10 ; start position
+	LDY.w #$0000
+
+	; later rows should be further left
+	PEA.w 5*64+10
+	BRA .start
+
+.next_counter
+	PHA
+
+.start
+	PHY
+
+	TAX ; get spot
+
+	LDA.w !ram_linecounter1,Y
+
+	ASL
+	TAY
+
+	LDA.w linecounter_routines,Y
+	DEC
+
+	PEA.w .return-1
+
+	PHA
+
+	LDA 5,S ; get value address position
+	ASL
+	ASL
+	ASL
+	TAY
+
+	RTS ; call routine
+
+.return
+	REP #$31
+	PLY
+
+	PLA ; next row
+	ADC.w #$0040
+
+	INY
+	INY
+	CPY.w #6
+	BCC .next_counter
+
+;===================================================================================================
 hud_draw_input_display:
-	LDA !ram_input_display
+	LDA.w !ram_input_display
 	AND #$0003
 	ASL : TAX
-	LDA !ram_ctrl1
 
-	JSR (.options, X)
+	LDA.b SA1IRAM.CONTROLLER_1
+	XBA
 
-;-----------------------------------------------------------------
-; Other
-;-----------------------------------------------------------------
-draw_quickwarp: ; cycle controlled
-	SEP #$30 ; M=8 for just this is few cycles faster
-	LDA !ram_qw_toggle : LSR ; shift toggle into carry
-	LDA $E2 : AND #$06 ; this tests the bits for camera
-	ORA $1B ; make QW only display in overworld, where $1B = 0
-	ROL ; roll carry flag into bottom bit
-	; if we're on a quick warp on the overworld
-	; then we'll have $0D
-	; if the camera matches but we're in the underworld
-	; then we'll have $0F, and it will fail
-	CMP #$0D ; 6 shifted left once and with a carry flag in bottom bit
-	REP #$20 ; faster because it removes an AND #$00FF to get rid of leakage
+	JSR (.options,X)
 
-	BEQ .qw
+;===================================================================================================
+; clean up the stuff right under items
+	REP #$30
+	LDA.w #$207F
+	STA.w SA1RAM.HUD+$10A
+	STA.w SA1RAM.HUD+$10C
+	STA.w SA1RAM.HUD+$10E
 
-.notqw
-	LDA #!EMPTY ; 3
-	STA $7EC80A ; 6
-	STA $7EC80C ; 6
-	; this will always be non zero, so we get an extra cycle for branch taken
-	BNE ++ ; 3
-	; 18 cycles total
+	LDA.b SA1IRAM.CopyOf_1B
+	LSR
+	BCC draw_quickwarp
 
-.qw ; 1 for branch
-	LDA #$340C ; 3
-	STA $7EC80A ; 6
-	INC ; 2
-	STA $7EC80C ; 6
-	; 18 cycles total
+draw_lanmo_cycles:
+	LDA.w !ram_toggle_boss_cycles
+	LSR
+	BCC .skip
 
-++	; Naked label. Avert your eyes.
+	LDA.b SA1IRAM.CopyOf_A0
+	CMP.w #$0033
+	BNE .skip
 
-;-----------------------------------------------------------------
-;-----------------------------------------------------------------
-; END OF CYCLE CONTROLLED EXTRAS
-;-----------------------------------------------------------------
-;-----------------------------------------------------------------
+	LDX.w #$0002
+	LDY.w #$0004
 
-extra_ram:
-	LDA !ram_extra_ram_watch : BEQ .nowatch
-	LDA #$0001 : %update_counter_line()
-	CPX.w #(5<<6+$2E) : BCS .nowatch ; line 6 is too many
-	LDA !ram_extra_ram_watch : ASL : TAY
-	LDA extra_ram_watch_routines, Y
-	PEA.w .return-1 ; so we can RTS back
-	PHA ; push the location of the routine
-	RTS
-.return
+.nextlanmo
+	LDA.b SA1IRAM.LanmoCycles,X
+	AND.w #$00FF
+	ORA.w #$2010
+	STA.w SA1RAM.HUD+$10A,Y
+	DEY
+	DEY
+	DEX
+	BPL .nextlanmo
 
-.nowatch ; Oh no! The nudists are everywhere
+	BRA .skip
+
+;===================================================================================================
+#draw_quickwarp:
+	SEP #$30
+	LDA.w !ram_qw_toggle
+	EOR.b #$01
+	ORA.b SA1IRAM.CopyOf_1B
+	BNE .skip
+
+	LDA.b SA1IRAM.CopyOf_E2 : AND #$06 : CMP #$06
+
+	REP #$30 : PHP
+
+	LDA.w #$300C
+
+	PLP : BNE .not_qw
+
+	ORA.w #$3800
+
+.not_qw
+	STA.w SA1RAM.HUD+$10A
+	INC
+	STA.w SA1RAM.HUD+$10C
+
+.skip
+draw_floor:
+	SEP #$20
+	LDA.b SA1IRAM.CopyOf_1B
+	LSR
+	LDA.b SA1IRAM.CopyOf_04A0
+	REP #$20
+	BEQ .skip
+	BCC .skip
+
+	LDA.w #$251E
+	STA.w SA1RAM.HUD+$A8
+	INC
+	STA.w SA1RAM.HUD+$EA
+	INC
+	STA.w SA1RAM.HUD+$E8
+	LDA.w #$250F
+	STA.w SA1RAM.HUD+$AA
+
+	LDY.w #0
+	LDA.b SA1IRAM.CopyOf_A4
+	BIT.w #$0080
+	BNE .drawem_flip
+
+	AND.w #$00FF
+	BRA .drawem
+
+.drawem_flip
+	INY
+	INY
+	ORA.w #$FF00
+	EOR.w #$FFFF
+
+.drawem
+	ASL
+	TAX
+	LDA.l $0AFD00,X
+	STA.w SA1RAM.HUD+$A8,Y
+	LDA.l $0AFD16,X
+	STA.w SA1RAM.HUD+$E8,Y
+
+.skip
+draw_timer:
+	LDA.b SA1IRAM.CopyOf_04B4
+	AND.w #$00FF
+	BIT.w #$0080
+	BNE .skip
+
+	JSR hex_to_dec_fast
+
+	LDA.b SA1IRAM.SCRATCH+4
+	BNE ++
+	LDA.w #10
+
+++	ASL
+	TAX
+	LDA.l $0AFD00-2,X
+	STA.w SA1RAM.HUD+$AA
+	LDA.l $0AFD16-2,X
+	STA.w SA1RAM.HUD+$EA
+
+
+	LDA.b SA1IRAM.SCRATCH+2
+	BEQ .skip
+	ASL
+	TAX
+	LDA.l $0AFD00-2,X
+	STA.w SA1RAM.HUD+$E8
+	LDA.l $0AFD16-3,X
+	STA.w SA1RAM.HUD+$E8
+
+.skip
+;===================================================================================================
 done_extras:
 	PLB : PLP
 	RTL
 
-macro add_input_character_a(pos, topbottom)
-++	INY ; next character
-	%add_input_character_afirst(<pos>, <topbottom>)
-endmacro
+;===================================================================================================
+draw_hearts_options:
+	dw .practicehack
+	dw .vanilla
 
-macro add_input_character_afirst(pos, topbottom)
-	LSR ; shift bit into carry
-	; cycle control here
-	BCS ?inputheld
+.practicehack
+	SEP #$21
+	LDA.b SA1IRAM.CopyOf_7EF36C
+	SBC.b SA1IRAM.CopyOf_7EF36D
+	CMP.b #$04
 
-?inputnotheld:
-	STX.w (!POS_MEM_INPUT_DISPLAY_<topbottom>)+<pos> ; 5
-	NOP ; 2
-	BRA ++ ; 2
-	; 9 cycles total
+	REP #$30
+	LDA.w #$24A0
+	ADC.w #$0000
+	STA.w SA1RAM.HUD+$90
 
-?inputheld: ; 1 for branch taken
-	STY.w (!POS_MEM_INPUT_DISPLAY_<topbottom>)+<pos> ; 5
-	REP #$00 ; 3
-	; 9 cycles total
-endmacro
+	LDA.b SA1IRAM.CopyOf_7EF36D
+	AND.w #$00FF
+	LSR
+	LSR
+	LSR
+	JSR hex_to_dec_fast
 
-; this one goes backwards, since the bottom nibble is all 0
-macro add_input_character_b(pos, topbottom)
-++	INY ; next character
-	ASL ; shift bit into carry
-	; cycle control here
-	BCS ?inputheld
+	LDA.b SA1IRAM.SCRATCH+2
+	ORA #$3C90
+	STA.w SA1RAM.HUD+$92
 
-?inputnotheld:
-	STX.w !POS_MEM_INPUT_DISPLAY_<topbottom>+<pos> ; 5
-	NOP ; 2
-	BRA ++ ; 2
-	; 9 cycles total
+	LDA.b SA1IRAM.SCRATCH+4
+	ORA #$3C90
+	STA.w SA1RAM.HUD+$94
 
-?inputheld: ; 1 for branch taken
-	STY.w !POS_MEM_INPUT_DISPLAY_<topbottom>+<pos> ; 5
-	REP #$00 ; 3
-	; 9 cycles total
-endmacro
+	LDA.b SA1IRAM.CopyOf_7EF36D
+	AND.w #$0007
+	ORA.w #$3490
+	STA.w SA1RAM.HUD+$96
 
+	JSR GetHeartLagTile
+	STA.w SA1RAM.HUD+$98
+
+	; containers
+	LDA.w #$24A2
+	STA.w SA1RAM.HUD+$9A
+
+	LDA.b SA1IRAM.CopyOf_7EF36C
+	AND.w #$00FF
+	LSR
+	LSR
+	LSR
+	JSR hex_to_dec_fast
+
+	LDA.b SA1IRAM.SCRATCH+2
+	ORA #$3C90
+	STA.w SA1RAM.HUD+$9C
+
+	LDA.b SA1IRAM.SCRATCH+4
+	ORA #$3C90
+	STA.w SA1RAM.HUD+$9E
+
+	RTS
+
+;------------------------------------------------------------------------------
+
+.vanilla
+	REP #$20
+	; --LIFE--
+	LDA.w #$288B
+	STA.w SA1RAM.HUD+$02C
+	LDA.w #$288F
+	STA.w SA1RAM.HUD+$02E
+	LDA.w #$24AB
+	STA.w SA1RAM.HUD+$030
+	LDA.w #$24AC
+	STA.w SA1RAM.HUD+$032
+	LDA.w #$688F
+	STA.w SA1RAM.HUD+$034
+	LDA.w #$688B
+	STA.w SA1RAM.HUD+$036
+
+	JSR GetHeartLagTile
+	STA.w SA1RAM.HUD+$02A
+
+	LDA.b SA1IRAM.CopyOf_7EF36C
+	LSR
+	LSR
+	LSR
+	AND.w #$1F1F ; shift both right at once
+	SEP #$10
+	TAX ; X has max health
+	XBA
+	TAY ; Y has current health
+
+	LDA.w #SA1RAM.HUD+$068
+	STA.b SA1IRAM.SCRATCH+0
+	STA.b SA1IRAM.SCRATCH+2
+
+..next_filled_heart
+	CPX.b #1 ; do we have at least 1 HP?
+	BMI ..done_hearts
+
+	CPY.b #1
+	BMI ..do_max_health
+
+	LDA.w #$24A0
+	BRA ..add_heart
+
+..do_max_health
+	LDA.w #$24A2
+
+..add_heart
+	STA.b (SA1IRAM.SCRATCH+0)
+
+	DEY
+	DEX
+
+	LDA.b SA1IRAM.SCRATCH+0
+	INC
+	INC
+	CMP.w #SA1RAM.HUD+$07C
+	BEQ ..nextrow
+	CMP.w #SA1RAM.HUD+$0BC
+	BNE ..fine
+
+..nextrow
+	ADC.w #$002B ; +1 carry +2 from inc
+
+..fine
+	STA.b SA1IRAM.SCRATCH+0
+	CPY.b #1 ; save pointer when we have 0 hearts left to add
+	BNE ..skip_save
+
+	STA.b SA1IRAM.SCRATCH+2
+
+..skip_save
+
+	BRA ..next_filled_heart
+
+..done_hearts
+	LDA.b SA1IRAM.CopyOf_7EF36D
+	AND.w #$0007
+	BEQ ..skip_partial
+
+	CMP.w #$0005
+	LDA.w #$24A0
+	BCS ..more_than_half
+
+	INC ; 1-4 means half heart
+
+..more_than_half
+	STA.b (SA1IRAM.SCRATCH+2)
+
+..skip_partial
+	SEP #$20
+	LDA.b SA1IRAM.Moved_020A
+	BEQ ..done
+
+	; heart refill animation
+	LDA.b SA1IRAM.Moved_0209
+	ASL
+	TAX
+	REP #$20
+	LDA.l $0DFA29,X
+	STA.b (SA1IRAM.SCRATCH+2)
+
+..done
+	RTS
+
+GetHeartLagTile:
+	LDA.w !ram_heartlag_spinner
+	BNE .doheartlag
+
+	LDA.w #$207F
+	RTS
+
+.doheartlag
+	LDA.b SA1IRAM.CopyOf_1A
+	AND.w #$000C
+	LSR
+	LSR
+	; Desired results:
+	; 00  ->  00
+	; 01  ->  01
+	; 10  ->  11
+	; 11  ->  10
+	; b0 = b1 ^ b0
+	; b1 = b1
+
+	LSR ; put b1 in b0
+	STA.b SA1IRAM.SCRATCH+0
+	ROL ; back to normal
+
+	EOR.b SA1IRAM.SCRATCH+0 ; b0 ^ b1
+	ROR ; get to bits 14 and 15
+	ROR
+	ROR
+
+	ORA.w #$253F
+	RTS
+
+; wrap at 7a
 hud_draw_input_display_options:
 	dw .off
 	dw .cool
-	dw .lame
-	dw .off
+	dw .classic
+	dw .classicgray
 
 .off
-	STA $72
-	AND #$000F : ORA #$2D70 : LDA !POS_MEM_INPUT_DISPLAY_BOT+2
-	SEP #$30
-	LDA $72+0 : AND #$C0 : LSR #5 : STA $74
-	LDA $72+1 : AND #$40 : LSR #3 : ORA $74
-	ASL $73 : ADC #$70 ; a in place
-	REP #$20
-	LDA !POS_MEM_INPUT_DISPLAY_BOT+6
-	LDA $72 : AND #$0030 : LSR #4 : ORA #$2C00
-	LDA !POS_MEM_INPUT_DISPLAY_BOT+4
-	ASL $72 : ASL $72
-	LDA #$2C04 : ADC #$0000 : LDA !POS_MEM_INPUT_DISPLAY_TOP+2
-	ASL $72
-	LDA #$6C04 : ADC #$0000 : LDA !POS_MEM_INPUT_DISPLAY_TOP+6
-	LDA #$2C06 : LDA !POS_MEM_INPUT_DISPLAY_TOP+4
 	RTS
 
 .cool
-	STA $72 ; dpad
-	AND #$000F : ORA #$2D70 : STA !POS_MEM_INPUT_DISPLAY_BOT+2
+	STA.b SA1IRAM.SCRATCH ; dpad
+	AND #$000F : ORA #$2D70 : STA.w SA1RAM.HUD+$66+2
 
 	; need buttons in this order: xbya
 	SEP #$30
-	LDA $72+0 : AND #$C0 : LSR #5 : STA $74 ; b and y in place
-	LDA $72+1 : AND #$40 : LSR #3 : ORA $74 ; ; x in place
+	LDA.b SA1IRAM.SCRATCH+0 : AND #$C0 : LSR #5 : STA.b SA1IRAM.SCRATCH+2 ; b and y in place
+	LDA.b SA1IRAM.SCRATCH+1 : AND #$40 : LSR #3 : ORA.b SA1IRAM.SCRATCH+2 ; ; x in place
 	; this ASL takes care of one for figuring out LR inputs
-	ASL $73 : ADC #$70 ; a in place
+	ASL.b SA1IRAM.SCRATCH+1 : ADC #$70 ; a in place
 
 	; #$70 is the character offset we want
 	; top byte contains $29 from doing dpad, which is what we want
 	REP #$20
-	STA !POS_MEM_INPUT_DISPLAY_BOT+6
+	STA.w SA1RAM.HUD+$66+6
 
 	; start and select
-	LDA $72 : AND #$0030 : LSR #4 : ORA #$2C00
-	STA !POS_MEM_INPUT_DISPLAY_BOT+4
+	LDA.b SA1IRAM.SCRATCH : AND #$0030 : LSR #4 : ORA #$2C00
+	STA.w SA1RAM.HUD+$66+4
 
 	; L and R
-	ASL $72 : ASL $72 ; L into carry and remember where R is
-	LDA #$2C04 : ADC #$0000 : STA !POS_MEM_INPUT_DISPLAY_TOP+2
+	ASL.b SA1IRAM.SCRATCH : ASL.b SA1IRAM.SCRATCH ; L into carry and remember where R is
+	LDA #$2C04 : ADC #$0000 : STA.w SA1RAM.HUD+$26+2
 
-	ASL $72 ; R into carry
-	LDA #$6C04 : ADC #$0000 : STA !POS_MEM_INPUT_DISPLAY_TOP+6
+	ASL.b SA1IRAM.SCRATCH ; R into carry
+	LDA #$6C04 : ADC #$0000 : STA.w SA1RAM.HUD+$26+6
 
-	LDA #$2C06 : STA  !POS_MEM_INPUT_DISPLAY_TOP+4
-	; old input display was 206 cycles
-	; new is 133ish?
+	LDA #$2C06 : STA.w SA1RAM.HUD+$26+4
 	RTS
 
-.lame
-	SEP #$20
-	REP #$10
-	; basically: this bank | bank $7E
-	PEA.w ((hud_draw_input_display>>8)&$FF00)|$807E
-	PLB ; proper bank
-
+.classic
+	REP #$30
 	; Y will hold the current input character
-	LDY.w #$2400
+	STA.b SA1IRAM.SCRATCH+0
+	XBA
+	LSR
+	LSR
+	LSR
+	LSR
+	STA.b SA1IRAM.SCRATCH+1 ; for high byte
 
-	LDX.w #!EMPTY ; X will hold the empty character always
+	LDX.w #$0000
 
-	; order: rlduSsYB....RLXA
-	; Starting with the low byte
+..next_button
+	LDY.w .classic_locations,X
+	LSR.b SA1IRAM.SCRATCH
+	BCC ..nopress
 
-	; special macro to not increment Y
-	%add_input_character_afirst(4, "BOT") ; dpad right
-	%add_input_character_a(0, "BOT") ; dpad left
-	%add_input_character_a(2, "BOT") ; dpad down
-	%add_input_character_a(2, "TOP") ; dpad up
+..press
+	TXA
+	LSR
+	ORA.w #$2400
+	STA.w SA1RAM.HUD,Y
 
-	%add_input_character_a(10, "BOT") ; start
-	%add_input_character_a(10, "TOP") ; select
-	%add_input_character_a(6, "TOP") ; Y
-	%add_input_character_a(6, "BOT") ; B
+..nopress
+	INX
+	INX
+	CPX.w #23
+	BCC ..next_button
 
-++	XBA ; switch to high byte
-	%add_input_character_b(8, "BOT") ; A
-	%add_input_character_b(8, "TOP") ; X
-	%add_input_character_b(0, "TOP") ; L shoulder
-	%add_input_character_b(4, "TOP") ; R shoulder
-
-++	PLB ; get this bank back
 	RTS
 
-extra_ram_watch_routines:
-	dw .nothing-1
-	dw .subpixels-1
-	dw .spooky-1
-	dw .arc-1
-	dw .icebreaker-1
 
-.icebreaker
-	LDA $6C : AND #$00FF : BEQ ..nodoor
-	LDA.w #$216A : BRA ++
+.classicgray
+	REP #$30
+	; Y will hold the current input character
+	STA.b SA1IRAM.SCRATCH+0
+	XBA
+	LSR
+	LSR
+	LSR
+	LSR
+	STA.b SA1IRAM.SCRATCH+1 ; for high byte
 
-..nodoor
+	LDX.w #$0000
+
+..next_button
+	LDY.w .classic_locations,X
+	TXA
+	LSR
+
+	LSR.b SA1IRAM.SCRATCH
+	BCC ..nopress
+
+..press
+	ORA.w #$2400
+	BRA ..addchr
+
+..nopress
+	ORA.w #$3000
+
+..addchr
+	STA.w SA1RAM.HUD,Y
+	INX
+	INX
+	CPX.w #23
+	BCC ..next_button
+
+	RTS
+
+.classic_locations
+	dw $68+4  ; dpad right
+	dw $68+0  ; dpad left
+	dw $68+2  ; dpad down
+	dw $28+2  ; dpad up
+
+	dw $68+10 ; start
+	dw $28+10 ; select
+	dw $28+6  ; Y
+	dw $68+6  ; B
+
+	dw $28+4  ; R shoulder
+	dw $28+0  ; L shoulder
+	dw $28+8  ; X
+	dw $68+8  ; A
+
+;===================================================================================================
+
+DrawCoordinates:
+	PHY ; y coordinate first as it's right-to-left
+	LDA.w #!yellow
+	STA.b SA1IRAM.SCRATCH+10
+	LDA.b SA1IRAM.CopyOf_20
+	JSR DrawHex
+
+	PLY ; x coordinate after
+	LDA.w #!white
+	STA.b SA1IRAM.SCRATCH+10
+	LDA.b SA1IRAM.CopyOf_22
+	BRA DrawHex
+
+DrawHex_next_digit:
+	LSR
+	LSR
+	LSR
+	LSR
+
+DrawHex:
+.draw_n_digits
+	PHA ; remember coordinates
+	AND.w #$000F ; get digit
+	ORA.b SA1IRAM.SCRATCH+10 ; add in color
+	STA.w SA1RAM.HUD+14,X
+	PLA ; recover value
+	DEX
+	DEX
+	DEY
+	BNE .next_digit
+	RTS
+
+.white
+	PHA
+	LDA.w #!white
+	BRA .start
+
+.yellow
+	PHA
+	LDA.w #!yellow
+	BRA .start
+
+.gray
+	PHA
+	LDA.w #!gray
+	BRA .start
+
+.red
+	PHA
+	LDA.w #!red
+	BRA .start
+
+.start
+	STA.b SA1IRAM.SCRATCH+10
+	PLA
+	BRA DrawHex
+
+
+DrawHEXForward:
+	PHA
+	BRA .start
+
+.white
+	PHA
+	LDA.w #!white
+	BRA .set_color
+
+.yellow
+	PHA
+	LDA.w #!yellow
+	BRA .set_color
+
+.gray
+	PHA
+	LDA.w #!gray
+	BRA .set_color
+
+.red
+	PHA
+	LDA.w #!red
+	BRA .set_color
+
+.set_color
+	STA.b SA1IRAM.SCRATCH+10
+
+.start
+	PHX ; save X
+	TYA ; get offset for Y
+	ASL
+	ADC 1,S ; get X offset
+
+	PLX ; kill the X we pushed
+	SEC
+	SBC.w #16 ; to account for DrawHEX offset
+	TAX ; after our last digit
+	PLA ; get val back
+
+	PHX ; save new position
+	JSR DrawHex
+
+	PLA
+	CLC
+	ADC.w #16
+	TAX
+
+	RTS
+
+DrawHEX2ForwardSaveY:
+	PHY
+	LDY.w #2
+	JSR DrawHEXForward
+	PLY
+	RTS
+
+.white
+	PHY
+	LDY.w #2
+	JSR DrawHEXForward_white
+	PLY
+	RTS
+
+.yellow
+	PHY
+	LDY.w #2
+	JSR DrawHEXForward_yellow
+	PLY
+	RTS
+
+.red
+	PHY
+	LDY.w #2
+	JSR DrawHEXForward_red
+	PLY
+	RTS
+
+.gray
+	PHY
+	LDY.w #2
+	JSR DrawHEXForward_gray
+	PLY
+	RTS
+
+DrawHEX4ForwardSaveY:
+	PHY
+	LDY.w #4
+	JSR DrawHEXForward
+	PLY
+	RTS
+
+.white
+	PHY
+	LDY.w #4
+	JSR DrawHEXForward_white
+	PLY
+	RTS
+
+.yellow
+	PHY
+	LDY.w #4
+	JSR DrawHEXForward_yellow
+	PLY
+	RTS
+
+.red
+	PHY
+	LDY.w #4
+	JSR DrawHEXForward_red
+	PLY
+	RTS
+
+.gray
+	PHY
+	LDY.w #4
+	JSR DrawHEXForward_gray
+	PLY
+	RTS
+
+;===================================================================================================
+; Various counters
+;===================================================================================================
+counter_routines:
+	dw counter_nothing
+	dw counter_room
+	dw counter_lag
+	dw counter_idle
+	dw counter_segment
+	dw counter_coords
+	dw counter_subpixels
+	dw counter_roomid
+	dw counter_quadrant
+	dw counter_screenid
+	dw counter_tile
+	dw counter_spooky
+	dw counter_arcvar
+	dw counter_westsom
+	dw counter_index
+	dw counter_hookslot
+	dw counter_pit
+	dw counter_bosshp
+	dw counter_hover
+
+;===================================================================================================
+
+counter_nothing:
+	RTS
+
+;---------------------------------------------------------------------------------------------------
+
+counter_room:
+	LDY.w #!yellow ; color
+	LDA.w #SA1IRAM.ROOM_TIME_F_DISPLAY ; address
+	JSR Draw_all_two
+
+	DEX ; down 4
+	DEX
+	DEX
+	DEX
+	LDY.w #!white ; color
+	LDA.w #SA1IRAM.ROOM_TIME_S_DISPLAY ; address
+	JMP Draw_short_three
+
+;---------------------------------------------------------------------------------------------------
+
+counter_lag:
+	LDY.w #!red ; color
+	LDA.w #SA1IRAM.ROOM_TIME_LAG_DISPLAY ; address
+	JMP Draw_short_three
+
+;---------------------------------------------------------------------------------------------------
+
+counter_idle:
+	LDY.w #!white
+	LDA.w #SA1IRAM.ROOM_TIME_IDLE_DISPLAY
+	JMP Draw_short_three
+
+;---------------------------------------------------------------------------------------------------
+
+counter_segment:
+	LDY.w #!gray
+	LDA.w #SA1IRAM.SEG_TIME_F_DISPLAY
+	JSR Draw_all_two
+
+	DEX
+	DEX
+	DEX
+	DEX
+	LDY.w #!yellow
+	LDA.w #SA1IRAM.SEG_TIME_S_DISPLAY
+	JSR Draw_all_two
+
+	DEX
+	DEX
+	DEX
+	DEX
+	LDY.w #!white
+	LDA.w #SA1IRAM.SEG_TIME_M_DISPLAY
+	JMP Draw_short_three
+
+;---------------------------------------------------------------------------------------------------
+
+counter_coords:
+	LDY.w #4
+	JMP DrawCoordinates
+
+;---------------------------------------------------------------------------------------------------
+
+counter_subpixels:
+	PHA
+	AND.w #$00FF
+	LDY.w #2
+	JSR DrawHex_yellow
+
+	PLA
+	XBA
+	AND.w #$00FF
+	LDY.w #2
+	JSR DrawHex_white
+
+	LDA.b SA1IRAM.CopyOf_6C : AND #$00FF : BEQ .nodoor
+	LDA.w #$216A : BRA .drawdoor
+
+.nodoor
 	LDA.w #!EMPTY
 
-++	STA !HUD_EXTRAS_BUFFER+06, X
-
-.subpixels
-	; can't macro this, since 1 byte addresses
-; first digit
-	LDA $2A : AND #$000F
-	ORA.w #!yellow
-	STA !HUD_EXTRAS_BUFFER+14, X
-
-; second digit
-	LDA $2A : AND #$00F0 : LSR #4
-	ORA.w #!yellow
-	STA !HUD_EXTRAS_BUFFER+12, X
-
-; first digit
-	LDA $2B : AND #$000F
-	ORA.w #!white
-	STA !HUD_EXTRAS_BUFFER+10, X
-
-; second digit
-	LDA $2B : AND #$00F0 : LSR #4
-	ORA.w #!white
-	STA !HUD_EXTRAS_BUFFER+08, X
-
-.nothing
+.drawdoor
+	STA.w SA1RAM.HUD+14,X
 	RTS
 
-.spooky
-; first digit
-	LDA $02A2 : AND #$000F
-	ORA.w #!white
-	STA !HUD_EXTRAS_BUFFER+14, X
+;---------------------------------------------------------------------------------------------------
 
-; second digit
-	LDA $02A2 : AND #$00F0 : LSR #4
-	ORA.w #!white
-	STA !HUD_EXTRAS_BUFFER+12, X
+counter_roomid:
+	; calculate correct room id first
+	LDA.b SA1IRAM.CopyOf_21 : AND.w #$00FE
+	ASL : ASL : ASL
+	STA.b SA1IRAM.SCRATCH+14
+
+	LDA.b SA1IRAM.CopyOf_23 : AND #$00FE : LSR ; bit 0 is off, so it clears carry
+	ADC.b SA1IRAM.SCRATCH+14 : STA.b SA1IRAM.SCRATCH+14
+
+	LDA.b SA1IRAM.CopyOf_1B
+	AND.w #$00FF
+	BEQ .overworld
+
+	LDA.b SA1IRAM.SCRATCH+14
+	CMP.b SA1IRAM.CopyOf_A0
+	BNE .desync
+
+.sync
+	PEA.w !SYNCED
+	LDA.w #!gray
+	BRA .draw
+
+.desync
+	PEA.w !DESYNC
+	LDA.w #!red
+	BRA .draw
+
+.overworld
+	PEA.w char($11)|!GRAY_PAL
+
+	LDA.w #$608B
+	STA.w SA1RAM.HUD+14,X
+	STA.w SA1RAM.HUD+12,X
+	STA.w SA1RAM.HUD+10,X
+
+	TXA
+	SEC
+	SBC.w #$0006
+	TAX
+	BRA ++
+
+.draw
+	STA.b SA1IRAM.SCRATCH+10
+
+	LDA.b SA1IRAM.SCRATCH+14
+	LDY.w #3
+	JSR DrawHex
+
+++	PLA
+	STA.w SA1RAM.HUD+14,X
+	DEX
+	DEX
+
+	LDY.w #3
+	LDA.b SA1IRAM.CopyOf_A0
+	JMP DrawHex_white
+
+;---------------------------------------------------------------------------------------------------
+
+counter_screenid:
+	STA.b SA1IRAM.SCRATCH+4
+
+	LDA.b SA1IRAM.CopyOf_1B
+	AND.w #$00FF
+	BNE NoDisplayCounter
+
+	LDA.b SA1IRAM.CopyOf_20
+	AND.w #$1E00
+	ASL A
+	ASL A
+	ASL A
+	STA.b SA1IRAM.SCRATCH+12
+
+	LDA.b SA1IRAM.CopyOf_22
+	AND.w #$1E00
+	ORA.b SA1IRAM.SCRATCH+12
+
+	XBA
+	LSR
+
+	PHX
+
+	TAX
+
+	LDA.b SA1IRAM.CopyOf_20 : ORA.b SA1IRAM.CopyOf_22
+	CMP.w #$1000
+
+	LDA.l $02A4E3,X
+	PLX
+
+	AND.w #$00FF
+	ORA.b SA1IRAM.CopyOf_7EF3CA
+
+	STA.b SA1IRAM.SCRATCH+6
+	BCS .way_off_screen
+
+	CMP.b SA1IRAM.SCRATCH+4
+	BNE .wrong
+
+.match
+	PEA.w !SYNCED
+	LDA.w #!gray
+	BRA .draw
+
+.wrong
+.way_off_screen
+	PEA.w !DESYNC
+	LDA.w #!red
+
+.draw
+	STA.b SA1IRAM.SCRATCH+10
+
+	LDA.b SA1IRAM.SCRATCH+6
+	LDY.w #2
+	JSR DrawHex
+
+	PLA
+	STA.w SA1RAM.HUD+14,X
+	DEX
+	DEX
+
+	LDY.w #2
+	LDA.b SA1IRAM.SCRATCH+4
+	JMP DrawHex_white
+
+;---------------------------------------------------------------------------------------------------
+
+counter_pit:
+	TAY
+
+	LDA.b SA1IRAM.CopyOf_1B
+	AND.w #$00FF
+	BEQ NoDisplayCounter
+
+	TYA
+
+	AND.w #$00FF
+	LDY.w #2
+	JSR DrawHex_white
+
+	PHX
+	LDX.b SA1IRAM.CopyOf_A0
+	LDA.l RoomHasPitDamage,X
+	PLX
+
+	LSR
+	BCS .pitdamage
+
+.warphole
+	LDA.w #char($16)|!GRAY_PAL
+	BRA .drawflag
+
+.pitdamage
+	LDA.w #char($16)|!YELLOW_PAL
+
+.drawflag
+	STA.w SA1RAM.HUD+14,X
 	RTS
 
-.arc
-	LDA $0B08 : TAY
+;---------------------------------------------------------------------------------------------------
 
-; fourth digit
-	AND #$000F
-	ORA.w #!white
-	STA !HUD_EXTRAS_BUFFER+14, X
+NoDisplayCounter:
+	LDA.w #$608B : STA.w SA1RAM.HUD+12,X
+	STA.w SA1RAM.HUD+14,X
+	RTS
 
-; third digit
-	TYA : AND #$00F0 : LSR #4
-	ORA.w #!white
-	STA !HUD_EXTRAS_BUFFER+12, X
+counter_tile:
+	AND.w #$00FF
+	TAY
 
-; second digit
-	TYA : XBA : AND #$000F
-	ORA.w #!white
-	STA !HUD_EXTRAS_BUFFER+10, X
+	LDA.b SA1IRAM.CopyOf_1B
+	AND.w #$00FF
+	BEQ NoDisplayCounter
 
-; first digit
-	TYA : XBA : AND #$00F0 : LSR #4
-	ORA.w #!white
-	STA !HUD_EXTRAS_BUFFER+8, X
+	TYA
+	LDY.w #2
+	JMP DrawHex_white
+
+;---------------------------------------------------------------------------------------------------
+
+counter_quadrant:
+	TAY
+
+	LDA.b SA1IRAM.CopyOf_1B
+	AND.w #$00FF
+	BEQ NoDisplayCounter
+
+	TYA
+	LSR
+	BCS .east
+	; $AA is 0 or 2, and will be the only bit remaining, no matter what
+
+.west
+	BEQ .northwest
+
+.southwest
+	LDY.w #2
+	LDA.w #char(5+2)|!RED_PAL
+	BRA .doQuadrant
+
+.northwest
+	LDY.w #3
+	LDA.w #char(5+3)|!RED_PAL
+	BRA .doQuadrant
+
+.east
+	BEQ .northeast
+
+.southeast
+	LDY.w #1
+	LDA.w #char(5+1)|!RED_PAL
+	BRA .doQuadrant
+
+.northeast
+	LDY.w #0
+	LDA.w #char(5+0)|!RED_PAL
+
+.doQuadrant
+	STY.b SA1IRAM.SCRATCH+14
+
+	STA.w SA1RAM.HUD+10,X
+
+.calc_correct_quadrant
+	LDA.w #$0100 ; checking the same bit on both coordinates
+
+	BIT.b SA1IRAM.CopyOf_22 : BNE ..east
+
+..west
+	BIT.b SA1IRAM.CopyOf_20 : BEQ ..northwest
+
+	; using the gray pal means we only need to ORA if desynched
+	; and can leave it alone otherwise
+..southwest
+	LDY.w #2
+	LDA.w #char(5+2)|!GRAY_PAL
+	BRA .drawQuadrant
+
+..northwest
+	LDY.w #3
+	LDA.w #char(5+3)|!GRAY_PAL
+	BRA .drawQuadrant
+
+..east
+	BIT.b SA1IRAM.CopyOf_20 : BEQ ..northeast
+
+..southeast
+	LDY.w #1
+	LDA.w #char(5+1)|!GRAY_PAL
+	BRA .drawQuadrant
+
+..northeast
+	LDY.w #0
+	LDA.w #char(5+0)|!GRAY_PAL
+
+.drawQuadrant
+	CPY.b SA1IRAM.SCRATCH+14
+	BEQ .sync
+
+.desync
+	ORA.w #!TEXT_PAL
+	STA.w SA1RAM.HUD+14,X
+
+	LDA.w #!DESYNC
+	BRA .drawSync
+
+.sync
+	STA.w SA1RAM.HUD+14,X
+	LDA.w #!SYNCED
+
+.drawSync
+	STA.w SA1RAM.HUD+12,X
+	RTS
+
+;---------------------------------------------------------------------------------------------------
+
+counter_bosshp:
+counter_index:
+counter_spooky:
+counter_hookslot:
+	AND.w #$00FF
+	LDY.w #2
+	JMP DrawHex_white
+
+;---------------------------------------------------------------------------------------------------
+
+counter_arcvar:
+	LDY.w #4
+	JMP DrawHex_white
+
+;---------------------------------------------------------------------------------------------------
+
+counter_westsom:
+	LDY.w #4
+	CMP.w #$0010
+	BCS .bad
+
+.good
+	JMP DrawHex_gray
+
+.bad
+	JMP DrawHex_red
+
+;---------------------------------------------------------------------------------------------------
+
+counter_hover:
+	AND.w #$00FF
+
+	CMP.w #$0000
+	BEQ ++
+
+	; carry guaranteed to be set since CMP #0
+	PHA
+	LDA.w #$001E
+	SBC 1,S
+	PLY
+
+	PHX
+	JSR hex_to_dec_fast
+	PLX
+
+	LDA.b SA1IRAM.SCRATCH+2
+	ASL
+	ASL
+	ASL
+	ASL
+	ORA.b SA1IRAM.SCRATCH+4
+
+++	STA.b SA1IRAM.SCRATCH
+
+	LDY.w #!white
+	LDA.w #SA1IRAM.SCRATCH
+	JMP Draw_short_two
+
+;===================================================================================================
+; full line counters
+;===================================================================================================
+linecounter_routines:
+	dw linecounter_nothing
+	dw linecounter_roomdata
+	dw linecounter_camerax
+	dw linecounter_cameray
+	dw linecounter_owtranx
+	dw linecounter_owtrany
+	dw linecounter_ancilla04
+	dw linecounter_ancilla59
+	dw linecounter_ancillaIX
+	dw linecounter_nothing
+	dw linecounter_nothing
+
+;===================================================================================================
+
+linecounter_nothing:
+	RTS
+
+;===================================================================================================
+
+linecounter_roomdata:
+	LDA.w SA1IRAM.LINEVAL+1,Y : AND.w #$0FFF : STA.b SA1IRAM.SCRATCH+10
+	LDA.w SA1IRAM.LINEVAL-1,Y : AND.w #$F000 : ORA.b SA1IRAM.SCRATCH+10
+
+	; rearrange it into the order we want
+	; Start: dddd qqqq hkcc cccc
+	; End:   hkcc cccc dddd qqqq
+	XBA 
+	STA.b SA1IRAM.SCRATCH+10
+
+	LDA.w #char($19)|!RED_PAL : STA.w SA1RAM.HUD,X ; flag symbol
+
+	LDY.w #0
+
+.next_flag
+	INX
+	INX
+	LDA.w .char,Y
+	ASL.b SA1IRAM.SCRATCH+10
+	BCS .on
+
+.off
+	AND.w #$E3FF
+	ORA.w #!GRAY_PAL
+
+.on
+	STA.w SA1RAM.HUD,X
+	INY
+	INY
+	CPY.w #32
+	BCC .next_flag
+
+	RTS
+
+!CHEST_TILE = char($15)
+!QUAD = char($14)
+!DOOR_TILE = char($1A)
+
+.char
+	dw $20A0|!RED_PAL
+	dw $2071|!YELLOW_PAL
+	dw $2071|!YELLOW_PAL
+	dw !CHEST_TILE|!RED_PAL
+	dw !CHEST_TILE|!RED_PAL
+	dw !CHEST_TILE|!RED_PAL
+	dw !CHEST_TILE|!RED_PAL
+	dw !CHEST_TILE|!RED_PAL
+	dw !DOOR_TILE|!BROWN_PAL
+	dw !DOOR_TILE|!BROWN_PAL
+	dw !DOOR_TILE|!BROWN_PAL
+	dw !DOOR_TILE|!BROWN_PAL
+	dw !QUAD|!HFLIP|!BLUE_PAL
+	dw !QUAD|!RED_PAL
+	dw !QUAD|!HFLIP|!VFLIP|!GREEN_PAL
+	dw !QUAD|!VFLIP|!YELLOW_PAL
+
+;===================================================================================================
+
+linecounter_camerax:
+	LDA.w #char(9)
+	PEA.w !white
+	BRA ++
+
+linecounter_cameray:
+	LDA.w #char(11)
+	PEA.w !yellow
+
+++	STA.b SA1IRAM.SCRATCH+14 ; save the icon
+
+	PLA
+	STA.b SA1IRAM.SCRATCH+10
+	STA.b SA1IRAM.SCRATCH+12
+
+
+	LDA.w #char($13)|!GRAY_PAL ; camera icon
+	STA.w SA1RAM.HUD,X
+	INX
+	INX
+
+	LDA.w SA1IRAM.LINEVAL+1,Y : JSR DrawHEX4ForwardSaveY
+	PHX ; save X for sync icon
+	INX
+	INX
+
+	; check which set to use
+	LDA.w SA1IRAM.LINEVAL+0,Y
+	BIT.w #$0002
+	BNE .set2
+
+	; +3 and +5 which are done first should be color of axis
+.set1
+	LDA.w SA1IRAM.LINEVAL+3,Y
+	STA.b SA1IRAM.SCRATCH+4
+
+	LDA.w SA1IRAM.LINEVAL+5,Y
+	STA.b SA1IRAM.SCRATCH+6
+
+	LDA.b SA1IRAM.SCRATCH+12 
+	PEA.w !gray ; other set is gray
+	BRA .draw
+
+.set2
+	LDA.w SA1IRAM.LINEVAL+7,Y
+	STA.b SA1IRAM.SCRATCH+4
+
+	LDA.w SA1IRAM.LINEVAL+9,Y
+	STA.b SA1IRAM.SCRATCH+6
+
+	PEI.b (SA1IRAM.SCRATCH+12) ; +3 and +5 should have gray
+	LDA.w #!gray 
+
+.draw
+	STA.b SA1IRAM.SCRATCH+10 ; set 1 color
+	PLA
+	STA.b SA1IRAM.SCRATCH+12 ; save set 2 color to here (don't need axis color anymore)
+
+	LDA.w SA1IRAM.LINEVAL+1,Y ; save camera position
+	PHA
+
+	INY ; so we start at the +3
+	JSR .draw1 ; draw first 2 camera values
+
+	INC.b SA1IRAM.SCRATCH+14
+	JSR .draw1
+
+	LDA.b SA1IRAM.SCRATCH+12
+	STA.b SA1IRAM.SCRATCH+10
+
+	DEC.b SA1IRAM.SCRATCH+14
+	JSR .draw1 ; draw first next 2 camera values
+
+	INC.b SA1IRAM.SCRATCH+14
+	JSR .draw1
+
+	PLA ; get camera position
+	PLX ; get HUD position of sync icon
+
+	CMP.b SA1IRAM.SCRATCH+4
+	BCC .desync
+	DEC
+	CMP.b SA1IRAM.SCRATCH+6
+	BCS .desync
+
+.sync
+	LDA.w #!SYNCED
+	BRA .drawsync
+
+.desync
+	LDA.w #!DESYNC
+
+.drawsync
+	STA.w SA1RAM.HUD,X
+	RTS
+
+.draw1
+	INY
+	INY
+	LDA.b SA1IRAM.SCRATCH+10
+	ORA.b SA1IRAM.SCRATCH+14
+	STA.w SA1RAM.HUD,X
+	INX
+	INX
+
+	LDA.w SA1IRAM.LINEVAL,Y
+	JMP DrawHEX4ForwardSaveY
+
+;===================================================================================================
+
+linecounter_owtranx:
+	PEA.w $02A83B
+	PEA.w char(9)|!white
+	LDA.w #$FFFF
+	BRA linecounter_owtran
+
+linecounter_owtrany:
+	PEA.w $02A7BB
+	PEA.w char(11)|!yellow
+	LDA.w #$FFF0
+
+; 1,S - Bank
+; 2,S - table
+linecounter_owtran:
+	STA.b SA1IRAM.SCRATCH+6 ; increment amount
+	PLA : STA.b SA1IRAM.SCRATCH+8 ; icon
+	AND.w #$FC00 : ORA.w #$0010 : STA.b SA1IRAM.SCRATCH+10
+
+	LDA.b SA1IRAM.CopyOf_1B
+	AND.w #$00FF
+	BEQ ++
+
+	; gray if overworld
+	LDA.w #$1C00
+	TRB.b SA1IRAM.SCRATCH+8
+	TRB.b SA1IRAM.SCRATCH+10
+
+	LDA.w #!GRAY_PAL
+	TSB.b SA1IRAM.SCRATCH+8
+	TSB.b SA1IRAM.SCRATCH+10
+
+
+++	PHB
+
+	LDA.b SA1IRAM.CopyOf_20
+	AND.w #$1E00
+	ASL A
+	ASL A
+	ASL A
+	STA.b SA1IRAM.SCRATCH+12
+
+	LDA.b SA1IRAM.CopyOf_22
+	AND.w #$1E00
+	ORA.b SA1IRAM.SCRATCH+12
+	
+	XBA
+	STA.b SA1IRAM.SCRATCH+12
+
+	PEA.w $0202
+	PLB : PLB
+
+;---------------------------------------------------------------------------------------------------
+
+	STZ.b SA1IRAM.SCRATCH+4
+
+	JSR .draw_one
+
+	INC.b SA1IRAM.SCRATCH+8
+
+	LDA.b SA1IRAM.SCRATCH+6 : EOR.w #$FFFF : INC : STA.b SA1IRAM.SCRATCH+6
+	LDA.w $02A77B,Y : AND.w #$00FF : INC : XBA : STA.b SA1IRAM.SCRATCH+4
+
+	INX : INX : INX : INX
+	JSR .draw_one
+
+	PLB
+	PLA
+
+	RTS
+
+.draw_one
+	LDY.b SA1IRAM.SCRATCH+12
+
+	LDA (4,S),Y
+	CLC : ADC.b SA1IRAM.SCRATCH+4
+
+	JSR DrawHEX4ForwardSaveY
+
+	LDA.b SA1IRAM.SCRATCH+8
+	STA.w SA1RAM.HUD,X
+	INX
+	INX
+
+	TYA : AND.w #$00FF : LSR : PHA
+	CLC : ADC.b SA1IRAM.SCRATCH+6
+	AND.w #$00FF
+	TAY
+
+	LDA.w $02A4E3,Y
+	ORA.b SA1IRAM.CopyOf_7EF3CA
+	PLY
+
+	JMP DrawHEX2ForwardSaveY
+
+
+;===================================================================================================
+
+linecounter_ancilla04:
+linecounter_ancilla59:
+linecounter_ancillaIX:
+	LDA.w #5
+	STA.b SA1IRAM.SCRATCH+14
+
+	PHX
+
+	LDX.w SA1IRAM.LINEVAL+8,Y
+	LDA.w .vectors,X
+
+	PLX
+	PHA
+
+	RTS
+
+.vectors
+	dw linecounter_ancilla_id-1
+	dw linecounter_ancilla_y-1
+	dw linecounter_ancilla_x-1
+	dw linecounter_ancilla_altitude-1
+	dw linecounter_ancilla_layer-1
+	dw linecounter_ancilla_itemget-1
+	dw linecounter_ancilla_tile-1
+	dw linecounter_ancilla_egcheck-1
+	dw linecounter_ancilla_direction-1
+	dw linecounter_ancilla_delta_x-1
+	dw linecounter_ancilla_delta_y-1
+
+;---------------------------------------------------------------------------------------------------
+
+linecounter_ancilla_delta_x:
+.next_ancilla
+	INX
+	INX
+
+	SEP #$21
+	LDA.b SA1IRAM.CopyOf_22
+	SBC.w SA1IRAM.LINEVAL,Y
+
+	REP #$20
+	AND.w #$00FF
+	CMP.w #$0002
+	BEQ ++
+	JSR DrawHEX2ForwardSaveY_white
+
+	BRA .continue
+
+++	JSR DrawHEX2ForwardSaveY_gray
+
+.continue
+	INY
+
+	DEC.b SA1IRAM.SCRATCH+14
+	BNE .next_ancilla
+
+	RTS
+
+;---------------------------------------------------------------------------------------------------
+
+linecounter_ancilla_delta_y:
+.next_ancilla
+	INX
+	INX
+
+	SEP #$21
+	LDA.b SA1IRAM.CopyOf_20
+	SBC.w SA1IRAM.LINEVAL,Y
+
+	REP #$20
+	AND.w #$00FF
+	CMP.w #$0002
+	BEQ ++
+
+	JSR DrawHEX2ForwardSaveY_yellow
+
+	BRA .continue
+
+++	JSR DrawHEX2ForwardSaveY_gray
+
+.continue
+	INY
+
+	DEC.b SA1IRAM.SCRATCH+14
+	BNE .next_ancilla
+
+	RTS
+
+
+;---------------------------------------------------------------------------------------------------
+
+linecounter_ancilla_x:
+linecounter_ancilla_itemget:
+linecounter_ancilla_tile:
+linecounter_ancilla_direction:
+linecounter_ancilla_layer:
+linecounter_ancilla_altitude:
+.next_ancilla
+	INX
+	INX
+
+	LDA.w SA1IRAM.LINEVAL,Y
+	JSR DrawHEX2ForwardSaveY_white
+
+.continue
+	INY
+
+	DEC.b SA1IRAM.SCRATCH+14
+	BNE .next_ancilla
+
+	RTS
+
+;---------------------------------------------------------------------------------------------------
+
+linecounter_ancilla_y:
+.next_ancilla
+	INX
+	INX
+
+	LDA.w SA1IRAM.LINEVAL,Y
+	JSR DrawHEX2ForwardSaveY_yellow
+
+.continue
+	INY
+
+	DEC.b SA1IRAM.SCRATCH+14
+	BNE .next_ancilla
+
+	RTS
+
+;---------------------------------------------------------------------------------------------------
+
+linecounter_ancilla_id:
+.next_ancilla
+	INX
+	INX
+
+	LDA.w SA1IRAM.LINEVAL,Y
+	AND.w #$00FF : BEQ .zero
+
+	CMP.w #$0A : BEQ .replace
+	CMP.w #$3C : BEQ .replace
+	CMP.w #$13 : BNE .normal
+
+.replace
+	JSR DrawHEX2ForwardSaveY_red
+	BRA .continue
+
+.zero
+	JSR DrawHEX2ForwardSaveY_gray
+	BRA .continue
+
+.normal
+	JSR DrawHEX2ForwardSaveY_white
+
+.continue
+	INY
+
+	DEC.b SA1IRAM.SCRATCH+14
+	BNE .next_ancilla
+
+	RTS
+
+;---------------------------------------------------------------------------------------------------
+
+linecounter_ancilla_egcheck:
+.next_ancilla
+	INX
+	INX
+
+	LDA.w SA1IRAM.LINEVAL,Y
+	AND.w #$00FF : BEQ .zero
+
+.bad
+	JSR DrawHEX2ForwardSaveY_red
+	BRA .continue
+
+.zero
+	JSR DrawHEX2ForwardSaveY_gray
+
+.continue
+	INY
+
+	DEC.b SA1IRAM.SCRATCH+14
+	BNE .next_ancilla
 
 	RTS

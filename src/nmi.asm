@@ -1,34 +1,108 @@
 pushpc
-;======================================================================================
+;===================================================================================================
 ; Improves the speed of OAM clearing by 2 scanlines; credit: MathOnNapkins
 ; Has no effect on anything
 ; But it gives us consistent improvements to account for practice hack lag
-;======================================================================================
-org $00841E ; ClearOamBuffer
-	PHP : REP #$10
+;===================================================================================================
+org $00805D
+	JML WasteTimeIfNeeded
+
+org $00841E
+	LDA.b $F0 : STA.w SA1IRAM.CopyOf_F0
+	LDA.b $F2 : STA.w SA1IRAM.CopyOf_F2
+	LDA.b $F4 : STA.w SA1IRAM.CopyOf_F4
+	LDA.b $F6 : STA.w SA1IRAM.CopyOf_F6
+
+	LDA.b #$81 ; fire an IRQ to request shortcuts
+	STA.w $2200
+
+	REP #$10
+
+	; 246,16 : 250,18
+	; Vanilla OAM cycles: 4 scanlines - 10
+	;
+	; Improved to: 2 scanlines + 87
+	; SA1 thing is 1 scanline + 69
+	; Waste time check is 38
+	; total is 3 scanlines + 194
+	;
+	; 145 left to waste
+	;
+	; NMI JSL+RTL = ~28 dots
+	; NMI cache = ~44+14+14 dots
+	; so NMI is ~100 dots
+	;
+	; 45 left to waste
+	;
+	; HUD uses ~38 dots
+
+	; set up
+	LDA.b #OAM_Cleaner>>16 : STA.w $4354
+	LDX.w #$8001 : STX.w $4350
+
+	LDA.b #$20
 
 	; first half
-	LDX #$8001 : STX $4300
-	LDX #$0801 : STX $2181 : STZ $2183
-
-	LDX.w #OAM_Cleaner : STX $4302
-	LDA.b #OAM_Cleaner>>16 : STA $4304
-	LDX #$0080 : STX $4305
-	LDA #$01 : STA $420B
+	LDX.w #OAM_Cleaner : STX.w $4352
+	LDX.w #$0801 : STX.w $2181 : STZ.w $2183
+	LDX.w #$0080
+	STX.w $4355
+	STA.w $420B
 
 	; second half
-	LDX.w #OAM_Cleaner : STX $4302
-	LDX #$0901 : STX $2181
-	LDX #$0080 : STX $4305
+	STX.w $4355
+	LDX.w #$0901 : STX.w $2181
+	LDX.w #OAM_Cleaner : STX.w $4352
+	STA.w $420B
 
-	STA $420B
+	BIT.w SA1IRAM.SHORTCUT_USED+1
+	BMI ++
+	SEP #$30
 
-	PLP : RTS
+	RTS
+	; if shortcut was used, exit
+
+++	PLX ; remove return point
+	PEA.w gamemode_hook-1
+	SEP #$30
+
+	RTS
+
 warnpc $008489
 
-; NMI
-;
-; Expands the NMI (code run at the end of each frame)
+;===================================================================================================
+; This small joypad improvement of 8 cycles gives us a little more leeway
+; but we also use 10 cycles here for joypad 2
+; net loss is 2 cycles, not an issue
+;===================================================================================================
+org $083D1
+	REP #$20
+
+	LDA.w $421A
+	STA.w SA1IRAM.JOYPAD2_NEW
+
+	LDA.w $4218
+	STA.b $00 ; not really necessary, but good for expected glitching
+
+	SEP #$20
+	STA.b $F2
+	TAY
+	EOR.b $FA
+	AND.b $F2
+	STA.b $F6
+	STY.b $FA
+
+	XBA
+	STA.b $F0
+	TAY
+	EOR.b $F8
+	AND.b $F0
+	STA.b $F4
+	STY.b $F8
+
+	RTS
+
+warnpc $0083F8
 
 ; NMI hook
 org $0080D5
@@ -39,62 +113,22 @@ org $0080D5
 	; 0080D7 SEP #$30
 	JSL nmi_expand
 
-org $008174
-LDA $1C : STA $AB : NOP
-LDA $1D : STA $AC : NOP
+; TM and TS writes
+ org $008176 : STA.w SA1RAM.layer_writer+0
+ org $00817B : STA.w SA1RAM.layer_writer+1
 
 ;org $0081A0 ; save camera correction for NMI expansion
 ;	BRA + ; save time during NMI
 ;org $0081B8 : +
 
-; HUD update hook
-org $008B6B
-	; 008b6b ldx $0219
-	; 008b6e stx $2116
-	;JSL nmi_hud_update
-	;NOP #2
-
-;org $008220
-org $00821B
-	; LDA $9B
-	; STA $420C
-	JSL nmi_hud_update
-	NOP
-
-; NMI HOOK
-org $0089C2
-nmi_hook:
-	TCD : PHK : PLB
-	JSL nmi_expand
-	RTS
-
 warnpc $0089DF
-; Unused $17 function repurposed
-org $008C8A
-	dw NMI_UpdatePracticeHUD ; $17=0x06
-
-org $00EA79 ; seems unused
-NMI_UpdatePracticeHUD:
-	REP #$20
-	LDX #$80 : STX $2115
-	LDA #$6C00 : STA $2116
-
-	LDA #$1801 : STA $4300
-	LDA.w #!menu_dma_buffer : STA $4302
-	LDX.b #!menu_dma_buffer>>16 : STX $4304
-	LDA #$0800 : STA $4305
-
-	LDX #$01 : STX $420B
-	SEP #$20
-	RTS
-
-warnpc $00EAE5
 
 ; The time this routine takes isn't relevant
 ; since it's never during game play
 org $00E36A
 	JSL LoadCustomHUDGFX
-	PLB : RTL
+	PLB
+	RTL
 
 pullpc
 
@@ -106,180 +140,25 @@ nmi_expand:
 	PHA ; A is 0 from right before the hook
 	PLB ; and that happens to be the bank we want
 
-	LDA !disabled_layers : TRB $AB : TRB $AC
-	REP #$20
-	LDA $AB : STA $212C
-
-	SEP #$28 ; a=8, BCD=on
-	LDA !lowram_last_frame_did_saveload : BEQ .update_counters
-	JMP .dont_update_counters
-
-.update_counters
-	; if $12 = 1, then we weren't done with game code
-	; that means we're in a lag frame
-	LDA $12 : STA !lag_cache : LSR
+	LDA.w SA1RAM.disabled_layers
+	TRB.w SA1RAM.layer_writer+0
+	TRB.w SA1RAM.layer_writer+1
 
 	REP #$20
-	LDA !lag_frames : ADC #$0000 ; carry set from $12 being 1
-	STA !lag_frames
+	LDA.w SA1RAM.layer_writer
+	STA.w $212C
+	SEP #$20
 
-	; cycle controlled room time
-	SEP #$21 ; include carry
-	LDA !room_time_F : ADC #$00
-	CMP #$60
-	BCS .rtF60
+	LDA.b $12 : STA.w SA1IRAM.CopyOf_12
 
-.rtFOK
-	BCC ++ ; 3 cycles
-
-.rtF60 ; 1 cycle for branch
-	LDA #$00 ; 2 cycles
-
-++	STA !room_time_F
-
-	REP #$20 ; seconds have 3 digits
-	LDA !room_time_S : ADC #$0000 ; increments by 1 if F>=60
-	STA !room_time_S
-
-	; cycle controlled segment time
-	SEP #$21 ; include carry
-	LDA !seg_time_F : ADC #$00
-	CMP #$60
-	BCS .stF60
-
-.stFOK
-	BCC ++ ; 3 cycles
-
-.stF60 ; 1 cycle for branch
-	LDA #$00 ; 2 cycles
-
-++	STA !seg_time_F
-
-	LDA !seg_time_S : ADC #$00 ; increments by 1 if F>=60
-	CMP #$60
-	BCS .stS60
-
-.stSOK
-	BCC ++ ; 3 cycles
-
-.stS60 ; 1 cycle for branch
-	LDA #$00 ; 2 cycles
-
-++	STA !seg_time_S
-
-	REP #$20
-	LDA !seg_time_M : ADC #$0000 ; increments by 1 if S>=60
-	STA !seg_time_M
-
-.dont_update_counters
-	CLD
-	JSR dotimers
-	SEP #$30
-	STZ !lowram_last_frame_did_saveload
-	RTL
-
-nmi_hud_update:
-	; Movie stuff commented out while it's not needed
-;	LDX #$6360 : STX $2116
-
-;	; $7EC700 is the WRAM buffer for this data
-;	LDX.w #!ram_movie_hud : STX $4302
-;	LDA.b #!ram_movie_hud>>16 : STA $4304
-;	LDX #$0040 : STX $4305 ; number of bytes to transfer is 330
-;	LDA #$01 : STA $420B ; refresh BG3 tilemap data with this transfer on channel 0
-	REP #$21 ; carry only needs clearing once
-	SEP #$10
-
-	LDX !lag_cache : BNE .dontbreakthings
-	LDA.l !ram_superwatch
-	AND #$0003
-	ASL
-	TAX
-	JMP (.routines, X)
-
-.doorwatch
-	LDX #$80 : STX $2115
-	LDA #$6500 : STA $2116
-
-	LDA #$1801 : STA $4300
-	LDA.w #!dg_dma_buffer : STA $4302
-	LDX.b #!dg_dma_buffer>>16 : STX $4304
-	LDA #$0100 : STA $4305
-
-	LDY #$01 : STY $420B
-
-.nowatch
-	; force heartlag update
-	LDX !do_heart_lag : BEQ .dontbreakthings
-	LDA #$C118>>1 : STA $2116
-	LDA.l !POS_MEM_HEARTLAG : STA $2118
-
-.dontbreakthings
-	STZ !do_heart_lag
-	LDX $13
-	STX $2100
+	LDA.b #$12 ; timers NMI
+	STA.w $2200
 
 	RTL
 
-.ancillawatch
-	LDX $10
-	CPX #$06 : BCC .nowatch
-	CPX #$19 : BCS .nowatch
-	CPX #$12 : BEQ .nowatch
-	CPX #$14 : BEQ .nowatch
-
-	LDX #$80 : STX $2115
-	LDY #$01
-	LDA #$1801 : STA $4300
-	LDA.w #!dg_dma_buffer : STA $4302
-	LDX.b #!dg_dma_buffer>>16 : STX $4304
-
-	LDA #$C202>>1 : STA $2116
-	LDA #$0010 : STA $4305
-	STY $420B
-
-macro draw_ancilla_row(n)
-	LDA #($C202+(64*<n>))>>1 : STA $2116
-	LDA #$0010 : STA $4305
-	STY $420B
-
-	;LDA #($C22E+(64*<n>))>>1 : STA $2116
-	;LDA #$0010 : STA $4305
-	;STY $420B
-endmacro
-
-	;%draw_ancilla_row(1)
-	%draw_ancilla_row(2)
-	%draw_ancilla_row(3)
-	%draw_ancilla_row(4)
-	%draw_ancilla_row(5)
-	%draw_ancilla_row(6)
-	;%draw_ancilla_row(7)
-	%draw_ancilla_row(8)
-	%draw_ancilla_row(9)
-	%draw_ancilla_row(10)
-	%draw_ancilla_row(11)
-	%draw_ancilla_row(12)
-	;%draw_ancilla_row(13)
-	;%draw_ancilla_row(14)
-	;%draw_ancilla_row(15)
-	;%draw_ancilla_row(16)
-	;%draw_ancilla_row(17)
-	;%draw_ancilla_row(18)
-	;%draw_ancilla_row(19)
-	;%draw_ancilla_row(20)
-
-	JMP .nowatch
-
-.routines
-	dw .nowatch
-	dw .ancillawatch
-	dw .doorwatch
-	dw .nowatch
-
-;===========================================
+;===================================================================================================
 ; OAM cleaner optimization
-;===========================================
+;===================================================================================================
 macro OAMVClear(pos)
 	db $F0, <pos>+$05, $F0, <pos>+$09, $F0, <pos>+$0D, $F0, <pos>+$11
 endmacro
@@ -301,3 +180,290 @@ OAM_Cleaner:
 	%OAMVClear($D0)
 	%OAMVClear($E0)
 	%OAMVClear($F0)
+
+;===================================================================================================
+; Custom NMI for hud
+;===================================================================================================
+NMI_RequestFullMenuUpdate:
+	REP #$20
+	LDA.w #NMI_UpdatePracticeHUD_full
+	STA.w SA1RAM.SNES_NMI_VECTOR
+	SEP #$30
+	RTL
+
+NMI_Request2RowsUpdate:
+	REP #$20
+	SEP #$10
+
+	LDA.w #NMI_UpdatePracticeHUD_two_rows
+	STA.w SA1RAM.SNES_NMI_VECTOR
+
+	STX.w SA1RAM.SNES_NMI_args+0
+	STY.w SA1RAM.SNES_NMI_args+1
+
+	SEP #$30
+	RTL
+
+NMI_RequestCurrentRowUpdateUnless:
+	REP #$20
+
+	LDA.w SA1RAM.SNES_NMI_VECTOR
+	CMP.w #NMI_UpdatePracticeHUD_full
+	BEQ .no
+
+	LDA.w #NMI_UpdatePracticeHUD_current_row
+	STA.w SA1RAM.SNES_NMI_VECTOR
+
+.no
+	SEP #$30
+	RTL
+
+;===================================================================================================
+
+NMI_UpdatePracticeHUD:
+.full
+	REP #$20
+
+	LDA.w #SA1RAM.MENU
+	STA.w $4302
+	LDA.w #$6C00
+	STA.w $2116
+	LDA.w #$0800
+
+.start
+	STA.w $4305
+	LDA.w #$1801
+	STA.w $4300
+
+	SEP #$20
+	LDA.b #$80
+	STA.w $2115
+	STZ.w $4304
+	LDA.b #$01
+	STA.w $420B
+
+	RTS
+
+.current_row
+	REP #$20
+	LDA.w SA1IRAM.cm_cursor
+	BRA .do_row
+
+.two_rows
+	REP #$20
+	LDA.w SA1RAM.SNES_NMI_args+0
+	JSR .do_row
+
+	REP #$20
+	LDA.w SA1RAM.SNES_NMI_args+1
+
+.do_row
+	AND.w #$00FF
+	ASL
+	ASL
+	ASL
+	ASL
+	ASL
+	PHA
+	ADC.w #$6C60
+	STA.w $2116
+
+	PLA
+	ASL
+	ADC.w #SA1RAM.MENU+(64*3)
+	STA.w $4302
+
+	LDA.w #$0040
+	BRA .start
+
+;===================================================================================================
+
+SNES_ENABLE_CUSTOM_NMI:
+	REP #$20
+
+	LDA.w #SNES_CUSTOM_NMI_nothing
+	STA.l SA1RAM.SNES_NMI_VECTOR
+
+--	SEP #$21
+
+	LDA.b #$11
+	STA.l $002200
+
+	ROL A
+-	DEC A : BPL -
+
+	; check if custom NMI is enabled
+	LDA.b #$10
+	AND.l $002300
+	BEQ --
+
+	RTL
+
+SNES_DISABLE_CUSTOM_NMI:
+--	SEP #$21
+
+	LDA.b #$10
+	STA.l $002200
+
+	ROL A
+-	DEC A : BPL -
+
+	; check if custom NMI is enabled
+	LDA.b #$10
+	AND.l $002300
+	BNE --
+
+	RTL
+
+;===================================================================================================
+
+SNES_CUSTOM_NMI:
+	REP #$30
+	PHA
+	PHX
+	PHY
+	PHD
+	PHB
+
+	SEP #$20
+	LDA.l $004210
+
+	PEA.w $0000
+	PLD
+	TDC ; A=0000
+	TAX
+
+	PHK
+	PLB
+
+	STA.l $00420C ; disable HDMA aggressively
+
+	LDA.b #$80
+	STA.w $2100
+
+	LDA.b $12
+	BEQ .good_to_go
+
+	JMP .lagging
+
+.good_to_go
+	INC.b $12
+	JSR.w (SA1RAM.SNES_NMI_VECTOR,X)
+
+	PEA.w $0000 ; used to be D=0 later
+	PEA.w $2100
+	PLD
+
+	PHK
+	PLB
+
+	SEP #$30
+	LDA.b #$04 ; only show BG3
+	STA.b $212C
+	STZ.b $212D
+
+	LDA.b #$09 : STA.w $2105 ; BG mode 1
+	LDA.b #$63 : STA.w $2109 ; restore tilemap and char addresses
+	LDA.b #$07 : STA.w $210C
+
+	; BG 3 scroll
+	LDA.b #$01
+	STZ.b $2111
+	STA.b $2111
+
+	STZ.b $2112
+	STA.b $2112
+
+	STZ.b $2106 ; no mosaic
+
+	STZ.b $2123 ; no windowing
+	STZ.b $2124
+	STZ.b $2125
+
+	STZ.b $212E
+	STZ.b $212F
+
+	STZ.b $2131 ; no color math
+
+	; handle music and sfx
+	LDX.b #3
+
+--	LDA.w $012C,X
+	STA.b $40,X
+	STZ.w $012C,X
+	DEX
+	BPL --
+
+	PLD ; D=0000
+	TDC ; A=0000
+
+	; Refresh colors every frame just cause it's easier
+	REP #$10
+	LDY.w #0
+
+.next_color
+	LDA.w .cgrams,Y
+	BMI .done_color
+
+	INY
+	STA.w $2121
+
+	LDX.w .cgrams,Y
+	INY
+	INY
+
+	STX.b $00
+	LDA.b ($00)
+	ASL
+	TAX
+
+	LDA.l COLORS_YAY,X
+	STA.w $2122
+
+	INX
+	LDA.l COLORS_YAY,X
+	STA.w $2122
+
+	BRA .next_color
+
+.done_color
+	SEP #$30
+	JSL ReadJoyPad_long
+
+	LDA.b $F0 : STA.w SA1IRAM.CopyOf_F0
+	LDA.b $F2 : STA.w SA1IRAM.CopyOf_F2
+	LDA.b $F4 : STA.w SA1IRAM.CopyOf_F4
+	LDA.b $F6 : STA.w SA1IRAM.CopyOf_F6
+
+
+	REP #$20
+	LDA.w #.nothing
+	STA.w SA1RAM.SNES_NMI_VECTOR
+
+.lagging
+	SEP #$20
+	LDA.b #$0F
+	STA.l $002100
+	JMP.w SA1NMI_EXIT
+
+.nothing
+	RTS
+
+.cgrams
+	db 00 : dw !ram_hud_bg
+	db 03 : dw !ram_hud_bg
+
+	db 17 : dw !ram_hud_header_hl
+	db 18 : dw !ram_hud_header_fg
+	db 19 : dw !ram_hud_header_bg
+
+	db 22 : dw !ram_hud_sel_fg
+	db 23 : dw !ram_hud_sel_bg
+
+	db 30 : dw !ram_hud_sel_bg
+	db 31 : dw !ram_hud_sel_fg
+
+	db 26 : dw !ram_hud_dis_fg
+	db 27 : dw !ram_hud_bg
+
+	db $FF ; done
