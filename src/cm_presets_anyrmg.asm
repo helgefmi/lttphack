@@ -8,7 +8,7 @@ presetheader_anyrmg:
 ;===================================================================================================
 %menu_header("Any% RMG", 5)
 	%submenu("Eastern Palace", presetmenu_anyrmg_eastern)
-	%submenu("Hyrule Castle", presetmenu_anyrmg_escape)
+	%submenu("Escape", presetmenu_anyrmg_escape)
 	%submenu("Tempered Sword", presetmenu_anyrmg_tempered)
 	%submenu("Ganon's Tower", presetmenu_anyrmg_gtower)
 	%submenu("Ganon", presetmenu_anyrmg_ganon)
@@ -310,7 +310,7 @@ dw $07FF ; Dead sprites
 ;---------------------------------------------------------------------------------------------------
 ;===================================================================================================
 presetmenu_anyrmg_escape:
-%menu_header("Hyrule Castle", 16)
+%menu_header("Escape", 16)
 
 ;---------------------------------------------------------------------------------------------------
 %preset_OW("Outside Eastern", "anyrmg", "escape", "outside_eastern")
@@ -496,7 +496,7 @@ db $02 ; Entrance
 db $C2 ; Room layout
 db $00 ; Floor
 db $01 ; Door / Peg state
-db $00 ; Layer
+db $10 ; Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -602,7 +602,7 @@ db $02 ; Entrance
 db $C2 ; Room layout
 db $00 ; Floor
 db $01 ; Door / Peg state
-db $00 ; Layer
+db $10 ; Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -803,7 +803,7 @@ dw $0032 ; Dead sprites
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Floor 2", "anyrmg", "gtower", "floor_2")
+%preset_UW("Floor 3", "anyrmg", "gtower", "floor_3")
 dw $000C ; Screen ID
 dw $18F8, $0022 ; Link Coords
 dw $1880, $0000 ; Camera HV
@@ -1244,7 +1244,7 @@ presetpersistent_anyrmg_gtower:
 .bombable_floor
 ..end
 ;-----------------------------
-.floor_2
+.floor_3
 %write8($7E0B09, $00) ; Arc variable
 %write8($7E0B08, $40) ; Arc variable
 ..end
@@ -1319,7 +1319,6 @@ presetSRAM_anyrmg:
 %write8($7EF3C6, $11) ; Game flags A
 %writeroom($104, $0012)
 %writeroom($055, $000F)
-%writeroom($028, $0000)
 ...end
 ;-----------------------------
 ..castle_entrance
@@ -1584,7 +1583,7 @@ presetSRAM_anyrmg:
 %writeroom($09B, $840F)
 ...end
 ;-----------------------------
-..floor_2
+..floor_3
 %write8($7EF377, $10) ; Arrows
 %write8($7EF389, $02) ; Key for dungeon $0D
 %write16sram($7EF366, $F024) ; Big keys

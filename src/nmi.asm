@@ -1,4 +1,12 @@
 pushpc
+
+; Other interrupt stuff
+org $00CF50
+BadInterrupt:
+	JML OOPS
+
+warnpc $00CFBE
+
 ;===================================================================================================
 ; Improves the speed of OAM clearing by 2 scanlines; credit: MathOnNapkins
 ; Has no effect on anything
@@ -22,17 +30,17 @@ org $00841E
 	; Vanilla OAM cycles: 4 scanlines - 10
 	;
 	; Improved to: 2 scanlines + 87
-	; SA1 thing is 1 scanline + 69
+	; SA1 thing is 1 scanline + 52
 	; Waste time check is 38
-	; total is 3 scanlines + 194
+	; total is 3 scanlines + 184
 	;
-	; 145 left to waste
+	; 152 left to waste
 	;
 	; NMI JSL+RTL = ~28 dots
 	; NMI cache = ~44+14+14 dots
 	; so NMI is ~100 dots
 	;
-	; 45 left to waste
+	; 52 left to waste
 	;
 	; HUD uses ~38 dots
 
@@ -75,7 +83,7 @@ warnpc $008489
 ; but we also use 10 cycles here for joypad 2
 ; net loss is 2 cycles, not an issue
 ;===================================================================================================
-org $083D1
+org $0083D1
 	REP #$20
 
 	LDA.w $421A
@@ -106,22 +114,11 @@ warnpc $0083F8
 
 ; NMI hook
 org $0080D5
-	; 0080D1 LDA #$0000
-	; 0080D4 TCD
-	; 0080D5 PHK
-	; 0080D6 PLB
-	; 0080D7 SEP #$30
 	JSL nmi_expand
 
 ; TM and TS writes
- org $008176 : STA.w SA1RAM.layer_writer+0
- org $00817B : STA.w SA1RAM.layer_writer+1
-
-;org $0081A0 ; save camera correction for NMI expansion
-;	BRA + ; save time during NMI
-;org $0081B8 : +
-
-warnpc $0089DF
+org $008176 : STA.w SA1RAM.layer_writer+0
+org $00817B : STA.w SA1RAM.layer_writer+1
 
 ; The time this routine takes isn't relevant
 ; since it's never during game play
@@ -282,19 +279,19 @@ SNES_ENABLE_CUSTOM_NMI:
 	REP #$20
 
 	LDA.w #SNES_CUSTOM_NMI_nothing
-	STA.l SA1RAM.SNES_NMI_VECTOR
+	STA.w SA1RAM.SNES_NMI_VECTOR
 
 --	SEP #$21
 
 	LDA.b #$11
-	STA.l $002200
+	STA.w $2200
 
 	ROL A
 -	DEC A : BPL -
 
 	; check if custom NMI is enabled
 	LDA.b #$10
-	AND.l $002300
+	AND.w $2300
 	BEQ --
 
 	RTL
@@ -303,14 +300,14 @@ SNES_DISABLE_CUSTOM_NMI:
 --	SEP #$21
 
 	LDA.b #$10
-	STA.l $002200
+	STA.w $2200
 
 	ROL A
 -	DEC A : BPL -
 
 	; check if custom NMI is enabled
 	LDA.b #$10
-	AND.l $002300
+	AND.w $2300
 	BNE --
 
 	RTL
@@ -325,20 +322,20 @@ SNES_CUSTOM_NMI:
 	PHD
 	PHB
 
-	SEP #$20
+	SEP #$21
 	LDA.l $004210
 
 	PEA.w $0000
 	PLD
-	TDC ; A=0000
+	TDC ; A = 0000
 	TAX
 
 	PHK
 	PLB
 
-	STA.l $00420C ; disable HDMA aggressively
+	STA.w $420C ; disable HDMA aggressively
 
-	LDA.b #$80
+	ROR ; A = 80
 	STA.w $2100
 
 	LDA.b $12
@@ -348,6 +345,7 @@ SNES_CUSTOM_NMI:
 
 .good_to_go
 	INC.b $12
+
 	JSR.w (SA1RAM.SNES_NMI_VECTOR,X)
 
 	PEA.w $0000 ; used to be D=0 later
@@ -413,6 +411,7 @@ SNES_CUSTOM_NMI:
 	INY
 
 	STX.b $00
+
 	LDA.b ($00)
 	ASL
 	TAX
@@ -428,6 +427,7 @@ SNES_CUSTOM_NMI:
 
 .done_color
 	SEP #$30
+
 	JSL ReadJoyPad_long
 
 	LDA.b $F0 : STA.w SA1IRAM.CopyOf_F0
@@ -435,35 +435,37 @@ SNES_CUSTOM_NMI:
 	LDA.b $F4 : STA.w SA1IRAM.CopyOf_F4
 	LDA.b $F6 : STA.w SA1IRAM.CopyOf_F6
 
-
 	REP #$20
+
 	LDA.w #.nothing
 	STA.w SA1RAM.SNES_NMI_VECTOR
 
 .lagging
 	SEP #$20
+
 	LDA.b #$0F
-	STA.l $002100
+	STA.w $2100
+
 	JMP.w SA1NMI_EXIT
 
 .nothing
 	RTS
 
 .cgrams
-	db 00 : dw !ram_hud_bg
-	db 03 : dw !ram_hud_bg
+	db 00 : dw !config_hud_bg
+	db 03 : dw !config_hud_bg
 
-	db 17 : dw !ram_hud_header_hl
-	db 18 : dw !ram_hud_header_fg
-	db 19 : dw !ram_hud_header_bg
+	db 17 : dw !config_hud_header_hl
+	db 18 : dw !config_hud_header_fg
+	db 19 : dw !config_hud_header_bg
 
-	db 22 : dw !ram_hud_sel_fg
-	db 23 : dw !ram_hud_sel_bg
+	db 22 : dw !config_hud_sel_fg
+	db 23 : dw !config_hud_sel_bg
 
-	db 30 : dw !ram_hud_sel_bg
-	db 31 : dw !ram_hud_sel_fg
+	db 30 : dw !config_hud_sel_bg
+	db 31 : dw !config_hud_sel_fg
 
-	db 26 : dw !ram_hud_dis_fg
-	db 27 : dw !ram_hud_bg
+	db 26 : dw !config_hud_dis_fg
+	db 27 : dw !config_hud_bg
 
 	db $FF ; done

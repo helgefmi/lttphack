@@ -32,17 +32,17 @@ RNG_SUBMENU:
 	JSL CMDRAW_WORD_LONG_LONG
 
 	PLA ; recover value
-	AND.w #$00C0 ; the top 2 bits for second pokey, already shifted for us too!
+	AND.w #$000C ; the top 2 bits for second pokey - already shifted for us too!
 	ADC.w #..directions ; carry should be clear always, I hope
 
 	JSL CMDRAW_WORD_LONG_LONG
 	RTL
 
 ..directions
-	db "ul ", $FF
-	db "ur ", $FF
 	db "dr ", $FF
 	db "dl ", $FF
+	db "ur ", $FF
+	db "ul ", $FF
 
 ..random
 	JML CMDRAW_RANDOM
@@ -80,7 +80,7 @@ RNG_SUBMENU:
 	JML CMDRAW_RANDOM
 
 ..slot
-	db "Slot ", $FF ; with a space,yes
+	db "Slot ", $FF ; with a space, yes
 
 ;===================================================================================================
 %choice_here("Ganon warps", SA1RAM.ganon_warp_rng, 3)
@@ -175,7 +175,7 @@ RNG_SUBMENU:
 	JML CMDRAW_RANDOM
 
 ;===================================================================================================
-%choice_here("Conveyor belt", SA1RAM.conveyor_rng, 5)
+%choice_here("Moth conveyor", SA1RAM.conveyor_rng, 5)
 	%list_item("Random")
 	%list_item("Right")
 	%list_item("Left")

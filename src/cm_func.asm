@@ -255,6 +255,7 @@ CMDO_FUNC:
 	BCC .exit
 
 	JSR CMDO_SAVE_ADDRESS_LONG
+
 	PHK
 	PEA.w .return-1
 
@@ -325,6 +326,7 @@ CMDO_CHOICE_LONG_PRGTEXT:
 
 .continue
 	LDA.b [SA1IRAM.cm_writer]
+
 	BIT.b SA1IRAM.cm_ax
 	BVS .empty
 	BMI .increment
@@ -479,32 +481,54 @@ CMDO_CTRL_SHORTCUT:
 ;===================================================================================================
 
 CMDO_TOGGLE_ROOMFLAG:
-	SEP #$20
+	REP #$20
 
-	BIT.b SA1IRAM.cm_ax
+	LDA.b [SA1IRAM.cm_current_selection],Y
+	AND.w #$00FF
+	ASL
+	TAY
+
+	LDA.w SA1RAM.loadroomid
+	AND.w #$00FF
+	ASL
+	TAX
+
+	LDA.w CM_BITS_ASCENDING,Y
+
+	BIT.b SA1IRAM.cm_ax-1
 	BVS .clear
 	BMI .toggle
 
-	BIT.b SA1IRAM.cm_leftright
+	BIT.b SA1IRAM.cm_leftright-1
 	BMI .toggle
 	BVS .toggle
 
-	BIT.b SA1IRAM.cm_y
+	BIT.b SA1IRAM.cm_y-1
 	BMI .enable
 
+	RTS
+
 .clear
+	EOR.w #$FFFF
+	AND.l $7EF000,X
+	STA.l $7EF000,X
+	JSL CM_MenuSFX_empty
+	RTS
+
 .toggle
+	EOR.l $7EF000,X
+	STA.l $7EF000,X
+	JSL CM_MenuSFX_bink
+	RTS
+
 .enable
+	ORA.l $7EF000,X
+	STA.l $7EF000,X
+	JSL CM_MenuSFX_fill
+	RTS
+
 
 ;===================================================================================================
-; TODO
-CMDO_NUMFIELD_PRESSFUNC_HEX:
-	LDA.b SA1IRAM.cm_ax
-	ASL
-	BCC CMDO_NUMFIELD
-	LDY.b #6
-	JMP CMDO_PERFORM_FUNC
-
 
 CMDO_NUMFIELD:
 CMDO_NUMFIELD_HEX:

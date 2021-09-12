@@ -1,20 +1,12 @@
 Big stuff
 ----------
 
-timer trigger on ganon sword up
+fix mushroom gfx for lost woods
 
-Room tab:
-	room ID selector
-	"Set to current room"
-	show flags
-	"Load room"
-	new menu chars for improved flag viewing?
-	options for:
-		Peg state: current, red, blue
-		Kill sprites
-		Open shutter doors
-		Keep world state
-		Plaid world?
+Get good entrance caching for every EG 2 room in a table
+replace eg caching in presets with a routine call/preset command
+update preset script
+use bit 7 to indicate left/right half for double entrance rooms
 
 aga 2 rng
 	lui: agah2 submenu -> set positions for each of the agahs for cycles 1, 2, 3 and 4+
@@ -24,11 +16,7 @@ Other stuff
 
 - deadrock rng control?
 
-- Preset for double reddies
-
 - Show cycle counter for Agahnim 2
-
-- Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances the game one frame. Would be good for clip learning. Maybe stop timer during this.
 
 - Frame counter for actions, like swinging your sword, throwing boomerang, enemy movement startup times. Startup/active/recovery.
 

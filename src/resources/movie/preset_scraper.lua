@@ -37,7 +37,7 @@ function labelize_trim(s)
 end
 
 function stylize(s)
-	return s:gsub('[%s_]+', ' '):gsub('[^a-zA-Z0-9%%%$ .,?!#%(%)-]', '')
+	return s:gsub('[%s_]+', ' '):gsub("[^a-zA-Z0-9%%%$ .,'?!#%(%)-]", '')
 end
 
 ----------------------------------------------------------------------------------------------------
@@ -252,7 +252,7 @@ function print_persist()
 						if xl == 0 and xh == 0 and yl == 0 and yh == 0 then
 							dprint('%write_sq()')
 						else
-							dprint(string.format('%%write_mirror($%02, $%02, $%02, $%02)', xl, xh, yl, yh))
+							dprint(string.format('%%write_mirror($%02X, $%02X, $%02X, $%02X)', xl, xh, yl, yh))
 						end
 					else
 						dprint(string.format('%%write8($%06X, $%02X) ; %s', g.addr, g.value, g.comment))
@@ -281,8 +281,8 @@ function print_sram()
 					dprint(string.format('%%%s($%06X, $%02X) ; %s', x.funcy, x.addr, x.value, x.comment))
 				elseif x.funcy == 'write16sram' then
 					dprint(string.format('%%%s($%06X, $%04X) ; %s', x.funcy, x.addr, x.value, x.comment))
-				else
-					dprint(string.format('%%%s($%03X, $%04X) ; %s', x.funcy, x.addr, x.value, x.comment))
+				elseif x.funcy == 'writeroom' then
+					dprint(string.format('%%%s($%03X, $%04X)', x.funcy, x.addr, x.value))
 				end
 			end
 			dprint('...end')
@@ -321,7 +321,6 @@ ow_args = {
 	mscr_X = { f = u16, l = 0x061C },
 	mscr_Y = { f = u16, l = 0x0618 },
 	tmap = { f = u16, l = 0x0084 },
-
 }
 
 single_args = {
@@ -369,6 +368,8 @@ single_args = {
 }
 
 single_arg_funcs = {
+	nofilter = function() return true end,
+
 	nonzero = function(a) return a ~= 0 end,
 
 	camerax = function()
@@ -394,8 +395,11 @@ single_arg_funcs = {
 }
 
 persist_args = {
+	{ addr = 0x01ABF, comment = 'Mirror portal' },
+
 	{ addr = 0x00B08, comment = 'Arc variable' },
 	{ addr = 0x00B09, comment = 'Arc variable' },
+
 	{ addr = 0x002A1, comment = 'Slot 3 Altitude' },
 	{ addr = 0x002A2, comment = 'Slot 4 Altitude' },
 
@@ -410,8 +414,6 @@ persist_args = {
 	{ addr = 0x00FCC, comment = 'Prize pack 5' },
 	{ addr = 0x00FCD, comment = 'Prize pack 6' },
 	{ addr = 0x00FCE, comment = 'Prize pack 7' },
-
-	{ addr = 0x01ABF, comment = 'Mirror portal' },
 
 	{ addr = 0x00CFB, comment = 'Rupee pull kills' },
 	{ addr = 0x00CFC, comment = 'Rupee pull hits' },
@@ -482,6 +484,8 @@ sram_args = {
 	{ addr = 0x0F3CA, reader = u8, comment = 'LW/DW' },
 	{ addr = 0x0F3CC, reader = u8, comment = 'Follower' },
 	{ addr = 0x0F360, reader = u16, comment = 'Rupees' },
+	{ addr = 0x0F364, reader = u16, comment = 'Compasses' },
+	{ addr = 0x0F368, reader = u16, comment = 'Maps' },
 	{ addr = 0x0F366, reader = u16, comment = 'Big keys' },
 }
 
@@ -511,7 +515,7 @@ while movie.mode() == 'PLAY' do
 	if state then
 		local s = state.s
 		local p = state.p
-		savestate.save(string.format('../movie/states/%s.%s.%s.%s.%s.%s.state',
+		savestate.save(string.format('states/%s.%s.%s.%s.%s.%s.state',
 			labelize_trim(category),
 			s,
 			p,
@@ -559,7 +563,7 @@ while movie.mode() == 'PLAY' do
 			sid = memory.read_u16_le(0x00A0)
 			ptype = 'UW'
 			arglist = uw_args
-			preset_values.dead = memory.read_u16_le(0x1FD80+(sid*2))
+			preset_values.dead = memory.read_u16_le(0x1DF80+(sid*2))
 		end
 
 		for n, v in pairs(arglist) do
@@ -590,7 +594,7 @@ while movie.mode() == 'PLAY' do
 				current_sram[i] = t
 				local screenid = bit.band(i,0xFFF)-0x280
 				table.insert(sram_values, {
-					addr = bit.bor(v.addr, 0x7E0000),
+					addr = bit.bor(i, 0x7E0000),
 					value = t,
 					comment = string.format('OW screen $%02X', screenid),
 					funcy = 'write8'
@@ -601,6 +605,19 @@ while movie.mode() == 'PLAY' do
 		for i=0x0F000,0x0F27E,2 do
 			local t = memory.read_u16_le(i)
 			if t ~= current_sram[i] then
+
+				-- dumb special shit for current room's flags
+				if not ow then
+					if (bit.band(i,0xFFF) == (sid*2)) then
+						local rdata = 0x0000
+						rdata = bit.bor(rdata, memory.read_u8(0x00408))
+						rdata = bit.bor(rdata, bit.lshift(memory.read_u8(0x00403), 4))
+						rdata = bit.bor(rdata, bit.band(memory.read_u16_le(0x00401), 0xF000))
+
+						t = rdata
+					end
+				end
+
 				current_sram[i] = t
 				local roomid = bit.rshift(bit.band(i,0xFFF), 1)
 				table.insert(sram_values, {
@@ -614,7 +631,7 @@ while movie.mode() == 'PLAY' do
 
 		-- Do WRAM normal
 		for _, v in ipairs(single_args) do
-			if v.indoors ~= ow then
+			if (v.indoors == nil) or v.indoors ~= ow then
 				local t = memory[v.reader](v.addr)
 				if single_arg_funcs[v.filter](t) then
 					local M8 = v.reader == u8
@@ -683,6 +700,7 @@ while movie.mode() == 'PLAY' do
 				end
 			end
 		end
+
 		presets[seg][pre].ptype = ptype
 		presets[seg][pre].preset_values = preset_values
 		presets[seg][pre].sram_values = sram_values

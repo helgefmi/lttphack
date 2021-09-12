@@ -7,7 +7,7 @@ presetheader_lownmg:
 
 ;===================================================================================================
 %menu_header("Low% NMG", 15)
-	%submenu("Hyrule Castle", presetmenu_lownmg_escape)
+	%submenu("Escape", presetmenu_lownmg_escape)
 	%submenu("Eastern Palace", presetmenu_lownmg_eastern)
 	%submenu("Desert Palace", presetmenu_lownmg_desert)
 	%submenu("Tower of Hera", presetmenu_lownmg_hera)
@@ -29,7 +29,7 @@ presetheader_lownmg:
 ;---------------------------------------------------------------------------------------------------
 ;===================================================================================================
 presetmenu_lownmg_escape:
-%menu_header("Hyrule Castle", 14)
+%menu_header("Escape", 14)
 
 ;---------------------------------------------------------------------------------------------------
 %preset_UW("Link's Bed", "lownmg", "escape", "bed")
@@ -257,7 +257,7 @@ dw $0000 ; Dead sprites
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Last Two Screens", "lownmg", "escape", "last_two_screens")
+%preset_UW("Into Sanctuary", "lownmg", "escape", "into_sanctuary")
 dw $0011 ; Screen ID
 dw $0378, $0224 ; Link Coords
 dw $0300, $0200 ; Camera HV
@@ -294,10 +294,12 @@ db $02 ; Link direction
 db $04 ; Entrance
 db $82 ; Room layout
 db $00 ; Floor
-db $81 ; Door / Peg state
+db $01 ; Door / Peg state
 db $11 ; Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
+%write8_enable()
+%write8($7E0642, $01) ; Room puzzle state
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
@@ -312,7 +314,7 @@ db $04 ; Entrance
 db $C0 ; Room layout
 db $00 ; Floor
 db $00 ; Door / Peg state
-db $00 ; Layer
+db $10 ; Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -790,7 +792,7 @@ dw $0000 ; Dead sprites
 ;---------------------------------------------------------------------------------------------------
 ;===================================================================================================
 presetmenu_lownmg_hera:
-%menu_header("Tower of Hera", 14)
+%menu_header("Tower of Hera", 15)
 
 ;---------------------------------------------------------------------------------------------------
 %preset_OW("Outside Desert Palace", "lownmg", "hera", "outside_desert_palace")
@@ -1025,6 +1027,23 @@ db $02 ; Floor
 db $10 ; Door / Peg state
 db $00 ; Layer
 dw $0580 ; Dead sprites
+;-----------------------------
+%write_end()
+
+;---------------------------------------------------------------------------------------------------
+%preset_UW("Bumper Skip", "lownmg", "hera", "bumper_skip")
+dw $0027 ; Screen ID
+dw $0E38, $0471 ; Link Coords
+dw $0E00, $0404 ; Camera HV
+db $03 ; Item
+db $00 ; Direction
+;-----------------------------
+db $33 ; Entrance
+db $C0 ; Room layout
+db $03 ; Floor
+db $10 ; Door / Peg state
+db $00 ; Layer
+dw $0064 ; Dead sprites
 ;-----------------------------
 %write_end()
 
@@ -3077,7 +3096,7 @@ dw $0000 ; Dead sprites
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Crystal Roller", "lownmg", "trock", "crystal_roller")
+%preset_UW("Crystaroller", "lownmg", "trock", "crystaroller")
 dw $0014 ; Screen ID
 dw $0878, $0224 ; Link Coords
 dw $0800, $0200 ; Camera HV
@@ -3096,7 +3115,7 @@ dw $0000 ; Dead sprites
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Dark Room", "lownmg", "trock", "dark_room")
+%preset_UW("Dark Maze", "lownmg", "trock", "dark_maze")
 dw $0004 ; Screen ID
 dw $0878, $0024 ; Link Coords
 dw $0800, $0000 ; Camera HV
@@ -3274,7 +3293,7 @@ dw $0000 ; Dead sprites
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Floor 2", "lownmg", "gtower", "floor_2")
+%preset_UW("Floor 3", "lownmg", "gtower", "floor_3")
 dw $000C ; Screen ID
 dw $18F8, $0024 ; Link Coords
 dw $1880, $0000 ; Camera HV
@@ -3622,7 +3641,7 @@ presetpersistent_lownmg:
 .keyrat
 ..end
 ;-----------------------------
-.last_two_screens
+.into_sanctuary
 %write8($7E0FC8, $02) ; Prize pack index
 ..end
 
@@ -3771,6 +3790,9 @@ presetpersistent_lownmg_hera:
 ;-----------------------------
 .petting_zoo
 %write8($7E0FCC, $04) ; Prize pack index
+..end
+;-----------------------------
+.bumper_skip
 ..end
 ;-----------------------------
 .moldorm
@@ -4215,11 +4237,11 @@ presetpersistent_lownmg_trock:
 %write8($7E0FCD, $03) ; Prize pack index
 ..end
 ;-----------------------------
-.crystal_roller
+.crystaroller
 %write8($7E0FCD, $05) ; Prize pack index
 ..end
 ;-----------------------------
-.dark_room
+.dark_maze
 ..end
 ;-----------------------------
 .laser_skip
@@ -4254,7 +4276,7 @@ presetpersistent_lownmg_gtower:
 %write8($7E02A2, $00) ; slot 4 altitude
 ..end
 ;-----------------------------
-.floor_2
+.floor_3
 %write8($7E0B09, $00) ; Arc variable
 %write8($7E0B08, $40) ; Arc variable
 %write8($7E03C4, $03) ; Ancilla Search Index
@@ -4338,7 +4360,6 @@ presetSRAM_lownmg:
 %write16sram($7EF360, $01) ; Rupees
 %write8($7EF3C6, $11) ; Game flags A
 %writeroom($055, $000F)
-%writeroom($028, $0000)
 ...end
 ;-----------------------------
 ..entrance
@@ -4397,7 +4418,7 @@ presetSRAM_lownmg:
 %writeroom($021, $0003)
 ...end
 ;-----------------------------
-..last_two_screens
+..into_sanctuary
 %writeroom($011, $2005)
 %writeroom($021, $840F)
 ...end
@@ -4641,11 +4662,14 @@ presetSRAM_lownmg:
 %writeroom($031, $800F)
 ...end
 ;-----------------------------
-..moldorm
+..bumper_skip
 %write8($7EF357, $01) ; Moon Pearl
 %write8($7EF36D, $10) ; Health
-%writeroom($017, $000F)
 %writeroom($027, $001F)
+...end
+;-----------------------------
+..moldorm
+%writeroom($017, $000F)
 ...end
 ;-----------------------------
 .aga
@@ -5109,7 +5133,7 @@ presetSRAM_lownmg:
 %write8($7EF2FB, $20) ; Overworld 7B overlay
 %write8($7EF3CA, $40) ; LW/DW
 %writeroom($10B, $008F)
-%writeroom($028, $0001)
+%writeroom($028, $0100)
 ...end
 ;-----------------------------
 ..first_key_pot
@@ -5189,7 +5213,7 @@ presetSRAM_lownmg:
 %write8($7EF2FB, $00) ; Overworld $7B
 %write8($7EF3CA, $00) ; LW/DW
 %writeroom($10B, $000F)
-%writeroom($028, $0080)
+%writeroom($028, $801F)
 ...end
 ;-----------------------------
 ..ice_entrance
@@ -5314,13 +5338,13 @@ presetSRAM_lownmg:
 %writeroom($013, $8405)
 ...end
 ;-----------------------------
-..crystal_roller
+..crystaroller
 %write8($7EF36E, $60) ; Magic
 %writeroom($014, $C01F)
 %writeroom($024, $800C)
 ...end
 ;-----------------------------
-..dark_room
+..dark_maze
 %writeroom($004, $C01A)
 ...end
 ;-----------------------------
@@ -5381,7 +5405,7 @@ presetSRAM_lownmg:
 %writeroom($08C, $0089)
 ...end
 ;-----------------------------
-..floor_2
+..floor_3
 %write8($7EF377, $0F) ; Arrows
 %write8($7EF389, $01) ; Key for dungeon $0D
 %write16sram($7EF366, $77BC) ; Big keys

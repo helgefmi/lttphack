@@ -35,6 +35,7 @@ incsrc cm_linkstate.asm
 incsrc cm_gameplay.asm
 incsrc cm_rng.asm
 incsrc cm_hud.asm
+incsrc cm_roomload.asm
 incsrc cm_shortcuts.asm
 incsrc cm_config.asm
 incsrc cm_presetconfig.asm
@@ -50,7 +51,7 @@ print "--------------------"
 ;===================================================================================================
 org $308000
 incsrc cm_presets_nmg.asm
-incsrc cm_presets_hundo.asm
+incsrc cm_presets_100nmg.asm
 incsrc cm_presets_lanmorta.asm
 
 org $318000
@@ -61,6 +62,9 @@ org $328000
 incsrc cm_presets_adold.asm
 incsrc cm_presets_ad2020.asm
 incsrc cm_presets_anyrmg.asm
+
+org $338000
+incsrc bsod.asm
 
 ; pad rom to 2mb
 org $3FFFFF

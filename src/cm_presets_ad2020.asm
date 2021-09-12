@@ -9,7 +9,7 @@ presetheader_ad2020:
 %menu_header("All Dungeons RMG", 16)
 	%submenu("Eastern Palace", presetmenu_ad2020_eastern)
 	%submenu("Palace of Darkness", presetmenu_ad2020_pod)
-	%submenu("Hyrule Castle", presetmenu_ad2020_escape)
+	%submenu("Escape", presetmenu_ad2020_escape)
 	%submenu("Early Hookshot", presetmenu_ad2020_hook)
 	%submenu("Thieves' Town", presetmenu_ad2020_thieves)
 	%submenu("Skull Woods", presetmenu_ad2020_skull)
@@ -640,7 +640,7 @@ dw $0010 ; Dead sprites
 ;---------------------------------------------------------------------------------------------------
 ;===================================================================================================
 presetmenu_ad2020_escape:
-%menu_header("Hyrule Castle", 8)
+%menu_header("Escape", 8)
 
 ;---------------------------------------------------------------------------------------------------
 %preset_OW("Outside PoD", "ad2020", "escape", "outside_pod")
@@ -669,7 +669,7 @@ db $02 ; Entrance
 db $C2 ; Room layout
 db $00 ; Floor
 db $01 ; Door / Peg state
-db $00 ; Layer
+db $10 ; Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -775,7 +775,7 @@ db $05 ; Entrance
 db $C2 ; Room layout
 db $00 ; Floor
 db $01 ; Door / Peg state
-db $00 ; Layer
+db $10 ; Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2012,7 +2012,7 @@ dw $0B60 ; Tilemap position
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Crystal Roller", "ad2020", "trock", "crystal_roller")
+%preset_UW("Crystaroller", "ad2020", "trock", "crystaroller")
 dw $00B5 ; Screen ID
 dw $0A78, $1625 ; Link Coords
 dw $0A00, $1600 ; Camera HV
@@ -2556,7 +2556,7 @@ dw $0032 ; Dead sprites
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Floor 2", "ad2020", "gtower", "floor_2")
+%preset_UW("Floor 3", "ad2020", "gtower", "floor_3")
 dw $000C ; Screen ID
 dw $18F8, $0025 ; Link Coords
 dw $1880, $0000 ; Camera HV
@@ -3425,7 +3425,7 @@ presetpersistent_ad2020_trock:
 %write_mirror($07, $0A, $98, $01)
 ..end
 ;-----------------------------
-.crystal_roller
+.crystaroller
 %write8($7E02A2, $00) ; slot 4 altitude
 ..end
 ;-----------------------------
@@ -3538,7 +3538,7 @@ presetpersistent_ad2020_gtower:
 .bombable_floor
 ..end
 ;-----------------------------
-.floor_2
+.floor_3
 %write8($7E0B08, $40) ; Arc variable
 %write8($7E0B09, $00) ; Arc variable
 ..end
@@ -3652,7 +3652,6 @@ presetSRAM_ad2020:
 %write8($7EF3C6, $11) ; Game flags A
 %writeroom($104, $0012)
 %writeroom($055, $000F)
-%writeroom($028, $0000)
 ...end
 ;-----------------------------
 ..castle_entrance
@@ -4328,7 +4327,7 @@ presetSRAM_ad2020:
 ..laser_entrance
 ...end
 ;-----------------------------
-..crystal_roller
+..crystaroller
 %write8($7EF343, $00) ; Bombs
 %write8($7EF36F, $01) ; Keys
 %write8($7EF36D, $28) ; Health
@@ -4401,7 +4400,7 @@ presetSRAM_ad2020:
 %write8($7EF2FB, $20) ; Overworld 7B overlay
 %write8($7EF3CA, $40) ; LW/DW
 %writeroom($10B, $008F)
-%writeroom($028, $0001)
+%writeroom($028, $0100)
 ...end
 ;-----------------------------
 ..first_key_pot
@@ -4453,7 +4452,7 @@ presetSRAM_ad2020:
 %write8($7EF2FB, $00) ; Overworld $7B
 %write16sram($7EF360, $67) ; Rupees
 %writeroom($10B, $000F)
-%writeroom($028, $0080)
+%writeroom($028, $801F)
 ...end
 ;-----------------------------
 ..penguin_switch_room
@@ -4511,7 +4510,6 @@ presetSRAM_ad2020:
 %write8($7EF36F, $FF) ; Keys
 %write8($7EF377, $0D) ; Arrows
 %write8($7EF3CA, $00) ; LW/DW
-%writeroom($028, $801F)
 ...end
 ;-----------------------------
 ..entrance
@@ -4537,7 +4535,7 @@ presetSRAM_ad2020:
 %writeroom($09B, $840F)
 ...end
 ;-----------------------------
-..floor_2
+..floor_3
 %write8($7EF377, $0A) ; Arrows
 %write8($7EF389, $02) ; Key for dungeon $0D
 %write16sram($7EF366, $73BC) ; Big keys

@@ -2,12 +2,12 @@ GAMEPLAY_SUBMENU:
 %menu_header("GAMEPLAY", 8)
 
 ;===================================================================================================
-%toggle_onoff("Skip Triforce", !ram_skip_triforce_toggle)
+%toggle_onoff("Skip Triforce", !config_skip_triforce_toggle)
 
 %toggle("Disable beams", !disable_beams)
 
 ;===================================================================================================
-%toggle_func_onoff_here("Lit rooms", !ram_lit_rooms_toggle)
+%toggle_func_onoff_here("Lit rooms", !config_lit_rooms_toggle)
 	LDA.w $001B : BEQ ++
 
 	LDA.b #$20 : STA.w $009A
@@ -17,9 +17,9 @@ GAMEPLAY_SUBMENU:
 ++	RTL
 
 ;===================================================================================================
-%toggle_onoff("Fast walls", !ram_fast_moving_walls)
+%toggle_onoff("Fast walls", !config_fast_moving_walls)
 
-%toggle_onoff("Visible probes", !ram_probe_toggle)
+%toggle_onoff("Visible probes", !config_probe_toggle)
 
 %toggle_bit("Disable BG1", SA1RAM.disabled_layers, 0)
 

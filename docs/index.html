@@ -11,9 +11,9 @@ title: LTTPHack - A Practice ROM for ALttP
 
 <!--- Put on updates.html when removing here --->
 <h3>FULL SA-1 REFACTOR</h3>
-<p>Version fourteen point zero point zero if finally here. This represents the biggest and most dramatic update since the inclusion of presets. From here on, the accessibility of the practice hack has been tightened a bit, now requiring decent SA-1 emulation. Fortunately, support is fairly widespread. Anyone without access to a supported system will be able to download v13.6.0 from this page; however, support for these non-SA-1 versions has been officially discontinued.</p>
+<p>Version fourteen point zero point zero is finally here. This represents the biggest and most dramatic update since the inclusion of presets. From here on, the accessibility of the practice hack has been tightened a bit, now requiring decent SA-1 emulation. Fortunately, support is fairly widespread. Anyone without access to a supported system will be able to download v13.6.0 from this page; however, support for these non-SA-1 versions has been officially discontinued.</p>
 <p>The SA-1's on-board RAM allows every system to include large save files, so fully fledged savestates are now available to everyone, eliminating the need for a separate SDSNES version. And while we're at it, the vanilla HUD variants are being nixed too (the option still exists, but it is no longer a separate ROM).</p>
-<p>Anyone without access to a supported system will be unable to use this version or any future version. Sorry. I know not everyone who plays on console can afford the more powerful flash carts, and that there are various other reasons people may stick with their current set up. Regardless, this hack is intended for vanilla practice, making accuracy for lag very important. Without a coprocessor, I have to put an aggressive filter on what features I add and count cycles meticulously everywhere. This inhibits improvement while <em>still</em> being too laggy. With the SA-1, I have so much more leeway. And with other cool features of the chip, I've vastly improved the backend of the practice menu to the point where it doesn't interfere with vanilla memory whatsoever. At the very least, I'm confident that this doesn't affect a majority audience. Many people who run on original hardware own an FXPak, and I can't name anyone who plays on the unsupported emulator cores. And, again, for those who can't or won't upgrade, v13.6 will always be available.</p>
+<p>Anyone without access to a supported system will be unable to use this version or any future version. I know not everyone who plays on console can afford the more powerful flash carts, and that there are various other reasons people may stick with their current set up. Regardless, this hack is intended for vanilla practice, making accuracy for lag very important. Without a coprocessor, I have to put an aggressive filter on what features I add and count cycles meticulously everywhere. This inhibits improvement while <em>still</em> being too laggy. With the SA-1, I have so much more leeway. And with other cool features of the chip, I've vastly improved the backend of the practice menu to the point where it doesn't interfere with vanilla memory whatsoever. At the very least, I'm confident that this doesn't affect a majority audience. Many people who run on original hardware own an FXPak, and I can't name anyone who plays on the unsupported emulator cores. And, again, for those who can't or won't upgrade, v13.6 will always be available.</p>
 
 <h3>Latest (SA-1)</h3>
 <p>This version should be used by any system that can properly emulate SA-1 with 256kb of BWRAM.</p>
@@ -216,7 +216,6 @@ title: LTTPHack - A Practice ROM for ALttP
 
 <h3>My system isn't supported! Update the older hacks!</h3>
 <p>No.</p>
-<p>Sorry.</p>
 <p>The change to SA-1 included a complete overhaul of the backend code. Adding new features to both versions would require maintaining two completely separate codebases and writing almost every feature twice. I simply cannot allow my ability to improve this project be inhibited by inferior applications or devices that do not properly emulate expansion chips. You may think it's not fair that I'm ignoring your system, but what's actually not fair is holding everyone else back from a better practice hack.</p>
 
 <h3 id="IKnowAboutItAlready">Known issues <a href="#IKnowAboutItAlready" class="headerLink">(link)</a></h3>
@@ -253,6 +252,8 @@ title: LTTPHack - A Practice ROM for ALttP
 	<dd>Fix specific RNG calls to specific values</dd>
 	<dt><a href="#menuHUD">HUD extras</a></dt>
 	<dd>Toggle features that appear on the HUD</dd>
+	<dt><a href="#menuRoomMaster">Room master</a></dt>
+	<dd>Load rooms and view/edit room flags</dd>
 	<dt><a href="#menuShortcuts">Shortcuts</a></dt>
 	<dd>Modify shortcuts for quick feature access</dd>
 	<dt><a href="#menuPresetConfiguration">Preset config</a></dt>
@@ -466,6 +467,8 @@ title: LTTPHack - A Practice ROM for ALttP
 			<dd>Smiths currently have your sword for tempering</dd>
 		</dl>
 	</dd>
+	<dt>Drops</dt>
+	<dd>Submenu for controller drop luck, rupee pulls, and prize packs.</dd>
 	<dt>Follower</dt>
 	<dd class="optionList">
 		<ol>
@@ -543,15 +546,6 @@ title: LTTPHack - A Practice ROM for ALttP
 			<dd>3; falling state obtained after a death hole in the underworld</dd>
 		</dl>
 	</dd>
-	<dt>Activate superbunny</dt>
-	<dd>Sets Link's general state handler to default (<code class="value">$00</code>). For safety, this will only run when Link's handler is currently set to bunny (<code class="value">$17</code>). If successful, you should hear a <i>poof</i>; otherwise, you will hear a <i>beep</i>.</dd>
-	<dt>Activate lonk</dt>
-	<dd>
-		<p>Sets Link's general state handler to bunny (<code class="value">$17</code>). For safety, this will only run when Link's handler is at its default value (<code class="value">$00</code>). If successful, you should hear <i>OOF</i>; otherwise, you will hear a <i>beep</i>.</p>
-		<p><em>Despite the labels, the Superbunny and Lonk menu options can be used to return to normal Link and normal bunny, respectively.</em></p>
-	</dd>
-	<dt>Finish mirrordoor</dt>
-	<dd>Sets the mirror door wait timer to finish after 11 frames. For safety reasons, this will only run when the Triforce door submodule is in effect. If successful, you should hear a <i>VOOMP</i>; otherwise, you will hear a <i>beep</i>.</dd>
 	<dt>Statue drag</dt>
 	<dd>Toggles the fake statue address.</dd>
 	<dt>Anc Index</dt>
@@ -566,6 +560,15 @@ title: LTTPHack - A Practice ROM for ALttP
 			<li>Weak</li>
 		</ul>
 	</dd>
+	<dt>Activate superbunny</dt>
+	<dd>Sets Link's general state handler to default (<code class="value">$00</code>). For safety, this will only run when Link's handler is currently set to bunny (<code class="value">$17</code>). If successful, you should hear a <i>poof</i>; otherwise, you will hear a <i>beep</i>.</dd>
+	<dt>Activate lonk</dt>
+	<dd>
+		<p>Sets Link's general state handler to bunny (<code class="value">$17</code>). For safety, this will only run when Link's handler is at its default value (<code class="value">$00</code>). If successful, you should hear <i>OOF</i>; otherwise, you will hear a <i>beep</i>.</p>
+		<p><em>Despite the labels, the Superbunny and Lonk menu options can be used to return to normal Link and normal bunny, respectively.</em></p>
+	</dd>
+	 <dt>Finish mirrordoor</dt>
+	<dd>Sets the mirror door wait timer to finish after 11 frames. For safety reasons, this will only run when the Triforce door submodule is in effect. If successful, you should hear a <i>VOOMP</i>; otherwise, you will hear a <i>beep</i>.</dd>
 </dl>
 <h3 id="menuGameplay">Gameplay</h3>
 <dl>
@@ -579,8 +582,6 @@ title: LTTPHack - A Practice ROM for ALttP
 	<dd>Speeds up the moving wall cutscenes.</dd>
 	<dt>Visible probes<sup class="badge lag-badge">LAG</sup></dt>
 	<dd>Search probes used by guards, beamos, etc. will display a graphic.</dd>
-	<dt>See bonk items<sup class="badge lag-badge">LAG</sup></dt>
-	<dd>Shows bonk items on the overworld as stationary sprites.</dd>
 	<dt>Disable BG1</dt>
 	<dd>Disables SNES background 1 via PPU registers. Has no effect on lag.</dd>
 	<dt>Disable BG2</dt>
@@ -672,7 +673,7 @@ title: LTTPHack - A Practice ROM for ALttP
 	<dd>Random, 32 fixed RNGs</dd>
 	<dt>Lanmola exit</dt>
 	<dd>Random, fixed {X,Y} for 0≤X≤7; 0≤Y≤7</dd>
-	<dt>Conveyor belt</dt>
+	<dt>Moth conveyor</dt>
 	<dd class="optionList">
 		<ol>
 			<li>Random</li>
@@ -708,7 +709,7 @@ title: LTTPHack - A Practice ROM for ALttP
 	<dd>How to show Link's current and max health:
 		<dl class="subDefinition">
 			<dt>Numerical</dt>
-			<dd>Classic practice hack display under rupee counter</dd>
+			<dd>Classic practice hack display under rupee count</dd>
 			<dt>Vanilla</dt>
 			<dd>Vanilla graphical display <strong class="lag"><b>NOTICE:</b> vanilla hearts will be drawn to the HUD first, and additional HUD features may be drawn over them.</strong></dd>
 		</dl>
@@ -726,12 +727,12 @@ title: LTTPHack - A Practice ROM for ALttP
 			<dd>Classic with unpressed buttons in gray.</dd>
 		</dl>
 	</dd>
-	<dt>Counter #<sup class="badge sa1-badge">SA1</sup></dt>
-	<dd>5 counter slots displayed on the HUD.
+	<dt>Sentry #<sup class="badge sa1-badge">SA1</sup></dt>
+	<dd>5 sentry slots displayed on the HUD.
 		<dl class="subDefinition">
 			<dt>Room time</dt>
 			<dd>Time spent on the current screen, starting from the beginning of the last transition.</dd>
-			<dt>Lag counter</dt>
+			<dt>Lag</dt>
 			<dd>Count of lag frames on the current screen, starting from the beginning of the last transition.</dd>
 			<dt>Idle frames</dt>
 			<dd>Count of frames with no relevant input, starting from the beginning of the last transition.</dd>
@@ -740,7 +741,7 @@ title: LTTPHack - A Practice ROM for ALttP
 			<dt>Coordinates</dt>
 			<dd>Absolute position of Link (X,Y)</dd>
 			<dt>Subpixels</dt>
-			<dd>Current subpixel (Hexadecimal). Includes door marker for icebreaker, etc.; address: $7E002A</dd>
+			<dd>Current subpixel (Hexadecimal); address: $7E002A</dd>
 			<dt>Room ID</dt>
 			<dd>Current room ID, corrected room ID (based on coordinates), and sync. Sync not displayed on overworld; address: $7E00A0</dd>
 			<dt>Quadrant</dt>
@@ -748,19 +749,19 @@ title: LTTPHack - A Practice ROM for ALttP
 			<dt>Screen ID</dt>
 			<dd>Current overworld screen ID, corrected screen ID (based on coordinates), and sync. Not displayed in underworld; address: $7E008A</dd>
 			<dt>Tile (UW)</dt>
-			<dd>Tile type Link is standing on (only works in underworld); address: $7E0114</dd>
+			<dd>Tile type Link is standing on (bottom right; only works in underworld); address: $7E0114</dd>
 			<dt>Spooky</dt>
 			<dd>Ancilla height for slot 4; address: $7E02A2</dd>
 			<dt>Arc variable</dt>
 			<dd>Overlord value used by Armos Knights and Ganon for circles; address: $7E0B08</dd>
 			<dt>WEST SOMARIA</dt>
 			<dd>West somaria door timer; address: $7E0690</dd>
-			<dt>Anc index</dt>
-			<dd>Ancilla overload starting index; address: $7E03C4</dd>
+			<dt>Ancilla index</dt>
+			<dd>Ancilla search index; address: $7E03C4</dd>
 			<dt>Pits</dt>
 			<dd>Current pit destination/damage flag. Not displayed on overworld; address: $7EC000</dd>
 			<dt>Hookslot</dt>
-			<dd>Hookshot slot index; address: $7E039D</dd>
+			<dd>Hookshot slot index, layer, and activeness; address: $7E039D</dd>
 			<dt>Boss HP</dt>
 			<dd>Health of enemy in slot 0; address: $7E0E50</dd>
 			<dt>Hovering</dt>
@@ -768,8 +769,8 @@ title: LTTPHack - A Practice ROM for ALttP
 		</dl>
 	</dd>
 
-	<dt>Line counter #<sup class="badge lag-badge">EX</sup></dt>
-	<dd>3 larger lines of info displayed on the HUD.
+	<dt>Line #<sup class="badge lag-badge">EX</sup></dt>
+	<dd>3 larger sentry lines of info displayed on the HUD.
 		<dl class="subDefinition">
 			<dt>Room flags</dt>
 			<dd>Boss heart, key, chest, and door floogs for current room.</dd>
@@ -782,23 +783,23 @@ title: LTTPHack - A Practice ROM for ALttP
 			<dt>OW Trans Y</dt>
 			<dd>Transition triggers and target screen IDs for vertical overworld transitions.</dd>
 			<dt>Ancilla 0-4</dt>
-			<dd>Custom ancilla property for slots 0&ndash;4 (property # corresponds to counter #)</dd>
+			<dd>Custom ancilla property for slots 0&ndash;4 (property # corresponds to sentry #). This set of slots is indicated by a yellow triangle pointing down.</dd>
 			<dt>Ancilla 5-9</dt>
-			<dd>Custom ancilla property for slots 5&ndash;9</dd>
-			<dt>Ancilla IXd</dt>
-			<dd>Custom ancilla property for the 5 slots preceding the current search index ($03C4)</dd>
+			<dd>Custom ancilla property for slots 5&ndash;9. This set of slots is indicated by a green triangle pointing up.</dd>
+			<dt>Ancilla MSX</dt>
+			<dd>Custom ancilla property for the 5 slots preceding the current search index ($03C4). This set of slots is indicated by a blue magnifying glass.</dd>
 		</dl>
 	</dd>
 	<dt>Ancilla Prop #</dt>
-	<dd>Custom property 1–3 for ancillae corresponding to line counter 1–3
+	<dd>Custom property 1–3 for ancilla sets corresponding to line sentries 1–3
 		<dl class="subDefinition">
 			<dt>ID</dt>
 			<dd>Ancilla ID from $03C4,X (includes coloring for 00 and replacable particles).</dd>
-			<dt>Y coord</dt>
-			<dd>Ancilla Y-Coordinate; address: $7E0BFA,X</dd>
 			<dt>X coord</dt>
 			<dd>Ancilla X-Coordinate; address: $7E0C04,X</dd>
-			<dt>Altotude</dt>
+			<dt>Y coord</dt>
+			<dd>Ancilla Y-Coordinate; address: $7E0BFA,X</dd>
+			<dt>Altitude</dt>
 			<dd>Ancilla Z-Coordinate; address: $7E029E,X</dd>
 			<dt>Layer</dt>
 			<dd>Ancilla layer; address: $7E0C7C,X</dd>
@@ -815,12 +816,42 @@ title: LTTPHack - A Practice ROM for ALttP
 			<dd>Difference between Link's coordinates and the ancillae's.</dd>
 		</dl>
 	</dd>
-	<dt>Heart lag<sup class="badge sa1-badge">SA1</sup></dt>
-	<dd>Animated spinning square that indicates there is heart lag present.</dd>
-	<dt>QW indicator<sup class="badge sa1-badge">SA1</sup></dt>
+	<dt>HUD lag<sup class="badge sa1-badge">SA1</sup></dt>
+	<dd>Animated spinning icon that indicates there is potential for HUD-related lag present.</dd>
+	<dt>State icons<sup class="badge sa1-badge">SA1</sup></dt>
+	<dd>Displays icons along the left side of the HUD for the following properties (top to bottom): superspeed, waterwalk, door state, stair drag.</dd>
+	<dt>Quick warp<sup class="badge sa1-badge">SA1</sup></dt>
 	<dd>Displays an icon on the HUD when the current camera will effect a quickwarp.</dd>
 	<dt>Boss cycles<sup class="badge sa1-badge">SA1</sup></dt>
-	<dd>Displays a counter for the cycle count of bosses.</dd>
+	<dd>Displays the cycle count of bosses.</dd>
+</dl>
+
+<h3 id="menuRoomMaster">Room master</h3>
+<dl>
+	<dt>Set room</dt>
+	<dd>Change the current room loaded and viewed.</dd>
+	<dt>Load selected room</dt>
+	<dd>Loads the currently selected room based on the configurable settings. Tries to be systematic and intelligent about positioning, camera, etc.</dd>
+	<dt>Config</dt>
+	<dd>Configure settings that control what state rooms are loaded in.
+		<dl class="subDefinition">
+			<dt>Equipment</dt>
+			<dd>Select between current equipment, the custom preset loadout, or full equipment.</dd>
+			<dt>Open shutters</dt>
+			<dd>Opens all shutter doors in the loaded room.</dd>
+			<dt>Kill sprites</dt>
+			<dd>Kills all sprites in the loaded room.</dd>
+			<dt>Peg state</dt>
+			<dd>Choose the peg state when loading rooms, or leave them in the current value.</dd>
+			<dt>World state</dt>
+			<dd>Choose the world ID, let it take on the expected value of the room, or leave it as is.</dd>
+			<dt>Dungeon ID</dt>
+			<dd>Choose the dungeon ID, let it take on the expected value of the room, or leave it as is.</dd>
+			
+		</dl>
+	</dd>
+	<dt>Door 0...</dt>
+	<dd>View and change the various flags saved per room.</dd>
 </dl>
 
 <h3 id="menuShortcuts">Shortcuts</h3>
@@ -846,7 +877,7 @@ title: LTTPHack - A Practice ROM for ALttP
 	<dt>Fill everything</dt>
 	<dd>Maxes out equipment, rupees, items, and health.</dd>
 	<dt>VRAM repair</dt>
-	<dd>Attempts to fix important graphics registers and VRAM data that have been corrupted by door glitches.<strong class="lag"><b>WARNING:</b> If this shortcut is triggered during a text box, the text box will disappear, but the game will remain in text mode.</strong><strong class="lag"><b>WARNING:</b> this feature only repairs registers and VRAM; other areas of RAM may result in game crashes unrelated to this feature, but which are never normally encountered in vanilla.</strong></dd>
+	<dd>Attempts to fix important graphics registers and VRAM data that have been corrupted by door glitches.<strong class="lag"><b>WARNING:</b> If this shortcut is triggered during a text box, the text box will disappear, but the game will remain in text mode.</strong><strong class="lag"><b>NOTE:</b> this feature only repairs registers and VRAM; other areas of RAM may result in game crashes unrelated to this feature, but which are never normally encountered in vanilla runs.</strong></dd>
 	<dt>Show somaria pits</dt>
 	<dd>Modifies the upper layer tilemap to mark pits.<strong class="lag"><b>NOTE:</b> this feature is intended for finding pits created by overlay corruption, but it will mark all standard pit tiles the same way.</strong></dd>
 </dl>
@@ -878,7 +909,7 @@ title: LTTPHack - A Practice ROM for ALttP
 	<dt>HUD font</dt>
 	<dd>Change the font used by HUD extras. This will not change the font for the vanilla HUD or for the HP display. <i>Hover over options for larger preview.</i>
 		<ul class="fontList">
-			<li><span class="fontName">Shop</span><span class="fontPreview font1"></span></li>
+			<li><span class="fontName">LTTP</span><span class="fontPreview font1"></span></li>
 			<li><span class="fontName">Klonoa</span><span class="fontPreview font2"></span></li>
 			<li><span class="fontName">TI-83</span><span class="fontPreview font3"></span></li>
 			<li><span class="fontName">Shin-chan</span><span class="fontPreview font4"></span></li>
@@ -898,7 +929,7 @@ title: LTTPHack - A Practice ROM for ALttP
 			<li><span class="fontName">Skyroads</span><span class="fontPreview font18"></span></li>
 			<li><span class="fontName">Yoshi's <i>(Island)</i></span><span class="fontPreview font19"></span></li>
 			<li><span class="fontName">S. Metroid <i>(Super Metroid)</i></span><span class="fontPreview font20"></span></li>
-			<li><span class="fontName">Tazmani</span><span class="fontPreview font21"></span></li>
+			<li><span class="fontName">Tazmania</span><span class="fontPreview font21"></span></li>
 			<li><span class="fontName">Black Bass (Super Black Bass 3)</span><span class="fontPreview font22"></span></li>
 		</ul>
 	</dd>

@@ -6,7 +6,7 @@
 ;===================================================================================================
 
 cm_mainmenu:
-%menu_header("LTTPHACK !VERSION", 11)
+%menu_header("LTTPHACK !VERSION", 12)
 	%submenu_variable("Presets", PRESET_SUBMENU)
 	%submenu("Y Items", ITEMS_SUBMENU)
 	%submenu("Equipment", EQUIPMENT_SUBMENU)
@@ -15,6 +15,7 @@ cm_mainmenu:
 	%submenu("Gameplay", GAMEPLAY_SUBMENU)
 	%submenu("RNG control", RNG_SUBMENU)
 	%submenu("HUD extras", HUDEXTRAS_SUBMENU)
+	%submenu("Room master", ROOMLOAD_SUBMENU)
 	%submenu("Shortcuts", SHORTCUTS_SUBMENU)
 	%submenu("Preset config", PRESET_CONFIG_SUBMENU)
 	%submenu("Configuration", CONFIG_SUBMENU)
@@ -33,13 +34,13 @@ CM_Main:
 	JSL SNES_ENABLE_CUSTOM_NMI
 
 	JSR CM_PrepPPU
-	JSR CM_CacheWRAM
+	JSL CM_CacheWRAM
 
 	REP #$20
 
 	STZ.b SA1IRAM.SHORTCUT_USED
-	STZ.w SA1IRAM.CONTROLLER_1
-	STZ.w SA1IRAM.CONTROLLER_1_FILTERED
+	STZ.b SA1IRAM.CONTROLLER_1
+	STZ.b SA1IRAM.CONTROLLER_1_FILTERED
 
 	LDA.w #15
 	STA.w SA1RAM.cm_input_timer
@@ -50,12 +51,13 @@ CM_Main:
 
 	; assume something went wrong if it's not 2
 	STZ.b SA1IRAM.cm_submodule
+
 	BRA .loop
 
 .fine
 	SEP #$20
 
-	LDA.w !ram_cm_save_place
+	LDA.w !config_cm_save_place
 	BEQ .loop
 
 	JSR EmptyEntireMenu
@@ -105,30 +107,33 @@ CM_Return:
 	PLD
 	PLB
 
+	JSL SetHUDItemGraphics
 	JSL CM_Exiting
 
 	LDA.b #$81 : STA.w $4200
 
 	RTL
 
-;---------------------------------------------------------------------------------------------------
+;===================================================================================================
 
 CM_Exiting:
 	REP #$20
-	LDA.w #2
-	STA.l SA1IRAM.cm_submodule
+
+	LDA.w #$0002
+	STA.w SA1IRAM.cm_submodule
 
 	SEP #$20
 
 	STZ.w $4200
+
 	LDA.b #$80
 	STA.w $2100
 
-	JSL load_default_tileset
-	JSL reinit_counteraddr
+	JSL LoadCustomHUDGFX
+	JSL reinit_sentry_addresses
 
 	SEP #$30
-	LDA.b #$15 : STA.w $012E
+	LDA.b #$15 : STA.w $2142
 
 	STZ.b $12
 	INC.b $15 ; trigger a CGRAM update
@@ -181,16 +186,16 @@ CM_PrepPPU:
 
 	; transfer menu tileset
 	REP #$10
-	; word-access, incr by 1
-	LDA #$80 : STA $2115
 
-	LDX.w #$7000 : STX.w $2116 ; VRAM address (E000 in vram)
-	LDX.w #cm_gfx>>0 : STX.w $4352 ; Source offset
-	LDA.b #cm_gfx>>16 : STA.w $4354 ; Source bank
-	LDX.w #$1800 : STX.w $4355 ; Size (0x10 = 1 tile)
-	LDA.b #$01 : STA.w $4350 ; word, normal increment (DMA MODE)
-	LDA.b #$18 : STA.w $4351 ; destination (VRAM write)
-	LDA.b #$20 : STA.w $420B ; initiate DMA (channel 1)
+	LDA.b #$80 : STA.w $2115
+
+	LDX.w #$7000 : STX.w $2116
+	LDX.w #cm_gfx>>0 : STX.w $4352
+	LDA.b #cm_gfx>>16 : STA.w $4354
+	LDX.w #$1800 : STX.w $4355
+	LDX.w #$1801 : STX.w $4350
+	LDA.b #$20 : STA.w $420B
+
 	RTS
 
 ;===================================================================================================
@@ -201,7 +206,7 @@ CM_CacheWRAM:
 
 	; Bow
 	LDA.l $7EF340 : BEQ ++
-	CMP #$03
+	CMP.b #$03
 	LDA.b #$01
 	ADC.b #$00
 ++	STA.w SA1RAM.cm_item_bow
@@ -211,7 +216,9 @@ CM_CacheWRAM:
 	LSR #3
 	STA.w SA1RAM.cm_equipment_maxhp
 
-	RTS
+	RTL
+
+;===================================================================================================
 
 CM_Init:
 	JSR EmptyEntireMenu
@@ -282,11 +289,11 @@ CM_MenuSFX:
 	REP #$20
 	PHA ; save our A
 
-	LDA.l $00012E
+	LDA.w $012E
 	BNE .sfx_busy
 
 	LDA 4,S ; get our PEA
-	STA.l $00012E
+	STA.w $012E
 
 .sfx_busy
 	LDA 2,S ; move the P to top of stack
@@ -563,6 +570,7 @@ CM_UpdateCurrentSelection:
 
 	LDY.b SA1IRAM.cm_current_menu+2
 	STY.b SA1IRAM.cm_current_selection+2
+
 	RTS
 
 ;===================================================================================================

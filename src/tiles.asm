@@ -1,58 +1,50 @@
 pushpc
-; TILES
-;
-; Takes care to expand the tileset with our own stuff, so we can draw custom HUD items.
 
-; Load Tiles Hijack
-org $028068
-	JSL load_default_tileset
+org $028068 : JSL LoadCustomHUDGFX
 
-; Load Tiles Hook
 pullpc
-load_default_tileset:
+
 LoadCustomHUDGFX:
 	REP #$20
 	SEP #$10
-	LDY #$01 ; dma channel 0
 
-	LDX #$80 : STX $2115
-	LDA #$7000 : STA $2116 ; VRAM address ($E000 in vram)
-	LDA #$1801 : STA $4300 ; word, normal increment, destination $2118
-	LDA.w #hud_table : STA $4302 ; Source offset
-	LDX.b #hud_table>>16 : STX $4304 ; Source bank
-	LDA #$1800 : STA $4305 ; Size (0x800 = 1 sheet)
+	LDY.b #$01
 
-	STY $420B ; initiate DMA (channel 1)
+	LDX.b #$80 : STX.w $2115
+	LDA.w #$E000>>1 : STA.w $2116
+	LDA.w #$1801 : STA.w $4300
+	LDA.w #hud_table : STA.w $4302
+	LDX.b #hud_table>>16 : STX.w $4304
+	LDA.w #$1800 : STA.w $4305
 
-	; next, load the font
-LoadHudFont:
-	LDA #$7080 : STA $2116
-	LDA #$1801 : STA $4300
+	STY.w $420B ; initiate DMA (channel 1)
+
+	; Font
+	LDA.w #$7080 : STA.w $2116
+	LDA.w #$1801 : STA.w $4300
 	; we're writing 16 2BPP tiles to VRAM
-	; so 16*64*2 = 2048 bits, or 256 bytes
+	; 16*64*2 = 2048 bits, or 256 bytes
 	; AKA 0x100 bytes
-	; since the offset is a multiple of 256,
-	; we can just swap the bytes and
-	; add them in as the offset
-	LDA.w !ram_hud_font : XBA : CLC : ADC.w #hud_font : STA $4302
-	LDX.b #hud_font>>16 : STX $4304
-	LDA #$0100 : STA $4305
+	; since the offset is a multiple of 256, we can just swap the bytes and
+	LDA.w !config_hud_font : XBA : CLC : ADC.w #hud_font : STA.w $4302
+	LDX.b #hud_font>>16 : STX.w $4304
+	LDA.w #$0100 : STA.w $4305
 
-	STY $420B
+	STY.w $420B
 
-LoadHudInputDisplay:
-	LDA.w !ram_input_display : AND #$0002 : BEQ CustomCharsDone
-	LDA #$7000 : STA $2116
-	LDA #$1801 : STA $4300
-	LDA #hud_inputchars : STA $4302
-	LDX.b #hud_inputchars>>16 : STX $4304
-	; we're writing 12 2BPP tiles to VRAM
-	LDA.w #12*8*2 : STA $4305
+	; Input display
+	LDA.w !config_input_display : AND.w #$0002 : BEQ .done
+	LDA.w #$7000 : STA.w $2116
+	LDA.w #$1801 : STA.w $4300
+	LDA.w #hud_inputchars : STA.w $4302
+	LDX.b #hud_inputchars>>16 : STX.w $4304
+	LDA.w #12*8*2 : STA.w $4305 ; writing 12 2BPP tiles
 
-	STY $420B
+	STY.w $420B
 
-CustomCharsDone:
-	SEP #$30 ; expected flags from both entry points/DecompAndDirectCopy
+.done
+	SEP #$30
+
 	RTL
 
 hud_table:

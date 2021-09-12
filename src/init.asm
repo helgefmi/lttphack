@@ -66,7 +66,7 @@ init_hook:
 	SEP #$30
 	LDA.b #$03 : STA.l $002224 ; image 3 for page $60
 
-	LDA.l !ram_feature_music : BNE ++
+	LDA.l !config_feature_music : BNE ++
 	JSL mute_music
 
 ++	LDA.b #$22 : STA.l $2143 ; BWOOWOOOWOWOOOOOO
@@ -128,17 +128,30 @@ init_hook:
 	REP #$20
 	LDA.b $00
 	AND.w #$FF00 : CMP.w #$3000 : BEQ .forcereset
-	LDA.w !ram_init_sig : CMP.w #!INIT_SIGNATURE : BEQ .noforcereset
+	LDA.w !config_init_sig : CMP.w #!INIT_SIGNATURE : BEQ .noforcereset
 
 .forcereset
 	JSR init_initialize_all
 	BRA .sram_initialized
 
 .noforcereset
-	LDA.w !ram_sram_initialized
+	LDA.w !config_sram_initialized
 	CMP.w #$0030 : BCC .forcereset
 
 .sram_initialized
+	REP #$10
+	; clear unused config settings, for when they're used in future updates
+	LDX.w #!last_config
+
+	SEP #$20
+	LDA.b #$00
+	BRA ++
+
+--	STA.l SA1RAM.SETTINGS,X
+	INX
+++	CPX.w #$0400
+	BCC --
+
 	SEP #$30
 	STZ.w $037F
 
@@ -150,7 +163,7 @@ init_hook:
 	JSL $0EF572
 	JSL DoWRAM4BPP
 
-	JSL reinit_counteraddr
+	JSL reinit_sentry_addresses
 
 	SEP #$30
 	LDA.b #$15 : STA.b $1C
@@ -174,6 +187,7 @@ init_initialize_all:
 	SEP #$20
 
 	LDA.b #$1F : STA.w $2143
+	STA.l SA1RAM.ss_old_music_bank
 
 	REP #$30
 	PLY
@@ -197,7 +211,6 @@ init_initialize_all:
 	BRA .next
 
 .done
-	LDA.w #$FFFF : STA.l SA1RAM.ss_old_music_bank
 	PLB
 	RTS
 

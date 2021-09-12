@@ -1,8 +1,8 @@
 EmptyEntireMenu:
 	REP #$20
 	SEP #$10
-	LDX.b #$00
 
+	LDX.b #$00
 	LDA.w #$002F
 
 .loop
@@ -38,6 +38,12 @@ EmptyCurrentMenu:
 
 .doneclean
 --	RTS
+
+;===================================================================================================
+
+RedrawCurrentMenu:
+	JSR DrawCurrentMenu
+	JML NMI_RequestFullMenuUpdate
 
 ;===================================================================================================
 
@@ -410,9 +416,6 @@ CMDRAW_ONOFF:
 
 ;===================================================================================================
 
-; TODO 3 digits for room ID?
-CMDRAW_NUMFIELD_HEX_UPDATEWHOLEMENU:
-
 CMDRAW_HEX_2_DIGITS:
 	LDY.w #2
 	BRA CMDRAW_HEX
@@ -652,7 +655,10 @@ CMDRAW_TOGGLE_BIT0_LONG_CUSTOMTEXT:
 ;===================================================================================================
 ; TODO ?
 CMDRAW_TOGGLE_ROOMFLAG:
+	REP #$20
+
 	LDA.b [SA1IRAM.cm_current_draw],Y
+	AND.w #$00FF
 	ASL
 	TAY
 
@@ -660,21 +666,23 @@ CMDRAW_TOGGLE_ROOMFLAG:
 
 	LDA.w SA1RAM.loadroomid : ASL : TAX
 	LDA.l $7EF000,X
+	TYX
+	AND.l CM_BITS_ASCENDING,X
 
 	PLX
 
-	AND.w .bits,Y : PHP
+	CMP.w #$0001
 
 	LDA.w #'0'
+	ADC.w #$0000
 
-	PLP : BEQ ++
+	JSL CMDRAW_1_CHARACTER
 
-	LDA.w #'1'
-
-++	JSL CMDRAW_1_CHARACTER
 	RTS
 
-.bits
+;===================================================================================================
+
+CM_BITS_ASCENDING:
 	dw 1<<0
 	dw 1<<1
 	dw 1<<2
@@ -761,9 +769,9 @@ CMDRAW_NUMFIELD_LONG_FUNC_HEX:
 	JSR CMDRAW_SAVE_ADDRESS_LONG
 	BRA .continue
 
+#CMDRAW_NUMFIELD_HEX_UPDATEWHOLEMENU:
 #CMDRAW_NUMFIELD_HEX:
 #CMDRAW_NUMFIELD_FUNC_HEX:
-#CMDRAW_NUMFIELD_PRESSFUNC_HEX:
 	JSR CMDRAW_SAVE_ADDRESS_00
 
 .continue

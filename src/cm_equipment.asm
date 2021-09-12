@@ -41,6 +41,7 @@ EQUIPMENT_SUBMENU:
 	LDA.w SA1RAM.cm_equipment_maxhp
 	ASL #3
 	STA.l $7EF36C
+
 	RTL
 
 ;===================================================================================================
@@ -49,13 +50,19 @@ EQUIPMENT_SUBMENU:
 ;===================================================================================================
 %func("Fill rupees", this)
 	REP #$20
+
 	LDA.w #999
 	STA.l $7EF360
 	STA.l $7EF362
+
 	RTL
 
 ;===================================================================================================
-%func_filtered("Fill everything", gamemode_fill_everything)
+%func("Fill everything", this)
+	JSL gamemode_fill_everything
+	JSL CM_CacheWRAM
+
+	JML RedrawCurrentMenu
 
 ;===================================================================================================
 %choice_long_func_filtered_here("Sword", $7EF359, 5, set_sword)
@@ -145,7 +152,7 @@ EQUIPMENT_SUBMENU:
 BIG_KEYS_SUBMENU:
 %menu_header("BIG KEYS", 14)
 	%toggle_bit_long("Sewers", $7EF367, 7)
-	%toggle_bit_long("Hyrule Castle", $7EF367, 6)
+	%toggle_bit_long("Escape", $7EF367, 6)
 	%toggle_bit_long("Eastern", $7EF367, 5)
 	%toggle_bit_long("Desert", $7EF367, 4)
 	%toggle_bit_long("Hera", $7EF366, 5)

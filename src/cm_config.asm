@@ -2,15 +2,15 @@ CONFIG_SUBMENU:
 %menu_header("CONFIGURATION", 5)
 
 ;===================================================================================================
-%toggle_onoff("Rerandomize", !ram_rerandomize_toggle)
+%toggle_onoff("Rerandomize", !config_rerandomize_toggle)
 
 ;===================================================================================================
-%toggle_func_onoff_here("Music", !ram_feature_music)
-	LDA.w !ram_feature_music
+%toggle_func_onoff_here("Music", !config_feature_music)
+	LDA.w !config_feature_music
+
 	REP #$20
 	BNE ..unmute
 
-#mute_music_entry:
 ..mute
 	LDA.w #MutedInstruments
 	BRA ..transfer
@@ -21,8 +21,8 @@ CONFIG_SUBMENU:
 ..transfer
 	JSR transfer_adsr
 
-	LDA.l $0133 : STA.l $012C
-	
+	LDA.w $0133 : STA.w $012C
+
 	RTL
 
 #mute_music:
@@ -42,19 +42,21 @@ CONFIG_SUBMENU:
 	STZ.w $4200
 
 	LDA.b #UnmutedInstruments>>16
-	JSL $00891D ; load song bank
+	JSL $00891D
+
 	SEP #$30
+
 	PLD
 	RTS
 
 ;===================================================================================================
-%toggle_customtext_here("Menu open", !ram_cm_save_place)
+%toggle_customtext_here("Menu open", !config_cm_save_place)
 	%list_item("Main menu")
 	%list_item("Save place")
 
 ;===================================================================================================
-%choice_here("HUD font", !ram_hud_font, 22)
-	%list_item("Shop")
+%choice_here("HUD font", !config_hud_font, 22)
+	%list_item("LTTP")
 	%list_item("Klonoa")
 	%list_item("TI-83")
 	%list_item("Shin-chan")
@@ -97,17 +99,17 @@ endmacro
 
 COLOR_CONFIG_SUBMENU:
 %menu_header("COLOR CONFIG", 7)
-%choice_func("Menu BG", !ram_hud_bg, !color_count, set_color, color_list)
+%choice_func("Menu BG", !config_hud_bg, !color_count, set_color, color_list)
 
-%choice_func("Header FG", !ram_hud_header_fg, !color_count, set_color, color_list)
-%choice_func("Header HL", !ram_hud_header_hl, !color_count, set_color, color_list)
-%choice_func("Header BG", !ram_hud_header_bg, !color_count, set_color, color_list)
+%choice_func("Header FG", !config_hud_header_fg, !color_count, set_color, color_list)
+%choice_func("Header HL", !config_hud_header_hl, !color_count, set_color, color_list)
+%choice_func("Header BG", !config_hud_header_bg, !color_count, set_color, color_list)
 
-%choice_func("Selection FG", !ram_hud_sel_fg, !color_count, set_color, color_list)
-%choice_func("Selection BG", !ram_hud_sel_bg, !color_count, set_color, color_list)
+%choice_func("Selection FG", !config_hud_sel_fg, !color_count, set_color, color_list)
+%choice_func("Selection BG", !config_hud_sel_bg, !color_count, set_color, color_list)
 
-%choice_func("Inactive FG", !ram_hud_dis_fg, !color_count, set_color, color_list)
-;%choice_func("Inactive BG", !ram_hud_dis_bg, !color_count, set_color, color_list)
+%choice_func("Inactive FG", !config_hud_dis_fg, !color_count, set_color, color_list)
+;%choice_func("Inactive BG", !config_hud_dis_bg, !color_count, set_color, color_list)
 
 set_color:
 	BIT.b SA1IRAM.cm_ax
@@ -119,7 +121,7 @@ set_color:
 	TAY
 
 	LDA.l .defaults,X
-	STA.w !ram_hud_bg,Y
+	STA.w !config_hud_bg,Y
 
 .dontreset
 	RTL

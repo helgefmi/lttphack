@@ -1,5 +1,5 @@
 GAMESTATE_SUBMENU:
-%menu_header("GAME STATE", 10)
+%menu_header("GAME STATE", 11)
 
 ;===================================================================================================
 %func("Skip text", this)
@@ -17,15 +17,10 @@ GAMESTATE_SUBMENU:
 
 ;===================================================================================================
 %submenu("Reset dungeons", cm_game_reset_dungeons_submenu)
-
-;===================================================================================================
 %submenu("Toggle bosses defeated", cm_game_state_bosses_submenu)
-
-;===================================================================================================
 %submenu("Pendants and crystals", cm_game_state_crystals_submenu)
-
-;===================================================================================================
-%submenu("Game flags", cm_submenu_game_state_flags)
+%submenu("Game flags", cm_game_state_game_flags_submenu)
+%submenu("Drops", cm_game_state_drops_submenu)
 
 ;===================================================================================================
 %choice_long_func_here("Follower", $7EF3CC, 15, $00D463)
@@ -72,18 +67,18 @@ GAMESTATE_SUBMENU:
 ;===================================================================================================
 cm_game_state_bosses_submenu:
 %menu_header("BOSSES DEFEATED", 12)
-	%toggle_bit_long_customtext("Armos", $7EF191, 7, bossalivetext)
-	%toggle_bit_long_customtext("Lanmola", $7EF067, 7, bossalivetext)
-	%toggle_bit_long_customtext("Moldorm", $7EF00F, 7, bossalivetext)
-	%toggle_bit_long_customtext("Agahnim", $7EF041, 7, bossalivetext)
-	%toggle_bit_long_customtext("Helmasaur", $7EF0B5, 7, bossalivetext)
-	%toggle_bit_long_customtext("Blind", $7EF159, 7, bossalivetext)
-	%toggle_bit_long_customtext("Mothula", $7EF053, 7, bossalivetext)
-	%toggle_bit_long_customtext("Kholdstare", $7EF1BD, 7, bossalivetext)
-	%toggle_bit_long_customtext("Arrghus", $7EF00D, 7, bossalivetext)
-	%toggle_bit_long_customtext("Vitreous", $7EF121, 7, bossalivetext)
-	%toggle_bit_long_customtext("Trinexx", $7EF149, 7, bossalivetext)
-	%toggle_bit_long_customtext("Agahnim 2", $7EF01B, 7, bossalivetext)
+	%toggle_bit_long_customtext("Armos", $7EF191, 3, bossalivetext)
+	%toggle_bit_long_customtext("Lanmola", $7EF067, 3, bossalivetext)
+	%toggle_bit_long_customtext("Moldorm", $7EF00F, 3, bossalivetext)
+	%toggle_bit_long_customtext("Agahnim", $7EF041, 3, bossalivetext)
+	%toggle_bit_long_customtext("Helmasaur", $7EF0B5, 3, bossalivetext)
+	%toggle_bit_long_customtext("Blind", $7EF159, 3, bossalivetext)
+	%toggle_bit_long_customtext("Mothula", $7EF053, 3, bossalivetext)
+	%toggle_bit_long_customtext("Kholdstare", $7EF1BD, 3, bossalivetext)
+	%toggle_bit_long_customtext("Arrghus", $7EF00D, 3, bossalivetext)
+	%toggle_bit_long_customtext("Vitreous", $7EF121, 3, bossalivetext)
+	%toggle_bit_long_customtext("Trinexx", $7EF149, 3, bossalivetext)
+	%toggle_bit_long_customtext("Agahnim 2", $7EF01B, 3, bossalivetext)
 
 #bossalivetext:
 %list_header(2)
@@ -91,7 +86,7 @@ cm_game_state_bosses_submenu:
 	%list_item("Alive")
 
 ;===================================================================================================
-cm_submenu_game_state_flags:
+cm_game_state_game_flags_submenu:
 %menu_header("GAME FLAGS", 12)
 	%toggle_bit_long("Uncle dead", $7EF3C6, 0)
 	%toggle_bit_long("Sanc priest", $7EF3C6, 1)
@@ -106,6 +101,28 @@ cm_submenu_game_state_flags:
 	%toggle_bit_long("Purple chest", $7EF3C9, 4)
 	%toggle_bit_long("Smithy rescued", $7EF3C9, 5)
 	%toggle_bit_long("Tempering", $7EF3C9, 7)
+
+;===================================================================================================
+cm_game_state_drops_submenu:
+%menu_header("ENEMY DROPS", 11)
+
+%choice_long_here("Drop luck", $7E0CF9, 3)
+	%list_item("None")
+	%list_item("Good")
+	%list_item("Bad")
+
+%numfield_long("Lucky kills", $7E0CFA, 0, 10, 1)
+%numfield_long("Rupee pull kills", $7E0CFB, 0, 255, 16)
+%numfield_long("Rupee pull hits", $7E0CFC, 0, 255, 16)
+
+%choice_long_prgtext("Prize pack 1", $7E0FC7, 8, draw_prize_pack_1)
+%choice_long_prgtext("Prize pack 2", $7E0FC8, 8, draw_prize_pack_2)
+%choice_long_prgtext("Prize pack 3", $7E0FC9, 8, draw_prize_pack_3)
+%choice_long_prgtext("Prize pack 4", $7E0FCA, 8, draw_prize_pack_4)
+%choice_long_prgtext("Prize pack 5", $7E0FCB, 8, draw_prize_pack_5)
+%choice_long_prgtext("Prize pack 6", $7E0FCC, 8, draw_prize_pack_6)
+%choice_long_prgtext("Prize pack 7", $7E0FCD, 8, draw_prize_pack_7)
+
 
 ;===================================================================================================
 cm_game_state_crystals_submenu:
@@ -138,7 +155,6 @@ cm_game_reset_dungeons_submenu:
 	%func("Turtle Rock", reset_dungeon_func)
 	%func("Ganon's Tower", reset_dungeon_func)
 	%func("Other", reset_dungeon_func)
-
 
 !EX = $01 ; escape
 !EP = $02 ; eastern palace
@@ -191,7 +207,8 @@ reset_dungeon_func:
 	LDX.w .list,Y
 
 	REP #$30
-	LDA #$0000
+
+	LDA.w #$0000
 	TCD
 	STX.b $00
 
@@ -230,3 +247,74 @@ reset_dungeon_func:
 	db !TR
 	db !GT
 	db !CV
+
+;===================================================================================================
+
+draw_prize_pack:
+	JSL CMDRAW_1_CHARACTER
+
+	LDA.b #' '
+	JSL CMDRAW_1_CHARACTER
+
+	REP #$20
+	PLA
+	SEP #$20
+
+	PHX
+	TAX
+
+	; get prize pack # from index + pack
+	ASL : ASL : ASL
+	ADC.w $0FC7,X
+	TAX
+
+	LDA.l $06FA78,X
+	SBC.b #$D7
+
+	REP #$F3
+	ASL
+	TAX
+
+	LDA.w .item_names,X
+
+	PLX
+
+	JSL CMDRAW_WORD_LONG_LONG
+
+	RTL
+
+#draw_prize_pack_1:
+	PEA.w $0000 : BRA draw_prize_pack
+
+#draw_prize_pack_2:
+	PEA.w $0001 : BRA draw_prize_pack
+
+#draw_prize_pack_3:
+	PEA.w $0002 : BRA draw_prize_pack
+
+#draw_prize_pack_4:
+	PEA.w $0003 : BRA draw_prize_pack
+
+#draw_prize_pack_5:
+	PEA.w $0004 : BRA draw_prize_pack
+
+#draw_prize_pack_6:
+	PEA.w $0005 : BRA draw_prize_pack
+
+#draw_prize_pack_7:
+	PEA.w $0006 : BRA draw_prize_pack
+
+.item_names
+%list_header(12)
+	%list_item("Heart") ; $D8
+	%list_item("Grn rupee") ; $D9
+	%list_item("Blue rupee") ; $DA
+	%list_item("Red rupee") ; $DB
+	%list_item("Bomb (1)") ; $DC
+	%list_item("Bomb (4)") ; $DD
+	%list_item("Bomb (8)") ; $DE
+	%list_item("Magic") ; $DF
+	%list_item("Big magic") ; $E0
+	%list_item("Arrow (5)") ; $E1
+	%list_item("Arrow (10)") ; $E2
+	%list_item("Fairy") ; $E3

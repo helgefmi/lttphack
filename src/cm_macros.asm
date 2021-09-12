@@ -49,9 +49,9 @@ macro add_menu_item(label)
 .ITEM_!{CM_HEADER_ID}_!{MENU_ITEM}
 
 endmacro
+
 ;===================================================================================================
-;
-;===================================================================================================
+
 !LIST_HEADER_ID = 0
 !LAST_LIST_SIZE = 0
 macro list_header(size)
@@ -64,16 +64,21 @@ macro list_header(size)
 	!LAST_LIST_SIZE = <size>
 endmacro
 
-macro list_item(text)
+macro add_list_item(l)
 	!LIST_ITEM #= !LIST_ITEM+1
 	if !LIST_ITEM > !LAST_LIST_SIZE
 			error "Too many items\! !LIST_ITEM > !LAST_LIST_SIZE"
 	endif
 
 	pushpc
-	org ..table-2+(!LIST_ITEM*2) : dw ?here
+	org ..table-2+(!LIST_ITEM*2) : dw <l>
 	pullpc
-#?here:
+endmacro
+
+macro list_item(text)
+	%add_list_item(++++)
+
+++++
 	db "<text>", $FF
 endmacro
 
@@ -307,7 +312,7 @@ endmacro
 %MenuAction("NUMFIELD_HEX_UPDATEWHOLEMENU", 6, $6D)
 macro numfield_hex_update(name, addr, start, end, increment)
 	%add_self()
-	db !CM_NUMFIELD_HEX
+	db !CM_NUMFIELD_HEX_UPDATEWHOLEMENU
 	dw <addr>
 	db <start>, <end>, <increment>
 	db "<name>", $FF
@@ -355,17 +360,6 @@ endmacro
 macro numfield_func_hex(name, addr, start, end, increment, func)
 	%add_self()
 	db !CM_NUMFIELD_FUNC_HEX
-	dw <addr>
-	db <start>, <end>, <increment>
-	dl select(equal(<func>,this), ?here, <func>)
-	db "<name>", $FF
-#?here:
-endmacro
-
-%MenuAction("NUMFIELD_PRESSFUNC_HEX", 9, $6D)
-macro numfield_pressfunc_hex(name, addr, start, end, increment, func)
-	%add_self()
-	db !CM_NUMFIELD_PRESSFUNC_HEX
 	dw <addr>
 	db <start>, <end>, <increment>
 	dl select(equal(<func>,this), ?here, <func>)

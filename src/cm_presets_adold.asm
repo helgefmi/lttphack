@@ -7,7 +7,7 @@ presetheader_adold:
 
 ;===================================================================================================
 %menu_header("All Dungeons RMG (old)", 15)
-	%submenu("Hyrule Castle", presetmenu_adold_escape)
+	%submenu("Escape", presetmenu_adold_escape)
 	%submenu("Eastern Palace", presetmenu_adold_eastern)
 	%submenu("Palace of Darkness", presetmenu_adold_pod)
 	%submenu("Hera Tower", presetmenu_adold_hera)
@@ -29,7 +29,7 @@ presetheader_adold:
 ;-------------------------------------------------------------------------------
 ;===================================================================================================
 presetmenu_adold_escape:
-%menu_header("Hyrule Castle", 14)
+%menu_header("Escape", 14)
 
 ;-------------------------------------------------------------------------------
 %preset_UW("Link's Bed", "adold", "escape", "links_bed")
@@ -255,7 +255,7 @@ dw $0000 ; Dead sprites
 %write_end()
 
 ;-------------------------------------------------------------------------------
-%preset_UW("Last Two", "adold", "escape", "last_two")
+%preset_UW("Into Sanctuary", "adold", "escape", "into_sanctuary")
 dw $0011 ; Screen ID
 dw $0378, $022E ; Link Coords
 dw $0300, $0200 ; Camera HV
@@ -292,10 +292,12 @@ db $02 ; Link direction
 db $04 ; Entrance
 db $82 ; Room layout
 db $00 ; Floor
-db $81 ; Door / Peg state
+db $01 ; Door / Peg state
 db $11 ; Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
+%write8_enable()
+%write8($7E0642, $01) ; Room puzzle state
 %write_end()
 
 ;-------------------------------------------------------------------------------
@@ -537,7 +539,7 @@ db $02 ; Entrance
 db $C0 ; Room layout
 db $00 ; Floor
 db $00 ; Door / Peg state
-db $00 ; Layer
+db $10 ; Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2268,7 +2270,7 @@ dw $0B60 ; Tilemap position
 %write_end()
 
 ;-------------------------------------------------------------------------------
-%preset_UW("Crystal Roller", "adold", "trock", "crystal_roller")
+%preset_UW("Crystaroller", "adold", "trock", "crystaroller")
 dw $00B5 ; Screen ID
 dw $0A78, $162C ; Link Coords
 dw $0A00, $1600 ; Camera HV
@@ -2463,7 +2465,7 @@ dw $0012 ; Dead sprites
 %write_end()
 
 ;-------------------------------------------------------------------------------
-%preset_UW("Floor 2", "adold", "gtower", "floor_2")
+%preset_UW("Floor 3", "adold", "gtower", "floor_3")
 dw $000C ; Screen ID
 dw $18F8, $002A ; Link Coords
 dw $1880, $0000 ; Camera HV
@@ -2930,7 +2932,7 @@ presetpersistent_adold:
 .keyrat
 ..end
 ;-----------------------------
-.last_two
+.into_sanctuary
 ..end
 
 ;===================================================================================================
@@ -3346,7 +3348,7 @@ presetpersistent_adold_trock:
 %write_mirror($07, $0A, $98, $01)
 ..end
 ;-----------------------------
-.crystal_roller
+.crystaroller
 ..end
 ;-----------------------------
 .pokey_1
@@ -3385,7 +3387,7 @@ presetpersistent_adold_gtower:
 .bombable_floor
 ..end
 ;-----------------------------
-.floor_2
+.floor_3
 %write8($7E0B08, $40) ; Arc variable
 %write8($7E0B09, $00) ; Arc variable
 ..end
@@ -3488,7 +3490,6 @@ presetSRAM_adold:
 %write16sram($7EF360, $01) ; Rupees
 %write8($7EF3C6, $11) ; Game flags A
 %writeroom($055, $000F)
-%writeroom($028, $0000)
 ...end
 ;-------------------------------------------------------------------------------
 ..entrance
@@ -3548,7 +3549,7 @@ presetSRAM_adold:
 %writeroom($021, $0003)
 ...end
 ;-------------------------------------------------------------------------------
-..last_two
+..into_sanctuary
 %writeroom($011, $2005)
 %writeroom($021, $840F)
 ...end
@@ -4157,7 +4158,7 @@ presetSRAM_adold:
 %write8($7EF2FB, $20) ; Overworld 7B overlay
 %write8($7EF3CA, $40) ; LW/DW
 %writeroom($10B, $008F)
-%writeroom($028, $0001)
+%writeroom($028, $0100)
 ...end
 ;-------------------------------------------------------------------------------
 ..first_key_pot
@@ -4207,7 +4208,7 @@ presetSRAM_adold:
 %write8($7EF36F, $00) ; Keys
 %writeroom($00E, $0001)
 %writeroom($10B, $000F)
-%writeroom($028, $0080)
+%writeroom($028, $801F)
 ...end
 ;-------------------------------------------------------------------------------
 ..ice_conveyor
@@ -4262,7 +4263,6 @@ presetSRAM_adold:
 %write8($7EF36F, $FF) ; Keys
 %write8($7EF377, $0E) ; Arrows
 %write8($7EF3CA, $00) ; LW/DW
-%writeroom($028, $801F)
 %writeroom($120, $001A)
 ...end
 ;-------------------------------------------------------------------------------
@@ -4273,7 +4273,7 @@ presetSRAM_adold:
 ..laser_entrance
 ...end
 ;-------------------------------------------------------------------------------
-..crystal_roller
+..crystaroller
 %write8($7EF343, $01) ; Bombs
 %write8($7EF36F, $01) ; Keys
 %write8($7EF36D, $28) ; Health
@@ -4350,7 +4350,7 @@ presetSRAM_adold:
 %writeroom($09B, $840F)
 ...end
 ;-------------------------------------------------------------------------------
-..floor_2
+..floor_3
 %write8($7EF377, $0B) ; Arrows
 %write8($7EF389, $01) ; Key for dungeon $0D
 %write16sram($7EF366, $73BC) ; Big keys

@@ -33,7 +33,7 @@ LoadOverworldOverlay:
 
 org $09F253
 CheckForDeathReload:
-	LDA.w !ram_death_reload : BEQ GameOver01
+	LDA.w !config_death_reload : BEQ GameOver01
 
 	LDX.b #$03
 	LDA.b #$06
@@ -59,10 +59,10 @@ pullpc
 PRESET_SUBMENU:
 	SEP #$30
 
-	LDA.w !ram_preset_category
+	LDA.w !config_preset_category
 	ASL
 	CLC
-	ADC.w !ram_preset_category
+	ADC.w !config_preset_category
 	TAX
 
 	REP #$21
@@ -99,7 +99,7 @@ PRESET_SUBMENU:
 ; PRESET LIST
 .pointers
 	dl presetheader_nmg
-	dl presetheader_hundo
+	dl presetheader_100nmg
 	dl presetheader_lownmg
 	dl presetheader_lowleg
 	dl presetheader_ad2020
@@ -201,6 +201,7 @@ emptybg3:
 ;	UW ONLY
 ;	db $00 ; Entrance
 ;	db $00 ; Room layout
+;		aa.. ..bb ; TODO document
 ;	db $00 ; Floor
 ;	db $02 ; Door / Peg state
 ;		s..p..dd
@@ -299,31 +300,9 @@ preset_load:
 
 	JSR presetload_write_sram
 
-	LDA.l !ram_use_custom_load : BEQ .no_loadout
+	LDA.l !config_use_custom_load : BEQ .no_loadout
 
-	LDX.w #$0021
---	LDA.l !ram_custom_load,X
-	STA.l $7EF340,X
-
-	DEX
-	BPL --
-
-	LDA.l !ram_custom_load_2+0 : STA.l $7EF36C
-	LDA.l !ram_custom_load_2+1 : STA.l $7EF36D
-	LDA.l !ram_custom_load_2+2 : STA.l $7EF36E
-	LDA.l !ram_custom_load_2+3 : STA.l $7EF37B
-	LDA.l !ram_custom_load_2+4 : STA.l $7E0303
-
-	LDA.b #$F8 : STA.l $7EF379
-	LDA.l $7EF355 : CMP.b #$01
-	LDA.b #$00 : ROL
-	PHA
-	LDA.l $7EF356 : CMP.b #$01
-	PLA
-	ROL
-	ROL
-	ORA.l $7EF379
-	STA.l $7EF379
+	JSR LoadCustomLoadOut
 	BRA .done_loadout
 
 .no_loadout
@@ -354,7 +333,7 @@ preset_load:
 	; prevent NMI again
 	SEP #$20
 
-	STZ.w $4200
+	LDA.b #$01 : STA.w $4200
 
 	; do the arbitrary writes
 	REP #$31
@@ -369,93 +348,10 @@ preset_load:
 	PLB
 
 	; do hud items from the items we have
-	SEP #$30
-	LDA.b #$7E : STA.b SA1IRAM.preset_reader+2
-
-	LDY.w $0303
-	LDA.w .item_to_menu,Y
-	STA.w $0202
-
-	CPY.b #$00
-	REP #$30
-	BEQ .no_item
-
-.have_item
-	TYA
-	ASL : ASL
-	TAY
-
-	LDX.w .item_HUD-4,Y ; bank0D offset
-	STX.b SA1IRAM.preset_reader2
-
-	LDA.w .item_HUD-2,Y ; bank7E SRAM val
-	STA.b SA1IRAM.preset_reader+0
-
-	LDA.b [SA1IRAM.preset_reader]
-	AND.w #$00FF
-	BEQ .missing_item
-
-	CPY.w #$0001*4 : BEQ .bombs_adjust
-	CPY.w #$000B*4 : BNE .normal_item
-
-.bottle_adjust
-	TAX
-	LDA.l $7EF35C-1,X
-	AND.w #$00FF
-
-.normal_item
-	ASL
-	ASL
-	ASL
-	ADC.b SA1IRAM.preset_reader2
-	TAX
-	BRA .draw_item
-
-.missing_item
-	SEP #$30
-
-	TYA
-	LSR
-	LSR
-	STA.b SA1IRAM.preset_reader2
-
-	TAX
-
---	DEX
-	BPL ++
-
-	LDX.b #$13
-
-++	CPX.b SA1IRAM.preset_reader2
-	BEQ .no_item_at_all
-
-	LDA.l $7EF340,X
-	BEQ --
-
-	REP #$30
-	TXY
-	BRA .have_item
-
-.bombs_adjust
-	CMP.w #$0001
-	BCC .no_item
-
-	LDA.w #$0001
-	BRA .normal_item
-
-.no_item_at_all
-	REP #$30
-
-.no_item
-	LDX.w #$FEE7 ; value happens to have $207F x4
-
-.draw_item
-	LDA.l $0D0000,X : STA.w SA1RAM.HUD+$04A
-	LDA.l $0D0002,X : STA.w SA1RAM.HUD+$04C
-	LDA.l $0D0004,X : STA.w SA1RAM.HUD+$08A
-	LDA.l $0D0006,X : STA.w SA1RAM.HUD+$08C
+	JSL SetHUDItemGraphics
 
 	; make rupees match
+	REP #$20
 	LDA.l $7EF360 : STA.l $7EF362
 
 	LDA.w #$0000
@@ -485,7 +381,9 @@ preset_load:
 	JSL GetRandomInt : STA.w $0B08
 	JSL GetRandomInt : STA.w $0B09
 
-++	JMP TriggerTimerAndReset
+++	JSL Rerandomize
+
+	JMP TriggerTimerAndReset
 
 ;---------------------------------------------------------------------------------------------------
 
@@ -493,53 +391,6 @@ preset_load:
 	dw preset_abort_fast
 	dw presetload_dungeon
 	dw presetload_overworld
-
-; $0303 -> $0202
-.item_to_menu
-	db $00 ; $00 - Nothing
-	db $04 ; $01 - Bombs
-	db $02 ; $02 - Boomerang
-	db $01 ; $03 - Bow
-	db $0C ; $04 - Hammer
-	db $06 ; $05 - Fire Rod
-	db $07 ; $06 - Ice Rod
-	db $0E ; $07 - Bug catching net
-	db $0D ; $08 - Flute
-	db $0B ; $09 - Lamp
-	db $05 ; $0A - Magic Powder
-	db $10 ; $0B - Bottle
-	db $0F ; $0C - Book of Mudora
-	db $12 ; $0D - Cane of Byrna
-	db $03 ; $0E - Hookshot
-	db $08 ; $0F - Bombos Medallion
-	db $09 ; $10 - Ether Medallion
-	db $0A ; $11 - Quake Medallion
-	db $11 ; $12 - Cane of Somaria
-	db $13 ; $13 - Cape
-	db $14 ; $14 - Magic Mirror
-
-; dw bank0D address, SRAM address
-.item_HUD
-	dw $0DF699, $7EF343 ; $01 - Bombs
-	dw $0DF671, $7EF341 ; $02 - Boomerang
-	dw $0DF649, $7EF340 ; $03 - Bow
-	dw $0DF721, $7EF34B ; $04 - Hammer
-	dw $0DF6C1, $7EF345 ; $05 - Fire Rod
-	dw $0DF6D1, $7EF346 ; $06 - Ice Rod
-	dw $0DF751, $7EF34D ; $07 - Bug catching net
-	dw $0DF731, $7EF34C ; $08 - Flute
-	dw $0DF711, $7EF34A ; $09 - Lamp
-	dw $0DF6A9, $7EF344 ; $0A - Magic Powder
-	dw $0DF771, $7EF34F ; $0B - Bottle
-	dw $0DF761, $7EF34E ; $0C - Book of Mudora
-	dw $0DF7C9, $7EF351 ; $0D - Cane of Byrna
-	dw $0DF689, $7EF342 ; $0E - Hookshot
-	dw $0DF6E1, $7EF347 ; $0F - Bombos Medallion
-	dw $0DF701, $7EF348 ; $10 - Ether Medallion
-	dw $0DF6F1, $7EF349 ; $11 - Quake Medallion
-	dw $0DF7B9, $7EF350 ; $12 - Cane of Somaria
-	dw $0DF7D9, $7EF352 ; $13 - Cape
-	dw $0DF7E9, $7EF353 ; $14 - Magic Mirror
 
 ;===================================================================================================
 
@@ -634,7 +485,7 @@ preset_load:
 
 	AND.w #$00FF
 	STA.w $0B80,X
-	
+
 	ASL : TAX
 
 	LDA.b [SA1IRAM.preset_reader],Y
@@ -783,6 +634,7 @@ presetload_write_persist:
 
 .write_mirror
 	SEP #$20
+
 	LDA.b [SA1IRAM.preset_pert],Y : INY : STA.w $7E1ABF
 	LDA.b [SA1IRAM.preset_pert],Y : INY : STA.w $7E1ACF
 	LDA.b [SA1IRAM.preset_pert],Y : INY : STA.w $7E1ADF
@@ -818,9 +670,6 @@ presetload_write_persist:
 	STZ.w $0FC9
 	STZ.w $0FCB
 	STZ.w $0FCD
-	STZ.w $0FDE
-
-	STZ.w $0FA1
 
 	; mirror portal
 	STZ.w $1ABF
@@ -838,7 +687,7 @@ presetload_safeties:
 	PHK
 	PLB
 
-	LDA.w !ram_preset_category
+	LDA.w !config_preset_category
 	AND.w #$00FF
 	ASL
 	TAX
@@ -875,17 +724,20 @@ presetload_safeties:
 	; sanc heart
 	CPY.w #presetmenu_nmg_eastern_octorok : BCC --
 
-	LDA.w !ram_safeties_nmg_sanc_heart : BEQ ..no_sanc
+	LDA.w !config_safeties_nmg_sanc_heart : BEQ ..no_sanc
 
 	REP #$21
 
 	LDA.l $7EF36C : ADC.w #$0808 : STA.l $7EF36C
 
+	; flag sanc chest
+	LDA.l $7EF000+($12*2) : ORA.w #$0010 : STA.l $7EF000+($12*2)
+
 	SEP #$20
 
 ..no_sanc
 	; mushroom / powder / half magic
-	LDA.w !ram_safeties_nmg_powder
+	LDA.w !config_safeties_nmg_powder
 	BEQ ..no_powder
 
 	CPY.w #presetmenu_nmg_aga_after_lost_woods : BCC ..no_powder
@@ -901,19 +753,31 @@ presetload_safeties:
 
 	CPY.w #presetmenu_nmg_skull_fence_dash : BCC ..no_half_magic
 
+	; flag bat
+	REP #$20
+	LDA.w #$0007 : STA.l $7EF000+($E3*2)
+	SEP #$20
+
+	LDA.b #$01
 	STA.l $7EF37B
 
 ..no_half_magic
 	; add ether if powder
 	STA.l $7EF348
-	INC
+
+	; flag witch's hut
+	REP #$20
+	LDA.w #$0082 : STA.l $7EF000+($109*2)
+	SEP #$20
+
+	LDA.b #$02
 
 ..mushroom_only
 	STA.l $7EF344
 
 ..no_powder
 	; bottles
-	LDA.w !ram_safeties_nmg_bottles : BEQ ..no_bottles
+	LDA.w !config_safeties_nmg_bottles : BEQ ..no_bottles
 
 	CMP.b #$01 : BEQ ..early
 
@@ -931,15 +795,20 @@ presetload_safeties:
 
 ..no_bottles
 	; red mail
-	LDA.w !ram_safeties_nmg_red_mail : BEQ ..no_red_mail
-	CPY.w #presetmenu_nmg_gtower_floor_2 : BCC ..no_red_mail
+	LDA.w !config_safeties_nmg_red_mail : BEQ ..no_red_mail
+	CPY.w #presetmenu_nmg_gtower_floor_3 : BCC ..no_red_mail
 
 	LDA.b #$02 : STA.l $7EF35B
+
+	; flag gt big chest
+	REP #$20
+	LDA.l $7EF000+($8C*2) : ORA.w #$0012 : STA.l $7EF000+($8C*2)
+	SEP #$20
 
 ..no_red_mail
 	; gold/silvers
 	CPY.w #presetmenu_nmg_trock_icerod_overworld : BCC ..no_gs
-	LDA.w !ram_safeties_nmg_gs : BEQ ..no_gs
+	LDA.w !config_safeties_nmg_gs : BEQ ..no_gs
 	CMP.b #$01 : BEQ ..silvers_only
 
 ..gold_sword
@@ -948,6 +817,13 @@ presetload_safeties:
 ..silvers_only
 	LDA.b #$03 : STA.l $7EF340
 
+	; flag fairy visits
+	REP #$20
+	LDA.l $7EF000+($116*2) : ORA.w #$0001 : STA.l $7EF000+($116*2)
+
+	SEP #$20
+	LDA.l $7EF2DB : ORA.b #$02 : STA.l $7EF2DB
+
 ..no_gs
 	RTS
 
@@ -955,9 +831,14 @@ presetload_safeties:
 
 .ad2020
 	CPY.w #presetmenu_ad2020_pod_kiki_skip : BCC ..no
-	LDA.w !ram_safeties_ad2020_silvers : BEQ ..no
+	LDA.w !config_safeties_ad2020_silvers : BEQ ..no
 
 	LDA.b #$03 : STA.l $7EF340
+
+	; flag fairy visits
+	REP #$20
+	LDA.l $7EF000+($116*2) : ORA.w #$0001 : STA.l $7EF000+($116*2)
+	SEP #$20
 
 ..no
 	RTS
@@ -966,9 +847,14 @@ presetload_safeties:
 
 .adold
 	CPY.w #presetmenu_adold_pod_kiki_skip : BCC ..no
-	LDA.w !ram_safeties_adold_silvers : BEQ ..no
+	LDA.w !config_safeties_adold_silvers : BEQ ..no
 
 	LDA.b #$03 : STA.l $7EF340
+
+	; flag fairy visits
+	REP #$20
+	LDA.l $7EF000+($116*2) : ORA.w #$0001 : STA.l $7EF000+($116*2)
+	SEP #$20
 
 ..no
 	RTS
@@ -977,22 +863,32 @@ presetload_safeties:
 
 .anyrmg
 	CPY.w #presetmenu_anyrmg_tempered_frog_dmd : BCC ..no
-	LDA.w !ram_safeties_anyrmg_hook : BEQ ..no
+	LDA.w !config_safeties_anyrmg_hook : BEQ ..no
 
 	LDA.b #$01 : STA.l $7EF342
 
+	; flag hook shot stuff
+	REP #$20
+	LDA.w #$248F : STA.l $7EF000+($037*2)
+	LDA.w #$001F : STA.l $7EF000+($036*2)
+	SEP #$20
 ..no
 	RTS
 
 ;---------------------------------------------------------------------------------------------------
 
 .hundo
-	LDA.w !ram_safeties_hundo_trinexx_boom : BEQ ..no
+	LDA.w !config_safeties_100nmg_trinexx_boom : BEQ ..no
+
+	; flag boom chest
+	REP #$20
+	LDA.l $7EF000+($71*2) : ORA.w #$0010 : STA.l $7EF000+($71*2)
+	SEP #$20
 
 	LDA.b #$01
-	CPY.w #presetmenu_hundo_escape_ball_n_chains : BCC ..no
+	CPY.w #presetmenu_100nmg_escape_ball_n_chains : BCC ..no
 
-	CPY.w #presetmenu_hundo_ice_zoras_domain : BCC ..set_boom
+	CPY.w #presetmenu_100nmg_ice_palace_zoras_domain : BCC ..set_boom
 
 	INC
 
@@ -1052,7 +948,7 @@ presetload_overworld:
 	LDA.w #$FFF8 : STA.w $00EC
 	STZ.w $0696 : STZ.w $0698
 	STZ.w $2116
-	
+
 	REP #$20
 	JSL $02EA30
 	SEP #$20
@@ -1095,12 +991,14 @@ presetload_overworld:
 	SEP #$30
 
 	LDA.b #$FF : STA.l $7EF36F ; no keys
+	STA.w $040C ; no dungeon
 
 	; load overworld music
 	SEI
-	STZ.w $4200
-	STZ.w $0136
+
 	STA.w $2140
+	LDA.b #$01 : STA.w $4200
+	STZ.w $0136
 
 	JSL $008913
 
@@ -1109,8 +1007,8 @@ presetload_overworld:
 	JSR PullALot
 
 	LDA.w #$0009 : STA.w $0010
+
 	SEP #$20
-	LDA.b #$0F : STA.w $0013
 	STZ.w $0200 : STZ.w $00B0
 
 	RTS
@@ -1249,9 +1147,9 @@ presetload_dungeon:
 
 	JSL PresetLoadArea_UW
 
-	STZ.w $4200
-
 	SEP #$20
+
+	LDA.b #$01 : STA.w $4200
 	; get shutter door state
 	LDA 10,S : AND.b #$80 : EOR.b #$80 : ASL : ROL
 

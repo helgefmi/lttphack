@@ -77,20 +77,18 @@ struct SA1IRAM $003000
 	.SEG_TIME_S_DISPLAY: skip 2
 	.SEG_TIME_M_DISPLAY: skip 2
 
-	.CNTVAL1: skip 2
-	.CNTVAL2: skip 2
-	.CNTVAL3: skip 2
-	.CNTVAL4: skip 2
-	.CNTVAL5: skip 2
+	.SNTVAL1: skip 2
+	.SNTVAL2: skip 2
+	.SNTVAL3: skip 2
+	.SNTVAL4: skip 2
+	.SNTVAL5: skip 2
 
-	.CNTADD1: skip 2
-	.CNTADD2: skip 2
-	.CNTADD3: skip 2
-	.CNTADD4: skip 2
-	.CNTADD5: skip 2
+	.SNTADD1: skip 2
+	.SNTADD2: skip 2
+	.SNTADD3: skip 2
+	.SNTADD4: skip 2
+	.SNTADD5: skip 2
 
-	.CopyOf_10: skip 1
-	.CopyOf_11: skip 1
 	.CopyOf_12: skip 1
 	.CopyOf_1A: skip 1
 	.CopyOf_1B: skip 1
@@ -99,19 +97,15 @@ struct SA1IRAM $003000
 	.CopyOf_22: skip 1
 	.CopyOf_23: skip 1
 
-	.CopyOf_30: skip 1
-	.CopyOf_31: skip 1
+	.CopyOf_57: skip 1
+	.CopyOf_5B: skip 1
 	.CopyOf_6C: skip 1
+	.CopyOf_0372: skip 1
+
 	.CopyOf_A0: skip 1
 	.CopyOf_A1: skip 1
 	.CopyOf_A4: skip 1
-	.CopyOf_A5: skip 1
-	.CopyOf_B0: skip 1
-	.CopyOf_E2: skip 2
-	.CopyOf_E8: skip 2
-
-	.CopyOf_04A0: skip 1
-	.CopyOf_04B4: skip 1
+	.CopyOf_E2: skip 1
 
 	.CopyOf_7EF36C: skip 1
 	.CopyOf_7EF36D: skip 1
@@ -122,8 +116,11 @@ struct SA1IRAM $003000
 	.Moved_0209: skip 1
 	.Moved_020A: skip 1
 
+	.Moved_04A0: skip 2
+	.Moved_04B4: skip 1
+
 	; extra stuff
-	.LanmoCycles: skip 16 ; 16 to be safe
+	.BossCycles: skip 16 ; 16 to be safe
 
 	print ""
 	print "SA1 dp: $", pc
@@ -139,9 +136,8 @@ struct SA1IRAM $003000
 	.LINE3VAL: skip 16
 	.LINE4VAL: skip 16
 
-
-
 	print "SA1 mirroring: $", pc
+
 endstruct
 
 ;===================================================================================================
@@ -292,37 +288,39 @@ WasteTimeIfNeeded:
 ; TODO arbitrary transfers with jump table?
 CacheSA1Stuff:
 	REP #$30 ; 16 bit first
-	PHD
+
 	LDA.w #$3000
 	TCD
 
-	LDA.w $0010 : STA.b SA1IRAM.CopyOf_10
 	LDA.w $001A : STA.b SA1IRAM.CopyOf_1A
 	LDA.w $0020 : STA.b SA1IRAM.CopyOf_20
 	LDA.w $0022 : STA.b SA1IRAM.CopyOf_22
 	LDA.w $00A0 : STA.b SA1IRAM.CopyOf_A0
-	LDA.w $00A4 : STA.b SA1IRAM.CopyOf_A4
-	LDA.w $00E2 : STA.b SA1IRAM.CopyOf_E2
-	LDA.w $00E8 : STA.b SA1IRAM.CopyOf_E8
 	LDA.l $7EF36C : STA.b SA1IRAM.CopyOf_7EF36C
 
-	LDX.b SA1IRAM.CNTADD1 : LDA.l $7E0000,X : STA.b SA1IRAM.CNTVAL1
-	LDX.b SA1IRAM.CNTADD2 : LDA.l $7E0000,X : STA.b SA1IRAM.CNTVAL2
-	LDX.b SA1IRAM.CNTADD3 : LDA.l $7E0000,X : STA.b SA1IRAM.CNTVAL3
-	LDX.b SA1IRAM.CNTADD4 : LDA.l $7E0000,X : STA.b SA1IRAM.CNTVAL4
-	LDX.b SA1IRAM.CNTADD5 : LDA.l $7E0000,X : STA.b SA1IRAM.CNTVAL5
+	LDX.b SA1IRAM.SNTADD1 : LDA.l $7E0000,X : STA.b SA1IRAM.SNTVAL1
+	LDX.b SA1IRAM.SNTADD2 : LDA.l $7E0000,X : STA.b SA1IRAM.SNTVAL2
+	LDX.b SA1IRAM.SNTADD3 : LDA.l $7E0000,X : STA.b SA1IRAM.SNTVAL3
+	LDX.b SA1IRAM.SNTADD4 : LDA.l $7E0000,X : STA.b SA1IRAM.SNTVAL4
+	LDX.b SA1IRAM.SNTADD5 : LDA.l $7E0000,X : STA.b SA1IRAM.SNTVAL5
+
+	LDA.w #$0000 ; top byte 0x00
 
 	; 8 bit stuff
 	SEP #$30
+
+	LDA.w $00E2 : STA.b SA1IRAM.CopyOf_E2
+	LDA.w $0057 : STA.b SA1IRAM.CopyOf_57
+	LDA.w $005B : STA.b SA1IRAM.CopyOf_5B
 	LDA.w $006C : STA.b SA1IRAM.CopyOf_6C
-	LDA.w $00B0 : STA.b SA1IRAM.CopyOf_B0
-	LDA.w $04A0 : STA.b SA1IRAM.CopyOf_04A0
-	LDA.w $04B4 : STA.b SA1IRAM.CopyOf_04B4
+	LDA.w $00A4 : STA.b SA1IRAM.CopyOf_A4
+	LDA.w $0372 : STA.b SA1IRAM.CopyOf_0372
 	LDA.l $7EF3CA : STA.b SA1IRAM.CopyOf_7EF3CA
 
 	INC.b SA1IRAM.CachedThisFrame ; flag this
 
-	PLD
+	LDA.b #$00 : TCD
+
 	RTL
 
 Extra_SA1_Transfers:
@@ -331,7 +329,7 @@ Extra_SA1_Transfers:
 	LDY.b #$00
 
 .next
-	LDA.w !ram_linecounter1,Y
+	LDA.w !config_linesentry1,Y
 	ASL
 	TAX
 
@@ -439,7 +437,7 @@ Extra_SA1_Transfers:
 	LSR
 	LSR
 	TAY
-	LDA.w !ram_ancprop1,Y
+	LDA.w !config_ancprop1,Y
 	PLY
 
 	ASL
@@ -465,7 +463,7 @@ Extra_SA1_Transfers:
 InitSA1:
 	REP #$20
 
-	LDA #$0020
+	LDA.w #$0020
 	STA.w $2200
 
 	LDA.w #SA1Reset00
@@ -482,13 +480,13 @@ InitSA1:
 	STA.w $2222
 
 	SEP #$20
-	LDA #$80
+	LDA.b #$80
 	STA.w $2226
 
 	LDA.b #$03
 	STA.w $2224
 
-	LDA #$FF
+	LDA.b #$FF
 	STA.w $2202
 	STA.w $2229
 	STZ.w $2228
@@ -531,10 +529,10 @@ SA1Reset:
 
 	REP #$FB
 
-	LDA #$0000
+	LDA.w #$0000
 	TCD
 
-	LDA #$37FF
+	LDA.w #$37FF
 	TCS
 
 	PHK
@@ -618,7 +616,7 @@ SA1NMI:
 .nmis
 	dw .disable_custom_nmi
 	dw .enable_custom_nmi
-	dw SA1NMI_COUNTERS
+	dw SA1NMI_SENTRIES
 	dw .nothing_at_all
 
 .disable_custom_nmi
@@ -634,10 +632,10 @@ SA1NMI:
 
 ;---------------------------------------------------------------------------------------------------
 
-SA1NMI_COUNTERS:
+SA1NMI_SENTRIES:
 	SED
 
-.update_counters
+.update_sentries
 	; if $12 = 1, then we weren't done with game code
 	; that means we're in a lag frame
 	LDA.b SA1IRAM.CopyOf_12
@@ -683,10 +681,10 @@ SA1NMI_COUNTERS:
 	STA.b SA1IRAM.SEG_TIME_S
 
 	REP #$20
-	LDA.b SA1IRAM.SEG_TIME_M : ADC #$0000 ; increments by 1 if S>=60
+	LDA.b SA1IRAM.SEG_TIME_M : ADC.w #$0000 ; increments by 1 if S>=60
 	STA.b SA1IRAM.SEG_TIME_M
 
-.dont_update_counters
+.dont_update_sentries
 	CLD
 
 	SEP #$20
@@ -713,7 +711,8 @@ SA1NMI_COUNTERS:
 
 .dontreset
 	SEP #$30
-	LDA #$80
+
+	LDA.b #$80
 	STA.b SA1IRAM.TIMER_FLAG
 
 .donothing

@@ -1,0 +1,284 @@
+@ 100% NMG
+
+= Escape
+755 Link's Bed
+2576 Outside
+4095 Uncle
+5122 Courtyard
+5847 Entrance
+7846 1st Key Guard
+9329 Stealth Room
+10272 2nd Key Guard
+11629 Ball 'n Chains
+13975 Backtracking
+16168 Key Guard Revisited
+18475 Throne Room
+20095 Snake Avoidance Room
+21357 Sewer Rooms
+22402 Key Rat
+23680 Into Sanctuary
+
+= Eastern Palace
+24611 Before Cutscene
+26199 After Cutscene
+28490 Octorok Overworld
+29394 Eastern Overworld
+31070 Entrance
+33152 Stalfos Room
+34165 Big Chest Room 1
+35499 Dark Key Room
+36902 Big Key Damage Boost
+38149 Big Chest Room 2
+39130 Gifted with Greenies
+39775 Pot Room
+41125 Zeldagamer Room
+42196 Armos
+
+= Desert Palace
+44318 Outside Eastern Palace
+47121 Eastern Palace Spinspeed
+48318 Bridge Screen
+49924 Unholy Spinspeed
+51044 Holy Spinspeed
+52633 Water Dash
+53134 Dam Dash
+54065 Outside Desert Palace
+55578 Entrance
+56727 Key Bonk
+58040 Pre Cannonball Room
+60327 Pot Room
+62029 Desert Ledge
+63966 Popo Genocide
+65166 Torches
+66231 Lanmolas
+
+= Tower of Hera
+70087 Outside Desert Palace
+71417 Aginah Cave
+75058 Fake Flippers
+76280 Bonk Rocks
+77892 Boulder Lift
+78757 Old Man Cave
+80898 Death Mountain
+81882 After Mirror
+82913 Spectacle Rock Choice
+88167 Quickhop
+88492 Entrance
+90163 Tile Room
+92933 Mini Moldorm Room
+93396 Torches
+94604 Beetles
+96706 Petting Zoo
+98552 Bumper Skip
+99054 Moldorm
+
+= Agahnim's Tower
+102426 Outside Hera
+104124 Lumberjacks
+104938 Lost Woods
+109281 After Grove
+111679 After Lost Woods
+112841 Castle Screen
+113513 Castle Entrance
+114663 Tower Entrance
+115546 Prize Pack Guards
+116359 Dark Maze
+118621 Dark Catwalk
+119593 Spear Guards
+120847 Red Alert II
+121368 Circle of Pots
+123547 Catwalk
+125856 Agahnim
+
+= Palace of Darkness
+132846 Pyramid #manual
+134486 Palace Overworld Screen
+137375 Entrance
+140037 Main Hub (Small Key)
+141290 Main Hub (Big Key)
+143336 Main Hub (Hammerjump)
+144505 Hammerjump
+147162 Pre Sexy Statue
+147884 Sexy Statue Room
+148969 Mimics
+149396 Eye Statue
+151237 Basement
+152164 Turtle Room
+153902 Helmasaur
+
+= Minigames
+159749 Outside PoD
+161779 Overworld Hammerdash
+162609 Hype Cave
+163642 Dash to Grove
+165533 Grove
+167977 South Grove Cave
+170297 Digging Game
+173077 Arrow Game Spinspeed
+175392 Usain Bolt
+180093 After Activating Flute
+182631 Return to Town
+183586 Blind's Hut
+185500 Kakariko Well
+188141 One Musketeer
+188504 Three Musketeers
+190175 After Warp
+190582 Chest Game
+
+= Thieves' Town
+192221 Red Boomerang
+194530 Entrance
+196309 After Big Key
+197241 Stalfos Hallway
+198119 Conveyor Gibos
+198457 Hellway
+200157 Bombable Floor
+201030 Backtracking
+202634 Basement
+203507 Prison
+204752 Gloves
+205152 After Gloves
+205807 Pot Hammerdash
+206536 Blind
+
+= Skull Woods
+211155 Outside Thieves
+212453 Cursed Dwarf
+213599 Hammer Pegs
+217965 Purple Chest
+223385 Locksmith
+226414 After Warp
+228049 Mummy Room
+230333 Bomb Jump
+232484 Key Pot
+233475 Skull Entrance
+234153 Mummy Hellway
+234984 Mummy Key
+235418 Mothula
+
+= Ice Palace
+240236 Outside Skull
+242051 Bridge Warp
+243052 Moblin Dash
+243726 Lottery
+244807 Medallion
+247294 Zora's Domain
+251402 Tiny Warp Dik
+252694 Entrance
+253028 Ice 2
+254877 Penguin Switch Room
+255565 Bombable Floor
+256890 Conveyor Room
+257700 IPBJ
+258814 Penguin Lineup
+259675 Lonely Firebar
+260669 Last 2 Rooms
+262107 Kholdstare
+
+= Misery Mire
+267034 Outside Ice
+267875 Death Mountain
+269685 Spike Cave
+271670 Dark Death Mountain
+274454 Free Flutedash
+275043 Mire Portal
+278289 Mire Entrance
+278932 Mire 2
+279631 Main Hub
+281012 Beat the Fireball
+281673 Bari Key
+282212 Sluggulas
+282594 Torches
+285875 Spark Gamble
+286926 Big Chest Room
+287851 Spike Key
+288542 Wizzrobe
+289345 Basement
+290584 Spooky Action 1
+291257 Spooky Action 2
+292626 Vitreous
+
+= Swamp Palace
+296904 Outside Mire
+299464 Link's House
+300500 After Warp
+301304 Bombos Medallion
+305909 Dam
+308108 Entrance
+308888 First Key Pot
+309923 Tiny Hallway Key
+310481 Hammer Peg Lever
+311617 Main Hub
+313715 Crystal Switch Lever
+316654 Sociable Firebar
+318169 Backtracking
+319427 Hookshot
+320830 Hookdash
+321867 Final Lever
+322902 Waterfall Room
+323351 Restock Room
+324071 Phelps' Way
+325246 Arrghus
+
+= Collection
+330596 Outside Swamp
+331173 Lake Hylia
+333765 Hobo
+336468 Hammer Peg Bridge
+338105 Super Bomb
+343897 After Fat Fairy
+345517 King's Tomb
+347394 Graveyard Ledge
+350717 Pmurderdactyl Trio
+351298 Bumper Cave
+352784 Lumberjack Tree
+355391 Ice Rod Overworld
+
+= Turtle Rock
+357690 Death Mountain
+359958 Squirrels
+360366 Peg Puzzle
+362549 Entrance
+363825 Torches
+364859 Roller Room
+366479 Pokey 0
+366989 Chomps
+369412 Pokey 1
+372106 Pokeys 2
+373008 Bomb Yeet
+376553 Mimic Cave
+379967 Crystaroller Room
+380790 Dark Maze
+382714 Laser Skip
+383764 Switch Room
+385030 Trinexx
+
+= Ganon's Tower
+390562 Outside Turtle Rock
+393461 Hookshot Cave
+397957 Entrance
+399632 Spike Skip
+401473 Pre Firesnakes Room
+404581 Bombable Floor
+405265 Ice Armos
+406423 Red Mail
+407943 Floor 3
+408721 Mimics 1
+409209 Mimics 2
+409730 Spike Room
+411061 Gauntlet 1
+412071 Gauntlet 3
+413639 Lanmola 2
+414649 Wizzrobes 1
+415624 Wizzrobes 2
+416269 Torches 1
+417705 Torches 2
+418231 Helma Key
+418622 Bombable Wall
+419720 Moldorm 2
+421971 Agahnim 2
+
+= Ganon
+425701 Ganon
+
+= End

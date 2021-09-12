@@ -4,6 +4,9 @@ title: LTTPHack - A Practice ROM for ALttP
 ---
 <section id="presets">
 
+<h2>Expectations</h2>
+<p>For examples of preset definitions in the desired format, look at <a href="https://github.com/spannerisms/lttphack/tree/master/src/resources/movie">the repository's existing files</a>. The <code>preset_scraper.lua</code> script used to create preset data files can also be found here. To run this script, navigate to the Lua console under the Tools menu, then open the script from there. The script should not be run until a movie is playing. All files should be in the same directory, and within that directory should be a folder named <code>states</code>.</p>
+
 <h2>Recording</h2>
 <p>Create an emulator playback file in BizHawk 2.3+ using the vanilla JP1.0 ROM. You don't need to play perfectly, but play well enough that any preset built from the movie is useful for practice. Sloppy movement is fine, as long as Link's position for defined presets is useful. However, movies should still be reasonably good execution. Avoid taking unintended damage unless a trick is hard enough that every runner expects to take damage more often than not.</p>
 
@@ -49,12 +52,13 @@ title: LTTPHack - A Practice ROM for ALttP
 	<li>Choose frames that precede the next scene of action. For example, if the preset is for a kill room, define the frame as one where Link is in the door in the room before it. Don't pick frames that are in the middle of combat, performing a transition, or using an interface. The gamer should have control of Link once the preset is loaded, so the preset should be defined as a frame with control.</li>
 	<li>If you have specific concerns for what data gets scraped or presets you are unsure will be created properly, put a comment by adding a pound sign (#) followed by the comment at the end of the line. Everything that follows the pound sign will be ignored.</li>
 	<li>After the last segment, create a segment named "End"; i.e. put a new line containing <code>=&nbsp;End</code>.</li>
+	<li>After you have defined the end, put one more new line. This is required due to a bug I don't feel like fixing.</li>
 </ul>
 
 <h2>Submitting</h2>
 <p>Ideally, you will run the scraping script yourself. If you do that, be sure to include a folder in the same directory as the script named <code>states</code>. The script will automatically create a save state 60 frames before every preset. The script will also create a file named <code>cm_presets_&gt;category&lt;.asm</code>. Ideally, you package this file along with the preset definitions and every save state in a single <code>.zip</code> folder.</p>
 
-<p>After submission and some initial clean up, I will send you a <code>.bps</code> file for you to patch yourself and test the presets.
+<p>After submission and some initial clean up, I will send you a <code>.bps</code> file for you to patch yourself and test the presets.</p>
 
 <h2>Styling</h2>
 <ul>

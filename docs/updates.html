@@ -5,7 +5,62 @@ title: LTTPHack - A Practice ROM for ALttP
 
 <h2>Latest update</h2>
 
-<h3 id="v14"><a href="https://github.com/spannerisms/lttphack/releases/tag/14.0.0">v14.0.0</a> <span class="releaseDate"></span></h3>
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/14.1.0">v14.1.0</a> <span class="releaseDate">12 September 2021</span></h3>
+
+<ul class="changes">
+	<li>Fixed an issue that made presets remove too much lag.</li>
+	<li>Added a new "Room master" submenu that includes the ability to view and set flags for underworld rooms, and load arbitrary rooms.</li>
+	<li>Presets:
+		<ul>
+			<li>Proper 100% NMG presets (thanks to Sirius)</li>
+			<li>Changed various preset names.</li>
+			<li>Added "Bumper Skip" for NMG presets.</li>
+			<li>Fixed some data issues with Swamp lobby.</li>
+			<li>Fixed 10,000,000,000 errors with the preset scraping script.</li>
+		</ul>
+	</li>
+	<li>Game state:
+		<ul>
+			<li>Added a submenu for controlling drops and such.</li>
+			<li>Fixed boss deaths menu.</li>
+		</ul>
+	</li>
+	<li>RNG Control:
+		<ul>
+			<li>Fixed pokeys</li>
+		</ul>
+	</li>
+	<li>HUD Extras:
+		<ul>
+			<li>Rebranded counters as "sentries".</li>
+			<li>Improved the Hookslot sentry to include an icon indicating what it is, an icon indicating if hookdrag is active, and the layer bit.</li>
+			<li>Added an icon for the ancilla search index, spooky, UW tile, boss HP, and WEST SOMARIA sentries.</li>
+			<li>Added an icon for every ancilla property as well as an icon for which set of slots is being watched.</li>
+			<li>Renamed "Heart lag" to "HUD lag" and moved the indicator to the left of the magic bar.</li>
+			<li>Added a state icons feature that displays along the left side of the HUD.</li>
+			<li>Removed door state from the subpixels sentry in favor of the state icon.</li>
+			<li>Added cycle counter for Agahnim 2.</li>
+		</ul>
+	</li>
+	<li>Other:
+		<ul>
+			<li>Implemented a blue screen of death for catching BRK and COP software interrupts. This will hopefully protect configuration settings more often.</li>
+			<li>Improved behavior for finding the currently equipped item after modifying items.</li>
+			<li>Changed the numfield icon to something more cool and abstract and less ugly.</li>
+			<li>Filling equipment will update the rest of the menu.</li>
+			<li>Fixed a bug with saving HDMA channels during savestates.</li>
+			<li>Fixed a bug with overworld sprite deaths during savestates.</li>
+			<li>Link no longer slides around if a preset is loaded during death.</li>
+			<li>Loading last preset should no longer bring up the select menu (unless you hold select for too long).</li>
+			<li>Rerandomization works properly again.</li>
+			<li>Rerebranded the default font again.</li>
+			<li>Segment timer now resets on preset load.</li>
+			<li>Removed file 3 BAGE functionality, since no one uses it and there are existing functions for max equipment.</li>
+		</ul>
+	</li>
+</ul>
+
+<h3 id="v14"><a href="https://github.com/spannerisms/lttphack/releases/tag/14.0.0">v14.0.0</a> <span class="releaseDate">1 September 2021</span></h3>
 
 <h4>Changes</h4>
 <ul class="changes">

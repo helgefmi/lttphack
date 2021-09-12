@@ -52,7 +52,7 @@ fire_hud_irq:
 
 	; don't want to be transferring too much
 	; certain things will get designated as slow
-	LDA.b !ram_extra_sa1_required
+	LDA.b !config_extra_sa1_required
 	BEQ .noextra
 
 	JSL Extra_SA1_Transfers
@@ -61,12 +61,14 @@ fire_hud_irq:
 .noextra
 	LDA.b #$83 ; request a hud update from SA-1
 	STA.w $2200
-	INC $16
+
+	INC.b $16
+
 	RTS
 
 warnpc $0DDB3F
 
-; for lanmo counters
+; for boss cycle counters
 org $05A39B
 	JML ResetLanmoCycles
 
@@ -74,20 +76,43 @@ org $05A40E
 	JSL UpdateLanmoCycles
 	NOP
 
-warnpc $0DDB3F
+org $06919F
+	JSL ResetAgaCycles
+	NOP
+
+org $1ED632
+	JSL UpdateAgaCycles
+	NOP
 
 pullpc
+
 ;===================================================================================================
 
 UpdateLanmoCycles:
 	INC.w $0D80,X
-	INC.w SA1IRAM.LanmoCycles,X
+	INC.w SA1IRAM.BossCycles,X
 	LDA.b #$18
 	RTL
 
 ResetLanmoCycles:
 	STA.l $7FF81E,X
-	STZ.w SA1IRAM.LanmoCycles,X
+	STZ.w SA1IRAM.BossCycles,X
+	RTL
+
+ResetAgaCycles:
+	STZ.w $0DC0,X
+
+	STZ.w SA1IRAM.BossCycles+0
+	STZ.w SA1IRAM.BossCycles+1
+	STZ.w SA1IRAM.BossCycles+2
+
+	RTL
+
+UpdateAgaCycles:
+	INC.w $0D80,X
+	LDY.b #$04
+
+	INC.w SA1IRAM.BossCycles,X
 	RTL
 
 ;===================================================================================================
@@ -289,14 +314,13 @@ draw_hud_extras:
 	PHK
 	PLB
 
-	; clear up counters
+	; clear up sentriess
 	REP #$20
 
 	LDA.b SA1IRAM.TIMER_FLAG
 	AND.w #$FF7F
 	STA.b SA1IRAM.TIMER_FLAG
 
-	; clean up these first
 	SEP #$10
 
 	LDA.w #$207F
@@ -326,27 +350,84 @@ draw_hud_extras:
 	DEX
 	BPL --
 
-	LDA.w !ram_heart_display
+	LDA.w !config_heart_display
 	ASL
 	TAX
 	JSR (draw_hearts_options,X)
 
-draw_hud_counters:
+;===================================================================================================
+
+	REP #$30
+
+	JSR GetHUDLagTile
+	STA.w SA1RAM.HUD+$02
+
+	SEP #$10
+
+	LDX.w !config_state_icons : BNE ++
+
+	LDA.w #$207F
+	STA.w SA1RAM.HUD+$042
+	STA.w SA1RAM.HUD+$082
+	STA.w SA1RAM.HUD+$0C2
+	STA.w SA1RAM.HUD+$102
+	BRA draw_hud_sentry
+
+	; super speed
+++	LDA.w #char($1C)|!RED_PAL
+	LDX.b SA1IRAM.CopyOf_0372 : BNE ++
+
+	AND.w #$E3FF
+	ORA.w #!GRAY_PAL
+
+++	STA.w SA1RAM.HUD+$042
+
+	; water walk
+	LDA.w #char($1D)|!BLUE_PAL
+	LDX.b SA1IRAM.CopyOf_5B : BNE ++
+
+	AND.w #$E3FF
+	ORA.w #!GRAY_PAL
+
+++	STA.w SA1RAM.HUD+$082
+
+	; door state
+	LDA.w #char($1A)|!BROWN_PAL
+	LDX.b SA1IRAM.CopyOf_6C : BNE ++
+
+	AND.w #$E3FF
+	ORA.w #!GRAY_PAL
+
+++	STA.w SA1RAM.HUD+$0C2
+
+	; stair drag
+	LDA.w #char($1B)|!BROWN_PAL
+	LDX.b SA1IRAM.CopyOf_57 : BNE ++
+
+	AND.w #$E3FF
+	ORA.w #!GRAY_PAL
+
+++	STA.w SA1RAM.HUD+$102
+
+
+;===================================================================================================
+
+draw_hud_sentry:
 	REP #$30
 	LDA.w #$002E ; start place
 	LDX.w #$0000
 
-.next_counter
+.next_sentry
 	PHA
 	PHX
 
-	LDA.b SA1IRAM.CNTVAL1,X
+	LDA.b SA1IRAM.SNTVAL1,X
 	PHA
 
-	LDA.w !ram_counter1,X
+	LDA.w !config_sentry1,X
 	ASL
 	TAY
-	LDA.w counter_routines,Y
+	LDA.w sentry_routines,Y
 	TAY
 
 	LDA 5,S ; get write spot
@@ -371,10 +452,11 @@ draw_hud_counters:
 	INX
 	INX
 	CPX.w #10
-	BCC .next_counter
+	BCC .next_sentry
 
 ;===================================================================================================
-draw_hud_linecounters:
+
+draw_hud_linesentrys:
 	REP #$30
 	LDA.w #5*64+10 ; start position
 	LDY.w #$0000
@@ -383,7 +465,7 @@ draw_hud_linecounters:
 	PEA.w 5*64+10
 	BRA .start
 
-.next_counter
+.next_sentry
 	PHA
 
 .start
@@ -391,12 +473,12 @@ draw_hud_linecounters:
 
 	TAX ; get spot
 
-	LDA.w !ram_linecounter1,Y
+	LDA.w !config_linesentry1,Y
 
 	ASL
 	TAY
 
-	LDA.w linecounter_routines,Y
+	LDA.w linesentry_routines,Y
 	DEC
 
 	PEA.w .return-1
@@ -421,12 +503,13 @@ draw_hud_linecounters:
 	INY
 	INY
 	CPY.w #6
-	BCC .next_counter
+	BCC .next_sentry
 
 ;===================================================================================================
+
 hud_draw_input_display:
-	LDA.w !ram_input_display
-	AND #$0003
+	LDA.w !config_input_display
+	AND.w #$0003
 	ASL : TAX
 
 	LDA.b SA1IRAM.CONTROLLER_1
@@ -437,6 +520,7 @@ hud_draw_input_display:
 ;===================================================================================================
 ; clean up the stuff right under items
 	REP #$30
+
 	LDA.w #$207F
 	STA.w SA1RAM.HUD+$10A
 	STA.w SA1RAM.HUD+$10C
@@ -446,39 +530,20 @@ hud_draw_input_display:
 	LSR
 	BCC draw_quickwarp
 
-draw_lanmo_cycles:
-	LDA.w !ram_toggle_boss_cycles
-	LSR
-	BCC .skip
-
-	LDA.b SA1IRAM.CopyOf_A0
-	CMP.w #$0033
-	BNE .skip
-
-	LDX.w #$0002
-	LDY.w #$0004
-
-.nextlanmo
-	LDA.b SA1IRAM.LanmoCycles,X
-	AND.w #$00FF
-	ORA.w #$2010
-	STA.w SA1RAM.HUD+$10A,Y
-	DEY
-	DEY
-	DEX
-	BPL .nextlanmo
+	JSR draw_boss_cycles
 
 	BRA .skip
 
 ;===================================================================================================
+
 #draw_quickwarp:
 	SEP #$30
-	LDA.w !ram_qw_toggle
+	LDA.w !config_qw_toggle
 	EOR.b #$01
 	ORA.b SA1IRAM.CopyOf_1B
 	BNE .skip
 
-	LDA.b SA1IRAM.CopyOf_E2 : AND #$06 : CMP #$06
+	LDA.b SA1IRAM.CopyOf_E2 : AND.b #$06 : CMP.b #$06
 
 	REP #$30 : PHP
 
@@ -498,7 +563,7 @@ draw_floor:
 	SEP #$20
 	LDA.b SA1IRAM.CopyOf_1B
 	LSR
-	LDA.b SA1IRAM.CopyOf_04A0
+	LDA.b SA1IRAM.Moved_04A0
 	REP #$20
 	BEQ .skip
 	BCC .skip
@@ -536,7 +601,7 @@ draw_floor:
 
 .skip
 draw_timer:
-	LDA.b SA1IRAM.CopyOf_04B4
+	LDA.b SA1IRAM.Moved_04B4
 	AND.w #$00FF
 	BIT.w #$0080
 	BNE .skip
@@ -594,11 +659,11 @@ draw_hearts_options:
 	JSR hex_to_dec_fast
 
 	LDA.b SA1IRAM.SCRATCH+2
-	ORA #$3C90
+	ORA.w #$3C90
 	STA.w SA1RAM.HUD+$92
 
 	LDA.b SA1IRAM.SCRATCH+4
-	ORA #$3C90
+	ORA.w #$3C90
 	STA.w SA1RAM.HUD+$94
 
 	LDA.b SA1IRAM.CopyOf_7EF36D
@@ -606,7 +671,7 @@ draw_hearts_options:
 	ORA.w #$3490
 	STA.w SA1RAM.HUD+$96
 
-	JSR GetHeartLagTile
+	LDA.w #$207F
 	STA.w SA1RAM.HUD+$98
 
 	; containers
@@ -621,11 +686,11 @@ draw_hearts_options:
 	JSR hex_to_dec_fast
 
 	LDA.b SA1IRAM.SCRATCH+2
-	ORA #$3C90
+	ORA.w #$3C90
 	STA.w SA1RAM.HUD+$9C
 
 	LDA.b SA1IRAM.SCRATCH+4
-	ORA #$3C90
+	ORA.w #$3C90
 	STA.w SA1RAM.HUD+$9E
 
 	RTS
@@ -647,9 +712,6 @@ draw_hearts_options:
 	STA.w SA1RAM.HUD+$034
 	LDA.w #$688B
 	STA.w SA1RAM.HUD+$036
-
-	JSR GetHeartLagTile
-	STA.w SA1RAM.HUD+$02A
 
 	LDA.b SA1IRAM.CopyOf_7EF36C
 	LSR
@@ -736,14 +798,16 @@ draw_hearts_options:
 ..done
 	RTS
 
-GetHeartLagTile:
-	LDA.w !ram_heartlag_spinner
-	BNE .doheartlag
+;===================================================================================================
+
+GetHUDLagTile:
+	LDA.w !config_hudlag_spinner
+	BNE .dohudlag
 
 	LDA.w #$207F
 	RTS
 
-.doheartlag
+.dohudlag
 	LDA.b SA1IRAM.CopyOf_1A
 	AND.w #$000C
 	LSR
@@ -768,6 +832,8 @@ GetHeartLagTile:
 	ORA.w #$253F
 	RTS
 
+;===================================================================================================
+
 ; wrap at 7a
 hud_draw_input_display_options:
 	dw .off
@@ -778,16 +844,19 @@ hud_draw_input_display_options:
 .off
 	RTS
 
+;---------------------------------------------------------------------------------------------------
+
 .cool
 	STA.b SA1IRAM.SCRATCH ; dpad
-	AND #$000F : ORA #$2D70 : STA.w SA1RAM.HUD+$66+2
+	AND.w #$000F : ORA.w #$2D70 : STA.w SA1RAM.HUD+$66+2
 
 	; need buttons in this order: xbya
 	SEP #$30
-	LDA.b SA1IRAM.SCRATCH+0 : AND #$C0 : LSR #5 : STA.b SA1IRAM.SCRATCH+2 ; b and y in place
-	LDA.b SA1IRAM.SCRATCH+1 : AND #$40 : LSR #3 : ORA.b SA1IRAM.SCRATCH+2 ; ; x in place
+
+	LDA.b SA1IRAM.SCRATCH+0 : AND.b #$C0 : LSR #5 : STA.b SA1IRAM.SCRATCH+2 ; b and y in place
+	LDA.b SA1IRAM.SCRATCH+1 : AND.b #$40 : LSR #3 : ORA.b SA1IRAM.SCRATCH+2 ; ; x in place
 	; this ASL takes care of one for figuring out LR inputs
-	ASL.b SA1IRAM.SCRATCH+1 : ADC #$70 ; a in place
+	ASL.b SA1IRAM.SCRATCH+1 : ADC.b #$70 ; a in place
 
 	; #$70 is the character offset we want
 	; top byte contains $29 from doing dpad, which is what we want
@@ -795,18 +864,21 @@ hud_draw_input_display_options:
 	STA.w SA1RAM.HUD+$66+6
 
 	; start and select
-	LDA.b SA1IRAM.SCRATCH : AND #$0030 : LSR #4 : ORA #$2C00
+	LDA.b SA1IRAM.SCRATCH : AND.w #$0030 : LSR #4 : ORA.w #$2C00
 	STA.w SA1RAM.HUD+$66+4
 
 	; L and R
 	ASL.b SA1IRAM.SCRATCH : ASL.b SA1IRAM.SCRATCH ; L into carry and remember where R is
-	LDA #$2C04 : ADC #$0000 : STA.w SA1RAM.HUD+$26+2
+	LDA.w #$2C04 : ADC.w #$0000 : STA.w SA1RAM.HUD+$26+2
 
 	ASL.b SA1IRAM.SCRATCH ; R into carry
-	LDA #$6C04 : ADC #$0000 : STA.w SA1RAM.HUD+$26+6
+	LDA.w #$6C04 : ADC.w #$0000 : STA.w SA1RAM.HUD+$26+6
 
-	LDA #$2C06 : STA.w SA1RAM.HUD+$26+4
+	LDA.w #$2C06 : STA.w SA1RAM.HUD+$26+4
+
 	RTS
+
+;---------------------------------------------------------------------------------------------------
 
 .classic
 	REP #$30
@@ -840,6 +912,7 @@ hud_draw_input_display_options:
 
 	RTS
 
+;---------------------------------------------------------------------------------------------------
 
 .classicgray
 	REP #$30
@@ -878,6 +951,8 @@ hud_draw_input_display_options:
 
 	RTS
 
+;---------------------------------------------------------------------------------------------------
+
 .classic_locations
 	dw $68+4  ; dpad right
 	dw $68+0  ; dpad left
@@ -893,6 +968,42 @@ hud_draw_input_display_options:
 	dw $28+0  ; L shoulder
 	dw $28+8  ; X
 	dw $68+8  ; A
+
+;===================================================================================================
+
+draw_boss_cycles:
+	LDA.w !config_toggle_boss_cycles
+	LSR
+	BCC .no
+
+	LDA.b SA1IRAM.CopyOf_A0
+	CMP.w #$0033 : BEQ .three ; lanmo
+	CMP.w #$000D : BEQ .three ; agahnim
+
+	BRA .no
+
+.three
+	LDA.w #$0002
+	BRA .start
+
+.start
+	TAX
+	ASL
+	TAY
+
+.next
+	LDA.b SA1IRAM.BossCycles,X
+	AND.w #$00FF
+	ORA.w #$2010
+	STA.w SA1RAM.HUD+$10A,Y
+
+	DEY
+	DEY
+	DEX
+	BPL .next
+
+.no
+	RTS
 
 ;===================================================================================================
 
@@ -1074,37 +1185,36 @@ DrawHEX4ForwardSaveY:
 	RTS
 
 ;===================================================================================================
-; Various counters
-;===================================================================================================
-counter_routines:
-	dw counter_nothing
-	dw counter_room
-	dw counter_lag
-	dw counter_idle
-	dw counter_segment
-	dw counter_coords
-	dw counter_subpixels
-	dw counter_roomid
-	dw counter_quadrant
-	dw counter_screenid
-	dw counter_tile
-	dw counter_spooky
-	dw counter_arcvar
-	dw counter_westsom
-	dw counter_index
-	dw counter_hookslot
-	dw counter_pit
-	dw counter_bosshp
-	dw counter_hover
+
+sentry_routines:
+	dw sentry_nothing
+	dw sentry_room
+	dw sentry_lag
+	dw sentry_idle
+	dw sentry_segment
+	dw sentry_coords
+	dw sentry_subpixels
+	dw sentry_roomid
+	dw sentry_quadrant
+	dw sentry_screenid
+	dw sentry_tile
+	dw sentry_spooky
+	dw sentry_arcvar
+	dw sentry_westsom
+	dw sentry_index
+	dw sentry_hookslot
+	dw sentry_pit
+	dw sentry_bosshp
+	dw sentry_hover
 
 ;===================================================================================================
 
-counter_nothing:
+sentry_nothing:
 	RTS
 
 ;---------------------------------------------------------------------------------------------------
 
-counter_room:
+sentry_room:
 	LDY.w #!yellow ; color
 	LDA.w #SA1IRAM.ROOM_TIME_F_DISPLAY ; address
 	JSR Draw_all_two
@@ -1119,21 +1229,21 @@ counter_room:
 
 ;---------------------------------------------------------------------------------------------------
 
-counter_lag:
+sentry_lag:
 	LDY.w #!red ; color
 	LDA.w #SA1IRAM.ROOM_TIME_LAG_DISPLAY ; address
 	JMP Draw_short_three
 
 ;---------------------------------------------------------------------------------------------------
 
-counter_idle:
+sentry_idle:
 	LDY.w #!white
 	LDA.w #SA1IRAM.ROOM_TIME_IDLE_DISPLAY
 	JMP Draw_short_three
 
 ;---------------------------------------------------------------------------------------------------
 
-counter_segment:
+sentry_segment:
 	LDY.w #!gray
 	LDA.w #SA1IRAM.SEG_TIME_F_DISPLAY
 	JSR Draw_all_two
@@ -1156,13 +1266,13 @@ counter_segment:
 
 ;---------------------------------------------------------------------------------------------------
 
-counter_coords:
+sentry_coords:
 	LDY.w #4
 	JMP DrawCoordinates
 
 ;---------------------------------------------------------------------------------------------------
 
-counter_subpixels:
+sentry_subpixels:
 	PHA
 	AND.w #$00FF
 	LDY.w #2
@@ -1172,27 +1282,17 @@ counter_subpixels:
 	XBA
 	AND.w #$00FF
 	LDY.w #2
-	JSR DrawHex_white
-
-	LDA.b SA1IRAM.CopyOf_6C : AND #$00FF : BEQ .nodoor
-	LDA.w #$216A : BRA .drawdoor
-
-.nodoor
-	LDA.w #!EMPTY
-
-.drawdoor
-	STA.w SA1RAM.HUD+14,X
-	RTS
+	JMP DrawHex_white
 
 ;---------------------------------------------------------------------------------------------------
 
-counter_roomid:
+sentry_roomid:
 	; calculate correct room id first
 	LDA.b SA1IRAM.CopyOf_21 : AND.w #$00FE
 	ASL : ASL : ASL
 	STA.b SA1IRAM.SCRATCH+14
 
-	LDA.b SA1IRAM.CopyOf_23 : AND #$00FE : LSR ; bit 0 is off, so it clears carry
+	LDA.b SA1IRAM.CopyOf_23 : AND.w #$00FE : LSR ; bit 0 is off, so it clears carry
 	ADC.b SA1IRAM.SCRATCH+14 : STA.b SA1IRAM.SCRATCH+14
 
 	LDA.b SA1IRAM.CopyOf_1B
@@ -1245,12 +1345,12 @@ counter_roomid:
 
 ;---------------------------------------------------------------------------------------------------
 
-counter_screenid:
+sentry_screenid:
 	STA.b SA1IRAM.SCRATCH+4
 
 	LDA.b SA1IRAM.CopyOf_1B
 	AND.w #$00FF
-	BNE NoDisplayCounter
+	BNE NoDisplaySentry
 
 	LDA.b SA1IRAM.CopyOf_20
 	AND.w #$1E00
@@ -1313,12 +1413,12 @@ counter_screenid:
 
 ;---------------------------------------------------------------------------------------------------
 
-counter_pit:
+sentry_pit:
 	TAY
 
 	LDA.b SA1IRAM.CopyOf_1B
 	AND.w #$00FF
-	BEQ NoDisplayCounter
+	BEQ NoDisplaySentry
 
 	TYA
 
@@ -1347,18 +1447,23 @@ counter_pit:
 
 ;---------------------------------------------------------------------------------------------------
 
-NoDisplayCounter:
+NoDisplaySentry:
 	LDA.w #$608B : STA.w SA1RAM.HUD+12,X
 	STA.w SA1RAM.HUD+14,X
 	RTS
 
-counter_tile:
+;---------------------------------------------------------------------------------------------------
+
+sentry_tile:
 	AND.w #$00FF
 	TAY
 
+	LDA.w #char(24)|!GREEN_PAL
+	STA.w SA1RAM.HUD+10,X
+
 	LDA.b SA1IRAM.CopyOf_1B
 	AND.w #$00FF
-	BEQ NoDisplayCounter
+	BEQ NoDisplaySentry
 
 	TYA
 	LDY.w #2
@@ -1366,12 +1471,12 @@ counter_tile:
 
 ;---------------------------------------------------------------------------------------------------
 
-counter_quadrant:
+sentry_quadrant:
 	TAY
 
 	LDA.b SA1IRAM.CopyOf_1B
 	AND.w #$00FF
-	BEQ NoDisplayCounter
+	BEQ NoDisplaySentry
 
 	TYA
 	LSR
@@ -1461,23 +1566,93 @@ counter_quadrant:
 
 ;---------------------------------------------------------------------------------------------------
 
-counter_bosshp:
-counter_index:
-counter_spooky:
-counter_hookslot:
+sentry_hookslot:
+	PHA
+
+	XBA
+	LSR
+
+	LDA.w #$2010
+	ADC.w #$0000
+
+	STA.w SA1RAM.HUD+14,X
+
+	LDA.w #char(2)|!RED_PAL
+	STA.w SA1RAM.HUD+6,X
+
+
+	DEX
+	DEX
+
+	LDA 1,S : XBA : LSR : LSR
+
+	LDA.w #char(22)
+	BCS ++
+
+	ORA.w #!GRAY_PAL
+	BRA +
+
+++	ORA.w #!YELLOW_PAL
++	STA.w SA1RAM.HUD+14,X
+
+	DEX
+	DEX
+
+	PLA
+
+;---------------------------------------------------------------------------------------------------
+
+sentry_raw:
 	AND.w #$00FF
 	LDY.w #2
 	JMP DrawHex_white
 
 ;---------------------------------------------------------------------------------------------------
 
-counter_arcvar:
+sentry_index:
+	JSR sentry_raw
+
+	LDA.w #char(4)|!BLUE_PAL
+	STA.w SA1RAM.HUD+14,X
+
+	RTS
+
+;---------------------------------------------------------------------------------------------------
+
+sentry_bosshp:
+	JSR sentry_raw
+
+	LDA.w #$2CA1
+	STA.w SA1RAM.HUD+14,X
+
+	RTS
+
+;---------------------------------------------------------------------------------------------------
+
+sentry_spooky:
+	JSR sentry_raw
+
+	LDA.w #char(3)|!RED_PAL
+	STA.w SA1RAM.HUD+14,X
+
+	RTS
+
+;---------------------------------------------------------------------------------------------------
+
+sentry_arcvar:
 	LDY.w #4
 	JMP DrawHex_white
 
 ;---------------------------------------------------------------------------------------------------
 
-counter_westsom:
+sentry_westsom:
+	PHA
+
+	LDA.w #char(23)|!BLUE_PAL
+	STA.w SA1RAM.HUD+6,X
+
+	PLA
+
 	LDY.w #4
 	CMP.w #$0010
 	BCS .bad
@@ -1490,7 +1665,7 @@ counter_westsom:
 
 ;---------------------------------------------------------------------------------------------------
 
-counter_hover:
+sentry_hover:
 	AND.w #$00FF
 
 	CMP.w #$0000
@@ -1520,29 +1695,29 @@ counter_hover:
 	JMP Draw_short_two
 
 ;===================================================================================================
-; full line counters
+; full line sentries
 ;===================================================================================================
-linecounter_routines:
-	dw linecounter_nothing
-	dw linecounter_roomdata
-	dw linecounter_camerax
-	dw linecounter_cameray
-	dw linecounter_owtranx
-	dw linecounter_owtrany
-	dw linecounter_ancilla04
-	dw linecounter_ancilla59
-	dw linecounter_ancillaIX
-	dw linecounter_nothing
-	dw linecounter_nothing
+linesentry_routines:
+	dw linesentry_nothing
+	dw linesentry_roomdata
+	dw linesentry_camerax
+	dw linesentry_cameray
+	dw linesentry_owtranx
+	dw linesentry_owtrany
+	dw linesentry_ancilla04
+	dw linesentry_ancilla59
+	dw linesentry_ancillaIX
+	dw linesentry_nothing
+	dw linesentry_nothing
 
 ;===================================================================================================
 
-linecounter_nothing:
+linesentry_nothing:
 	RTS
 
 ;===================================================================================================
 
-linecounter_roomdata:
+linesentry_roomdata:
 	LDA.w SA1IRAM.LINEVAL+1,Y : AND.w #$0FFF : STA.b SA1IRAM.SCRATCH+10
 	LDA.w SA1IRAM.LINEVAL-1,Y : AND.w #$F000 : ORA.b SA1IRAM.SCRATCH+10
 
@@ -1576,36 +1751,32 @@ linecounter_roomdata:
 
 	RTS
 
-!CHEST_TILE = char($15)
-!QUAD = char($14)
-!DOOR_TILE = char($1A)
-
 .char
 	dw $20A0|!RED_PAL
 	dw $2071|!YELLOW_PAL
 	dw $2071|!YELLOW_PAL
-	dw !CHEST_TILE|!RED_PAL
-	dw !CHEST_TILE|!RED_PAL
-	dw !CHEST_TILE|!RED_PAL
-	dw !CHEST_TILE|!RED_PAL
-	dw !CHEST_TILE|!RED_PAL
-	dw !DOOR_TILE|!BROWN_PAL
-	dw !DOOR_TILE|!BROWN_PAL
-	dw !DOOR_TILE|!BROWN_PAL
-	dw !DOOR_TILE|!BROWN_PAL
-	dw !QUAD|!HFLIP|!BLUE_PAL
-	dw !QUAD|!RED_PAL
-	dw !QUAD|!HFLIP|!VFLIP|!GREEN_PAL
-	dw !QUAD|!VFLIP|!YELLOW_PAL
+	dw $20A8|!BLUE_PAL
+	dw char($15)|!REDYELLOW
+	dw char($15)|!REDYELLOW
+	dw char($15)|!REDYELLOW
+	dw char($15)|!REDYELLOW
+	dw char($1A)|!BROWN_PAL
+	dw char($1A)|!BROWN_PAL
+	dw char($1A)|!BROWN_PAL
+	dw char($1A)|!BROWN_PAL
+	dw char($14)|!HFLIP|!BLUE_PAL
+	dw char($14)|!RED_PAL
+	dw char($14)|!HFLIP|!VFLIP|!GREEN_PAL
+	dw char($14)|!VFLIP|!YELLOW_PAL
 
 ;===================================================================================================
 
-linecounter_camerax:
+linesentry_camerax:
 	LDA.w #char(9)
 	PEA.w !white
 	BRA ++
 
-linecounter_cameray:
+linesentry_cameray:
 	LDA.w #char(11)
 	PEA.w !yellow
 
@@ -1710,20 +1881,20 @@ linecounter_cameray:
 
 ;===================================================================================================
 
-linecounter_owtranx:
+linesentry_owtranx:
 	PEA.w $02A83B
 	PEA.w char(9)|!white
 	LDA.w #$FFFF
-	BRA linecounter_owtran
+	BRA linesentry_owtran
 
-linecounter_owtrany:
+linesentry_owtrany:
 	PEA.w $02A7BB
 	PEA.w char(11)|!yellow
 	LDA.w #$FFF0
 
 ; 1,S - Bank
 ; 2,S - table
-linecounter_owtran:
+linesentry_owtran:
 	STA.b SA1IRAM.SCRATCH+6 ; increment amount
 	PLA : STA.b SA1IRAM.SCRATCH+8 ; icon
 	AND.w #$FC00 : ORA.w #$0010 : STA.b SA1IRAM.SCRATCH+10
@@ -1754,7 +1925,7 @@ linecounter_owtran:
 	LDA.b SA1IRAM.CopyOf_22
 	AND.w #$1E00
 	ORA.b SA1IRAM.SCRATCH+12
-	
+
 	XBA
 	STA.b SA1IRAM.SCRATCH+12
 
@@ -1807,13 +1978,38 @@ linecounter_owtran:
 
 ;===================================================================================================
 
-linecounter_ancilla04:
-linecounter_ancilla59:
-linecounter_ancillaIX:
+linesentry_ancilla04:
+	LDA.w #$A82F
+	BRA linesentry_ancilla_all
+
+linesentry_ancilla59:
+	LDA.w #$3C2F
+	BRA linesentry_ancilla_all
+
+linesentry_ancillaIX:
+	LDA.w #char(4)|!BLUE_PAL
+
+linesentry_ancilla_all:
+	STA.w SA1RAM.HUD+2,X
+
+	TXA
+	CLC
+	ADC.w #$0004
+	PHA
+
+	PHX
+
 	LDA.w #5
 	STA.b SA1IRAM.SCRATCH+14
 
-	PHX
+	LDX.w SA1IRAM.LINEVAL+8,Y
+	LDA.w .icons,X
+
+	PLX
+
+	STA.w SA1RAM.HUD,X
+
+	LDA.w SA1IRAM.LINEVAL+8,Y
 
 	LDX.w SA1IRAM.LINEVAL+8,Y
 	LDA.w .vectors,X
@@ -1823,22 +2019,35 @@ linecounter_ancillaIX:
 
 	RTS
 
+.icons
+	dw char(1)|!RED_PAL
+	dw $202D|!RED_PAL
+	dw $202E|!RED_PAL
+	dw char(3)|!RED_PAL
+	dw char(27)|!RED_PAL
+	dw char(2)|!RED_PAL
+	dw char(24)|!BLUE_PAL
+	dw char(22)|!YELLOW_PAL
+	dw char(20)|!GREEN_PAL
+	dw char(10)|!RED_PAL
+	dw char(12)|!RED_PAL
+
 .vectors
-	dw linecounter_ancilla_id-1
-	dw linecounter_ancilla_y-1
-	dw linecounter_ancilla_x-1
-	dw linecounter_ancilla_altitude-1
-	dw linecounter_ancilla_layer-1
-	dw linecounter_ancilla_itemget-1
-	dw linecounter_ancilla_tile-1
-	dw linecounter_ancilla_egcheck-1
-	dw linecounter_ancilla_direction-1
-	dw linecounter_ancilla_delta_x-1
-	dw linecounter_ancilla_delta_y-1
+	dw linesentry_ancilla_id-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_y-1
+	dw linesentry_ancilla_altitude-1
+	dw linesentry_ancilla_layer-1
+	dw linesentry_ancilla_itemget-1
+	dw linesentry_ancilla_tile-1
+	dw linesentry_ancilla_egcheck-1
+	dw linesentry_ancilla_direction-1
+	dw linesentry_ancilla_delta_x-1
+	dw linesentry_ancilla_delta_y-1
 
 ;---------------------------------------------------------------------------------------------------
 
-linecounter_ancilla_delta_x:
+linesentry_ancilla_delta_x:
 .next_ancilla
 	INX
 	INX
@@ -1867,7 +2076,7 @@ linecounter_ancilla_delta_x:
 
 ;---------------------------------------------------------------------------------------------------
 
-linecounter_ancilla_delta_y:
+linesentry_ancilla_delta_y:
 .next_ancilla
 	INX
 	INX
@@ -1898,12 +2107,12 @@ linecounter_ancilla_delta_y:
 
 ;---------------------------------------------------------------------------------------------------
 
-linecounter_ancilla_x:
-linecounter_ancilla_itemget:
-linecounter_ancilla_tile:
-linecounter_ancilla_direction:
-linecounter_ancilla_layer:
-linecounter_ancilla_altitude:
+linesentry_ancilla_x:
+linesentry_ancilla_itemget:
+linesentry_ancilla_tile:
+linesentry_ancilla_direction:
+linesentry_ancilla_layer:
+linesentry_ancilla_altitude:
 .next_ancilla
 	INX
 	INX
@@ -1921,7 +2130,7 @@ linecounter_ancilla_altitude:
 
 ;---------------------------------------------------------------------------------------------------
 
-linecounter_ancilla_y:
+linesentry_ancilla_y:
 .next_ancilla
 	INX
 	INX
@@ -1939,7 +2148,7 @@ linecounter_ancilla_y:
 
 ;---------------------------------------------------------------------------------------------------
 
-linecounter_ancilla_id:
+linesentry_ancilla_id:
 .next_ancilla
 	INX
 	INX
@@ -1972,7 +2181,7 @@ linecounter_ancilla_id:
 
 ;---------------------------------------------------------------------------------------------------
 
-linecounter_ancilla_egcheck:
+linesentry_ancilla_egcheck:
 .next_ancilla
 	INX
 	INX

@@ -8,6 +8,21 @@ LINKSTATE_SUBMENU:
 	%list_item("Armed (2)")
 	%list_item("Deathholed")
 
+
+;===================================================================================================
+%toggle("Statue drag", $02FA)
+
+;===================================================================================================
+%numfield_hex("Ancilla index", $03C4, 0, $7F, 5)
+
+;===================================================================================================
+%toggle("Armed EG", $047A)
+
+%choice_here("EG strength", $044A, 3)
+	%list_item("EG 0")
+	%list_item("Strong")
+	%list_item("Weak")
+
 ;===================================================================================================
 %func_filtered("Activate superbunny", this)
 	LDA.b $5D
@@ -32,24 +47,12 @@ LINKSTATE_SUBMENU:
 %func_filtered("Finish mirror door", this)
 
 	REP #$20
+
 	LDA.b $10 : CMP.w #$0007 : BEQ .allow
 	CMP.w #$010E : BNE .nothappening
 	LDA.w $010C : CMP.w #$1A07 : BNE .nothappening
 
 .allow
 	LDA.w #$0111 : STA.b $C8
+
 	RTL
-
-;===================================================================================================
-%toggle("Statue drag", $02FA)
-
-;===================================================================================================
-%numfield_hex("Anc Index", $03C4, 0, $7F, 5)
-
-;===================================================================================================
-%toggle("Armed EG", $047A)
-
-%choice_here("EG strength", $044A, 3)
-	%list_item("EG 0")
-	%list_item("Strong")
-	%list_item("Weak")

@@ -1,6 +1,8 @@
 !SRAM_VERSION = $0030
 !INIT_SIGNATURE = $25A4
 
+function hexto555(h) = ((((h&$FF)/8)<<10)|(((h>>8&$FF)/8)<<5)|(((h>>16&$FF)/8)<<0))
+
 ;===================================================================================================
 ; Memory map:
 ; Bank 40:
@@ -9,8 +11,7 @@
 ;    $9000..$97FF - unused
 ;    $9800..$9EFF - SA-1 savestate for $3000..$36FF
 ; Bank 41: savestates
-; Bank 42: savestates
-;    $0000..$FFFF - vram mirror
+; Bank 42: savestates vram
 ;===================================================================================================
 org $400000
 SA1SRAM = $400000
@@ -30,10 +31,9 @@ struct SA1RAM $406000
 	.hex2dec_second_digit: skip 2
 	.hex2dec_third_digit: skip 2
 
+	.ss_old_music_bank: skip 1
+
 .clearable_sa1ram:
-	.rng_counter: skip 2
-	.rng_cache: skip 1
-	.frame_cache: skip 1
 	.pokey_rng: skip 2
 	.agahnim_rng: skip 2
 	.helmasaur_rng: skip 2
@@ -49,16 +49,19 @@ struct SA1RAM $406000
 	.vitreous_rng: skip 2
 	.ganon_bats: skip 2
 
-	.react_counter: skip 2
-	.react_frames: skip 2
-
-	.mash_counter: skip 2
-	.mash_inputs: skip 2
-
 	.CM_SubMenuIndex: skip 2
 	.CM_SubMenuStack: skip 40
 
 	.loadroomid: skip 2
+	.loadroomshutters: skip 2
+	.loadroomkill: skip 2
+	.loadroompegset: skip 2
+	.loadroomdungeonset: skip 2
+	.loadroomworldset: skip 2
+	.loadroomequip: skip 2
+	.loadroomdungeon: skip 1
+	.loadroompegstate: skip 1
+	.loadroomeg: skip 1
 
 	.disabled_layers: skip 2
 	.layer_writer: skip 2
@@ -68,14 +71,9 @@ struct SA1RAM $406000
 
 	.cm_input_timer: skip 2
 	.cm_last_input: skip 2
-	.LayerCache: skip 2
 
 	.cm_item_bow: skip 1
 	.cm_equipment_maxhp: skip 1
-
-	.movie_hud: skip $40
-
-	.ss_old_music_bank: skip 2
 
 	warnpc $407FFF
 endstruct
@@ -107,7 +105,7 @@ function color(h) = ((((h&$FF)/8)<<10)|(((h>>8&$FF)/8)<<5)|(((h>>16&$FF)/8)<<0))
 ; 7C[0x02]
 ; 04CB[0x25] (04F0)
 
-!ram_extra_sa1_required = $35
+!config_extra_sa1_required = $35
 
 !offset = $407000
 !offsetinc = 0
@@ -115,8 +113,8 @@ function color(h) = ((((h&$FF)/8)<<10)|(((h>>8&$FF)/8)<<5)|(((h>>16&$FF)/8)<<0))
 !ON = 1
 
 macro def_sram(name, default)
-	!ram_<name> #= !offset+!offsetinc
-	!newval := "dw !ram_<name>, <default>"
+	!config_<name> #= !offset+!offsetinc
+	!newval := "dw !config_<name>, <default>"
 
 	if defined("PERM_INIT")
 		!PERM_INIT := "!PERM_INIT : !newval"
@@ -125,12 +123,14 @@ macro def_sram(name, default)
 	endif
 
 	!offsetinc #= !offsetinc+2
+	!last_config #= !offsetinc
 endmacro
 
 macro def_sram_long(name, size)
-	!ram_<name> #= !offset+!offsetinc
+	!config_<name> #= !offset+!offsetinc
 
 	!offsetinc #= !offsetinc+<size>
+	!last_config #= !offsetinc
 endmacro
 
 %def_sram("sram_initialized", !SRAM_VERSION)
@@ -142,7 +142,7 @@ endmacro
 %def_sram("cm_save_place", 0)
 
 %def_sram("ctrl_load_last_preset", $A020)
-%def_sram("ctrl_replay_last_movie", $3020)
+%def_sram("ctrl_unused", $0000)
 %def_sram("ctrl_save_state", $6010)
 %def_sram("ctrl_load_state", $6020)
 
@@ -164,16 +164,16 @@ endmacro
 %def_sram("heart_display", 0)
 %def_sram("feature_music", !ON)
 
-%def_sram("counter1", 1) ; room time
-%def_sram("counter2", 2) ; lag time
-%def_sram("counter3", 3) ; idle time
-%def_sram("counter4", !OFF)
-%def_sram("counter5", 5) ; coords
+%def_sram("sentry1", 1) ; room time
+%def_sram("sentry2", 2) ; lag time
+%def_sram("sentry3", 3) ; idle time
+%def_sram("sentry4", !OFF)
+%def_sram("sentry5", 5) ; coords
 
-%def_sram("linecounter1", !OFF)
-%def_sram("linecounter2", !OFF)
-%def_sram("linecounter3", !OFF)
-%def_sram("linecounter4", !OFF)
+%def_sram("linesentry1", !OFF)
+%def_sram("linesentry2", !OFF)
+%def_sram("linesentry3", !OFF)
+%def_sram("linesentry4", !OFF)
 
 %def_sram("ancprop1", 0)
 %def_sram("ancprop2", 0)
@@ -181,7 +181,7 @@ endmacro
 %def_sram("ancprop4", 0)
 
 %def_sram("qw_toggle", !ON)
-%def_sram("heartlag_spinner", !ON)
+%def_sram("hudlag_spinner", !ON)
 %def_sram("toggle_boss_cycles", !ON)
 
 %def_sram("lit_rooms_toggle", !OFF)
@@ -212,7 +212,7 @@ endmacro
 %def_sram("safeties_nmg_bottles", !OFF)
 %def_sram("safeties_nmg_red_mail", !OFF)
 
-%def_sram("safeties_hundo_trinexx_boom", !OFF)
+%def_sram("safeties_100nmg_trinexx_boom", !OFF)
 
 %def_sram("safeties_ad2020_silvers", !OFF)
 
@@ -220,151 +220,20 @@ endmacro
 
 %def_sram("safeties_anyrmg_hook", !OFF)
 
-; Placeholders for future SRAM
-; this way, future updates will end up in one of these
-; instead of say, a preset thing
-%def_sram("PLACEHOLDER_00", 0)
-%def_sram("PLACEHOLDER_01", 0)
-%def_sram("PLACEHOLDER_02", 0)
-%def_sram("PLACEHOLDER_03", 0)
-%def_sram("PLACEHOLDER_04", 0)
-%def_sram("PLACEHOLDER_05", 0)
-%def_sram("PLACEHOLDER_06", 0)
-%def_sram("PLACEHOLDER_07", 0)
-%def_sram("PLACEHOLDER_08", 0)
-%def_sram("PLACEHOLDER_09", 0)
-%def_sram("PLACEHOLDER_0A", 0)
-%def_sram("PLACEHOLDER_0B", 0)
-%def_sram("PLACEHOLDER_0C", 0)
-%def_sram("PLACEHOLDER_0D", 0)
-%def_sram("PLACEHOLDER_0E", 0)
-%def_sram("PLACEHOLDER_0F", 0)
-%def_sram("PLACEHOLDER_0G", 0)
-%def_sram("PLACEHOLDER_0H", 0)
-%def_sram("PLACEHOLDER_0I", 0)
-%def_sram("PLACEHOLDER_0J", 0)
-%def_sram("PLACEHOLDER_0K", 0)
-%def_sram("PLACEHOLDER_0L", 0)
-%def_sram("PLACEHOLDER_0M", 0)
-%def_sram("PLACEHOLDER_0N", 0)
-%def_sram("PLACEHOLDER_0O", 0)
-%def_sram("PLACEHOLDER_0P", 0)
-%def_sram("PLACEHOLDER_0Q", 0)
-%def_sram("PLACEHOLDER_0R", 0)
-%def_sram("PLACEHOLDER_0S", 0)
-%def_sram("PLACEHOLDER_0T", 0)
-%def_sram("PLACEHOLDER_0U", 0)
-%def_sram("PLACEHOLDER_0V", 0)
-%def_sram("PLACEHOLDER_0W", 0)
-%def_sram("PLACEHOLDER_0X", 0)
-%def_sram("PLACEHOLDER_0Y", 0)
-%def_sram("PLACEHOLDER_0Z", 0)
-%def_sram("PLACEHOLDER_10", 0)
-%def_sram("PLACEHOLDER_11", 0)
-%def_sram("PLACEHOLDER_12", 0)
-%def_sram("PLACEHOLDER_13", 0)
-%def_sram("PLACEHOLDER_14", 0)
-%def_sram("PLACEHOLDER_15", 0)
-%def_sram("PLACEHOLDER_16", 0)
-%def_sram("PLACEHOLDER_17", 0)
-%def_sram("PLACEHOLDER_18", 0)
-%def_sram("PLACEHOLDER_19", 0)
-%def_sram("PLACEHOLDER_1A", 0)
-%def_sram("PLACEHOLDER_1B", 0)
-%def_sram("PLACEHOLDER_1C", 0)
-%def_sram("PLACEHOLDER_1D", 0)
-%def_sram("PLACEHOLDER_1E", 0)
-%def_sram("PLACEHOLDER_1F", 0)
-%def_sram("PLACEHOLDER_1G", 0)
-%def_sram("PLACEHOLDER_1H", 0)
-%def_sram("PLACEHOLDER_1I", 0)
-%def_sram("PLACEHOLDER_1J", 0)
-%def_sram("PLACEHOLDER_1K", 0)
-%def_sram("PLACEHOLDER_1L", 0)
-%def_sram("PLACEHOLDER_1M", 0)
-%def_sram("PLACEHOLDER_1N", 0)
-%def_sram("PLACEHOLDER_1O", 0)
-%def_sram("PLACEHOLDER_1P", 0)
-%def_sram("PLACEHOLDER_1Q", 0)
-%def_sram("PLACEHOLDER_1R", 0)
-%def_sram("PLACEHOLDER_1S", 0)
-%def_sram("PLACEHOLDER_1T", 0)
-%def_sram("PLACEHOLDER_1U", 0)
-%def_sram("PLACEHOLDER_1V", 0)
-%def_sram("PLACEHOLDER_1W", 0)
-%def_sram("PLACEHOLDER_1X", 0)
-%def_sram("PLACEHOLDER_1Y", 0)
-%def_sram("PLACEHOLDER_1Z", 0)
-%def_sram("PLACEHOLDER_20", 0)
-%def_sram("PLACEHOLDER_21", 0)
-%def_sram("PLACEHOLDER_22", 0)
-%def_sram("PLACEHOLDER_23", 0)
-%def_sram("PLACEHOLDER_24", 0)
-%def_sram("PLACEHOLDER_25", 0)
-%def_sram("PLACEHOLDER_26", 0)
-%def_sram("PLACEHOLDER_27", 0)
-%def_sram("PLACEHOLDER_28", 0)
-%def_sram("PLACEHOLDER_29", 0)
-%def_sram("PLACEHOLDER_2A", 0)
-%def_sram("PLACEHOLDER_2B", 0)
-%def_sram("PLACEHOLDER_2C", 0)
-%def_sram("PLACEHOLDER_2D", 0)
-%def_sram("PLACEHOLDER_2E", 0)
-%def_sram("PLACEHOLDER_2F", 0)
-%def_sram("PLACEHOLDER_2G", 0)
-%def_sram("PLACEHOLDER_2H", 0)
-%def_sram("PLACEHOLDER_2I", 0)
-%def_sram("PLACEHOLDER_2J", 0)
-%def_sram("PLACEHOLDER_2K", 0)
-%def_sram("PLACEHOLDER_2L", 0)
-%def_sram("PLACEHOLDER_2M", 0)
-%def_sram("PLACEHOLDER_2N", 0)
-%def_sram("PLACEHOLDER_2O", 0)
-%def_sram("PLACEHOLDER_2P", 0)
-%def_sram("PLACEHOLDER_2Q", 0)
-%def_sram("PLACEHOLDER_2R", 0)
-%def_sram("PLACEHOLDER_2S", 0)
-%def_sram("PLACEHOLDER_2T", 0)
-%def_sram("PLACEHOLDER_2U", 0)
-%def_sram("PLACEHOLDER_2V", 0)
-%def_sram("PLACEHOLDER_2W", 0)
-%def_sram("PLACEHOLDER_2X", 0)
-%def_sram("PLACEHOLDER_2Y", 0)
-%def_sram("PLACEHOLDER_2Z", 0)
+%def_sram("state_icons", !OFF)
+
+print ""
+print "Config end: $", hex(!last_config,3)
+
+if !last_config > $3FF
+	error "Too many config settings!"
+endif
+
 
 ;-------------------------
 ; Sword beams
 ;-------------------------
 !disable_beams = $7A
-
-;-------------------------
-; MOVIE
-;-------------------------
-
-!ram_movie_mode = $7F8000
-!ram_movie_index = $0000
-!ram_movie_timer = $7E
-!ram_movie_length = $80
-!ram_movie_rng_index = $82
-!ram_movie_rng_length = $0258
-!ram_prev_ctrl = $7F8006
-!ram_movie_framecounter = $7F8002
-!ram_movie_next_mode = $7F8004
-!ram_movie = $7F8020
-
-!sram_movies = $771000
-!sram_movie_data = $771100
-!sram_movie_data_size = $6F00
-
-!sram_movies_length = !sram_movies+0
-!sram_movies_input_length = !sram_movies+2
-!sram_movies_rng_length = !sram_movies+4
-!sram_movies_offset = !sram_movies+6
-!sram_movies_prev_slot = !sram_movies+8
-!sram_movies_next_slot = !sram_movies+10
-!sram_movies_frame_counter = !sram_movies+12
-!sram_movies_preset_type = !sram_movies+13
-!sram_movies_preset_destination = !sram_movies+14
 
 ;-------------------------
 ; From ROM

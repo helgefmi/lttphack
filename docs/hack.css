@@ -75,6 +75,7 @@ span.dgIcon {
 	display: inline-block;
 	margin-right: .3em;
 	margin-left: .5px;
+	image-rendering: crisp-edges;
 	image-rendering: pixelated;
 }
 
@@ -216,6 +217,7 @@ span.menuIcon {
 	height: 16px;
 	display: inline-block;
 	margin: .3em 0 .1em;
+	image-rendering: crisp-edges;
 	image-rendering: pixelated;
 }
 
@@ -257,9 +259,10 @@ ul.fontList > li > span.fontPreview {
 	background-image: url("fontpreviews.png");
 	background-color: #489848;
 	outline: 2px solid #489848;
-	width: 256;
+	width: 256px;
 	height: 16px;
 	vertical-align: sub;
+	image-rendering: crisp-edges;
 	image-rendering: pixelated;
 }
 

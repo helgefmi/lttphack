@@ -1,63 +1,63 @@
 HUDEXTRAS_SUBMENU:
-	%menu_header("HUD EXTRAS", 16)
+	%menu_header("HUD EXTRAS", 17)
 
 ;===================================================================================================
-%choice_here("Health display", !ram_heart_display, 2)
+%choice_here("Health display", !config_heart_display, 2)
 	%list_item("Numerical")
 	%list_item("Vanilla")
 
 ;===================================================================================================
-%choice_here("Input display", !ram_input_display, 4)
+%choice_here("Input display", !config_input_display, 4)
 	%list_item("Off")
 	%list_item("Graphical")
 	%list_item("Classic")
 	%list_item("Classic Gray")
 
 ;===================================================================================================
-!counter_count = 19
-%choice("Counter 1", !ram_counter1, !counter_count, counter_names)
-%choice("Counter 2", !ram_counter2, !counter_count, counter_names)
-%choice("Counter 3", !ram_counter3, !counter_count, counter_names)
-%choice("Counter 4", !ram_counter4, !counter_count, counter_names)
-%choice("Counter 5", !ram_counter5, !counter_count, counter_names)
+!sentry_count = 19
+%choice("Sentry 1", !config_sentry1, !sentry_count, sentry_names)
+%choice("Sentry 2", !config_sentry2, !sentry_count, sentry_names)
+%choice("Sentry 3", !config_sentry3, !sentry_count, sentry_names)
+%choice("Sentry 4", !config_sentry4, !sentry_count, sentry_names)
+%choice("Sentry 5", !config_sentry5, !sentry_count, sentry_names)
 
-#counter_address:
-	fillword $001A : fill !counter_count*2
+#sentry_address:
+	fillword $001A : fill !sentry_count*2
 
-!counterid = -1
-macro new_counter(addr, name)
-	!counterid #= !counterid+1
+!sentryid = -1
+macro new_sentry(addr, name)
+	!sentryid #= !sentryid+1
 	%list_item("<name>")
 	pushpc
-	org counter_address+!counterid*2
+	org sentry_address+!sentryid*2
 	dw <addr>
 	pullpc
 
 endmacro
 
-#counter_names:
-%list_header(!counter_count)
-	%new_counter($001A, "Off")
-	%new_counter($001A, "Room time")
-	%new_counter($001A, "Lag")
-	%new_counter($001A, "Idle")
-	%new_counter($001A, "Segment")
-	%new_counter($001A, "Coordinates")
-	%new_counter($002A, "Subpixels")
-	%new_counter($001A, "Room ID")
-	%new_counter($00A9, "Quadrant")
-	%new_counter($008A, "Screen ID")
-	%new_counter($0114, "Tile (UW)")
-	%new_counter($02A2, "Spooky")
-	%new_counter($0B08, "Arc variable")
-	%new_counter($0690, "WEST SOMARIA")
-	%new_counter($03C4, "Anc index")
-	%new_counter($039D, "Hookslot")
-	%new_counter($C000, "Pits")
-	%new_counter($0E50, "Boss HP")
-	%new_counter($0374, "Hovering")
+#sentry_names:
+%list_header(!sentry_count)
+	%new_sentry($001A, "Off")
+	%new_sentry($001A, "Room time")
+	%new_sentry($001A, "Lag")
+	%new_sentry($001A, "Idle")
+	%new_sentry($001A, "Segment")
+	%new_sentry($001A, "Coordinates")
+	%new_sentry($002A, "Subpixels")
+	%new_sentry($001A, "Room ID")
+	%new_sentry($00A9, "Quadrant")
+	%new_sentry($008A, "Screen ID")
+	%new_sentry($0114, "Tile (UW)")
+	%new_sentry($02A2, "Spooky")
+	%new_sentry($0B08, "Arc variable")
+	%new_sentry($0690, "WEST SOMARIA")
+	%new_sentry($03C4, "Anc index")
+	%new_sentry($039D, "Hookslot")
+	%new_sentry($C000, "Pits")
+	%new_sentry($0E50, "Boss HP")
+	%new_sentry($0374, "Hovering")
 
-#reinit_counteraddr:
+#reinit_sentry_addresses:
 	REP #$30
 
 	PHB
@@ -66,37 +66,37 @@ endmacro
 
 	LDX.w #$0008
 
---	LDA.w !ram_counter1,X
+--	LDA.w !config_sentry1,X
 	ASL
 	TAY
-	LDA.w counter_address,Y
-	STA.w SA1IRAM.CNTADD1,X
+	LDA.w sentry_address,Y
+	STA.w SA1IRAM.SNTADD1,X
 	DEX
 	DEX
 	BPL --
 
 	SEP #$30
 
-	LDA.w !ram_linecounter1
-	ORA.w !ram_linecounter2
-	ORA.w !ram_linecounter3
-	ORA.w !ram_linecounter4
+	LDA.w !config_linesentry1
+	ORA.w !config_linesentry2
+	ORA.w !config_linesentry3
+	ORA.w !config_linesentry4
 	CMP.b #$01
 	LDA.b #$00
 	ROR
-	STA.b !ram_extra_sa1_required
+	STA.b !config_extra_sa1_required
 
 	PLB
 	RTL
 
 ;===================================================================================================
-!linecounter_count = 9
-%choice("Line 1", !ram_linecounter1, !linecounter_count, linecounter_names)
-%choice("Line 2", !ram_linecounter2, !linecounter_count, linecounter_names)
-%choice("Line 3", !ram_linecounter3, !linecounter_count, linecounter_names)
+!linesentry_count = 9
+%choice("Line 1", !config_linesentry1, !linesentry_count, linesentry_names)
+%choice("Line 2", !config_linesentry2, !linesentry_count, linesentry_names)
+%choice("Line 3", !config_linesentry3, !linesentry_count, linesentry_names)
 
-#linecounter_names:
-%list_header(!linecounter_count)
+#linesentry_names:
+%list_header(!linesentry_count)
 	%list_item("Off")
 	%list_item("Room flags")
 	%list_item("UW Camera X")
@@ -105,23 +105,23 @@ endmacro
 	%list_item("OW Trans Y")
 	%list_item("Ancilla 0-4")
 	%list_item("Ancilla 5-9")
-	%list_item("Ancilla IXd")
+	%list_item("Ancilla MSX")
 
 ;===================================================================================================
 !ancprop_count = 11
-%choice("Ancilla prop 1", !ram_ancprop1, !ancprop_count, ancprop_names)
-%choice("Ancilla prop 2", !ram_ancprop2, !ancprop_count, ancprop_names)
-%choice("Ancilla prop 3", !ram_ancprop3, !ancprop_count, ancprop_names)
+%choice("Ancilla prop 1", !config_ancprop1, !ancprop_count, ancprop_names)
+%choice("Ancilla prop 2", !config_ancprop2, !ancprop_count, ancprop_names)
+%choice("Ancilla prop 3", !config_ancprop3, !ancprop_count, ancprop_names)
 
 #ancillawatch_props:
 	fillword $0C4A : fill !ancprop_count*2
 
-!anccounterid = -1
+!ancsentryid = -1
 macro new_ancprop(addr, name)
-	!anccounterid #= !anccounterid+1
+	!ancsentryid #= !ancsentryid+1
 	%list_item("<name>")
 	pushpc
-	org ancillawatch_props+!anccounterid*2
+	org ancillawatch_props+!ancsentryid*2
 	dw <addr>
 	pullpc
 
@@ -130,8 +130,8 @@ endmacro
 #ancprop_names:
 %list_header(!ancprop_count)
 	%new_ancprop($0C4A, "ID")
-	%new_ancprop($0BFA, "Y coord")
 	%new_ancprop($0C04, "X coord")
+	%new_ancprop($0BFA, "Y coord")
 	%new_ancprop($029E, "Altitude")
 	%new_ancprop($0C7C, "Layer")
 	%new_ancprop($0C5E, "Extension")
@@ -142,10 +142,11 @@ endmacro
 	%new_ancprop($0BFA, "Delta Y")
 
 ;===================================================================================================
-%toggle_onoff("Heart lag", !ram_heartlag_spinner)
 
-;===================================================================================================
-%toggle_onoff("QW indicator", !ram_qw_toggle)
+%toggle_onoff("HUD lag", !config_hudlag_spinner)
 
-;===================================================================================================
-%toggle_onoff("Boss cycles", !ram_toggle_boss_cycles)
+%toggle_onoff("State icons", !config_state_icons)
+
+%toggle_onoff("Quick warp", !config_qw_toggle)
+
+%toggle_onoff("Boss cycles", !config_toggle_boss_cycles)
