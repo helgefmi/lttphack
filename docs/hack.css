@@ -586,7 +586,8 @@ ul.colorList > li.colorDefine > .colorBlock {
 	padding: 0 4px;
 	width: 90px;
 	text-align: center;
-	height: 20px;
+	height: 18px;
+	margin: 1px 3px 1px 0;
 }
 
 /**************************************

@@ -52,7 +52,7 @@ gamemode_shortcuts:
 
 ..forsa1
 	PHA
-	LDA.w #gamemode_sa1_side_shortcut
+	LDA.w #SA1SideShortcut
 	STA.b SA1IRAM.SHORTCUT_USED
 	PLA
 	JSL UseShortCutSA1
@@ -76,18 +76,18 @@ gamemode_shortcuts:
 !SA1_SIDE = $FFFF ; for routines to be done by the SA1 instead of the CPU
 
 .shortcut_routine
-	dw ..pracmenushortcut, gamemode_custom_menu&!CPU_SIDE
-	dw !config_ctrl_load_last_preset, gamemode_load_previous_preset&!CPU_SIDE
-	dw !config_ctrl_save_state, gamemode_savestate_save&!CPU_SIDE
-	dw !config_ctrl_load_state, gamemode_savestate_load&!CPU_SIDE
-	dw !config_ctrl_reset_segment_timer, gamemode_reset_segment_timer&!SA1_SIDE
-	dw !config_ctrl_somaria_pits, gamemode_somaria_pits_wrapper&!CPU_SIDE
-	dw !config_ctrl_fix_vram, gamemode_fix_vram&!CPU_SIDE
-	dw !config_ctrl_toggle_switch, gamemode_toggle_switch&!CPU_SIDE
-	dw !config_ctrl_fill_everything, gamemode_fill_everything&!CPU_SIDE
-	dw !config_ctrl_toggle_oob, gamemode_oob&!CPU_SIDE
-	dw !config_ctrl_skip_text, gamemode_skip_text&!CPU_SIDE
-	dw !config_ctrl_disable_sprites, gamemode_disable_sprites&!CPU_SIDE
+	dw ..pracmenushortcut, Shortcut_EnterPracticeMenu&!CPU_SIDE
+	dw !config_ctrl_load_last_preset, Shortcut_LoadLastPreset&!CPU_SIDE
+	dw !config_ctrl_save_state, Shortcut_SaveState&!CPU_SIDE
+	dw !config_ctrl_load_state, Shortcut_LoadState&!CPU_SIDE
+	dw !config_ctrl_reset_segment_timer, Shortcut_ResetSegmentTimer&!SA1_SIDE
+	dw !config_ctrl_somaria_pits, Shortcut_ShowPits&!CPU_SIDE
+	dw !config_ctrl_fix_vram, Shortcut_FixGraphics&!CPU_SIDE
+	dw !config_ctrl_toggle_switch, Shortcut_ToggleCrystalSwitch&!CPU_SIDE
+	dw !config_ctrl_fill_everything, Shortcut_FillEverything&!CPU_SIDE
+	dw !config_ctrl_toggle_oob, Shortcut_ToggleOoB&!CPU_SIDE
+	dw !config_ctrl_skip_text, Shortcut_SkipText&!CPU_SIDE
+	dw !config_ctrl_disable_sprites, Shortcut_DisableSprites&!CPU_SIDE
 	dw 0, 0
 
 #final_static_short_PracMenuShortcut:

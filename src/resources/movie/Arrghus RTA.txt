@@ -1,0 +1,25 @@
+@ Defeat Arrghus
+
+= Arrghus
+657 Uncle's Bed
+4838 Courtyard
+5433 Castle
+5851 Stairclip
+6568 Re-arm EG
+7765 Ball 'n Chains
+10059 Trudge to Sanctuary
+15246 Stocking Up
+18700 Mini Moldorm Cape
+22140 Leaving Sanctuary
+23468 Supply Run
+28908 Fairy Catching
+31361 Tower EG
+34458 Catwalk EG
+36239 Sewers EG
+38271 East Hall EG
+41201 Enter Swamp
+41898 Fairy Fake Flippers
+43800 Arrghus
+
+= End
+ 

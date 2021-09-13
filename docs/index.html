@@ -255,6 +255,8 @@ title: LTTPHack - A Practice ROM for ALttP
 	<dd>Fix specific RNG calls to specific values</dd>
 	<dt><a href="#menuHUD">HUD extras</a></dt>
 	<dd>Toggle features that appear on the HUD</dd>
+	<dt><a href="#menuLiteStates">Lite states</a></dt>
+	<dd>Custom presets</dd>
 	<dt><a href="#menuRoomMaster">Room master</a></dt>
 	<dd>Load rooms and view/edit room flags</dd>
 	<dt><a href="#menuShortcuts">Shortcuts</a></dt>
@@ -587,6 +589,8 @@ title: LTTPHack - A Practice ROM for ALttP
 	<dd>Speeds up the moving wall cutscenes.</dd>
 	<dt>Visible probes<sup class="badge lag-badge">LAG</sup></dt>
 	<dd>Search probes used by guards, beamos, etc. will display a graphic.</dd>
+	<dt>Show STC pits</dt>
+	<dd>Automatically mark all pits after performing somaria door corruptions.</dd>
 	<dt>Disable BG1</dt>
 	<dd>Disables SNES background 1 via PPU registers. Has no effect on lag.</dd>
 	<dt>Disable BG2</dt>
@@ -766,7 +770,7 @@ title: LTTPHack - A Practice ROM for ALttP
 			<dt>Pits</dt>
 			<dd>Current pit destination/damage flag. Not displayed on overworld; address: $7EC000</dd>
 			<dt>Hookslot</dt>
-			<dd>Hookshot slot index, layer, and activeness; address: $7E039D</dd>
+			<dd>Hookshot slot index; address: $7E039D</dd>
 			<dt>Boss HP</dt>
 			<dd>Health of enemy in slot 0; address: $7E0E50</dd>
 			<dt>Hovering</dt>
@@ -830,6 +834,15 @@ title: LTTPHack - A Practice ROM for ALttP
 	<dt>Boss cycles<sup class="badge sa1-badge">SA1</sup></dt>
 	<dd>Displays the cycle count of bosses.</dd>
 </dl>
+
+<h3 id="menuLiteStates">Lite states</h3>
+<p>16 custom presets that can be saved, loaded, and erased.</p>
+<ul>
+	<li>To load a lite state, press <span class="snesButton snesA">A</span>.</li>
+	<li>To write a lite state, hold <span class="snesButton snesY">Y</span> for 60 frames. This will create a preset at your current location with your current equipment.</li>
+	<li>To delete a lite state, hold <span class="snesButton snesX">X</span> for 60 frames.</li>
+</ul>
+
 
 <h3 id="menuRoomMaster">Room master</h3>
 <dl>
@@ -962,6 +975,7 @@ title: LTTPHack - A Practice ROM for ALttP
 			<li class="colorDefine"><div class="colorBlock" style="background:#F76D61">F76D61</div>Peach42</li>
 			<li class="colorDefine"><div class="colorBlock" style="background:#2AA8D9">2AA8D9</div>Siriusly?</li>
 			<li class="colorDefine"><div class="colorBlock" style="background:#BADA55">BADA55</div>Almost BADA55</li>
+			<li class="colorDefine"><div class="colorBlock" style="background:#FFBFFF">FFBFFF</div>Blunt pink</li>
 		</ul>
 	</dd>
 </dl>

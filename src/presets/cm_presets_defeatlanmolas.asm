@@ -1,12 +1,12 @@
 ;===================================================================================================
 ; PRESET DATA HEADER
 ;===================================================================================================
-presetheader_lanmorta:
-	dw presetSRAM_lanmorta ; location of SRAM
-	dw presetpersistent_lanmorta ; location of persistent data
+presetheader_defeatlanmolas:
+	dw presetSRAM_defeatlanmolas ; location of SRAM
+	dw presetpersistent_defeatlanmolas ; location of persistent data
 
 ;===================================================================================================
-%menu_header("Lanmo RTA", 15)
+%menu_header("Defeat Lanmolas", 15)
 
 ;===================================================================================================
 ;---------------------------------------------------------------------------------------------------
@@ -14,7 +14,7 @@ presetheader_lanmorta:
 ;---------------------------------------------------------------------------------------------------
 ;===================================================================================================
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Link's bed", "lanmorta", "escape", "links_bed")
+%preset_UW("Link's bed", "defeatlanmolas", "escape", "links_bed")
 dw $0104 ; Screen ID
 dw $0940, $215A ; Link Coords
 dw $0900, $2110 ; Camera HV
@@ -22,16 +22,14 @@ db $00 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $00 ; Entrance
-db $02 ; Room layout
-db $00 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $20 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Lamp", "lanmorta", "escape", "lamp")
+%preset_UW("Lamp", "defeatlanmolas", "escape", "lamp")
 dw $0104 ; Screen ID
 dw $0940, $2157 ; Link Coords
 dw $0900, $2110 ; Camera HV
@@ -39,22 +37,25 @@ db $00 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $00 ; Entrance
-db $02 ; Room layout
-db $00 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $20 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write8_enable()
 %write8($7E005D, $16) ; sit up in bed
 %write8($7E037C, $01)
 %write8($7E037D, $01)
+%write8($7E0BFA, $62) ; blanket
+%write8($7E0C04, $38)
+%write8($7E0C0E, $21)
+%write8($7E0C18, $09)
+%write8($7E0C4A, $20)
 %write16_enable()
 %write16($7E02CD, $0DF3)
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_OW("Outside", "lanmorta", "escape", "outside")
+%preset_OW("Outside", "defeatlanmolas", "escape", "outside")
 dw $002C ; Screen ID
 dw $08B8, $0AFB ; Link Coords
 dw $0832, $0A9D ; Camera HV
@@ -67,7 +68,7 @@ dw $0506 ; Tilemap position
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Uncle", "lanmorta", "escape", "uncle")
+%preset_UW("Uncle", "defeatlanmolas", "escape", "uncle")
 dw $0055 ; Screen ID
 dw $0B9F, $0A96 ; Link Coords
 dw $0B00, $0A10 ; Camera HV
@@ -75,16 +76,14 @@ db $09 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $7D ; Entrance
-db $81 ; Room layout
-db $FF ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $9F ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Courtyard", "lanmorta", "escape", "courtyard")
+%preset_UW("Courtyard", "defeatlanmolas", "escape", "courtyard")
 dw $0055 ; Screen ID
 dw $0A78, $0BDF ; Link Coords
 dw $0A00, $0B10 ; Camera HV
@@ -92,16 +91,14 @@ db $09 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $7D ; Entrance
-db $82 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $AF ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_OW("Entrance", "lanmorta", "escape", "entrance")
+%preset_OW("Entrance", "defeatlanmolas", "escape", "entrance")
 dw $001B ; Screen ID
 dw $07F8, $06F9 ; Link Coords
 dw $0784, $069B ; Camera HV
@@ -114,7 +111,7 @@ dw $0530 ; Tilemap position
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Stair Clip", "lanmorta", "escape", "stair_clip")
+%preset_UW("Stair Clip", "defeatlanmolas", "escape", "stair_clip")
 dw $0062 ; Screen ID
 dw $0518, $0C60 ; Link Coords
 dw $04A0, $0C00 ; Camera HV
@@ -122,16 +119,14 @@ db $09 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $C1 ; Room layout
-db $00 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $D0 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Arm EG", "lanmorta", "escape", "arm_eg")
+%preset_UW("Arm EG", "defeatlanmolas", "escape", "arm_eg")
 dw $0072 ; Screen ID
 dw $055A, $0E0C ; Link Coords
 dw $04E2, $0E00 ; Camera HV
@@ -139,10 +134,8 @@ db $09 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $81 ; Room layout
-db $00 ; Floor
-db $00 ; Door / Peg state
-db $01 ; Layer
+db $90 ; Room layout / Floor
+db $04 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -154,7 +147,7 @@ dw $0000 ; Dead sprites
 ;===================================================================================================
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Tile room", "lanmorta", "desert", "tile_room")
+%preset_UW("Tile room", "defeatlanmolas", "desert", "tile_room")
 dw $0043 ; Screen ID
 dw $0751, $09C0 ; Link Coords
 dw $0662, $0912 ; Camera HV
@@ -162,10 +155,8 @@ db $09 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $03 ; Room layout
-db $00 ; Floor
-db $00 ; Door / Peg state
-db $01 ; Layer
+db $30 ; Room layout / Floor
+db $04 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write16_enable()
@@ -176,7 +167,7 @@ dw $0000 ; Dead sprites
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Backtracking", "lanmorta", "desert", "backtracking")
+%preset_UW("Backtracking", "defeatlanmolas", "desert", "backtracking")
 dw $0053 ; Screen ID
 dw $0778, $0A20 ; Link Coords
 dw $06DC, $0A00 ; Camera HV
@@ -184,16 +175,14 @@ db $09 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $41 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $50 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Reverse Genocide", "lanmorta", "desert", "reverse_genocide")
+%preset_UW("Reverse Genocide", "defeatlanmolas", "desert", "reverse_genocide")
 dw $0053 ; Screen ID
 dw $0712, $0B78 ; Link Coords
 dw $0700, $0B0B ; Camera HV
@@ -201,16 +190,14 @@ db $09 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $43 ; Room layout
-db $00 ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $70 ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Tile Room 2", "lanmorta", "desert", "tile_room_2")
+%preset_UW("Tile Room 2", "defeatlanmolas", "desert", "tile_room_2")
 dw $0053 ; Screen ID
 dw $0678, $0A22 ; Link Coords
 dw $0600, $0A00 ; Camera HV
@@ -218,16 +205,14 @@ db $09 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $00 ; Room layout
-db $00 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $00 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_OW("Dungeon Reload", "lanmorta", "desert", "dungeon_reload")
+%preset_OW("Dungeon Reload", "defeatlanmolas", "desert", "dungeon_reload")
 dw $0030 ; Screen ID
 dw $0128, $0C3B ; Link Coords
 dw $00A2, $0C00 ; Camera HV
@@ -240,7 +225,7 @@ dw $0016 ; Tilemap position
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Dark Room", "lanmorta", "desert", "dark_room")
+%preset_UW("Dark Room", "defeatlanmolas", "desert", "dark_room")
 dw $0052 ; Screen ID
 dw $05E4, $0A0E ; Link Coords
 dw $0500, $0A00 ; Camera HV
@@ -248,16 +233,14 @@ db $09 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $0C ; Entrance
-db $C1 ; Room layout
-db $00 ; Floor
-db $00 ; Door / Peg state
-db $01 ; Layer
+db $D0 ; Room layout / Floor
+db $04 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
-%preset_UW("Lanmolas", "lanmorta", "desert", "lanmolas")
+%preset_UW("Lanmolas", "defeatlanmolas", "desert", "lanmolas")
 dw $0043 ; Screen ID
 dw $0628, $0805 ; Link Coords
 dw $0600, $0805 ; Camera HV
@@ -265,19 +248,17 @@ db $09 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $0C ; Entrance
-db $80 ; Room layout
-db $00 ; Floor
-db $00 ; Door / Peg state
-db $01 ; Layer
+db $80 ; Room layout / Floor
+db $04 ; Door / Peg state / Layer
 dw $0606 ; Dead sprites
 ;-----------------------------
 %write_end()
 
 ;===================================================================================================
-presetpersistent_lanmorta:
+presetpersistent_defeatlanmolas:
 
 ;===================================================================================================
-presetpersistent_lanmorta_escape:
+presetpersistent_defeatlanmolas_escape:
 ;-----------------------------
 .links_bed
 %write_sq()
@@ -309,7 +290,7 @@ presetpersistent_lanmorta_escape:
 ..end
 
 ;===================================================================================================
-presetpersistent_lanmorta_desert:
+presetpersistent_defeatlanmolas_desert:
 ;-----------------------------
 .tile_room
 %write8($7E047A, $01) ; Armed EG
@@ -335,15 +316,13 @@ presetpersistent_lanmorta_desert:
 ..end
 
 ;===================================================================================================
-presetSRAM_lanmorta:
+presetSRAM_defeatlanmolas:
 ;-----------------------------
 .escape
 ;-----------------------------
 ..links_bed
 %write8($7EF36F, $FF) ; Keys
 %writeroom($104, $0002)
-%writeroom($106, $F000)
-%writeroom($107, $F000)
 ...end
 ;-----------------------------
 ..lamp
@@ -419,5 +398,5 @@ presetSRAM_lanmorta:
 %writeroom($043, $240D) ; Room $0043
 ...end
 ;===================================================================================================
-presetend_lanmorta:
-print "lanmorta size: $", hex(presetend_lanmorta-presetheader_lanmorta)
+presetend_defeatlanmolas:
+print "defeatlanmolas size: $", hex(presetend_defeatlanmolas-presetheader_defeatlanmolas)

@@ -59,7 +59,7 @@ EQUIPMENT_SUBMENU:
 
 ;===================================================================================================
 %func("Fill everything", this)
-	JSL gamemode_fill_everything
+	JSL Shortcut_FillEverything
 	JSL CM_CacheWRAM
 
 	JML RedrawCurrentMenu
@@ -95,7 +95,7 @@ EQUIPMENT_SUBMENU:
 
 ;===================================================================================================
 %choice_long_func_filtered_here("Gloves", $7EF354, 3, Palette_Armor)
-	%list_item("Bare hands")
+	%list_item("No")
 	%list_item("Power glove")
 	%list_item("Titan's mitt")
 

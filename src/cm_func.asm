@@ -437,7 +437,7 @@ CMDO_PRESET_OW:
 	LDA.b SA1IRAM.cm_current_menu+2
 	STA.b SA1IRAM.preset_addr+2
 
-	JML preset_load
+	JML LoadPreset
 
 ;===================================================================================================
 
@@ -476,6 +476,56 @@ CMDO_CTRL_SHORTCUT:
 	JSL CM_MenuSFX_empty
 
 .no
+	RTS
+
+;===================================================================================================
+
+CMDO_LITESTATE:
+	LDA.b [SA1IRAM.cm_current_selection],Y
+	STA.b SA1IRAM.litestate_act
+
+	BIT.b SA1IRAM.cm_ax
+	BMI .load
+	BVS .delete
+
+	BIT.b SA1IRAM.cm_y
+	BMI .save
+
+	RTS
+
+.save
+	REP #$30
+	LDA.w #$000A
+	STA.b SA1IRAM.cm_submodule
+	STZ.b SA1IRAM.preset_scratch
+
+	RTS
+
+
+.delete
+	LDA.b SA1IRAM.litestate_act
+	JSL ValidateLiteState
+	BCC .invalid
+
+	REP #$30
+	LDA.w #$000C
+	STA.b SA1IRAM.cm_submodule
+	STZ.b SA1IRAM.preset_scratch
+	RTS
+
+.load
+	JSL ValidateLiteState
+	BCC .invalid
+
+	JSL CM_Exiting
+
+	REP #$20
+	LDA.w SA1IRAM.litestate_act
+	STA.w SA1IRAM.litestate_last
+	JML LoadLiteState
+
+.invalid
+	JSL CM_MenuSFX_error
 	RTS
 
 ;===================================================================================================

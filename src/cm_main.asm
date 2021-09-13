@@ -6,7 +6,7 @@
 ;===================================================================================================
 
 cm_mainmenu:
-%menu_header("LTTPHACK !VERSION", 12)
+%menu_header("LTTPHACK !VERSION", 13)
 	%submenu_variable("Presets", PRESET_SUBMENU)
 	%submenu("Y Items", ITEMS_SUBMENU)
 	%submenu("Equipment", EQUIPMENT_SUBMENU)
@@ -15,6 +15,7 @@ cm_mainmenu:
 	%submenu("Gameplay", GAMEPLAY_SUBMENU)
 	%submenu("RNG control", RNG_SUBMENU)
 	%submenu("HUD extras", HUDEXTRAS_SUBMENU)
+	%submenu("Lite states (BETA)", LITESTATES_SUBMENU)
 	%submenu("Room master", ROOMLOAD_SUBMENU)
 	%submenu("Shortcuts", SHORTCUTS_SUBMENU)
 	%submenu("Preset config", PRESET_CONFIG_SUBMENU)
@@ -87,6 +88,8 @@ CM_Main:
 	dw CM_Active
 	dw CM_Return
 	dw CM_ShortcutConfig
+	dw CM_SetLiteState
+	dw CM_DeleteLiteState
 
 ;===================================================================================================
 
@@ -157,24 +160,76 @@ CM_ShortcutConfig:
 	INC.b SA1IRAM.preset_scratch
 	LDA.b SA1IRAM.preset_scratch
 	CMP.w #$0061
-	BCC .continue
+	BCC CM_UpdateHeldOption
 
+	JSL CM_MenuSFX_shortcut_done
+
+#CM_AbortHeldOption:
 	LDA.w #$0004
 	STA.b SA1IRAM.cm_submodule
-	JSL CM_MenuSFX_shortcut_done
-	BRA .continue
+	BRA CM_UpdateHeldOption
 
 .notheld
 	STA.b [SA1IRAM.cm_writer]
 	STZ.b SA1IRAM.preset_scratch
 
-.continue
+;===================================================================================================
+
+CM_UpdateHeldOption:
 	SEP #$30
 	LDY.b SA1IRAM.cm_cursor
 	JSR DrawCurrentRow_ShiftY
 	JSL NMI_RequestCurrentRowUpdateUnless
 
 	RTS
+
+;===================================================================================================
+
+CM_SetLiteState:
+	REP #$20
+
+	LDA.b SA1IRAM.CONTROLLER_1
+	CMP.w #$4000
+	BNE CM_AbortHeldOption
+
+	LDA.b SA1IRAM.preset_scratch
+	CMP.w #60
+	BCS .save_litestate
+
+	INC
+	STA.b SA1IRAM.preset_scratch
+	BRA CM_UpdateHeldOption
+
+.save_litestate
+	LDA.b SA1IRAM.litestate_act
+	JSL SaveLiteState
+	JSL CM_MenuSFX_shortcut_done
+
+	BRA CM_AbortHeldOption
+
+;===================================================================================================
+
+CM_DeleteLiteState:
+	REP #$20
+
+	LDA.b SA1IRAM.CONTROLLER_1
+	CMP.w #$0040
+	BNE CM_AbortHeldOption
+
+	LDA.b SA1IRAM.preset_scratch
+	CMP.w #60
+	BCS .delete_litestate
+
+	INC
+	STA.b SA1IRAM.preset_scratch
+	BRA CM_UpdateHeldOption
+
+.delete_litestate
+	LDA.b SA1IRAM.litestate_act
+	JSL DeleteLiteState
+	JSL CM_MenuSFX_empty
+
+	BRA CM_AbortHeldOption
 
 ;===================================================================================================
 

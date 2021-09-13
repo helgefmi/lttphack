@@ -1,7 +1,7 @@
 pushpc
 
 org $008039
-gamemode_hook:
+RequestShortcut:
 	BIT.w SA1IRAM.SHORTCUT_USED+1
 	BPL .askforshortcut
 
@@ -84,9 +84,9 @@ UseShortCut:
 	SEP #$20
 
 	LDA.b $10
-	CMP.b #$06 : BCC shortcuts_banned
-	CMP.b #$19 : BCS shortcuts_banned
-	CMP.b #$14 : BEQ shortcuts_banned
+	CMP.b #$06 : BCC ShortcutsBanned
+	CMP.b #$19 : BCS ShortcutsBanned
+	CMP.b #$14 : BEQ ShortcutsBanned
 
 	JMP.w (SA1IRAM.SHORTCUT_USED)
 
@@ -95,37 +95,27 @@ UseShortCutSA1:
 	PHA
 	RTS
 
-shortcuts_banned:
+ShortcutsBanned:
 	SEP #$20
 
 	LDA.b #$3C : STA.w $2142
 
-gamemode_sa1_side_shortcut:
+SA1SideShortcut:
 	RTL
 
 ;===================================================================================================
 
-gamemode_custom_menu:
+Shortcut_EnterPracticeMenu:
 	JML CM_Main
 
 ;===================================================================================================
 
-gamemode_load_previous_preset:
-	; Loading during text mode makes the text stay or the item menu bug
-	REP #$20
-	LDA.w SA1IRAM.preset_addr
-	; catchings half of potential garbage values
-	BPL .no_load_preset
-
-	JML preset_load_last_preset
-
-.no_load_preset
-	RTL
-
+Shortcut_LoadLastPreset:
+	JML LoadLastPreset
 
 ;===================================================================================================
 
-gamemode_savestate_save:
+Shortcut_SaveState:
 	PHK
 	PLB
 
@@ -133,7 +123,7 @@ gamemode_savestate_save:
 	REP #$10
 	; Remember which song bank was loaded before load stating
 	; I put it here too, since `end` code runs both on save and load state..
-	LDA.w $0136 : STA.w SA1RAM.ss_old_music_bank
+	LDA.w $0136 : STA.w SA1RAM.old_music_bank
 
 	STZ.w $4200
 	STZ.w $420C
@@ -142,26 +132,27 @@ gamemode_savestate_save:
 	STA.w $4350 ; B to A
 	JSR DMA_BWRAMSRAM
 
-	JMP savestate_end
+	JMP FinalizeSavestate
 
 ;===================================================================================================
 
-gamemode_savestate_load:
+Shortcut_LoadState:
 	; music bank should only ever be 0 or 1
 	; assume any other value means there's no save state
 	SEP #$30
-	LDA.w SA1RAM.ss_old_music_bank
+	LDA.w SA1RAM.old_music_bank
 	CMP.b #$02 : BCC ++
 
-	JMP shortcuts_banned
+	JMP ShortcutsBanned
 
 ++	PHK
 	PLB
 
 	SEP #$20
 	REP #$10
+
 	; Remember which song and bank was in APU before load stating (so we can change if needed)
-	LDA.w $0136 : STA.w SA1RAM.ss_old_music_bank
+	LDA.w $0136 : STA.w SA1RAM.old_music_bank
 	LDA.w $0130 : STA.w SA1RAM.old_music
 
 	; Mute ambient sounds
@@ -184,6 +175,7 @@ gamemode_savestate_load:
 
 	; Update which song is currently being played by the APU
 	LDA.w SA1RAM.old_music : STA.w $0133
+
 	; Attempt to restart the current song if it isn't already playing
 	LDA.w $0130 : STA.w $012C
 
@@ -202,7 +194,7 @@ gamemode_savestate_load:
 
 	SEP #$20
 
-	JMP savestate_end
+	JMP FinalizeSavestate
 
 ;===================================================================================================
 
@@ -296,12 +288,14 @@ DMA_BWRAMSRAM:
 .address_size
 	dl $7E0000 : dw $6000
 	dl $7EA680 : dw $0C00
+	dl $7EB940 : dw $0480
 	dl $7EC000 : dw $0700
 	dl $7EC880 : dw $0080
 	dl $7EE800 : dw $1800
 
-	dl $7F2000 : dw $2000
+	dl $7F0000 : dw $4000
 	dl $7F5800 : dw $0700
+	dl $7F7000 : dw $01C0
 	dl $7FDD80 : dw $1400
 	dl $7FF800 : dw $0800
 
@@ -309,7 +303,7 @@ DMA_BWRAMSRAM:
 
 ;===================================================================================================
 
-savestate_end:
+FinalizeSavestate:
 	LDA.w $4350
 	ORA.b #$01
 	STA.w $4350
@@ -333,11 +327,12 @@ savestate_end:
 	STX.w $4355
 	STX.w $2116
 	LDA.w $4351 : CMP.b #$39 : BNE ++
+
 	LDY.w $2139 ; necessary dummy read
 
 ++	LDA.b #$20 : STA.w $420B
 
-	LDA.w SA1RAM.ss_old_music_bank : CMP.w $0136 : BEQ .songBankNotChanged
+	LDA.w SA1RAM.old_music_bank : CMP.w $0136 : BEQ .songBankNotChanged
 
 	SEP #$34 ; I flag too
 
@@ -348,6 +343,7 @@ savestate_end:
 
 	LDA.b $1B : STA.w $0136
 	BEQ .indoors
+
 	JSL $008925
 	BRA ++
 
@@ -361,7 +357,7 @@ savestate_end:
 
 ;===================================================================================================
 
-gamemode_oob:
+Shortcut_ToggleOoB:
 	SEP #$20
 
 	LDA.w $037F
@@ -373,7 +369,7 @@ gamemode_oob:
 
 ;===================================================================================================
 
-gamemode_toggle_switch:
+Shortcut_ToggleCrystalSwitch:
 	REP #$20
 
 	LDA.b $10
@@ -392,7 +388,7 @@ gamemode_toggle_switch:
 
 ;===================================================================================================
 
-gamemode_skip_text:
+Shortcut_SkipText:
 	SEP #$20
 
 	LDA.b #$04 : STA.w $1CD4
@@ -401,13 +397,13 @@ gamemode_skip_text:
 
 ;===================================================================================================
 
-gamemode_disable_sprites:
+Shortcut_DisableSprites:
 	SEP #$20
 	JML Sprite_DisableAll
 
 ;===================================================================================================
 
-gamemode_fill_everything:
+Shortcut_FillEverything:
 	SEP #$20
 	REP #$10
 
@@ -528,7 +524,7 @@ gamemode_fill_everything:
 
 ;===================================================================================================
 
-gamemode_reset_segment_timer:
+Shortcut_ResetSegmentTimer:
 	REP #$20
 
 	STZ.w SA1IRAM.SEG_TIME_F
@@ -543,7 +539,7 @@ gamemode_reset_segment_timer:
 
 ;===================================================================================================
 
-gamemode_fix_vram:
+Shortcut_FixGraphics:
 	SEP #$30
 	LDA.b #$80 : STA.w $2100
 	STZ.w $4200
@@ -557,19 +553,21 @@ gamemode_fix_vram:
 
 	SEP #$F0
 	LDA.b $1B : BEQ ++
-	JSL fix_vram_uw
+
+	JSL FixGraphics_Underworld
 	JSL LoadCustomHUDGFX
 
 	LDA.l $7EC172 : BEQ ++
-	JSR fixpegs
+	JSR FixGraphics_Pegs
 
 ++	LDA.b #$0F : STA.b $13
 	LDA.b #$81 : STA.w $4200
+
 	RTL
 
 ;===================================================================================================
 
-fixpegs:
+FixGraphics_Pegs:
 	REP #$30
 
 	PHB
@@ -590,7 +588,7 @@ fixpegs:
 
 ;===================================================================================================
 
-fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics
+FixGraphics_Underworld: ; mostly copied from PalaceMap_RestoreGraphics
 	PHB
 
 	LDA.b #$00 : PHA : PLB
@@ -626,22 +624,32 @@ fix_vram_uw: ; mostly copied from PalaceMap_RestoreGraphics
 
 ;===================================================================================================
 
-; wrapper because of push and pull logic
-; need this to make it safe and ultimately fix INIDISP ($13)
-gamemode_somaria_pits_wrapper:
+Shortcut_ShowPits:
 	SEP #$30
 	LDA.b $1B : BEQ ++ ; don't do this outdoors
 
+	STZ.w $4200
 	LDA.b #$80 : STA.b $13 : STA.w $2100
-	JSL gamemode_somaria_pits
+	STA.w $2115
+
+	JSL ShowPits
+
 	LDA.b #$0F : STA.b $13
+	LDA.b #$81 : STA.w $4200
 
 ++	RTL
 
-gamemode_somaria_pits:
+ShowPits:
 	PHB ; rebalanced in redraw
-	PEA $007F
+
+	PEA $7F00
 	PLB
+
+	LDA.b $9B
+	STZ.b $9B : STA.w $420C
+
+	PLB
+	PHA
 
 	REP #$30
 
@@ -650,20 +658,55 @@ gamemode_somaria_pits:
 --	LDA.w $2000,Y : AND.w #$00FF ; checks tile attributes table
 	CMP.w #$0020 : BNE .skip
 
+	STZ.b $00
+
 	TYA : ASL : TAX
 	LDA.w #$050F : STA.l $7E2000,X
+	TXA
+	BIT.w #$1000 : BEQ ++
+
+	PHA
+	LDA.w #$1000
+	STA.b $00
+	PLA
+	EOR.w #$1000
+
+++	BIT.w #$0040 : BEQ ++
+
+	PHA
+	LDA.w #$0800
+	TSB.b $00
+	PLA
+	EOR.w #$0040
+
+++	PHA
+	AND.w #$FF80
+	LSR
+	STA.b $02
+	PLA
+	SEC
+	SBC.b $02
+	CLC
+	ADC.b $00
+	LSR
+	STA.l $2116
+	LDA.w #$050F
+	STA.l $2118
 
 .skip
 	DEY : BPL --
 
 .time_for_tilemaps ; just a delimiting label
 	SEP #$30
-	PLB ; pull to bank 00 for this next stuff
 
-	LDA.b $9B : PHA ; rebalanced in redraw
-	STZ.b $9B : STZ.w $420C
+	STZ.b $17
+	STZ.b $B0
 
-	JMP fix_vram_uw_just_redraw ; jmp because of stack
+	PLA : STA.b $9B
+
+	PLB
+
+	RTL
 
 ;===================================================================================================
 ; DISGUSTING

@@ -83,7 +83,7 @@ CONFIG_SUBMENU:
 %submenu("Color config", COLOR_CONFIG_SUBMENU)
 
 ;===================================================================================================
-!color_count = 20
+!color_count = 21
 !color_id = -1
 
 COLORS_YAY:
@@ -164,6 +164,8 @@ color_list:
 	%fixed_color($F76D61, "Peach42")
 	%fixed_color($2AA8D9, "Siriusly?")
 	%fixed_color($BADA55, "BADA55")
+
+	%fixed_color($FFBFFF, "Blunt pink")
 
 ;===================================================================================================
 UnmutedInstruments:

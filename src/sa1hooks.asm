@@ -34,7 +34,7 @@ struct SA1IRAM $003000
 	.cm_leftright: skip 1 ; N=left V=right
 	.cm_updown: skip 1 ; N=up V=down
 	.cm_ax: skip 1 ; N=A V=X
-	.cm_y: skip 1 ; N=l V=r
+	.cm_y: skip 1 ; 
 	.cm_shoulder: skip 1 ; N=l V=r
 	skip 1 ; for safety
 
@@ -53,6 +53,10 @@ struct SA1IRAM $003000
 	.preset_writer: skip 2
 	.preset_type: skip 2
 	.preset_scratch: skip 4
+
+	.litestate_act: skip 2
+	.litestate_last: skip 2
+	.litestate_off: skip 2
 
 .savethis_start
 	.TIMER_FLAG: skip 2
@@ -223,9 +227,22 @@ DisableCorruptionWatcher:
 	PHP
 	SEP #$20
 	LDA.b #$00 : STA.w $2201
+
 	REP #$30
 	LDA.w #$FFFF : STA.w SA1IRAM.corruption_watcher
-	PLP
+
+	SEP #$20
+
+	LDA.w !config_somaria_pits : BEQ ++
+
+	STZ.b $12
+
+	; wait for NMI once for the main vram transfers
+--	LDA.b $12 : BEQ --
+
+	JSL Shortcut_ShowPits
+
+++	PLP
 	RTL
 
 RecoverFromCorruption:
@@ -492,6 +509,10 @@ InitSA1:
 	STZ.w $2228
 
 	REP #$20
+
+	LDA.w #$FFFF
+	STA.w SA1IRAM.litestate_last
+	STA.w SA1IRAM.litestate_act
 
 	STZ.b $F0
 	STZ.b $F2

@@ -1,0 +1,20 @@
+@ Defeat Agahnim 2
+
+= Agahnim 2
+638 Link's Bed
+4856 Courtyard
+5877 Stair Clip
+6460 Re-arm EG
+7749 Ball 'n Chains
+11104 Spark Avoidance
+12110 Somaria Bridge
+12872 Trudge to Falling Bridge
+14881 Low Snap to Hera
+15766 Hera Descent
+17833 TR Climb
+19224 Lionel Peak
+20217 TR Backdoor
+21720 Pokeys 2
+23380 Agahnim 2
+
+= End

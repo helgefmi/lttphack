@@ -130,24 +130,23 @@ function print_preset(s, p)
 			bit.lshift(e.quadB, 5)
 		)
 
-		temp = bit.bor(temp, bit.band(e.quadC, 0x01))
-		temp = bit.bor(temp, bit.band(e.quadD, 0x02))
+		temp = bit.bor(temp, bit.lshift(bit.band(e.quadC, 0x01), 4))
+		temp = bit.bor(temp, bit.lshift(bit.band(e.quadD, 0x02), 4))
+
+		temp = bit.bor(temp, bit.band(e.flr, 0x0F))
 
 		dprint(string.format('db $%02X ; Room layout', temp))
-		dprint(string.format('db $%02X ; Floor', e.flr))
 
 		temp = bit.bor(
 			bit.band(e.door, 0x03),
-			bit.lshift(bit.band(e.pegs, 0x01), 4)
+			bit.lshift(bit.band(e.pegs, 0x01), 6)
 		)
 
 		temp = bit.bor(temp, bit.lshift(bit.bxor(bit.band(e.shutters, 0x01), 0x01), 7))
-		dprint(string.format('db $%02X ; Door / Peg state', temp))
+		temp = bit.bor(temp, bit.lshift(bit.band(e.layerA, 0x01), 2))
+		temp = bit.bor(temp, bit.lshift(bit.band(e.layerB, 0x01), 3))
 
-		temp = bit.band(e.layerA, 0x0F)
-		temp = bit.bor(temp, bit.rshift(bit.band(e.layerB, 0x0F), 4))
-
-		dprint(string.format('db $%02X ; Layer', temp))
+		dprint(string.format('db $%02X ; Door / Peg state / Layer', temp))
 
 		dprint(string.format('dw $%04X ; Dead sprites', e.dead))
 	else
@@ -326,6 +325,12 @@ ow_args = {
 single_args = {
 	{ addr = 0x00ABD, indoors = true, reader = u8, filter = 'nonzero', comment = 'Palette swap' },
 
+	{ addr = 0x002E0, reader = u8, filter = 'nonzero', comment = 'Bunny' },
+	{ addr = 0x00056, reader = u8, filter = 'nonzero', comment = 'Bunny' },
+	{ addr = 0x0005D, reader = u8, filter = 'linkstate', comment = 'Link state' },
+
+	{ addr = 0x002FA, reader = u8, filter = 'nonzero', comment = 'Statue drag' },
+
 	{ addr = 0x00600, indoors = true, reader = u16, filter = 'cameray', comment = 'Camera boundaries' },
 	{ addr = 0x00602, indoors = true, reader = u16, filter = 'cameray', comment = 'Camera boundaries' },
 	{ addr = 0x00604, indoors = true, reader = u16, filter = 'cameray', comment = 'Camera boundaries' },
@@ -372,11 +377,13 @@ single_arg_funcs = {
 
 	nonzero = function(a) return a ~= 0 end,
 
+	linkstate = function(a) return a == 0x04 or a == 0x17 end,
+
 	camerax = function()
 		local a = memory.read_u16_le(0x00E2)
 		local b = memory.read_u16_le(0x060A)
 		local c = memory.read_u16_le(0x060E)
-	
+
 		return (a < b) or (a > c)
 	end,
 
@@ -384,7 +391,7 @@ single_arg_funcs = {
 		local a = memory.read_u16_le(0x00E8)
 		local b = memory.read_u16_le(0x0602)
 		local c = memory.read_u16_le(0x0606)
-	
+
 		return (a < b) or (a > c)
 	end,
 
@@ -403,17 +410,16 @@ persist_args = {
 	{ addr = 0x002A1, comment = 'Slot 3 Altitude' },
 	{ addr = 0x002A2, comment = 'Slot 4 Altitude' },
 
-	{ addr = 0x0047A, comment = 'Armed EG' },
 	{ addr = 0x0044A, comment = 'EG strength' },
+	{ addr = 0x0047A, comment = 'Armed EG' },
 
-	{ addr = 0x00FC7, comment = 'Prize pack 0' },
-	{ addr = 0x00FC8, comment = 'Prize pack 1' },
-	{ addr = 0x00FC9, comment = 'Prize pack 2' },
-	{ addr = 0x00FCA, comment = 'Prize pack 3' },
-	{ addr = 0x00FCB, comment = 'Prize pack 4' },
-	{ addr = 0x00FCC, comment = 'Prize pack 5' },
-	{ addr = 0x00FCD, comment = 'Prize pack 6' },
-	{ addr = 0x00FCE, comment = 'Prize pack 7' },
+	{ addr = 0x00FC7, comment = 'Prize pack 1' },
+	{ addr = 0x00FC8, comment = 'Prize pack 2' },
+	{ addr = 0x00FC9, comment = 'Prize pack 3' },
+	{ addr = 0x00FCA, comment = 'Prize pack 4' },
+	{ addr = 0x00FCB, comment = 'Prize pack 5' },
+	{ addr = 0x00FCC, comment = 'Prize pack 6' },
+	{ addr = 0x00FCD, comment = 'Prize pack 7' },
 
 	{ addr = 0x00CFB, comment = 'Rupee pull kills' },
 	{ addr = 0x00CFC, comment = 'Rupee pull hits' },
@@ -497,7 +503,25 @@ for i=0x0F000,0x0F3CC do
 	current_sram[i] = 0
 end
 
-current_persist = {}
+current_sram[0xF36C] = 0x18
+current_sram[0xF36D] = 0x18
+current_sram[0xF379] = 0xF8
+current_sram[0xF20D] = 0xF0 -- room 106
+current_sram[0xF20F] = 0xF0 -- room 107
+
+current_persist = {
+	[0x0FC7] = 0x00,
+	[0x0FC8] = 0x00,
+	[0x0FC9] = 0x00,
+	[0x0FCA] = 0x00,
+	[0x0FCB] = 0x00,
+	[0x0FCC] = 0x00,
+	[0x0FCD] = 0x00,
+	[0x0FCE] = 0x00,
+	[0x0CFB] = 0x00,
+	[0x0CFC] = 0x00,
+}
+
 
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------
@@ -535,7 +559,7 @@ while movie.mode() == 'PLAY' do
 			current_segment_num = seg
 			print_segheader(seg)
 		end
-	
+
 		local ptype = nil
 		local preset_values = {}
 		local sram_values = {}
@@ -612,7 +636,7 @@ while movie.mode() == 'PLAY' do
 						local rdata = 0x0000
 						rdata = bit.bor(rdata, memory.read_u8(0x00408))
 						rdata = bit.bor(rdata, bit.lshift(memory.read_u8(0x00403), 4))
-						rdata = bit.bor(rdata, bit.band(memory.read_u16_le(0x00401), 0xF000))
+						rdata = bit.bor(rdata, bit.band(memory.read_u16_le(0x00400), 0xF000))
 
 						t = rdata
 					end

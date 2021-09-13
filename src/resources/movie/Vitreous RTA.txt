@@ -1,0 +1,21 @@
+@ Defeat Vitreous
+
+= Vitreous
+636 Link's Bed
+4843 Courtyard
+5437 Lobby Quadrant Glitch
+7515 Ice Chair
+8911 Supply Run
+13680 Leaving Kakariko
+15367 Bridge to Witch Hut
+18445 Trudge to PoD
+20824 Beetle Colosseum
+22645 PoD Entrance
+23319 Death Hole
+24618 Trudge to Catwalk
+28943 Sewers to Throne Room
+30182 Reload Enemies
+31183 East Hall YBA
+35459 Vitreous
+
+= End

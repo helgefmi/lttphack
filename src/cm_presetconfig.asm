@@ -158,14 +158,24 @@ presetsafeties_bossrta:
 #NO_SAFETIES:
 %label("No safeties available")
 
-
 ;===================================================================================================
 ; Fudged menu to make merging the boss RTAs possible
 ;===================================================================================================
 BOSSRTA_SUBMENU:
 
-%menu_header("Boss RTA", 1)
-%submenu_variable("Lanmo RTA", BOSSPRESET_SUBMENU)
+%menu_header("Boss RTA", 12)
+%submenu_variable("Armos", BOSSPRESET_SUBMENU)
+%submenu_variable("Lanmolas", BOSSPRESET_SUBMENU)
+%submenu_variable("Moldorm", BOSSPRESET_SUBMENU)
+%submenu_variable("Agahnim", BOSSPRESET_SUBMENU)
+%submenu_variable("Helmasaur", BOSSPRESET_SUBMENU)
+%submenu_variable("Arrghus", BOSSPRESET_SUBMENU)
+%submenu_variable("Mothula", BOSSPRESET_SUBMENU)
+%submenu_variable("Blind", BOSSPRESET_SUBMENU)
+%submenu_variable("Kholdstare", BOSSPRESET_SUBMENU)
+%submenu_variable("Vitreous", BOSSPRESET_SUBMENU)
+%submenu_variable("Trinexx", BOSSPRESET_SUBMENU)
+%submenu_variable("Agahnim 2", BOSSPRESET_SUBMENU)
 
 BOSSPRESET_SUBMENU:
 	LDA.b SA1IRAM.cm_cursor
@@ -189,4 +199,15 @@ BOSSPRESET_SUBMENU:
 	RTL
 
 .pointers
-	dl presetheader_lanmorta
+	dl presetheader_defeatarmos
+	dl presetheader_defeatlanmolas
+	dl presetheader_defeatmoldorm
+	dl presetheader_defeatagahnim
+	dl presetheader_defeathelmasaur
+	dl presetheader_defeatarrghus
+	dl presetheader_defeatmothula
+	dl presetheader_defeatblind
+	dl presetheader_defeatkholdstare
+	dl presetheader_defeatvitreous
+	dl presetheader_defeattrinexx
+	dl presetheader_defeatagahnim2

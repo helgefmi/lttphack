@@ -8,12 +8,13 @@ ROOMLOAD_SUBMENU:
 
 %func("Load selected room", this)
 	REP #$30
+
 	JSL CM_Exiting
 	JML LoadArbitraryRoom
 
 ;===================================================================================================
 
-%submenu("Config", ROOMLOADCONFIG_SUBMENU)
+%submenu("Configure loading", ROOMLOADCONFIG_SUBMENU)
 
 ;===================================================================================================
 

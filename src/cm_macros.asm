@@ -148,6 +148,16 @@ macro existing_preset(category, segment, scene)
 endmacro
 
 ;---------------------------------------------------------------------------------------------------
+%MenuAction("LITESTATE", 2, $6E)
+macro litestate(name, id)
+	%add_self()
+	db !CM_LITESTATE
+	db <id>
+	db "<name>", $FF
+endmacro
+
+
+;---------------------------------------------------------------------------------------------------
 %MenuAction("LABEL", 1, $2F)
 macro label(name)
 	%add_self()

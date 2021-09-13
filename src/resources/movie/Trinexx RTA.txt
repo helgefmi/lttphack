@@ -1,0 +1,29 @@
+@ Defeat Trinexx
+
+= Trinexx
+638 Link's Bed
+4856 Courtyard
+5877 Stair Clip
+6460 Re-arm EG
+7749 Ball 'n Chains
+11104 Spark Avoidance
+12110 Somaria Bridge
+12872 Trudge to Torches
+15620 Mire to Skull Woods
+17404 Fire Rod STC
+20363 Pit Stop
+22086 Skull to Swamp
+25239 Mini Moldorm Supplies
+28579 Ice Rod Overworld
+31307 Lobby Quadrant Glitch 1
+33372 Ice Chair 1
+35692 Kakariko Well to Hammer
+42183 Lobby Quadrant Glitch 2
+44241 Ice Chair 2
+45878 Supply Run
+50223 Somaria YBA 
+54127 Leaving TR
+56075 TR Entrance
+58850 Trinexx
+
+= End

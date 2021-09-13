@@ -71,7 +71,7 @@ org $00841E
 	; if shortcut was used, exit
 
 ++	PLX ; remove return point
-	PEA.w gamemode_hook-1
+	PEA.w RequestShortcut-1
 	SEP #$30
 
 	RTS

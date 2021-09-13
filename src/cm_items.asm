@@ -88,7 +88,7 @@ ITEMS_SUBMENU:
 ;===================================================================================================
 #bottle_items:
 %list_header(9)
-	%list_item("No bottle")
+	%list_item("No")
 	%list_item("Shroooom")
 	%list_item("Empty")
 	%list_item("Red")

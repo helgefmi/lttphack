@@ -1569,34 +1569,8 @@ sentry_quadrant:
 sentry_hookslot:
 	PHA
 
-	XBA
-	LSR
-
-	LDA.w #$2010
-	ADC.w #$0000
-
-	STA.w SA1RAM.HUD+14,X
-
 	LDA.w #char(2)|!RED_PAL
-	STA.w SA1RAM.HUD+6,X
-
-
-	DEX
-	DEX
-
-	LDA 1,S : XBA : LSR : LSR
-
-	LDA.w #char(22)
-	BCS ++
-
-	ORA.w #!GRAY_PAL
-	BRA +
-
-++	ORA.w #!YELLOW_PAL
-+	STA.w SA1RAM.HUD+14,X
-
-	DEX
-	DEX
+	STA.w SA1RAM.HUD+10,X
 
 	PLA
 

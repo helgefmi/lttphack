@@ -5,6 +5,13 @@ CacheRoomEntryPropertiesLong:
 	JSR.w $028C83
 	RTL
 
+org $01B53C
+LoadSingleDoorTileAttribute:
+	JSR.w $01D51D
+	RTL
+
+warnpc $01B55F
+
 pullpc
 
 ;===================================================================================================
@@ -13,7 +20,7 @@ LoadArbitraryRoom:
 	PHK
 	PLB
 
-	JSR ResetBeforeLoading
+	JSL ResetBeforeLoading
 
 	PEA.w $0000 : PLD
 
@@ -68,7 +75,7 @@ LoadArbitraryRoom:
 
 	LDA.w $040C : PHA
 
-	LDA.w .entrance,X : JSR SetDungeonEntranceAndProperties
+	LDA.w .entrance,X : JSL SetDungeonEntranceAndProperties
 
 	SEP #$30
 
@@ -96,7 +103,7 @@ LoadArbitraryRoom:
 	LDA.w SA1RAM.loadroomequip : BEQ .equipment_done
 	CMP.b #$01 : BEQ .loadout
 
-	JSL gamemode_fill_everything
+	JSL Shortcut_FillEverything
 	BRA .equipment_done
 
 .loadout
@@ -116,12 +123,12 @@ LoadArbitraryRoom:
 	SEP #$30
 
 	LDA.w SA1RAM.loadroompegstate
-	JSR HandlePegState
+	JSL HandlePegState
 
 	SEP #$30
 
 	LDA.w SA1RAM.loadroomshutters : AND.b #$01 : EOR.b #$01
-	JSR HandleOpenShutters
+	JSL HandleOpenShutters
 
 	LDX.w SA1RAM.loadroomid
 
@@ -341,9 +348,9 @@ LoadArbitraryRoom:
 
 	REP #$30
 
-	LDA.w #$FFFF : JSR KillSpritesInRoom
+	LDA.w #$FFFF : JSL KillSpritesInRoom
 
-++	JSR ApplyAfterLoading
+++	JSL ApplyAfterLoading
 
 	JMP TriggerTimerAndReset
 
@@ -733,7 +740,13 @@ ResetBeforeLoading:
 	STZ.b $EA
 	STZ.w $012C
 	STZ.w $012E
+	STZ.w $0131
 	STZ.w $06B0
+	STZ.w $0B80
+	STZ.w $0B82
+	STZ.w $0B84
+	STZ.w $0B86
+	STZ.w $0B99
 
 	LDA.w #$0DF3 : STA.w $02CD
 
@@ -759,6 +772,8 @@ ResetBeforeLoading:
 	STZ.w $046C
 	STZ.w $0710
 	STZ.w $0ABD
+	STZ.w $0B9E
+	STZ.w $0F70
 
 	STZ.b $57
 	STZ.b $5D
@@ -828,19 +843,7 @@ ResetBeforeLoading:
 	LDA.w #$1200 : STA.w $4355
 	STX.w $420B
 
-	; clear tile map
-	LDA.w #$2000 : STA.b $2181
-	STA.w $4355 ; happens to be number of bytes to write too
-	STX.w $420B
-
-	STZ.b $2182 ; bank 7E now
-
-	; clear some wram
-	LDA.w #$0500 : STA.w $4355
-	LDA.w #$0B00 : STA.b $2181
-	STX.w $420B
-
-	RTS
+	RTL
 
 ;===================================================================================================
 
@@ -858,6 +861,8 @@ ApplyAfterLoading:
 
 	STZ.w $4364 : STZ.w $4374
 	STZ.w $4367 : STZ.w $4377
+
+	STZ.w $0710
 
 	LDA.b #$80 : STA.b $9B
 
@@ -905,7 +910,7 @@ ApplyAfterLoading:
 	JSL $00D463
 
 .no_follower
-	RTS
+	RTL
 
 ;===================================================================================================
 
@@ -933,6 +938,7 @@ SetLoadedRoomID:
 	STZ.w $008A ; clear DW to prevent palette weirdness
 
 	STZ.w $00A6 ; quadrants, which get manipulated shortly
+	STZ.w $00A9
 
 	RTS
 
@@ -1007,7 +1013,7 @@ SetDungeonEntranceAndProperties:
 	STA.w $012C
 
 .done_music
-	RTS
+	RTL
 
 .sanc_music
 	LDX.w #$0014 : BRA .set_both
@@ -1028,10 +1034,17 @@ SetDungeonEntranceAndProperties:
 
 	; check for rain state theme
 	CPX.w #$0003 : BNE .set_both
-	LDA.l $7EF3C5 : CMP.b #$02 : BCC .set_both
+
+--	LDA.l $7EF3C5 : CMP.b #$02 : BCC .set_both
+
 	LDX.w #$0012 : BRA .set_both
 
 .links_bed
+	LDA.l $7EF3C6 : AND.b #$10 : BEQ .silent_bed
+	LDX.w #$0003
+	BRA --
+
+.silent_bed
 	LDA.b #$03 : STA.w $0132
 	LDA.b #$F0 : BRA .set_queue
 
@@ -1065,7 +1078,7 @@ SetDungeonEntranceAndProperties:
 	STA.w $0132
 
 	LDA.b #$F2
-	BRA .set_queue
+	JMP .set_queue
 
 .dw_theme
 	LDX.w #$0009 : BRA .set_fade
@@ -1201,7 +1214,7 @@ FindOptimalDoorType:
 	DEX
 	BPL --
 
-	DEX ; one more dex to say we found a score
+	DEX ; one more dex to say we found a door with score FFFE
 
 .compare_score
 
@@ -1302,9 +1315,429 @@ HandleOpenShutters:
 	STA.w $0468
 
 	EOR.b #$01 : STA.w $0641
+	BNE ++
+
+++	REP #$30
+
+	PHB
+
+	LDY.w #$0000
+
+	PHY
+	PLB
+	PLB
+
+--	LDA.w $19A0,Y
 	BEQ ++
 
-	JMP OpenShutterDoors
+	PHY
+	JSR .open
+	PLY
+
+++	INY
+	INY
+	CPY.w #$0020
+	BCC --
+
+	; now apply layer swap and dungeon swap attributes
+	JSL LoadSingleDoorTileAttribute
+
+	PLB
+	RTL
+
+.open
+	LDA.w $1980,Y
+	AND.w #$00FE
+	TAX
+
+	CMP.w #$0018
+	BEQ .shutter
+
+	CMP.w #$0044
+	BNE ++
+
+.shutter
+	STA.b $06
+
+	LDA.l $009A52,X
+	STA.b $00
+
+	LDA.l $009A02,X
+	STA.b $02
+
+	LDA.w $19C0,Y
+	AND.w #$0003
+	ASL
+	TAX
+
+	LDA.l .vectors,X
+	PHA
+
+	LDA.w $19A0,Y
+	STA.b $04
+
+++	RTS
+
+.vectors
+	dw .north-1
+	dw .south-1
+	dw .west-1
+	dw .east-1
+
+
+.north
+	LSR
+	AND.w #$783F
+	TAX
+
+	LDA.b $06
+	CMP.w #$44
+	PHP
+	LDA.b $00
+	PLP
+
+	STA.l $7F2001,X
+	STA.l $7F2041,X
+	STA.l $7F2081,X
+	STA.l $7F20C1,X
+	STA.l $7F2101,X
+	STA.l $7F2141,X
+	STA.l $7F2181,X
+
+	BNE .upper_north
+
+	STA.l $7F21C1,X
+	STA.l $7F2201,X
+	STA.l $7F2241,X
+
+	BRA ++
+
+.upper_north
+	LDA.w #$0000
+	STA.l $7F21C1,X
+
+++	LDX.b $02
+	LDA.l $00CD9E,X
+	TAY
+
+	LDX.b $04
+
+	LDA.w #$0004
+	STA.b $0E
+
+--	TXA
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+0,Y
+	STA.l $7E2000,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0080
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+2,Y
+	STA.l $7E2080,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0100
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+4,Y
+	STA.l $7E2100,X
+	STA.w $2118
+
+
+	TYA
+	CLC
+	ADC.w #$0006
+	TAY
+
+	INX
+	INX
+
+	DEC.b $0E
+	BNE --
+
+	RTS
+
+.south
+	LSR
+	TAX
+
+	LDA.b $06
+	CMP.w #$44
+	PHP
+	LDA.b $00
+	PLP
+
+	STA.l $7F2041,X
+	STA.l $7F2081,X
+	STA.l $7F20C1,X
+	STA.l $7F2101,X
+	STA.l $7F2141,X
+
+	BNE .upper_south
+
+	STA.l $7F2181,X
+	STA.l $7F21C1,X
+	STA.l $7F2201,X
+
+.upper_south
+	LDX.b $02
+	LDA.l $00CE06,X
+	TAY
+
+	LDX.b $04
+
+	LDA.w #$0004
+	STA.b $0E
+
+--	TXA
+	CLC
+	ADC.w #$0080
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+0,Y
+	STA.l $7E2080,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0100
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+2,Y
+	STA.l $7E2100,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0180
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+4,Y
+	STA.l $7E2180,X
+	STA.w $2118
+
+
+	TYA
+	CLC
+	ADC.w #$0006
+	TAY
+
+	INX
+	INX
+
+	DEC.b $0E
+	BNE --
+
+
+	RTS
+
+.west
+	LSR
+	AND.w #$FFE0
+	TAX
+
+
+	LDA.b $06
+	CMP.w #$44
+	PHP
+	LDA.b $00
+	CLC
+	ADC.w #$0101
+	PLP
+
+	STA.l $7F2040,X
+	STA.l $7F2042,X
+	STA.l $7F2080,X
+	STA.l $7F2082,X
+
+	BNE .upper_west
+
+	STA.l $7F2044,X
+	STA.l $7F2046,X
+	STA.l $7F2084,X
+	STA.l $7F2086,X
+	BRA ++
+
+.upper_west
+	AND.w #$00FF
+	STA.l $7F2044,X
+	STA.l $7F2084,X
+
+++	LDX.b $02
+	LDA.l $00CE66,X
+	TAY
+
+	LDX.b $04
+
+	LDA.w #$0003
+	STA.b $0E
+
+--	TXA
+	CLC
+	ADC.w #$0000
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+0,Y
+	STA.l $7E2000,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0080
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+2,Y
+	STA.l $7E2080,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0100
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+4,Y
+	STA.l $7E2100,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0180
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+6,Y
+	STA.l $7E2180,X
+	STA.w $2118
+
+	TYA
+	CLC
+	ADC.w #$0008
+	TAY
+
+	INX
+	INX
+
+	DEC.b $0E
+	BNE --
+
+	RTS
+
+.east
+	LSR
+	TAX
+
+	LDA.b $06
+	CMP.w #$44
+	PHP
+	LDA.b $00
+	CLC
+	ADC.w #$0101
+	PLP
+
+	STA.l $7F2042,X
+	STA.l $7F2044,X
+	STA.l $7F2082,X
+	STA.l $7F2084,X
+
+	BNE .upper_east
+
+	STA.l $7F2044,X
+	STA.l $7F2046,X
+	STA.l $7F2047,X
+	STA.l $7F2084,X
+	STA.l $7F2086,X
+	STA.l $7F2087,X
+
+.upper_east
+	AND.w #$FF00
+	STA.l $7F2040,X
+	STA.l $7F2080,X
+
+	LDX.b $02
+	LDA.l $00CEC6,X
+
+	TAY
+
+	LDX.b $04
+
+	LDA.w #$0003
+	STA.b $0E
+
+--	TXA
+	CLC
+	ADC.w #$0002
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+0,Y
+	STA.l $7E2002,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0082
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+2,Y
+	STA.l $7E2082,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0102
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+4,Y
+	STA.l $7E2102,X
+	STA.w $2118
+
+	TXA
+	CLC
+	ADC.w #$0182
+	JSR .toVRAMAddr
+
+	LDA.w $009B52+6,Y
+	STA.l $7E2182,X
+	STA.w $2118
+
+	TYA
+	CLC
+	ADC.w #$0008
+	TAY
+
+	INX
+	INX
+
+	DEC.b $0E
+	BNE --
+
+	RTS
+
+.toVRAMAddr
+	STA.b $08
+	AND.w #$0040
+	LSR : LSR : LSR : LSR
+	XBA
+	STA.b $0A
+
+	LDA.b $08
+	AND.w #$303F
+	LSR
+	TSB.b $0A
+
+	LDA.b $08
+	AND.w #$0F80
+	LSR : LSR
+	ORA.b $0A
+
+	STA.w $2116
+
+	RTS
 
 ;===================================================================================================
 
@@ -1316,7 +1749,7 @@ HandlePegState:
 	JSL $0296AD
 	JSL RefreshPegs
 
-++	RTS
+++	RTL
 
 ;===================================================================================================
 
@@ -1340,7 +1773,7 @@ KillSpritesInRoom:
 ++	DEX
 	BPL --
 
-	RTS
+	RTL
 
 ;===================================================================================================
 
@@ -1545,3 +1978,168 @@ SetHUDItemGraphics:
 	dw $0DF7B9, $7EF350 ; $12 - Cane of Somaria
 	dw $0DF7D9, $7EF352 ; $13 - Cape
 	dw $0DF7E9, $7EF353 ; $14 - Magic Mirror
+
+;===================================================================================================
+
+HandleOverworldLoad:
+	REP #$20
+
+	STZ.w $0624
+	STZ.w $0626
+	STZ.w $0628
+	STZ.w $062A
+
+	SEP #$30
+
+	STZ.b $EE ; layer
+	STZ.b $1B ; outdoors
+
+	BIT.w $008A ; do mirror portal?
+	BVS .darkworld
+
+	LDA.b #$6C ; add portal to sprite list
+	STA.w $0E2F
+
+	LDA.b #$08
+	STA.w $0DDF
+
+.darkworld
+	REP #$20
+
+	LDA.w #$0009 : STA.b $10
+	LDA.w #$FFF8 : STA.b $EC
+
+	STZ.w $0696 : STZ.w $0698
+	STZ.w $2116
+
+	REP #$20
+	JSL $02EA30
+	SEP #$20
+
+	JSL $0AB911
+
+	JSL $02B116 : JSR OWToVRAM
+
+	LDA.w $0410 : PHA
+	LDA.w $0416 : PHA
+	LDA.w $0418 : PHA
+	PEI.b ($84)
+	PEI.b ($86)
+	PEI.b ($88)
+	PEI.b ($8A)
+
+	LDA.b $8C : STA.b $8A
+	LDA.w #$0390 : STA.b $84
+	LDA.w #$001F : STA.b $88
+	STZ.b $86
+
+	STZ.w $0410
+	STZ.w $0416
+	STZ.w $0418
+
+	JSL LoadOverworldOverlay : JSR OWToVRAM
+
+	PLA : STA.b $8A
+	PLA : STA.b $88
+	PLA : STA.b $86
+	PLA : STA.b $84
+	PLA : STA.w $0418
+	PLA : STA.w $0416
+	PLA : STA.w $0410
+
+	SEP #$30
+
+	JSL $09C499
+
+	SEP #$30
+
+	LDA.b #$FF : STA.l $7EF36F ; no keys
+	STA.w $040C ; no dungeon
+
+	; load overworld music
+	SEI
+
+	STA.w $2140
+	LDA.b #$01 : STA.w $4200
+	STZ.w $0136
+
+	JSL $008913
+
+;===================================================================================================
+
+SetOverworldMusic:
+	SEP #$30
+
+	LDY.b $8A
+
+	; DM
+	LDX.b #$02
+	CPY.b #$40 : BCS .dark_world
+
+	; kakariko
+	CPY.b #$18 : BNE .not_kak
+	LDA.l $7EF3C5 : CMP.b #$03 : BCS .continue
+	LDX.b #$07 : BRA .save
+
+.not_kak
+	CMP.b #$00 : BNE .continue
+
+	LDA.l $7EF300 : AND.b #$40 : BEQ .continue
+	LDX.b #$05 : BRA .continue
+
+.dark_world
+	LDA.l $7EF3CA : BEQ .continue
+
+	LDX.b #$09
+	LDA.l $7EF357 : BNE .pearl
+
+	LDX.b #$04 : BRA .save
+
+.pearl
+	CPY.b #$40 : BEQ .sw
+	CPY.b #$43 : BEQ .sw
+	CPY.b #$45 : BEQ .sw
+	CPY.b #$47 : BNE .save
+
+.sw
+	LDX.b #$0D : BRA .save
+
+.continue
+	LDA.l $7EF3C5 : CMP.b #$02 : BCS .save
+
+	LDX.b #$03
+
+.save
+	STX.w $012C
+	STX.w $2140
+
+	RTL
+
+;===================================================================================================
+
+OWToVRAM:
+	SEP #$30
+
+	STZ.b $17 : STZ.w $0710
+
+	LDA.b #$7F : STA.w $4304
+	LDA.b #$80 : STA.w $2115
+
+	REP #$31
+
+	LDA.w #$2000 : STA.w $4302
+	LDY.w #$0080 : LDX.w #$0000
+	LDA.w #$1801 : STA.w $4300
+
+.next_chunk
+	LDA.l $7F4000,X : STA.w $2116 : STY.w $4305 : LDA.w #$0001 : STA.w $420B
+	LDA.l $7F4002,X : STA.w $2116 : STY.w $4305 : LDA.w #$0001 : STA.w $420B
+	LDA.l $7F4004,X : STA.w $2116 : STY.w $4305 : LDA.w #$0001 : STA.w $420B
+	LDA.l $7F4006,X : STA.w $2116 : STY.w $4305 : LDA.w #$0001 : STA.w $420B
+
+	TXA : ADC.w #$0008 : TAX
+
+	CPX.w #$0080
+	BCC .next_chunk
+
+	RTS

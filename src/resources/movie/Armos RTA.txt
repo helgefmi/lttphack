@@ -1,0 +1,22 @@
+@ Defeat Armos
+
+= Armos
+660 Link's Bed
+2646 Mandatory Clip
+3867 Optional Clip
+4804 Entrance
+5400 Cannonballs
+6363 Stalfos Dodging
+6678 Stalfos Room
+8139 Big Chest Room 1
+9029 Dark Antifairies Room
+9434 Dark Key Room
+10829 Big Key Damage Boost
+11984 Big Chest Room 2
+12856 Gifted with Greenies
+13871 Pot Room
+14981 Zeldagamer Room
+15358 Swordless Double Reddies
+15976 Armos
+
+= End

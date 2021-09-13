@@ -1,0 +1,29 @@
+@ Defeat Kholdstare
+
+= Kholdstare
+636 Link's Bed
+4564 Uncle Lamp
+6233 Castle
+6710 Stair Clip
+7274 Re-arm EG
+8571 Ball 'n Chains
+10196 Trudge to Mire
+12193 Spark Avoidance
+13281 Somaria Bridge
+14056 Trudge to Cannonballs
+16868 Cannonballs
+18454 Acquire Bow
+21486 Mire to Skull Woods
+22623 Fire Rod STC
+25006 Supply Run
+31024 Well Stair Clip
+32121 Ice Backdoor
+35133 Ice Entrance
+36216 Penguin Switch Room
+36709 Break the Ice
+37572 Spike Key
+38478 Lonely Firebar
+39314 Last Two Screens
+39915 Kholdstare
+
+= End

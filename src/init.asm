@@ -187,7 +187,7 @@ init_initialize_all:
 	SEP #$20
 
 	LDA.b #$1F : STA.w $2143
-	STA.l SA1RAM.ss_old_music_bank
+	STA.l SA1RAM.old_music_bank
 
 	REP #$30
 	PLY

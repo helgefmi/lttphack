@@ -1,9 +1,11 @@
 !VERSIONTEXT = "v"
+!RANDO ?= 0
+
 if stringsequal("!VERSION", "DEBUG")
 	!VERSIONTEXT = ""
 endif
 
-!VERSIONTEXT += !VERSION
+!VERSIONTEXT += "!{VERSION}"
 
 pushtable
 cleartable
@@ -104,8 +106,6 @@ org $0DF829 ; boots gfx location moved
 	dw $3521, $3522, $3523, $3524
 
 ;===================================================================================================
-
-!RANDO ?= 0
 
 if !RANDO
 	incsrc "rando.asm"

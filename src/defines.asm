@@ -7,14 +7,18 @@ function hexto555(h) = ((((h&$FF)/8)<<10)|(((h>>8&$FF)/8)<<5)|(((h>>16&$FF)/8)<<
 ; Memory map:
 ; Bank 40:
 ;    $0000..$1FFF - vanilla SRAM
+;    $2000..$5FFF - unused
 ;    $6000..$7FFF - mirrored to page $60 for SNES
 ;    $9000..$97FF - unused
 ;    $9800..$9EFF - SA-1 savestate for $3000..$36FF
 ; Bank 41: savestates
 ; Bank 42: savestates vram
+; Bank 43:
+;    $0000..$7FFF - Lite States
 ;===================================================================================================
 org $400000
 SA1SRAM = $400000
+LiteStateData = $430000
 
 struct SA1RAM $406000
 	.HUD skip $800 ; bg3 HUD
@@ -31,7 +35,8 @@ struct SA1RAM $406000
 	.hex2dec_second_digit: skip 2
 	.hex2dec_third_digit: skip 2
 
-	.ss_old_music_bank: skip 1
+	.old_music: skip 1
+	.old_music_bank: skip 1
 
 .clearable_sa1ram:
 	.pokey_rng: skip 2
@@ -66,7 +71,6 @@ struct SA1RAM $406000
 	.disabled_layers: skip 2
 	.layer_writer: skip 2
 
-	.old_music: skip 1
 .end_of_clearable_sa1ram:
 
 	.cm_input_timer: skip 2
@@ -221,6 +225,8 @@ endmacro
 %def_sram("safeties_anyrmg_hook", !OFF)
 
 %def_sram("state_icons", !OFF)
+
+%def_sram("somaria_pits", !OFF)
 
 print ""
 print "Config end: $", hex(!last_config,3)

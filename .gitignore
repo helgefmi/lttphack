@@ -6,3 +6,4 @@ std*.txt
 *.srm
 target/
 src/resources/movie/*.asm
+*.state

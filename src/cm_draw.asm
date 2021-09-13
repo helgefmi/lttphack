@@ -148,11 +148,21 @@ DrawCurrentRow:
 	CMP.w #$0008
 	BEQ .settingjoy
 
+	CMP.w #$000A
+	BEQ .litestating
+
+	CMP.w #$000C
+	BEQ .litestating
+
 	LDA.w #!SELECTED
 	BRA .setcol
 
 .header
 	LDA.w #!HEADER
+	BRA .setcol
+
+.litestating
+	LDA.w #!SHORTCUTTING
 	BRA .setcol
 
 .settingjoy
@@ -420,6 +430,10 @@ CMDRAW_HEX_2_DIGITS:
 	LDY.w #2
 	BRA CMDRAW_HEX
 
+CMDRAW_HEX_3_DIGITS:
+	LDY.w #3
+	BRA CMDRAW_HEX
+
 CMDRAW_HEX_4_DIGITS:
 	LDY.w #4
 	BRA CMDRAW_HEX
@@ -653,7 +667,7 @@ CMDRAW_TOGGLE_BIT0_LONG_CUSTOMTEXT:
 	LDA.b #$1<<0 : BRA CMDRAW_CHECK_BIT_LONG_CUSTOMTEXT
 
 ;===================================================================================================
-; TODO ?
+
 CMDRAW_TOGGLE_ROOMFLAG:
 	REP #$20
 
@@ -961,3 +975,58 @@ CMDRAW_CHOICE_FUNC:
 	LDA.b [SA1IRAM.cm_writer],Y
 
 	JMP CMDRAW_WORD_LONG
+
+;===================================================================================================
+
+CMDRAW_LITESTATE:
+	LDA.b [SA1IRAM.cm_current_draw],Y
+	REP #$30
+
+	JSL ValidateLiteState
+	BCC .invalid
+
+	PHX
+
+	LDX.b SA1IRAM.litestate_off	
+	LDA.l LiteStateData+$10+LiteSRAMSize,X ; get $1B cache
+
+	PLX
+	AND.w #$0001 : BEQ .ow_state
+
+.uw_state
+	LDA.w #.uw_text
+	JSR CMDRAW_WORD
+	PHX
+
+	LDX.b SA1IRAM.litestate_off
+	LDA.l LiteStateData+$10+$01+LiteSRAMSize+0,X
+	LDY.w #$03
+	BRA .draw_id
+
+.ow_state
+	LDA.w #.ow_text
+	JSR CMDRAW_WORD
+	PHX
+
+	LDX.b SA1IRAM.litestate_off
+	LDA.l LiteStateData+$10+$01+LiteSRAMSize+4,X
+	LDY.w #$02
+
+.draw_id
+	PLX
+
+	JSL CMDRAW_HEX
+	RTS
+
+.invalid
+	LDA.w #.invalid_text
+	JMP CMDRAW_WORD
+
+.uw_text
+	db "UW ", $FF
+
+.ow_text
+	db "OW  ", $FF
+
+.invalid_text
+	db "Empty", $FF

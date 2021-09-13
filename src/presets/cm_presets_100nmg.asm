@@ -42,10 +42,8 @@ db $00 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $00 ; Entrance
-db $02 ; Room layout
-db $00 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $20 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -72,10 +70,8 @@ db $00 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $7D ; Entrance
-db $81 ; Room layout
-db $FF ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $9F ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -89,10 +85,8 @@ db $00 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $7D ; Entrance
-db $82 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $AF ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -119,10 +113,8 @@ db $00 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $80 ; Room layout
-db $00 ; Floor
-db $00 ; Door / Peg state
-db $01 ; Layer
+db $80 ; Room layout / Floor
+db $04 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -136,10 +128,8 @@ db $00 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $C2 ; Room layout
-db $FF ; Floor
-db $00 ; Door / Peg state
-db $01 ; Layer
+db $EF ; Room layout / Floor
+db $04 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_7F_16()
@@ -155,10 +145,8 @@ db $00 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $02 ; Room layout
-db $FF ; Floor
-db $02 ; Door / Peg state
-db $01 ; Layer
+db $2F ; Room layout / Floor
+db $86 ; Door / Peg state / Layer
 dw $0001 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -172,10 +160,8 @@ db $00 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $00 ; Room layout
-db $FE ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $0E ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_7F_16()
@@ -191,10 +177,8 @@ db $09 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $80 ; Room layout
-db $FD ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $8D ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0006 ; Dead sprites
 ;-----------------------------
 %write_7F_16()
@@ -210,10 +194,8 @@ db $09 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $82 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $AF ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -227,10 +209,8 @@ db $09 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $C0 ; Room layout
-db $00 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $C0 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -244,10 +224,8 @@ db $09 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $C1 ; Room layout
-db $01 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $D1 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -261,10 +239,8 @@ db $09 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $C0 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $CF ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0002 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -278,10 +254,8 @@ db $09 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $82 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $AF ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -295,10 +269,8 @@ db $09 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $41 ; Room layout
-db $FF ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $5F ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0050 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -309,7 +281,7 @@ dw $0050 ; Dead sprites
 ;---------------------------------------------------------------------------------------------------
 ;===================================================================================================
 presetmenu_100nmg_eastern_palace:
-%menu_header("Eastern Palace", 14)
+%menu_header("Eastern Palace", 15)
 
 ;---------------------------------------------------------------------------------------------------
 %preset_UW("Before Cutscene", "100nmg", "eastern_palace", "before_cutscene")
@@ -320,10 +292,8 @@ db $09 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $82 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $01 ; Layer
+db $A0 ; Room layout / Floor
+db $85 ; Door / Peg state / Layer
 dw $0010 ; Dead sprites
 ;-----------------------------
 %write8_enable()
@@ -339,10 +309,8 @@ db $09 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $04 ; Entrance
-db $C0 ; Room layout
-db $00 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $C0 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -395,10 +363,8 @@ db $09 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $08 ; Entrance
-db $43 ; Room layout
-db $00 ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $70 ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -412,10 +378,8 @@ db $09 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $08 ; Entrance
-db $41 ; Room layout
-db $00 ; Floor
-db $02 ; Door / Peg state
-db $01 ; Layer
+db $50 ; Room layout / Floor
+db $06 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -429,10 +393,8 @@ db $09 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $08 ; Entrance
-db $00 ; Room layout
-db $00 ; Floor
-db $82 ; Door / Peg state
-db $00 ; Layer
+db $00 ; Room layout / Floor
+db $82 ; Door / Peg state / Layer
 dw $0010 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -446,10 +408,8 @@ db $09 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $08 ; Entrance
-db $C0 ; Room layout
-db $00 ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $C0 ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -463,10 +423,8 @@ db $09 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $08 ; Entrance
-db $41 ; Room layout
-db $00 ; Floor
-db $02 ; Door / Peg state
-db $01 ; Layer
+db $50 ; Room layout / Floor
+db $06 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -480,10 +438,8 @@ db $09 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $08 ; Entrance
-db $C0 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $C0 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -497,10 +453,8 @@ db $03 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $08 ; Entrance
-db $82 ; Room layout
-db $00 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $A0 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0008 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -514,11 +468,24 @@ db $03 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $08 ; Entrance
-db $02 ; Room layout
-db $01 ; Floor
-db $82 ; Door / Peg state
-db $00 ; Layer
+db $21 ; Room layout / Floor
+db $82 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
+;-----------------------------
+%write_end()
+
+;---------------------------------------------------------------------------------------------------
+%preset_UW("Double Reddies", "100nmg", "eastern_palace", "double_reddies")
+dw $00D8 ; Screen ID
+dw $1178, $1B31 ; Link Coords
+dw $1100, $1B00 ; Camera HV
+db $03 ; Item
+db $06 ; Direction
+;-----------------------------
+db $08 ; Entrance
+db $31 ; Room layout
+db $80 ; Door / Peg state / Layer
+dw $0700 ; Dead sprites
 ;-----------------------------
 %write_end()
 
@@ -531,10 +498,8 @@ db $03 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $08 ; Entrance
-db $01 ; Room layout
-db $01 ; Floor
-db $81 ; Door / Peg state
-db $00 ; Layer
+db $11 ; Room layout / Floor
+db $81 ; Door / Peg state / Layer
 dw $07FF ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -569,10 +534,8 @@ db $03 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $45 ; Entrance
-db $02 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $20 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write16_enable()
@@ -637,10 +600,8 @@ db $03 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $49 ; Entrance
-db $02 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $20 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write16_enable()
@@ -731,10 +692,8 @@ db $0C ; Item
 db $00 ; Direction
 ;-----------------------------
 db $09 ; Entrance
-db $03 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $3F ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -748,12 +707,15 @@ db $0C ; Item
 db $06 ; Direction
 ;-----------------------------
 db $09 ; Entrance
-db $40 ; Room layout
-db $FF ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $4F ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
+%write_7F()
+%write8($7F23DC, $00) ; Bastard door
+%write8($7F23E3, $00)
+%write8($7F249C, $00)
+%write8($7F24A3, $00)
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
@@ -765,10 +727,8 @@ db $0C ; Item
 db $04 ; Direction
 ;-----------------------------
 db $09 ; Entrance
-db $03 ; Room layout
-db $FF ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $3F ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -782,10 +742,8 @@ db $0C ; Item
 db $02 ; Direction
 ;-----------------------------
 db $09 ; Entrance
-db $02 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $2F ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -799,10 +757,8 @@ db $0C ; Item
 db $02 ; Direction
 ;-----------------------------
 db $0C ; Entrance
-db $00 ; Room layout
-db $01 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $01 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -816,10 +772,8 @@ db $0C ; Item
 db $00 ; Direction
 ;-----------------------------
 db $0C ; Entrance
-db $03 ; Room layout
-db $01 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $31 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -833,10 +787,8 @@ db $09 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $0C ; Entrance
-db $80 ; Room layout
-db $01 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $81 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -936,10 +888,8 @@ db $01 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $06 ; Entrance
-db $C3 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $F0 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1005,10 +955,8 @@ db $14 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $33 ; Entrance
-db $C0 ; Room layout
-db $01 ; Floor
-db $00 ; Door / Peg state
-db $01 ; Layer
+db $C1 ; Room layout / Floor
+db $04 ; Door / Peg state / Layer
 dw $0001 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1022,10 +970,8 @@ db $14 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $33 ; Entrance
-db $00 ; Room layout
-db $00 ; Floor
-db $92 ; Door / Peg state
-db $00 ; Layer
+db $00 ; Room layout / Floor
+db $C2 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1039,10 +985,8 @@ db $14 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $33 ; Entrance
-db $01 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $10 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1056,10 +1000,8 @@ db $14 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $33 ; Entrance
-db $C3 ; Room layout
-db $01 ; Floor
-db $00 ; Door / Peg state
-db $01 ; Layer
+db $F1 ; Room layout / Floor
+db $04 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1073,10 +1015,8 @@ db $14 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $33 ; Entrance
-db $81 ; Room layout
-db $02 ; Floor
-db $10 ; Door / Peg state
-db $00 ; Layer
+db $92 ; Room layout / Floor
+db $40 ; Door / Peg state / Layer
 dw $0580 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1090,10 +1030,8 @@ db $03 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $33 ; Entrance
-db $C0 ; Room layout
-db $03 ; Floor
-db $10 ; Door / Peg state
-db $00 ; Layer
+db $C3 ; Room layout / Floor
+db $40 ; Door / Peg state / Layer
 dw $0064 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1107,10 +1045,8 @@ db $03 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $33 ; Entrance
-db $C1 ; Room layout
-db $04 ; Floor
-db $10 ; Door / Peg state
-db $00 ; Layer
+db $D4 ; Room layout / Floor
+db $40 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1145,10 +1081,8 @@ db $03 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $2F ; Entrance
-db $C2 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $E0 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1240,10 +1174,8 @@ db $03 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $24 ; Entrance
-db $00 ; Room layout
-db $01 ; Floor
-db $82 ; Door / Peg state
-db $00 ; Layer
+db $01 ; Room layout / Floor
+db $82 ; Door / Peg state / Layer
 dw $0003 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1257,10 +1189,8 @@ db $03 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $24 ; Entrance
-db $01 ; Room layout
-db $02 ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $12 ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1274,10 +1204,8 @@ db $03 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $24 ; Entrance
-db $03 ; Room layout
-db $03 ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $33 ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1291,10 +1219,8 @@ db $03 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $24 ; Entrance
-db $01 ; Room layout
-db $03 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $13 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $000C ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1308,10 +1234,8 @@ db $03 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $24 ; Entrance
-db $01 ; Room layout
-db $04 ; Floor
-db $82 ; Door / Peg state
-db $00 ; Layer
+db $14 ; Room layout / Floor
+db $82 ; Door / Peg state / Layer
 dw $001E ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1325,10 +1249,8 @@ db $03 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $24 ; Entrance
-db $00 ; Room layout
-db $04 ; Floor
-db $81 ; Door / Peg state
-db $00 ; Layer
+db $04 ; Room layout / Floor
+db $81 ; Door / Peg state / Layer
 dw $003F ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1342,10 +1264,8 @@ db $03 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $24 ; Entrance
-db $03 ; Room layout
-db $05 ; Floor
-db $02 ; Door / Peg state
-db $01 ; Layer
+db $35 ; Room layout / Floor
+db $06 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1359,10 +1279,8 @@ db $03 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $24 ; Entrance
-db $00 ; Room layout
-db $06 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $06 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0001 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1423,10 +1341,8 @@ db $14 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $26 ; Entrance
-db $80 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $80 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1440,10 +1356,8 @@ db $14 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $26 ; Entrance
-db $80 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $80 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1457,10 +1371,8 @@ db $14 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $26 ; Entrance
-db $80 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $80 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1474,10 +1386,8 @@ db $14 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $26 ; Entrance
-db $C0 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $C0 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1491,10 +1401,8 @@ db $14 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $26 ; Entrance
-db $C1 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $D0 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0010 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1508,10 +1416,8 @@ db $03 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $26 ; Entrance
-db $C1 ; Room layout
-db $00 ; Floor
-db $12 ; Door / Peg state
-db $00 ; Layer
+db $D0 ; Room layout / Floor
+db $42 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1525,10 +1431,8 @@ db $03 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $26 ; Entrance
-db $40 ; Room layout
-db $00 ; Floor
-db $91 ; Door / Peg state
-db $00 ; Layer
+db $40 ; Room layout / Floor
+db $C1 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write8_enable()
@@ -1545,10 +1449,8 @@ db $03 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $26 ; Entrance
-db $02 ; Room layout
-db $00 ; Floor
-db $91 ; Door / Peg state
-db $00 ; Layer
+db $20 ; Room layout / Floor
+db $C1 ; Door / Peg state / Layer
 dw $0038 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1562,10 +1464,8 @@ db $03 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $26 ; Entrance
-db $81 ; Room layout
-db $00 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $90 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0038 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1579,10 +1479,8 @@ db $04 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $26 ; Entrance
-db $00 ; Room layout
-db $FF ; Floor
-db $11 ; Door / Peg state
-db $00 ; Layer
+db $0F ; Room layout / Floor
+db $41 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1596,10 +1494,8 @@ db $04 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $26 ; Entrance
-db $41 ; Room layout
-db $FF ; Floor
-db $11 ; Door / Peg state
-db $00 ; Layer
+db $5F ; Room layout / Floor
+db $41 ; Door / Peg state / Layer
 dw $0010 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1878,10 +1774,8 @@ db $01 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $34 ; Entrance
-db $C3 ; Room layout
-db $FF ; Floor
-db $00 ; Door / Peg state
-db $01 ; Layer
+db $FF ; Room layout / Floor
+db $04 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1895,10 +1789,8 @@ db $01 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $34 ; Entrance
-db $C1 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $DF ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1912,10 +1804,8 @@ db $01 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $34 ; Entrance
-db $02 ; Room layout
-db $FF ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $2F ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0240 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1929,10 +1819,8 @@ db $01 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $34 ; Entrance
-db $03 ; Room layout
-db $FF ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $3F ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write8_enable()
@@ -1948,10 +1836,8 @@ db $01 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $34 ; Entrance
-db $02 ; Room layout
-db $00 ; Floor
-db $12 ; Door / Peg state
-db $00 ; Layer
+db $20 ; Room layout / Floor
+db $42 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1965,10 +1851,8 @@ db $01 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $34 ; Entrance
-db $02 ; Room layout
-db $00 ; Floor
-db $10 ; Door / Peg state
-db $00 ; Layer
+db $20 ; Room layout / Floor
+db $40 ; Door / Peg state / Layer
 dw $0040 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1982,10 +1866,8 @@ db $01 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $34 ; Entrance
-db $00 ; Room layout
-db $FF ; Floor
-db $10 ; Door / Peg state
-db $00 ; Layer
+db $0F ; Room layout / Floor
+db $40 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -1999,10 +1881,8 @@ db $04 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $34 ; Entrance
-db $02 ; Room layout
-db $FE ; Floor
-db $12 ; Door / Peg state
-db $00 ; Layer
+db $2E ; Room layout / Floor
+db $42 ; Door / Peg state / Layer
 dw $0002 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2016,10 +1896,8 @@ db $04 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $34 ; Entrance
-db $43 ; Room layout
-db $FE ; Floor
-db $12 ; Door / Peg state
-db $00 ; Layer
+db $7E ; Room layout / Floor
+db $42 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2033,10 +1911,8 @@ db $04 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $34 ; Entrance
-db $02 ; Room layout
-db $FE ; Floor
-db $12 ; Door / Peg state
-db $00 ; Layer
+db $2E ; Room layout / Floor
+db $42 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2050,10 +1926,8 @@ db $04 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $34 ; Entrance
-db $00 ; Room layout
-db $FE ; Floor
-db $10 ; Door / Peg state
-db $00 ; Layer
+db $0E ; Room layout / Floor
+db $40 ; Door / Peg state / Layer
 dw $0002 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2067,10 +1941,8 @@ db $04 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $34 ; Entrance
-db $41 ; Room layout
-db $FF ; Floor
-db $11 ; Door / Peg state
-db $00 ; Layer
+db $5F ; Room layout / Floor
+db $41 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2131,10 +2003,8 @@ db $14 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $64 ; Entrance
-db $02 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $20 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write16_enable()
@@ -2229,10 +2099,8 @@ db $01 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $29 ; Entrance
-db $43 ; Room layout
-db $FF ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $7F ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2259,10 +2127,8 @@ db $05 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $2B ; Entrance
-db $02 ; Room layout
-db $FF ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $2F ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0400 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2276,10 +2142,8 @@ db $05 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $2B ; Entrance
-db $00 ; Room layout
-db $FF ; Floor
-db $81 ; Door / Peg state
-db $00 ; Layer
+db $0F ; Room layout / Floor
+db $81 ; Door / Peg state / Layer
 dw $0C41 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2293,12 +2157,15 @@ db $05 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $2B ; Entrance
-db $02 ; Room layout
-db $FF ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $2F ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0002 ; Dead sprites
 ;-----------------------------
+%write_7F()
+%write8($7F2BDC, $00) ; Bastard door
+%write8($7F2BE3, $00)
+%write8($7F2C9C, $00)
+%write8($7F2CA3, $00)
 %write_end()
 
 ;===================================================================================================
@@ -2422,10 +2289,8 @@ db $05 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $2D ; Entrance
-db $03 ; Room layout
-db $00 ; Floor
-db $82 ; Door / Peg state
-db $00 ; Layer
+db $30 ; Room layout / Floor
+db $82 ; Door / Peg state / Layer
 dw $0001 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2439,10 +2304,8 @@ db $05 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $2D ; Entrance
-db $03 ; Room layout
-db $FF ; Floor
-db $82 ; Door / Peg state
-db $00 ; Layer
+db $3F ; Room layout / Floor
+db $82 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2456,10 +2319,8 @@ db $05 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $2D ; Entrance
-db $03 ; Room layout
-db $FF ; Floor
-db $81 ; Door / Peg state
-db $00 ; Layer
+db $3F ; Room layout / Floor
+db $81 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2473,10 +2334,8 @@ db $01 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $2D ; Entrance
-db $01 ; Room layout
-db $FE ; Floor
-db $91 ; Door / Peg state
-db $00 ; Layer
+db $1E ; Room layout / Floor
+db $C1 ; Door / Peg state / Layer
 dw $0006 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2490,10 +2349,8 @@ db $01 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $2D ; Entrance
-db $82 ; Room layout
-db $FE ; Floor
-db $11 ; Door / Peg state
-db $00 ; Layer
+db $AE ; Room layout / Floor
+db $41 ; Door / Peg state / Layer
 dw $0306 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2507,10 +2364,8 @@ db $04 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $2D ; Entrance
-db $01 ; Room layout
-db $FE ; Floor
-db $10 ; Door / Peg state
-db $00 ; Layer
+db $1E ; Room layout / Floor
+db $40 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2524,10 +2379,8 @@ db $04 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $2D ; Entrance
-db $03 ; Room layout
-db $FD ; Floor
-db $12 ; Door / Peg state
-db $00 ; Layer
+db $3D ; Room layout / Floor
+db $42 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2541,10 +2394,8 @@ db $04 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $2D ; Entrance
-db $03 ; Room layout
-db $FB ; Floor
-db $10 ; Door / Peg state
-db $00 ; Layer
+db $3B ; Room layout / Floor
+db $40 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2558,10 +2409,8 @@ db $04 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $2D ; Entrance
-db $01 ; Room layout
-db $FA ; Floor
-db $10 ; Door / Peg state
-db $00 ; Layer
+db $1A ; Room layout / Floor
+db $40 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2624,10 +2473,8 @@ db $0D ; Item
 db $02 ; Direction
 ;-----------------------------
 db $41 ; Entrance
-db $C3 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $F0 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write16_enable()
@@ -2705,10 +2552,8 @@ db $05 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $27 ; Entrance
-db $83 ; Room layout
-db $00 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $B0 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2722,10 +2567,8 @@ db $05 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $27 ; Entrance
-db $C1 ; Room layout
-db $FF ; Floor
-db $81 ; Door / Peg state
-db $00 ; Layer
+db $DF ; Room layout / Floor
+db $81 ; Door / Peg state / Layer
 dw $03EF ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2739,10 +2582,8 @@ db $05 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $27 ; Entrance
-db $03 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $3F ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2756,10 +2597,8 @@ db $05 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $27 ; Entrance
-db $C2 ; Room layout
-db $FF ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $EF ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2773,10 +2612,8 @@ db $05 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $27 ; Entrance
-db $02 ; Room layout
-db $FF ; Floor
-db $11 ; Door / Peg state
-db $00 ; Layer
+db $2F ; Room layout / Floor
+db $41 ; Door / Peg state / Layer
 dw $0200 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2790,10 +2627,8 @@ db $05 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $27 ; Entrance
-db $00 ; Room layout
-db $FF ; Floor
-db $10 ; Door / Peg state
-db $00 ; Layer
+db $0F ; Room layout / Floor
+db $40 ; Door / Peg state / Layer
 dw $0040 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2807,10 +2642,8 @@ db $05 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $27 ; Entrance
-db $01 ; Room layout
-db $FF ; Floor
-db $12 ; Door / Peg state
-db $00 ; Layer
+db $1F ; Room layout / Floor
+db $42 ; Door / Peg state / Layer
 dw $0200 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2824,10 +2657,8 @@ db $05 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $27 ; Entrance
-db $42 ; Room layout
-db $FF ; Floor
-db $12 ; Door / Peg state
-db $00 ; Layer
+db $6F ; Room layout / Floor
+db $42 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2841,10 +2672,8 @@ db $05 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $27 ; Entrance
-db $40 ; Room layout
-db $FF ; Floor
-db $11 ; Door / Peg state
-db $00 ; Layer
+db $4F ; Room layout / Floor
+db $41 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2858,10 +2687,8 @@ db $05 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $27 ; Entrance
-db $00 ; Room layout
-db $FF ; Floor
-db $12 ; Door / Peg state
-db $01 ; Layer
+db $0F ; Room layout / Floor
+db $46 ; Door / Peg state / Layer
 dw $0002 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2875,10 +2702,8 @@ db $05 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $27 ; Entrance
-db $C0 ; Room layout
-db $FF ; Floor
-db $10 ; Door / Peg state
-db $01 ; Layer
+db $CF ; Room layout / Floor
+db $44 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2892,10 +2717,8 @@ db $05 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $27 ; Entrance
-db $02 ; Room layout
-db $FE ; Floor
-db $12 ; Door / Peg state
-db $00 ; Layer
+db $2E ; Room layout / Floor
+db $42 ; Door / Peg state / Layer
 dw $0020 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2909,10 +2732,8 @@ db $05 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $27 ; Entrance
-db $43 ; Room layout
-db $FE ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $7E ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -2926,10 +2747,8 @@ db $03 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $27 ; Entrance
-db $C0 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $CF ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3031,10 +2850,8 @@ db $04 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $25 ; Entrance
-db $C0 ; Room layout
-db $00 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $C0 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $000E ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3048,10 +2865,8 @@ db $04 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $25 ; Entrance
-db $82 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $AF ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3065,10 +2880,8 @@ db $04 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $25 ; Entrance
-db $82 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $AF ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3082,10 +2895,8 @@ db $04 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $25 ; Entrance
-db $82 ; Room layout
-db $FF ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $AF ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0002 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3099,10 +2910,8 @@ db $04 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $25 ; Entrance
-db $C0 ; Room layout
-db $FF ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $CF ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0011 ; Dead sprites
 ;-----------------------------
 %write_7F_16()
@@ -3118,10 +2927,8 @@ db $04 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $25 ; Entrance
-db $C2 ; Room layout
-db $FF ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $EF ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_7F_16()
@@ -3137,10 +2944,8 @@ db $04 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $25 ; Entrance
-db $80 ; Room layout
-db $FF ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $8F ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0240 ; Dead sprites
 ;-----------------------------
 %write_7F_16()
@@ -3156,10 +2961,8 @@ db $04 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $25 ; Entrance
-db $83 ; Room layout
-db $FF ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $BF ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0240 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3173,10 +2976,8 @@ db $0E ; Item
 db $00 ; Direction
 ;-----------------------------
 db $25 ; Entrance
-db $C0 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $CF ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0031 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3190,10 +2991,8 @@ db $0E ; Item
 db $00 ; Direction
 ;-----------------------------
 db $25 ; Entrance
-db $01 ; Room layout
-db $FF ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $1F ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0400 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3207,10 +3006,8 @@ db $0E ; Item
 db $00 ; Direction
 ;-----------------------------
 db $25 ; Entrance
-db $40 ; Room layout
-db $FE ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $4E ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0002 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3224,10 +3021,8 @@ db $0E ; Item
 db $00 ; Direction
 ;-----------------------------
 db $25 ; Entrance
-db $83 ; Room layout
-db $FE ; Floor
-db $01 ; Door / Peg state
-db $01 ; Layer
+db $BE ; Room layout / Floor
+db $05 ; Door / Peg state / Layer
 dw $00C0 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3241,10 +3036,8 @@ db $0E ; Item
 db $02 ; Direction
 ;-----------------------------
 db $25 ; Entrance
-db $81 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $9F ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0004 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3258,10 +3051,8 @@ db $0E ; Item
 db $00 ; Direction
 ;-----------------------------
 db $25 ; Entrance
-db $80 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $8F ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0004 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3348,10 +3139,8 @@ db $0E ; Item
 db $02 ; Direction
 ;-----------------------------
 db $63 ; Entrance
-db $03 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $30 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write16_enable()
@@ -3491,10 +3280,8 @@ db $0E ; Item
 db $02 ; Direction
 ;-----------------------------
 db $1F ; Entrance
-db $82 ; Room layout
-db $01 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $A1 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0003 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3534,10 +3321,8 @@ db $12 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $35 ; Entrance
-db $C1 ; Room layout
-db $00 ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $D0 ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0028 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3551,10 +3336,8 @@ db $13 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $35 ; Entrance
-db $C0 ; Room layout
-db $00 ; Floor
-db $81 ; Door / Peg state
-db $00 ; Layer
+db $C0 ; Room layout / Floor
+db $81 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3568,10 +3351,8 @@ db $12 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $35 ; Entrance
-db $C0 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $C0 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0029 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3585,10 +3366,8 @@ db $12 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $35 ; Entrance
-db $02 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $20 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0020 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3602,10 +3381,8 @@ db $12 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $35 ; Entrance
-db $C0 ; Room layout
-db $FF ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $CF ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3619,10 +3396,8 @@ db $12 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $35 ; Entrance
-db $C2 ; Room layout
-db $FF ; Floor
-db $11 ; Door / Peg state
-db $00 ; Layer
+db $EF ; Room layout / Floor
+db $41 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3636,10 +3411,8 @@ db $01 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $35 ; Entrance
-db $02 ; Room layout
-db $FF ; Floor
-db $12 ; Door / Peg state
-db $00 ; Layer
+db $2F ; Room layout / Floor
+db $42 ; Door / Peg state / Layer
 dw $0028 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3666,10 +3439,8 @@ db $12 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $19 ; Entrance
-db $C0 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $CF ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3683,10 +3454,8 @@ db $12 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $19 ; Entrance
-db $00 ; Room layout
-db $FF ; Floor
-db $10 ; Door / Peg state
-db $00 ; Layer
+db $0F ; Room layout / Floor
+db $40 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3700,10 +3469,8 @@ db $12 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $19 ; Entrance
-db $42 ; Room layout
-db $FE ; Floor
-db $11 ; Door / Peg state
-db $00 ; Layer
+db $6E ; Room layout / Floor
+db $41 ; Door / Peg state / Layer
 dw $0040 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3717,10 +3484,8 @@ db $12 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $19 ; Entrance
-db $42 ; Room layout
-db $FE ; Floor
-db $12 ; Door / Peg state
-db $00 ; Layer
+db $6E ; Room layout / Floor
+db $42 ; Door / Peg state / Layer
 dw $0040 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3734,10 +3499,8 @@ db $12 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $19 ; Entrance
-db $C0 ; Room layout
-db $FD ; Floor
-db $11 ; Door / Peg state
-db $00 ; Layer
+db $CD ; Room layout / Floor
+db $41 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3798,10 +3561,8 @@ db $04 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $01 ; Room layout
-db $00 ; Floor
-db $82 ; Door / Peg state
-db $00 ; Layer
+db $10 ; Room layout / Floor
+db $82 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3815,12 +3576,15 @@ db $02 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $00 ; Room layout
-db $00 ; Floor
-db $12 ; Door / Peg state
-db $00 ; Layer
+db $00 ; Room layout / Floor
+db $42 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
+%write_7F()
+%write8($7F23DC, $00) ; Bastard door
+%write8($7F23E3, $00)
+%write8($7F249C, $00)
+%write8($7F24A3, $00)
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
@@ -3832,10 +3596,8 @@ db $01 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $C1 ; Room layout
-db $00 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $D0 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0032 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3849,10 +3611,8 @@ db $0A ; Item
 db $02 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $03 ; Room layout
-db $FF ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $3F ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3866,10 +3626,8 @@ db $03 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $01 ; Room layout
-db $FF ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $1F ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $003F ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3883,10 +3641,8 @@ db $14 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $C0 ; Room layout
-db $01 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $C1 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3900,10 +3656,8 @@ db $03 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $80 ; Room layout
-db $02 ; Floor
-db $91 ; Door / Peg state
-db $00 ; Layer
+db $82 ; Room layout / Floor
+db $C1 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3917,10 +3671,8 @@ db $03 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $02 ; Room layout
-db $02 ; Floor
-db $92 ; Door / Peg state
-db $00 ; Layer
+db $22 ; Room layout / Floor
+db $C2 ; Door / Peg state / Layer
 dw $0240 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3934,10 +3686,8 @@ db $03 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $81 ; Room layout
-db $02 ; Floor
-db $11 ; Door / Peg state
-db $00 ; Layer
+db $92 ; Room layout / Floor
+db $41 ; Door / Peg state / Layer
 dw $2640 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3951,10 +3701,8 @@ db $03 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $81 ; Room layout
-db $02 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $92 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3968,10 +3716,8 @@ db $03 ; Item
 db $02 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $00 ; Room layout
-db $03 ; Floor
-db $81 ; Door / Peg state
-db $00 ; Layer
+db $03 ; Room layout / Floor
+db $81 ; Door / Peg state / Layer
 dw $00FD ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -3985,10 +3731,8 @@ db $03 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $03 ; Room layout
-db $03 ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $33 ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -4002,10 +3746,8 @@ db $03 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $00 ; Room layout
-db $03 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $03 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -4019,10 +3761,8 @@ db $12 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $83 ; Room layout
-db $04 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $B4 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0C8C ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -4036,10 +3776,8 @@ db $12 ; Item
 db $06 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $41 ; Room layout
-db $04 ; Floor
-db $02 ; Door / Peg state
-db $00 ; Layer
+db $54 ; Room layout / Floor
+db $02 ; Door / Peg state / Layer
 dw $000C ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -4053,10 +3791,8 @@ db $05 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $03 ; Room layout
-db $04 ; Floor
-db $00 ; Door / Peg state
-db $00 ; Layer
+db $34 ; Room layout / Floor
+db $00 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -4070,12 +3806,16 @@ db $05 ; Item
 db $00 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $03 ; Room layout
-db $05 ; Floor
-db $81 ; Door / Peg state
-db $00 ; Layer
+db $35 ; Room layout / Floor
+db $81 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
+%write8_enable()
+%write8($7E045A, $04) ; torches
+%write8($7E04F0, $AF)
+%write8($7E04F1, $B7)
+%write8($7E04F2, $98)
+%write8($7E04F3, $82)
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
@@ -4087,12 +3827,21 @@ db $01 ; Item
 db $04 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $01 ; Room layout
-db $05 ; Floor
-db $82 ; Door / Peg state
-db $00 ; Layer
+db $15 ; Room layout / Floor
+db $82 ; Door / Peg state / Layer
 dw $000C ; Dead sprites
 ;-----------------------------
+%write8_enable()
+%write8($7E045A, $04) ; torches
+%write8($7E04F0, $98)
+%write8($7E04F1, $A0)
+%write8($7E04F2, $7A)
+%write8($7E04F3, $64)
+%write_7F()
+%write8($7F23DC, $00) ; Bastard door
+%write8($7F23E3, $00)
+%write8($7F249C, $00)
+%write8($7F24A3, $00)
 %write_end()
 
 ;---------------------------------------------------------------------------------------------------
@@ -4104,10 +3853,8 @@ db $0E ; Item
 db $02 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $02 ; Room layout
-db $05 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $25 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $000C ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -4121,10 +3868,8 @@ db $0E ; Item
 db $00 ; Direction
 ;-----------------------------
 db $37 ; Entrance
-db $80 ; Room layout
-db $06 ; Floor
-db $01 ; Door / Peg state
-db $00 ; Layer
+db $86 ; Room layout / Floor
+db $01 ; Door / Peg state / Layer
 dw $0000 ; Dead sprites
 ;-----------------------------
 %write_end()
@@ -4220,7 +3965,7 @@ presetpersistent_100nmg_escape:
 ..end
 ;-----------------------------
 .into_sanctuary
-%write8($7E0FC8, $02) ; Prize pack 1
+%write8($7E0FC8, $02) ; Prize pack 2
 ..end
 
 ;===================================================================================================
@@ -4239,14 +3984,14 @@ presetpersistent_100nmg_eastern_palace:
 ..end
 ;-----------------------------
 .entrance
-%write8($7E0FC8, $04) ; Prize pack 1
+%write8($7E0FC8, $04) ; Prize pack 2
 ..end
 ;-----------------------------
 .stalfos_room
 ..end
 ;-----------------------------
 .big_chest_room_1
-%write8($7E0FCC, $01) ; Prize pack 5
+%write8($7E0FCC, $01) ; Prize pack 6
 ..end
 ;-----------------------------
 .dark_key_room
@@ -4267,10 +4012,13 @@ presetpersistent_100nmg_eastern_palace:
 .zeldagamer_room
 ..end
 ;-----------------------------
+.double_reddies
+..end
+;-----------------------------
 .armos
-%write8($7E0FC8, $00) ; Prize pack 1
-%write8($7E0FCB, $02) ; Prize pack 4
-%write8($7E0FCC, $03) ; Prize pack 5
+%write8($7E0FC8, $00) ; Prize pack 2
+%write8($7E0FCB, $02) ; Prize pack 5
+%write8($7E0FCC, $03) ; Prize pack 6
 ..end
 
 ;===================================================================================================
@@ -4304,14 +4052,14 @@ presetpersistent_100nmg_desert_palace:
 ..end
 ;-----------------------------
 .key_bonk
-%write8($7E0FC8, $01) ; Prize pack 1
+%write8($7E0FC8, $01) ; Prize pack 2
 ..end
 ;-----------------------------
 .pre_cannonball_room
 ..end
 ;-----------------------------
 .pot_room
-%write8($7E0FC8, $02) ; Prize pack 1
+%write8($7E0FC8, $02) ; Prize pack 2
 ..end
 ;-----------------------------
 .desert_ledge
@@ -4321,7 +4069,7 @@ presetpersistent_100nmg_desert_palace:
 ..end
 ;-----------------------------
 .torches
-%write8($7E0FC8, $04) ; Prize pack 1
+%write8($7E0FC8, $04) ; Prize pack 2
 ..end
 ;-----------------------------
 .lanmolas
@@ -4377,11 +4125,11 @@ presetpersistent_100nmg_tower_of_hera:
 ..end
 ;-----------------------------
 .petting_zoo
-%write8($7E0FCC, $04) ; Prize pack 5
+%write8($7E0FCC, $04) ; Prize pack 6
 ..end
 ;-----------------------------
 .bumper_skip
-%write8($7E0FC8, $05) ; Prize pack 1
+%write8($7E0FC8, $05) ; Prize pack 2
 ..end
 ;-----------------------------
 .moldorm
@@ -4403,7 +4151,7 @@ presetpersistent_100nmg_agahnims_tower:
 ..end
 ;-----------------------------
 .after_lost_woods
-%write8($7E0FCC, $05) ; Prize pack 5
+%write8($7E0FCC, $05) ; Prize pack 6
 ..end
 ;-----------------------------
 .castle_screen
@@ -4416,29 +4164,29 @@ presetpersistent_100nmg_agahnims_tower:
 ..end
 ;-----------------------------
 .prize_pack_guards
-%write8($7E0FC8, $06) ; Prize pack 1
+%write8($7E0FC8, $06) ; Prize pack 2
 ..end
 ;-----------------------------
 .dark_maze
 ..end
 ;-----------------------------
 .dark_catwalk
-%write8($7E0FC7, $02) ; Prize pack 0
+%write8($7E0FC7, $02) ; Prize pack 1
 ..end
 ;-----------------------------
 .spear_guards
 ..end
 ;-----------------------------
 .red_alert_ii
-%write8($7E0FC9, $01) ; Prize pack 2
+%write8($7E0FC9, $01) ; Prize pack 3
 ..end
 ;-----------------------------
 .circle_of_pots
-%write8($7E0FC7, $03) ; Prize pack 0
+%write8($7E0FC7, $03) ; Prize pack 1
 ..end
 ;-----------------------------
 .catwalk
-%write8($7E0FC7, $04) ; Prize pack 0
+%write8($7E0FC7, $04) ; Prize pack 1
 ..end
 ;-----------------------------
 .agahnim
@@ -4460,7 +4208,7 @@ presetpersistent_100nmg_palace_of_darkness:
 ..end
 ;-----------------------------
 .main_hub_big_key
-%write8($7E0FCC, $06) ; Prize pack 5
+%write8($7E0FCC, $06) ; Prize pack 6
 ..end
 ;-----------------------------
 .main_hub_hammerjump
@@ -4470,7 +4218,7 @@ presetpersistent_100nmg_palace_of_darkness:
 ..end
 ;-----------------------------
 .pre_sexy_statue
-%write8($7E0FCC, $07) ; Prize pack 5
+%write8($7E0FCC, $07) ; Prize pack 6
 ..end
 ;-----------------------------
 .sexy_statue_room
@@ -4480,7 +4228,7 @@ presetpersistent_100nmg_palace_of_darkness:
 ..end
 ;-----------------------------
 .eye_statue
-%write8($7E0FCB, $04) ; Prize pack 4
+%write8($7E0FCB, $04) ; Prize pack 5
 ..end
 ;-----------------------------
 .basement
@@ -4490,7 +4238,7 @@ presetpersistent_100nmg_palace_of_darkness:
 ..end
 ;-----------------------------
 .helmasaur
-%write8($7E0FC8, $02) ; Prize pack 1
+%write8($7E0FC8, $02) ; Prize pack 2
 ..end
 
 ;===================================================================================================
@@ -4523,7 +4271,7 @@ presetpersistent_100nmg_minigames:
 ..end
 ;-----------------------------
 .usain_bolt
-%write8($7E0FC7, $05) ; Prize pack 0
+%write8($7E0FC7, $05) ; Prize pack 1
 %write_mirror($AA, $01, $7B, $0B)
 ..end
 ;-----------------------------
@@ -4627,7 +4375,7 @@ presetpersistent_100nmg_skull_woods:
 ..end
 ;-----------------------------
 .bomb_jump
-%write8($7E0FCC, $00) ; Prize pack 5
+%write8($7E0FCC, $00) ; Prize pack 6
 ..end
 ;-----------------------------
 .key_pot
@@ -4640,8 +4388,8 @@ presetpersistent_100nmg_skull_woods:
 ..end
 ;-----------------------------
 .mummy_key
-%write8($7E0FC8, $03) ; Prize pack 1
-%write8($7E0FC9, $03) ; Prize pack 2
+%write8($7E0FC8, $03) ; Prize pack 2
+%write8($7E0FC9, $03) ; Prize pack 3
 ..end
 ;-----------------------------
 .mothula
@@ -4682,26 +4430,26 @@ presetpersistent_100nmg_ice_palace:
 ..end
 ;-----------------------------
 .penguin_switch_room
-%write8($7E0FCC, $01) ; Prize pack 5
+%write8($7E0FCC, $01) ; Prize pack 6
 ..end
 ;-----------------------------
 .bombable_floor
-%write8($7E0FC9, $07) ; Prize pack 2
+%write8($7E0FC9, $07) ; Prize pack 3
 ..end
 ;-----------------------------
 .conveyor_room
-%write8($7E0FCA, $02) ; Prize pack 3
+%write8($7E0FCA, $02) ; Prize pack 4
 ..end
 ;-----------------------------
 .ipbj
-%write8($7E0FCC, $02) ; Prize pack 5
+%write8($7E0FCC, $02) ; Prize pack 6
 ..end
 ;-----------------------------
 .penguin_lineup
 ..end
 ;-----------------------------
 .lonely_firebar
-%write8($7E0FC9, $01) ; Prize pack 2
+%write8($7E0FC9, $01) ; Prize pack 3
 ..end
 ;-----------------------------
 .last_2_rooms
@@ -4745,8 +4493,8 @@ presetpersistent_100nmg_misery_mire:
 ..end
 ;-----------------------------
 .main_hub
-%write8($7E0FC7, $07) ; Prize pack 0
-%write8($7E0FC8, $05) ; Prize pack 1
+%write8($7E0FC7, $07) ; Prize pack 1
+%write8($7E0FC8, $05) ; Prize pack 2
 ..end
 ;-----------------------------
 .beat_the_fireball
@@ -4777,7 +4525,7 @@ presetpersistent_100nmg_misery_mire:
 ..end
 ;-----------------------------
 .spooky_action_1
-%write8($7E0FCC, $03) ; Prize pack 5
+%write8($7E0FCC, $03) ; Prize pack 6
 ..end
 ;-----------------------------
 .spooky_action_2
@@ -4807,20 +4555,20 @@ presetpersistent_100nmg_swamp_palace:
 ;-----------------------------
 .dam
 %write8($7E02A1, $05) ; Slot 3 Altitude
-%write8($7E0FCC, $04) ; Prize pack 5
+%write8($7E0FCC, $04) ; Prize pack 6
 %write_mirror($70, $07, $0F, $0F)
 ..end
 ;-----------------------------
 .entrance
-%write8($7E0FC7, $00) ; Prize pack 0
-%write8($7E0FC8, $06) ; Prize pack 1
+%write8($7E0FC7, $00) ; Prize pack 1
+%write8($7E0FC8, $06) ; Prize pack 2
 ..end
 ;-----------------------------
 .first_key_pot
 ..end
 ;-----------------------------
 .tiny_hallway_key
-%write8($7E0FC8, $07) ; Prize pack 1
+%write8($7E0FC8, $07) ; Prize pack 2
 ..end
 ;-----------------------------
 .hammer_peg_lever
@@ -4913,7 +4661,7 @@ presetpersistent_100nmg_turtle_rock:
 ;-----------------------------
 .death_mountain
 %write8($7E02A2, $FE) ; Slot 4 Altitude
-%write8($7E0FC7, $01) ; Prize pack 0
+%write8($7E0FC7, $01) ; Prize pack 1
 ..end
 ;-----------------------------
 .squirrels
@@ -4928,29 +4676,29 @@ presetpersistent_100nmg_turtle_rock:
 ;-----------------------------
 .torches
 %write8($7E02A2, $00) ; Slot 4 Altitude
-%write8($7E0FCC, $05) ; Prize pack 5
+%write8($7E0FCC, $05) ; Prize pack 6
 ..end
 ;-----------------------------
 .roller_room
 ..end
 ;-----------------------------
 .pokey_0
-%write8($7E0FCC, $06) ; Prize pack 5
+%write8($7E0FCC, $06) ; Prize pack 6
 ..end
 ;-----------------------------
 .chomps
-%write8($7E0FCD, $01) ; Prize pack 6
+%write8($7E0FCD, $01) ; Prize pack 7
 ..end
 ;-----------------------------
 .pokey_1
 ..end
 ;-----------------------------
 .pokeys_2
-%write8($7E0FCD, $03) ; Prize pack 6
+%write8($7E0FCD, $03) ; Prize pack 7
 ..end
 ;-----------------------------
 .bomb_yeet
-%write8($7E0FCD, $05) ; Prize pack 6
+%write8($7E0FCD, $05) ; Prize pack 7
 ..end
 ;-----------------------------
 .mimic_cave
@@ -4958,7 +4706,7 @@ presetpersistent_100nmg_turtle_rock:
 ..end
 ;-----------------------------
 .crystaroller_room
-%write8($7E0FCB, $07) ; Prize pack 4
+%write8($7E0FCB, $07) ; Prize pack 5
 ..end
 ;-----------------------------
 .dark_maze
@@ -4971,7 +4719,7 @@ presetpersistent_100nmg_turtle_rock:
 ..end
 ;-----------------------------
 .trinexx
-%write8($7E0FCD, $06) ; Prize pack 6
+%write8($7E0FCD, $06) ; Prize pack 7
 ..end
 
 ;===================================================================================================
@@ -4992,7 +4740,7 @@ presetpersistent_100nmg_ganons_tower:
 ..end
 ;-----------------------------
 .pre_firesnakes_room
-%write8($7E0FCC, $07) ; Prize pack 5
+%write8($7E0FCC, $07) ; Prize pack 6
 ..end
 ;-----------------------------
 .bombable_floor
@@ -5022,22 +4770,22 @@ presetpersistent_100nmg_ganons_tower:
 ..end
 ;-----------------------------
 .gauntlet_3
-%write8($7E0FCC, $02) ; Prize pack 5
+%write8($7E0FCC, $02) ; Prize pack 6
 ..end
 ;-----------------------------
 .lanmola_2
-%write8($7E0FCC, $04) ; Prize pack 5
+%write8($7E0FCC, $04) ; Prize pack 6
 ..end
 ;-----------------------------
 .wizzrobes_1
 ..end
 ;-----------------------------
 .wizzrobes_2
-%write8($7E0FC7, $04) ; Prize pack 0
+%write8($7E0FC7, $04) ; Prize pack 1
 ..end
 ;-----------------------------
 .torches_1
-%write8($7E0FC7, $06) ; Prize pack 0
+%write8($7E0FC7, $06) ; Prize pack 1
 ..end
 ;-----------------------------
 .torches_2
@@ -5233,6 +4981,11 @@ presetSRAM_100nmg:
 %write8($7EF377, $18) ; Arrows
 %writeroom($0D9, $0003)
 %writeroom($0DA, $0002)
+...end
+;-----------------------------
+..double_reddies
+%write8($7EF377, $1A) ; Arrows
+%writeroom($0D8, $0001)
 ...end
 ;-----------------------------
 ..armos

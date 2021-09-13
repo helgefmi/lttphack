@@ -1,5 +1,5 @@
 GAMEPLAY_SUBMENU:
-%menu_header("GAMEPLAY", 8)
+%menu_header("GAMEPLAY", 9)
 
 ;===================================================================================================
 %toggle_onoff("Skip Triforce", !config_skip_triforce_toggle)
@@ -20,6 +20,8 @@ GAMEPLAY_SUBMENU:
 %toggle_onoff("Fast walls", !config_fast_moving_walls)
 
 %toggle_onoff("Visible probes", !config_probe_toggle)
+
+%toggle_onoff("Show STC pits", !config_somaria_pits)
 
 %toggle_bit("Disable BG1", SA1RAM.disabled_layers, 0)
 

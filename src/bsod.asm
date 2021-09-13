@@ -128,9 +128,14 @@ OOPS:
 	TCS
 	LDY.w #$FFFF
 
---	INX
+	INX
+	STX.w $4350
+
+	LDX.w #$0200
+
+--	DEX
+	CPX.w $4350 : BCC .done_stack
 	INY
-	CPX.w #$0200 : BCS .done_stack
 	CPY.w #$001E : BCC ++
 
 	LDY.w #$0000
@@ -148,7 +153,6 @@ OOPS:
 
 
 .done_stack
-
 	SEP #$10
 
 	STZ.b $2116
