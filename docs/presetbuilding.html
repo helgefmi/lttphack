@@ -26,7 +26,7 @@ title: LTTPHack - A Practice ROM for ALttP
 	<li>Take note of the frames you want to define presets at as they happen. Get Link into an appropriate position, pause the emulator, and look at the frame counter.</li>
 	<li>If you want to take a break, make a save state on the last frame you recorded. When you return, navigate to File→Movie→Recent and open your movie. Disable Read-only mode in the Movie submenu. Load the save state you created at the end of the movie.</li>
 	<li>Stop input for a few frames where you plan to make presets on the overworld. Do this to make sure that standing still at that position won't trigger a transition onto another screen or into the underworld.</li>
-	<li>Use RAM Watch to look at Link's coordinates for determining good preset definitions. This feature can be found at Tools→RAM Watch. Create a new watch for address <code>0x000020</code> that is 1 byte, displayed in HEX, in the WRAM Memory Domain for Link's Y coordinate. Do the same for address <code>0x000022</code>, which to get Link's X coordinate.</li>
+	<li>Use RAM Watch to look at Link's coordinates for determining good preset definitions. This feature can be found at Tools→RAM Watch. Create a new watch for address <code>0x000020</code> that is 1 byte, displayed in HEX, in the WRAM Memory Domain for Link's Y coordinate. Do the same for address <code>0x000022</code> to get Link's X coordinate.</li>
 		<ul>Ideal coordinate stopping points for underworld:
 			<li>North transitions: Y = 14</li>
 			<li>South transitions: Y = E1</li>
@@ -56,13 +56,13 @@ title: LTTPHack - A Practice ROM for ALttP
 </ul>
 
 <h2>Submitting</h2>
-<p>Ideally, you will run the scraping script yourself. If you do that, be sure to include a folder in the same directory as the script named <code>states</code>. The script will automatically create a save state 60 frames before every preset. The script will also create a file named <code>cm_presets_&gt;category&lt;.asm</code>. Ideally, you package this file along with the preset definitions and every save state in a single <code>.zip</code> folder.</p>
+<p>Ideally, you will run the scraping script yourself. If you do that, be sure to include a folder in the same directory as the script named <code>states</code>. The script will automatically create a save state 60 frames before every preset. The script will also create a file named <code>cm_presets_&lt;category&gt;.asm</code>. Ideally, you package this file along with the preset definitions and every save state in a single <code>.zip</code> folder.</p>
 
 <p>After submission and some initial clean up, I will send you a <code>.bps</code> file for you to patch yourself and test the presets.</p>
 
 <h2>Styling</h2>
 <ul>
-	<li>Category, segment, and preset names should be no longer than 25 characters and are limited to alphanumeric characters and the following symbols: <code>% $ . - , ? ! # ( ) '</code>.</li>
+	<li>Category, segment, and preset names should be no longer than 25 characters and are limited to alphanumeric characters and the following symbols: <code>% $ . - , ? ! # ( ) '</code></li>
 	<li>Category, segment, and preset names should be title case. Every word should be capitalized unless it is a conjunction (e.g. and, but, or), a preposition (e.g. at, of, to), or an article adjective (e.g. a, an, the).</li>
 	<li>Category names should match the common name for the category. Full abbreviations should not be used except for rulesets. For example, the category name "All Dungeons" should be used instead of "AD", but the ruleset should be "RMG" instead of "Restricted Major Glitches".</li>
 	<li>I retain final authority on any name used and reserve the right to change them as I see fit.</li>
