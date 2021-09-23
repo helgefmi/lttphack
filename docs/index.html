@@ -65,6 +65,8 @@ title: LTTPHack - A Practice ROM for ALttP
 	<li>Input display for displaying your inputs on your display.</li>
 </ul>
 
+<p>Configuration settings will persist across practice hack versions if newly downloaded hacks are given the same name on your SD card.</p>
+
 <h3>Practice Hack Menu</h3>
 <p>The practice hack menu can be accessed by having the <span class="snesButton snesR">R</span> and <span class="snesButton snesStart">Start</span> buttons held down together on the same frame. This menu and other shortcuts can be activated during most gameplay modes, but will be prohibited during some modules (such as the file select menu). When disallowed, shortcut bindings will play a beep and resume normal action.</p>
 
@@ -213,7 +215,7 @@ title: LTTPHack - A Practice ROM for ALttP
 
 <h4>Implementation</h4>
 <p>There are specific routines that get run at the beginning and end of every frame to manage the OAM buffer. The clearing routine isn't coded very efficiently, so it's been optimized to about twice its original speed. The SNES CPU then sends an interrupt request which tells the SA-1 to process controller input for shortcuts. If a shortcut is found, a vector pointing to its routine in ROM will be saved in memory. The next frame, the SNES will check for this vector, and respond accordingly.</p>
-<p>For the game HUD, almost every reference to its WRAM buffer has been changed to a place in BWRAM where the SA-1 can see it. Once the HUD's buffer has been modified by the game, it copies a handful of variables that are only visible to the SNES CPU into memory that is visible to both the SNES and the SA-1. This is where most of the time saved with OAM optimization is accounted for. After these variables are copied, the SNES sends another interrupt request to the SA-1 to indicate that the coprocessor can do its own changes to the tilemap before it gets drawn to the screen. Some features (such as the hearts) are still written to their original WRAM buffer. This way, they can contribute their normal CPU load without ruining the HUD.</p>
+<p>For the game HUD, almost every reference to its WRAM buffer has been changed to a location in BWRAM where the SA-1 can see it. Once the HUD's buffer has been modified by the game, it copies a handful of variables that are only visible to the SNES CPU into memory that is visible to both the SNES and the SA-1. This is where most of the time saved with OAM optimization is accounted for. After these variables are copied, the SNES sends another interrupt request to the SA-1 to indicate that the coprocessor can do its own changes to the tilemap before it gets drawn to the screen. Some features (such as the hearts) are still written to their original WRAM buffer. This way, they can contribute their normal CPU load without ruining the HUD.</p>
 <p>On any frame where the HUD doesn't update, a separate check makes sure that these variables are still copied over, as this copying is critical to balancing the practice hack back in line with vanilla. The rest of the code hacked in is very minimal, and those few extra cycles are very unlikely to create additional lag frames.</p>
 <p>Certain features require more variables to be copied over than others. These will necessarily require a slightly higher fraction of the CPU's time, but they will only take this time when the HUD is redrawn. Such features will be marked with this badge: <sup class="badge lag-badge">EX</sup>.</p>
 
@@ -223,7 +225,7 @@ title: LTTPHack - A Practice ROM for ALttP
 
 <h3 id="IKnowAboutItAlready">Known issues <a href="#IKnowAboutItAlready" class="headerLink">(link)</a></h3>
 <ul>
-	<li>Lag from mosaics can be very inaccurate, depending on what you've already done in your current play session. I'm still investigating the best way to approach this problem.</li>
+	<li>Lag from mosaics can be inaccurate, depending on what you've already done in your current play session. I'm still investigating the best way to approach this problem.</li>
 	<li>Giving your sword to the smith will result in a BAD VAL in the equipment menu. I don't have an elegant solution for this yet.</li>
 </ul>
 
@@ -426,7 +428,7 @@ title: LTTPHack - A Practice ROM for ALttP
 <h3 id="menuGameState">Game state</h3>
 <dl>
 	<dt>Skip text</dt>
-	<dd>Skips the current text box</dd>
+	<dd>Skips the current text box.</dd>
 	<dt>Remove sprites</dt>
 	<dd>Removes all sprites, overlords, and ancillae from the screen.</dd>
 	<dt>Reset dungeons</dt>
@@ -504,13 +506,13 @@ title: LTTPHack - A Practice ROM for ALttP
 	<dd>Game mode selector:
 		<dl class="subDefinition">
 			<dt>Started</dt>
-			<dd>No progress. Game will not save. Always respawned in bed.</dd>
+			<dd>No progress. Game will not save.</dd>
 			<dt>Uncle</dt>
-			<dd>Sword and shield obtained from uncle. Spawn is somewhere in escape (or Sanctuary with old man rescue).</dd>
+			<dd>Sword and shield obtained from uncle.</dd>
 			<dt>Zelda</dt>
-			<dd>Zelda has been rescued. Spawn is standard selection, or mountain with old man follower.</dd>
+			<dd>Zelda has been rescued.</dd>
 			<dt>Agahnim</dt>
-			<dd>Agahnim has been defeated. Spawn is standard selection in Light World, Pyramid in Dark World, or mountain with old man follower. Fake Light World from dungeon death no longer possible.</dd>
+			<dd>Agahnim has been defeated.</dd>
 		</dl>
 	</dd>
 	<dt>Map indicator</dt>
@@ -556,7 +558,7 @@ title: LTTPHack - A Practice ROM for ALttP
 	<dt>Statue drag</dt>
 	<dd>Toggles the fake statue address.</dd>
 	<dt>Anc Index</dt>
-	<dd>Set ancilla search index ($03C4); $00&ndash;$7F</dd>
+	<dd>Set ancilla search index ($03C4); $00–$7F</dd>
 	<dt>Armed EG</dt>
 	<dd>Yes/No.</dd>
 	<dt>EG strength</dt>
@@ -610,7 +612,7 @@ title: LTTPHack - A Practice ROM for ALttP
 	<dd>Modifies drop percentages. This option only affects prize packs, not other guaranteed drops such as the stun drop or keys. It will, however, affect the 100% prize packs.
 		<dl class="subDefinition">
 			<dt>Vanilla</dt>
-			<dd>Drops behave normally. 50% for most prize packs, and fairy luck works.</dd>
+			<dd>Drops behave normally. 50% for most prize packs; fairy luck works.</dd>
 			<dt>Always</dt>
 			<dd>All enemies drop their prize packs when possible.</dd>
 			<dt>Never</dt>
@@ -744,7 +746,7 @@ title: LTTPHack - A Practice ROM for ALttP
 			<dt>Lag</dt>
 			<dd>Count of lag frames on the current screen, starting from the beginning of the last transition.</dd>
 			<dt>Idle frames</dt>
-			<dd>Count of frames with no relevant input, starting from the beginning of the last transition.</dd>
+			<dd>Count of menu and text frames with no relevant input, starting from the beginning of the last transition.</dd>
 			<dt>Segment time</dt>
 			<dd>Time spent since the beginning of the last segment timer reset.</dd>
 			<dt>Coordinates</dt>
@@ -792,9 +794,9 @@ title: LTTPHack - A Practice ROM for ALttP
 			<dt>OW Trans Y</dt>
 			<dd>Transition triggers and target screen IDs for vertical overworld transitions.</dd>
 			<dt>Ancilla 0-4</dt>
-			<dd>Custom ancilla property for slots 0&ndash;4 (property # corresponds to sentry #). This set of slots is indicated by a yellow triangle pointing down.</dd>
+			<dd>Custom ancilla property for slots 0–4 (property # corresponds to sentry #). This set of slots is indicated by a yellow triangle pointing down.</dd>
 			<dt>Ancilla 5-9</dt>
-			<dd>Custom ancilla property for slots 5&ndash;9. This set of slots is indicated by a green triangle pointing up.</dd>
+			<dd>Custom ancilla property for slots 5–9. This set of slots is indicated by a green triangle pointing up.</dd>
 			<dt>Ancilla MSX</dt>
 			<dd>Custom ancilla property for the 5 slots preceding the current search index ($03C4). This set of slots is indicated by a blue magnifying glass.</dd>
 		</dl>
@@ -868,7 +870,7 @@ title: LTTPHack - A Practice ROM for ALttP
 			
 		</dl>
 	</dd>
-	<dt>Door 0, &hellip;</dt>
+	<dt>Door 0, …</dt>
 	<dd>View and change the various flags saved per room.</dd>
 </dl>
 
@@ -877,11 +879,11 @@ title: LTTPHack - A Practice ROM for ALttP
 	<dt>LTTPHack menu</dt>
 	<dd><span class="snesButton snesR">R</span>+<span class="snesButton snesStart">Start</span> - Opens the practice hack menu. <strong class="lag"><b>NOTE:</b> this shortcut cannot be changed.</strong></dd>
 	<dt>Load last preset</dt>
-	<dd>Loads the last preset used from the preset menu.</dd>
+	<dd>Reloads the most recent preset or litestate used from the menu.</dd>
 	<dt>Save state</dt>
 	<dd>Saves current state of the game, similar to emulator savestates.</dd>
 	<dt>Load state</dt>
-	<dd>Loads custom savestate/preset, similar to emulator savestates.</dd>
+	<dd>Loads saved savestates, similar to emulator savestates.</dd>
 	<dt>Reset seg timer</dt>
 	<dd>Resets the segment timer, which is not automatically reset like room timer.</dd>
 	<dt>Toggle OoB</dt>
@@ -903,9 +905,9 @@ title: LTTPHack - A Practice ROM for ALttP
 <h3 id="menuPresetConfiguration">Preset config</h3>
 <dl>
 	<dt>Preset category</dt>
-	<dd>Changes the run category listed in <a href="#menuPresets">presets</a>.</dd>
+	<dd>Changes the run category listed in the <a href="#menuPresets">presets submenu</a>.</dd>
 	<dt>Safeties</dt>
-	<dd>Opens a new submenu with safety options for the currently selected category</dd>
+	<dd>Opens a new submenu with safety options for the currently selected category.</dd>
 	<dt>Death reload</dt>
 	<dd>Reloads the last preset upon death.</dd>
 	<dt>Random bats</dt>
@@ -921,7 +923,7 @@ title: LTTPHack - A Practice ROM for ALttP
 	<dt>Rerandomize</dt>
 	<dd>When using built-in savestates and presets, this will run the RNG function to create a new value on each load. It will also randomize the frame counter.</dd>
 	<dt>Music</dt>
-	<dd>Sets the ADSR envelope of every instrument used by music to 0 (except the saw used by mirror warps). The size of the SPC transfers remains the same, so this feature does not affect lag.</dd>
+	<dd>Sets the ADSR envelope of every instrument used by music to 0 (except the saw used by mirror warps). Nothing else changes, so this feature does not affect lag.</dd>
 	<dt>Menu open</dt>
 	<dd>Select whether the practice menu opens up to where you left off or resets to the top.</dd>
 	<dt>HUD font</dt>
@@ -980,18 +982,6 @@ title: LTTPHack - A Practice ROM for ALttP
 	</dd>
 </dl>
 
-</section>
-
-<section id="coolfolk">
-<h2>Shoutouts</h2>
-<ul>
-	<li>MathOnNapkins - ALttP US disassembly</li>
-	<li><a href="https://twitch.tv/Acmlm">Acmlm</a> - save/load technique on SD2SNES.</li>
-	<li><a href="https://twitch.tv/poor_little_pinkus">Pinkus</a> - original practice hack</li>
-	<li><a href="https://twitch.tv/lui_">Lui</a> - poverty savestates and new presets</li>
-	<li>Myramong - original music muting</li>
-	<li>tewtal - JavaScript patcher</li>
-</ul>
 </section>
 
 <!-- Scripts for the JS patcher -->
