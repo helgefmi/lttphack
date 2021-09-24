@@ -76,8 +76,8 @@ CONFIG_SUBMENU:
 	%list_item("Skyroads")
 	%list_item("Yoshi's")
 	%list_item("S. Metroid")
-	%list_item("Black Bass")
 	%list_item("Tazmania")
+	%list_item("Black Bass")
 
 ;===================================================================================================
 %submenu("Color config", COLOR_CONFIG_SUBMENU)

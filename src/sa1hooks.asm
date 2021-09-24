@@ -58,6 +58,8 @@ struct SA1IRAM $003000
 	.litestate_last: skip 2
 	.litestate_off: skip 2
 
+	reset bytes
+
 .savethis_start
 	.TIMER_FLAG: skip 2
 
@@ -71,7 +73,6 @@ struct SA1IRAM $003000
 	.SEG_TIME_S: skip 2
 	.SEG_TIME_M: skip 2
 .timers_end
-
 	.ROOM_TIME_F_DISPLAY: skip 2
 	.ROOM_TIME_S_DISPLAY: skip 2
 	.ROOM_TIME_LAG_DISPLAY: skip 2
@@ -128,6 +129,7 @@ struct SA1IRAM $003000
 
 	print ""
 	print "SA1 dp: $", pc
+	print "Saved: ", bytes, "/640 (acceptable savestate limit)"
 
 	.QuickSwapLR: skip 1
 

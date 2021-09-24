@@ -211,7 +211,7 @@ DMA_BWRAMSRAM:
 
 .next
 	LDA.w .address_size+2,X ; get bank
-	BEQ .sa1stuff
+	BEQ .last_buffer
 
 	STA.w $2183
 
@@ -229,7 +229,19 @@ DMA_BWRAMSRAM:
 	TAX
 	BRA .next
 
-.sa1stuff
+; need a completely separate space for this shit
+.last_buffer
+	STZ.w $2183
+	LDY.w $4352 : PHY ; get last location written
+
+	LDA.b #$43 : STA.w $4354
+	LDY.w #$D000 : STY.w $4352
+	LDY.w #$6000 : STY.w $2181
+	LDY.w #$3000 : STY.w $4355
+	LDA.b #$20 : STA.w $420B
+
+	PLY : STY.w $4352
+
 	PHB
 	REP #$20
 
@@ -298,7 +310,7 @@ DMA_BWRAMSRAM:
 	dl $7F5800 : dw $0700
 	dl $7F7000 : dw $01C0
 	dl $7FDD80 : dw $1400
-	dl $7FF800 : dw $0800
+	dl $7FF800 : dw $0800 ; $F4C0 + $800 for HUD + $70 for DMA = $FD30
 
 	dl 0
 
