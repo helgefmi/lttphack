@@ -2016,68 +2016,6 @@ linesentry_ancilla_all:
 	dw linesentry_ancilla_tile-1
 	dw linesentry_ancilla_egcheck-1
 	dw linesentry_ancilla_direction-1
-	dw linesentry_ancilla_delta_x-1
-	dw linesentry_ancilla_delta_y-1
-
-;---------------------------------------------------------------------------------------------------
-
-linesentry_ancilla_delta_x:
-.next_ancilla
-	INX
-	INX
-
-	SEP #$21
-	LDA.b SA1IRAM.CopyOf_22
-	SBC.w SA1IRAM.LINEVAL,Y
-
-	REP #$20
-	AND.w #$00FF
-	CMP.w #$0002
-	BEQ ++
-	JSR DrawHEX2ForwardSaveY_white
-
-	BRA .continue
-
-++	JSR DrawHEX2ForwardSaveY_gray
-
-.continue
-	INY
-
-	DEC.b SA1IRAM.SCRATCH+14
-	BNE .next_ancilla
-
-	RTS
-
-;---------------------------------------------------------------------------------------------------
-
-linesentry_ancilla_delta_y:
-.next_ancilla
-	INX
-	INX
-
-	SEP #$21
-	LDA.b SA1IRAM.CopyOf_20
-	SBC.w SA1IRAM.LINEVAL,Y
-
-	REP #$20
-	AND.w #$00FF
-	CMP.w #$0002
-	BEQ ++
-
-	JSR DrawHEX2ForwardSaveY_yellow
-
-	BRA .continue
-
-++	JSR DrawHEX2ForwardSaveY_gray
-
-.continue
-	INY
-
-	DEC.b SA1IRAM.SCRATCH+14
-	BNE .next_ancilla
-
-	RTS
-
 
 ;---------------------------------------------------------------------------------------------------
 

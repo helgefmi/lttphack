@@ -247,15 +247,15 @@ DMA_BWRAMSRAM:
 	LDX.w #SA1RAM.HUD
 	%MVN($00, $41)
 
-	; LDA.w #$004F ; DMAs
-	; LDX.w #$4300 ; DMA location
-	; %MVN($41, $00)
-
-	; HDMA
-	LDA.w #$001F ; DMAs
-	LDX.w #$4360 ; DMA location
+	; DMA
+	LDA.w #$004F
+	LDX.w #$4300
 	%MVN($00, $41)
 
+	; HDMA
+	LDA.w #$001F
+	LDX.w #$4360
+	%MVN($00, $41)
 	BRA .done
 
 .loading
@@ -267,13 +267,14 @@ DMA_BWRAMSRAM:
 	LDY.w #SA1RAM.HUD
 	%MVN($41, $00)
 
-	; LDA.w #$004F ; DMAs
-	; LDY.w #$4300 ; DMA location
-	; %MVN($41, $00)
+	; DMA
+	LDA.w #$004F
+	LDY.w #$4300
+	%MVN($41, $00)
 
 	; HDMA
-	LDA.w #$001F ; DMAs
-	LDY.w #$4360 ; DMA location
+	LDA.w #$001F
+	LDY.w #$4360
 	%MVN($41, $00)
 
 .done

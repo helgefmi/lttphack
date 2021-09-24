@@ -108,7 +108,7 @@ endmacro
 	%list_item("Ancilla MSX")
 
 ;===================================================================================================
-!ancprop_count = 11
+!ancprop_count = 9
 %choice("Ancilla prop 1", !config_ancprop1, !ancprop_count, ancprop_names)
 %choice("Ancilla prop 2", !config_ancprop2, !ancprop_count, ancprop_names)
 %choice("Ancilla prop 3", !config_ancprop3, !ancprop_count, ancprop_names)
@@ -138,8 +138,6 @@ endmacro
 	%new_ancprop($03E4, "Tile prop")
 	%new_ancprop($03A4, "EG check")
 	%new_ancprop($0C72, "Direction")
-	%new_ancprop($0C04, "Delta X")
-	%new_ancprop($0BFA, "Delta Y")
 
 ;===================================================================================================
 
