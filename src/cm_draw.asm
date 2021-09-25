@@ -19,6 +19,22 @@ EmptyEntireMenu:
 	INX
 	BPL .loop
 
+	LDX.b #$3E
+	LDA.w #$3130
+.headera
+	STA.w SA1RAM.MENU+$0000,X
+	DEX
+	DEX
+	BPL .headera
+
+	LDX.b #$3E
+	LDA.w #$B130
+.headerb
+	STA.w SA1RAM.MENU+$0080,X
+	DEX
+	DEX
+	BPL .headerb
+
 	RTS
 
 EmptyCurrentMenu:

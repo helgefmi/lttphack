@@ -129,6 +129,12 @@ SaveLiteState:
 	PHD
 	PHB
 
+	SEP #$20
+
+	LDA.w $008A : BMI .banned
+	LDA.w $0010 : CMP.b #$06 : BEQ .banned
+
+	REP #$20
 	; map
 	; header (0x10 bytes)
 	; SRAM (0x402 bytes)
@@ -164,6 +170,7 @@ SaveLiteState:
 	LDA.b #$80
 	JSR DMALiteStates
 
+.exit
 	REP #$30
 	PLB
 	PLD
@@ -172,6 +179,10 @@ SaveLiteState:
 	PLA
 	PLP
 --	RTL
+
+.banned
+	JSL CM_MenuSFX_error
+	BRA .exit
 
 ;===================================================================================================
 

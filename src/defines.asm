@@ -15,7 +15,7 @@ function hexto555(h) = ((((h&$FF)/8)<<10)|(((h>>8&$FF)/8)<<5)|(((h>>16&$FF)/8)<<
 ; Bank 43:
 ;    $0000..$7FFF - Lite States
 ;    $8000..$CFFF - unused
-;    $D000..$FFFF - Save States
+;    $C000..$FFFF - Save States
 ;===================================================================================================
 org $400000
 SA1SRAM = $400000
@@ -190,17 +190,17 @@ endmacro
 %def_sram("toggle_boss_cycles", !ON)
 
 %def_sram("lit_rooms_toggle", !OFF)
-%def_sram("fast_moving_walls", !OFF)
+%def_sram("fast_moving_walls", !ON)
 %def_sram("probe_toggle", !OFF)
 
 %def_sram("rerandomize_toggle", !ON)
 %def_sram("skip_triforce_toggle", !OFF)
-%def_sram("bonk_items_toggle", !OFF)
+%def_sram("unused_toggle", !OFF)
 
 %def_sram("hud_bg", 0)
 %def_sram("hud_header_fg", 1)
-%def_sram("hud_header_hl", 10)
-%def_sram("hud_header_bg", 0)
+%def_sram("hud_header_hl", 0)
+%def_sram("hud_header_bg", 10)
 %def_sram("hud_sel_fg", 8)
 %def_sram("hud_sel_bg", 9)
 %def_sram("hud_dis_fg", 3)

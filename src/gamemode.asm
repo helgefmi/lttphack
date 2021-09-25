@@ -116,10 +116,16 @@ Shortcut_LoadLastPreset:
 ;===================================================================================================
 
 Shortcut_SaveState:
-	PHK
-	PLB
 
 	SEP #$20
+
+	LDA.b $10 : CMP.b #$06 : BNE ++
+
+	JMP ShortcutsBanned
+
+++	PHK
+	PLB
+
 	REP #$10
 	; Remember which song bank was loaded before load stating
 	; I put it here too, since `end` code runs both on save and load state..
@@ -140,6 +146,7 @@ Shortcut_LoadState:
 	; music bank should only ever be 0 or 1
 	; assume any other value means there's no save state
 	SEP #$30
+
 	LDA.w SA1RAM.old_music_bank
 	CMP.b #$02 : BCC ++
 
@@ -211,7 +218,7 @@ DMA_BWRAMSRAM:
 
 .next
 	LDA.w .address_size+2,X ; get bank
-	BEQ .last_buffer
+	BEQ .last_buffers
 
 	STA.w $2183
 
@@ -230,14 +237,20 @@ DMA_BWRAMSRAM:
 	BRA .next
 
 ; need a completely separate space for this shit
-.last_buffer
+.last_buffers
 	STZ.w $2183
 	LDY.w $4352 : PHY ; get last location written
 
 	LDA.b #$43 : STA.w $4354
-	LDY.w #$D000 : STY.w $4352
+	LDY.w #$C000 : STY.w $4352
+
 	LDY.w #$6000 : STY.w $2181
 	LDY.w #$3000 : STY.w $4355
+	LDA.b #$20 : STA.w $420B
+
+	LDA.b #$01 : STA.w $2183
+	LDY.w #$4000 : STY.w $2181
+	LDY.w #$1000 : STY.w $4355
 	LDA.b #$20 : STA.w $420B
 
 	PLY : STY.w $4352
@@ -307,10 +320,10 @@ DMA_BWRAMSRAM:
 	dl $7EE800 : dw $1800
 
 	dl $7F0000 : dw $4000
-	dl $7F5800 : dw $0700
+	dl $7F5800 : dw $0702
 	dl $7F7000 : dw $01C0
 	dl $7FDD80 : dw $1400
-	dl $7FF800 : dw $0800 ; $F4C0 + $800 for HUD + $70 for DMA = $FD30
+	dl $7FF800 : dw $0800 ; $F4C2 + $800 for HUD + $70 for DMA = $FD32
 
 	dl 0
 
