@@ -14,8 +14,8 @@ function hexto555(h) = ((((h&$FF)/8)<<10)|(((h>>8&$FF)/8)<<5)|(((h>>16&$FF)/8)<<
 ; Bank 42: savestates vram
 ; Bank 43:
 ;    $0000..$7FFF - Lite States
-;    $8000..$CFFF - unused
-;    $C000..$FFFF - Save States
+;    $8000..$FFFF - unused
+;    $C000..$FFFF - Save States (unused currently)
 ;===================================================================================================
 org $400000
 SA1SRAM = $400000

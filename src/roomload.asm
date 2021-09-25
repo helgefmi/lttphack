@@ -742,11 +742,21 @@ ResetBeforeLoading:
 	STZ.w $012E
 	STZ.w $0131
 	STZ.w $06B0
+
 	STZ.w $0B80
 	STZ.w $0B82
 	STZ.w $0B84
 	STZ.w $0B86
 	STZ.w $0B99
+
+	STZ.w $0CCA
+	STZ.w $0CCC
+	STZ.w $0CCE
+	STZ.w $0CD0
+	STZ.w $0CD2
+	STZ.w $0CD4
+	STZ.w $0CD6
+	STZ.w $0CD8
 
 	LDA.w #$0DF3 : STA.w $02CD
 
