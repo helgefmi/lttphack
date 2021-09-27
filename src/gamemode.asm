@@ -238,22 +238,22 @@ DMA_BWRAMSRAM:
 
 ; need a completely separate space for this shit
 .last_buffers
-;	STZ.w $2183
-;	LDY.w $4352 : PHY ; get last location written
-;
-;	LDA.b #$43 : STA.w $4354
-;	LDY.w #$C000 : STY.w $4352
-;
-;	LDY.w #$6000 : STY.w $2181
-;	LDY.w #$3000 : STY.w $4355
-;	LDA.b #$20 : STA.w $420B
-;
-;	LDA.b #$01 : STA.w $2183
-;	LDY.w #$4000 : STY.w $2181
-;	LDY.w #$1000 : STY.w $4355
-;	LDA.b #$20 : STA.w $420B
-;
-;	PLY : STY.w $4352
+	STZ.w $2183
+	LDY.w $4352 : PHY ; get last location written
+
+	LDA.b #$43 : STA.w $4354
+	LDY.w #$C000 : STY.w $4352
+
+	LDY.w #$6000 : STY.w $2181
+	LDY.w #$3000 : STY.w $4355
+	LDA.b #$20 : STA.w $420B
+
+	LDA.b #$01 : STA.w $2183
+	LDY.w #$4000 : STY.w $2181
+	LDY.w #$1000 : STY.w $4355
+	LDA.b #$20 : STA.w $420B
+
+	PLY : STY.w $4352
 
 	PHB
 	REP #$20
