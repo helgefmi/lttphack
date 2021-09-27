@@ -5941,6 +5941,7 @@ presetSRAM_100nmg:
 ...end
 ;-----------------------------
 ..phelps_way
+%write8($7EF343, $02) ; Bombs
 %write8($7EF377, $0D) ; Arrows
 %writeroom($016, $000C)
 %writeroom($066, $000F)
@@ -6005,7 +6006,7 @@ presetSRAM_100nmg:
 ...end
 ;-----------------------------
 ..pmurderdactyl_trio
-%write8($7EF343, $04) ; Bombs
+%write8($7EF343, $05) ; Bombs
 %write8($7EF36B, $00) ; Heart pieces
 %write8($7EF36C, $90) ; Max HP
 %write8($7EF36D, $90) ; Health
@@ -6034,7 +6035,7 @@ presetSRAM_100nmg:
 .turtle_rock
 ;-----------------------------
 ..death_mountain
-%write8($7EF343, $03) ; Bombs
+%write8($7EF343, $04) ; Bombs
 %write8($7EF346, $01) ; Ice Rod
 %write8($7EF2B7, $02) ; OW screen $37
 %writeroom($120, $001A)
@@ -6100,7 +6101,6 @@ presetSRAM_100nmg:
 ...end
 ;-----------------------------
 ..mimic_cave
-%write8($7EF343, $03) ; Bombs
 %write8($7EF36F, $FF) ; Keys
 %write8($7EF3CA, $00) ; LW/DW
 %write16sram($7EF360, $001E) ; Rupees
@@ -6160,7 +6160,7 @@ presetSRAM_100nmg:
 ...end
 ;-----------------------------
 ..entrance
-%write8($7EF343, $01) ; Bombs
+%write8($7EF343, $02) ; Bombs
 %write8($7EF36B, $00) ; Heart pieces
 %write8($7EF36C, $A0) ; Max HP
 %write8($7EF36D, $A0) ; Health
