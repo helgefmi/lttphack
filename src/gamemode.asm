@@ -312,18 +312,32 @@ DMA_BWRAMSRAM:
 	RTS
 
 .address_size
-	dl $7E0000 : dw $6000
+	dl $7E0000 : dw $0220
+	dl $7E0280 : dw $024B
+	dl $7E04F0 : dw $0158
+	dl $7E0670 : dw $00A8
+	dl $7E0800 : dw $11EA
+	dl $7E1A00 : dw $0078
+	dl $7E1AB0 : dw $03B8
+	dl $7E1F00 : dw $4100
+	dl $7E9000 : dw $0480
 	dl $7EA680 : dw $0C00
 	dl $7EB940 : dw $0480
-	dl $7EC000 : dw $0700
+	dl $7EC000 : dw $0025
+	dl $7EC100 : dw $00AB
+	dl $7EC200 : dw $002A
+	dl $7EC2F8 : dw $0408
 	dl $7EC880 : dw $0080
-	dl $7EE800 : dw $1800
+	dl $7EE800 : dw $0D00
+	dl $7EF580 : dw $0840
+	dl $7EFE00 : dw $0200
 
 	dl $7F0000 : dw $4000
 	dl $7F5800 : dw $0702
+	dl $7F6918 : dw $0001
 	dl $7F7000 : dw $01C0
 	dl $7FDD80 : dw $1400
-	dl $7FF800 : dw $0800 ; $F4C2 + $800 for HUD + $70 for DMA = $FD32
+	dl $7FF800 : dw $0800 ; $F409 + $800 for HUD + $70 for DMA = $FC79
 
 	dl 0
 
