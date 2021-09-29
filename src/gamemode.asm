@@ -116,7 +116,6 @@ Shortcut_LoadLastPreset:
 ;===================================================================================================
 
 Shortcut_SaveState:
-
 	SEP #$20
 
 	LDA.b $10 : CMP.b #$06 : BNE ++
@@ -450,7 +449,6 @@ Shortcut_FillEverything:
 	SEP #$20
 	REP #$10
 
-
 	PHD
 
 	PEA.w $0000
@@ -487,6 +485,7 @@ Shortcut_FillEverything:
 
 .no_keys
 	LDA.l $7EF3C5 : BNE .ignoreprogress
+
 	LDA.b #$01 : STA.l $7EF3C5
 
 .ignoreprogress
@@ -641,9 +640,9 @@ FixGraphics_Underworld: ; mostly copied from PalaceMap_RestoreGraphics
 
 	SEP #$30
 
-	JSL $00834B ; Vram_EraseTilemaps.normal
-	JSL $00E1DB ; InitTilesets
-	JSL $0DFA8C ; HUD.RebuildLong2
+	JSL $00834B ; Tile maps
+	JSL $00E1DB ; Tile sets
+	JSL $0DFA8C ; HUD
 
 .just_redraw
 	STZ.w $0418
@@ -799,7 +798,7 @@ QuickSwap:
 	LDA.b $F6 : AND.b #$40
 	RTL
 
-;===================================================================================================
+;---------------------------------------------------------------------------------------------------
 
 .swap_from_last_r
 	LDA.w SA1IRAM.QuickSwapLR : BEQ .find_r
@@ -809,7 +808,7 @@ QuickSwap:
 	LDA.w SA1IRAM.QuickSwapLR : BEQ .find_l
 	BRA .store
 
-;===================================================================================================
+;---------------------------------------------------------------------------------------------------
 
 .find_next
 	INX
@@ -822,7 +821,7 @@ QuickSwap:
 +	LDA.l $7EF33F,X : BEQ .find_prev
 	RTS
 
-;===================================================================================================
+;---------------------------------------------------------------------------------------------------
 
 FindNextBottle:
 	LDA.l $7EF34F
@@ -841,7 +840,7 @@ FindNextBottle:
 
 	RTS
 
-;===================================================================================================
+;---------------------------------------------------------------------------------------------------
 
 BottleMenuButtonPress:
 	BIT.b $F4 : BVC ++

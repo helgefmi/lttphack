@@ -9,12 +9,6 @@ title: LTTPHack - A Practice ROM for ALttP
 	<patcher id="prachack" manifest-path="patcher/manifest.json" />
 </div>
 
-<!--- Put on updates.html when removing here --->
-<h3>FULL SA-1 REFACTOR</h3>
-<p>Version fourteen point zero point zero is finally here. This represents the biggest and most dramatic update since the inclusion of presets. From here on, the accessibility of the practice hack has been tightened a bit, now requiring decent SA-1 emulation. Fortunately, support is fairly widespread. Anyone without access to a supported system will be able to download v13.6.0 from this page; however, support for these non-SA-1 versions has been officially discontinued.</p>
-<p>The SA-1's on-board RAM allows every system to include large save files, so fully fledged savestates are now available to everyone, eliminating the need for a separate SDSNES version. And while we're at it, the vanilla HUD variants are being nixed too (the option still exists, but it is no longer a separate ROM).</p>
-<p>Anyone without access to a supported system will be unable to use this version or any future version. I know not everyone who plays on console can afford the more powerful flash carts, and that there are various other reasons people may stick with their current set up. Regardless, this hack is intended for vanilla practice, making accuracy for lag very important. Without a coprocessor, I have to put an aggressive filter on what features I add and count cycles meticulously everywhere. This inhibits improvement while <em>still</em> being too laggy. With the SA-1, I have so much more leeway. And with other cool features of the chip, I've vastly improved the backend of the practice menu to the point where it doesn't interfere with vanilla memory whatsoever. At the very least, I'm confident that this doesn't affect a majority audience. Many people who run on original hardware own an FXPak, and I can't name anyone who plays on the unsupported emulator cores. And, again, for those who can't or won't upgrade, v13.6 will always be available.</p>
-
 <h3>Latest (SA-1)</h3>
 <p>This version should be used by any system that can properly emulate the SA-1 with 256kb of BWRAM.</p>
 
@@ -784,7 +778,7 @@ title: LTTPHack - A Practice ROM for ALttP
 	<dd>3 larger sentry lines of info displayed on the HUD.
 		<dl class="subDefinition">
 			<dt>Room flags</dt>
-			<dd>Boss heart, key, chest, and door floogs for current room.</dd>
+			<dd>Boss heart, key, chest, and door flags for current room.</dd>
 			<dt>UW Camera X</dt>
 			<dd>Camera scroll and boundaries for X-axis.</dd>
 			<dt>UW Camera Y</dt>

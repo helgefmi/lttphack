@@ -198,8 +198,8 @@ hex_to_dec_fast:
 
 	LDA.w hex_to_dec_fast_table,X
 	TAY : AND.w #$000F : STA.b SA1IRAM.SCRATCH+4
-	TYA : AND.w #$00F0 : LSR #4 : STA.b SA1IRAM.SCRATCH+2
-	XBA : AND.w #$000F : STA.b SA1IRAM.SCRATCH+0
+	TYA : AND.w #$00F0 : LSR : LSR : LSR : LSR : STA.b SA1IRAM.SCRATCH+2
+	TYA : XBA : AND.w #$000F : STA.b SA1IRAM.SCRATCH+0
 
 	PLP
 	RTS
@@ -853,8 +853,14 @@ hud_draw_input_display_options:
 	; need buttons in this order: xbya
 	SEP #$30
 
-	LDA.b SA1IRAM.SCRATCH+0 : AND.b #$C0 : LSR #5 : STA.b SA1IRAM.SCRATCH+2 ; b and y in place
-	LDA.b SA1IRAM.SCRATCH+1 : AND.b #$40 : LSR #3 : ORA.b SA1IRAM.SCRATCH+2 ; ; x in place
+	LDA.b SA1IRAM.SCRATCH+0 : AND.b #$C0
+	LSR : LSR : LSR : LSR : LSR ; b and y in place
+	STA.b SA1IRAM.SCRATCH+2
+
+	LDA.b SA1IRAM.SCRATCH+1 : AND.b #$40
+	LSR : LSR : LSR ; x in place
+	ORA.b SA1IRAM.SCRATCH+2
+	
 	; this ASL takes care of one for figuring out LR inputs
 	ASL.b SA1IRAM.SCRATCH+1 : ADC.b #$70 ; a in place
 
@@ -864,7 +870,9 @@ hud_draw_input_display_options:
 	STA.w SA1RAM.HUD+$66+6
 
 	; start and select
-	LDA.b SA1IRAM.SCRATCH : AND.w #$0030 : LSR #4 : ORA.w #$2C00
+	LDA.b SA1IRAM.SCRATCH : AND.w #$0030
+	LSR : LSR : LSR : LSR
+	ORA.w #$2C00
 	STA.w SA1RAM.HUD+$66+4
 
 	; L and R
@@ -881,43 +889,15 @@ hud_draw_input_display_options:
 ;---------------------------------------------------------------------------------------------------
 
 .classic
-	REP #$30
-	; Y will hold the current input character
-	STA.b SA1IRAM.SCRATCH+0
-	XBA
-	LSR
-	LSR
-	LSR
-	LSR
-	STA.b SA1IRAM.SCRATCH+1 ; for high byte
-
-	LDX.w #$0000
-
-..next_button
-	LDY.w .classic_locations,X
-	LSR.b SA1IRAM.SCRATCH
-	BCC ..nopress
-
-..press
-	TXA
-	LSR
-	ORA.w #$2400
-	STA.w SA1RAM.HUD,Y
-
-..nopress
-	INX
-	INX
-	CPX.w #23
-	BCC ..next_button
-
-	RTS
-
-;---------------------------------------------------------------------------------------------------
+	REP #$70 ; clear overflow means classic
+	BRA ++
 
 .classicgray
-	REP #$30
+	REP #$20
+	SEP #$40 ; set overflow means classic gray
+
 	; Y will hold the current input character
-	STA.b SA1IRAM.SCRATCH+0
+++	STA.b SA1IRAM.SCRATCH+0
 	XBA
 	LSR
 	LSR
@@ -929,6 +909,7 @@ hud_draw_input_display_options:
 
 ..next_button
 	LDY.w .classic_locations,X
+
 	TXA
 	LSR
 
@@ -936,14 +917,17 @@ hud_draw_input_display_options:
 	BCC ..nopress
 
 ..press
-	ORA.w #$2400
+	ORA.w #$2570
 	BRA ..addchr
 
 ..nopress
-	ORA.w #$3000
+	BVC ..nochar
+	ORA.w #$3170
 
 ..addchr
 	STA.w SA1RAM.HUD,Y
+
+..nochar
 	INX
 	INX
 	CPX.w #23
@@ -1237,8 +1221,27 @@ sentry_lag:
 ;---------------------------------------------------------------------------------------------------
 
 sentry_idle:
+	LDA.w SA1IRAM.ROOM_TIME_IDLE_DISPLAY
+
+	PHX
+	JSR hex_to_dec_fast
+	PLX
+
+	XBA
+	SEP #$20
+
+	LDA.b SA1IRAM.SCRATCH+2
+	ASL
+	ASL
+	ASL
+	ASL
+	ORA.b SA1IRAM.SCRATCH+4
+
+	REP #$20
+	STA.b SA1IRAM.SCRATCH
+
 	LDY.w #!white
-	LDA.w #SA1IRAM.ROOM_TIME_IDLE_DISPLAY
+	LDA.w #SA1IRAM.SCRATCH
 	JMP Draw_short_three
 
 ;---------------------------------------------------------------------------------------------------

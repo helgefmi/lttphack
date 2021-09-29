@@ -39,7 +39,9 @@ EQUIPMENT_SUBMENU:
 ;===================================================================================================
 %numfield_func("Max HP", SA1RAM.cm_equipment_maxhp, 3, 20, 5, this)
 	LDA.w SA1RAM.cm_equipment_maxhp
-	ASL #3
+	ASL
+	ASL
+	ASL
 	STA.l $7EF36C
 
 	RTL

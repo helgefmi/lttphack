@@ -108,7 +108,12 @@ EmptyCurrentRow:
 CM_YRowToXOffset:
 	TYA
 	LSR
-	ASL #6
+	ASL
+	ASL
+	ASL
+	ASL
+	ASL
+	ASL
 
 	ADC.w #64 ; down 1 row
 
@@ -782,6 +787,7 @@ CMDRAW_NUMBER_DEC:
 	INX
 	INX
 
+.ones
 	LDA.b SA1IRAM.cm_writer+1
 	AND.w #$00FF
 	ORA.b SA1IRAM.cm_draw_color
@@ -791,6 +797,35 @@ CMDRAW_NUMBER_DEC:
 	INX
 
 	RTS
+
+;===================================================================================================
+
+CMDRAW_INFO_4HEX:
+	JSR CMDRAW_SAVE_ADDRESS_LONG
+	REP #$20
+	LDA.b [SA1IRAM.cm_writer]
+	JSL CMDRAW_HEX_4_DIGITS
+	RTS
+
+
+CMDRAW_INFO_1DIGIT:
+	JSR CMDRAW_SAVE_ADDRESS_LONG
+
+	LDA.b [SA1IRAM.cm_writer]
+	JSR CMDRAW_HEX_TO_DEC
+
+	REP #$20
+	LDA.w #$002F
+	ORA.b SA1IRAM.cm_draw_color
+
+	LDY.w #4
+--	STA.w SA1RAM.MENU,X
+	INX
+	INX
+	DEY
+	BNE --
+
+	JMP CMDRAW_NUMBER_DEC_ones
 
 ;===================================================================================================
 
@@ -874,20 +909,55 @@ CMDRAW_CTRL_SHORTCUT_FINAL:
 
 .continue
 	REP #$30
-	LDY.w #$0070
-	LDA.b [SA1IRAM.cm_writer]
 
+	LDA.b [SA1IRAM.cm_writer]
+	TAY
+
+	STZ.b SA1IRAM.cm_writer
+
+	; remap buttons to a more useful order
+	; LRABXYSs^v<>
 	SEP #$20
-	LSR #4; get AXLR near the others
+
+	; dpad
+	ASL : ASL : ASL : ASL
+	TSB.b SA1IRAM.cm_writer
+
+	; start and select
+	TYA : AND.b #$30
+	LSR : LSR : LSR : LSR
+	TSB.b SA1IRAM.cm_writer+1
+
+	; B
+	TYA : AND.b #$80 : LSR : LSR : LSR
+	TSB.b SA1IRAM.cm_writer+1
+
+	; Y
+	TYA : AND.b #$40 : LSR : LSR : LSR : LSR
+	TSB.b SA1IRAM.cm_writer+1
+
+	; LR
+	XBA : AND.b #$30 : ASL : ASL
+	TSB.b SA1IRAM.cm_writer+1
+
+	; A
+	TYA : XBA : AND.b #$80 : ASL : ASL
+	TSB.b SA1IRAM.cm_writer+1
+
+	; X
+	TYA : XBA : AND.b #$40 : ASL : ASL
+	TSB.b SA1IRAM.cm_writer+1
+
+
 	REP #$20
-	XBA
-	STA.b SA1IRAM.cm_writer
 
 	LDA.w #12
 	STA.b SA1IRAM.preset_scratch+2
 
+	LDY.w #$0070
+
 .next_button
-	LSR.b SA1IRAM.cm_writer
+	ASL.b SA1IRAM.cm_writer
 	BCC .nopress
 
 	TYA

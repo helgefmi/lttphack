@@ -68,8 +68,8 @@ org $00841E
 	SEP #$30
 
 	RTS
-	; if shortcut was used, exit
 
+	; if shortcut was used, exit
 ++	PLX ; remove return point
 	PEA.w RequestShortcut-1
 	SEP #$30
@@ -218,28 +218,36 @@ NMI_RequestCurrentRowUpdateUnless:
 ;===================================================================================================
 
 NMI_UpdatePracticeHUD:
+
 .full
 	REP #$20
 
 	LDA.w #SA1RAM.MENU
-	STA.w $4302
+
+	STA.w $4352
 	LDA.w #$6C00
+
 	STA.w $2116
 	LDA.w #$0800
 
 .start
-	STA.w $4305
+	STA.w $4355
 	LDA.w #$1801
-	STA.w $4300
+	STA.w $4350
 
 	SEP #$20
+
 	LDA.b #$80
 	STA.w $2115
-	STZ.w $4304
-	LDA.b #$01
+
+	STZ.w $4354
+
+	LDA.b #$20
 	STA.w $420B
 
 	RTS
+
+;---------------------------------------------------------------------------------------------------
 
 .current_row
 	REP #$20
@@ -253,6 +261,8 @@ NMI_UpdatePracticeHUD:
 
 	REP #$20
 	LDA.w SA1RAM.SNES_NMI_args+1
+
+;---------------------------------------------------------------------------------------------------
 
 .do_row
 	AND.w #$00FF
@@ -268,7 +278,7 @@ NMI_UpdatePracticeHUD:
 	PLA
 	ASL
 	ADC.w #SA1RAM.MENU+(64*3)
-	STA.w $4302
+	STA.w $4352
 
 	LDA.w #$0040
 	BRA .start

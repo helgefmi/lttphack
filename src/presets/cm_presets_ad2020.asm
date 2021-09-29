@@ -2869,6 +2869,8 @@ presetpersistent_ad2020_pod:
 %write8($7E02A1, $17) ; ancilla altitude
 %write8($7E0B08, $40) ; Arc variable
 %write8($7E0B09, $00) ; Arc variable
+%write8($7E0B10, $31) ; Overlord X coordinate high byte
+%write8($7E0B20, $11) ; Overlord Y coordinate high byte
 ..end
 ;-----------------------------
 .eastern_spinspeed
@@ -2928,8 +2930,6 @@ presetpersistent_ad2020_pod:
 ;-----------------------------
 .outside_pod
 %write8($7E02A1, $0B) ; ancilla altitude
-%write8($7E0B10, $31) ; Overlord X coordinate high byte
-%write8($7E0B20, $11) ; Overlord Y coordinate high byte
 ..end
 ;-----------------------------
 .sanc_1

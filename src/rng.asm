@@ -117,7 +117,10 @@ rng_lanmola_1:
 
 rng_lanmola_2:
 	LDA.w SA1RAM.lanmola_rng : BEQ JML_to_RNG
-	DEC : LSR #3
+	DEC
+	LSR
+	LSR
+	LSR
 	RTL
 
 ;===================================================================================================
@@ -131,6 +134,7 @@ rng_conveyor_belt:
 
 choose_vitty_eye:
 	LDA.w SA1RAM.vitreous_rng : BEQ JML_to_RNG
+
 	LDA.w $0E70,X : BNE JML_to_RNG
 
 	INC : STA.w $0E70,X ; set to 1

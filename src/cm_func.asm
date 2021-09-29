@@ -20,9 +20,12 @@ CMDO_SAVE_ADDRESS_LONG:
 
 	SEP #$20
 
+; These do nothing
 ACTION_EXIT:
 CMDO_HEADER:
 CMDO_LABEL:
+CMDO_INFO_1DIGIT:
+CMDO_INFO_4HEX:
 	RTS
 
 ;===================================================================================================

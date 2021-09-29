@@ -17,7 +17,7 @@ LoadCustomHUDGFX:
 	LDX.b #hud_table>>16 : STX.w $4304
 	LDA.w #$1800 : STA.w $4305
 
-	STY.w $420B ; initiate DMA (channel 1)
+	STY.w $420B
 
 	; Font
 	LDA.w #$7080 : STA.w $2116
@@ -34,7 +34,8 @@ LoadCustomHUDGFX:
 
 	; Input display
 	LDA.w !config_input_display : AND.w #$0002 : BEQ .done
-	LDA.w #$7000 : STA.w $2116
+
+	LDA.w #$F700>>1 : STA.w $2116
 	LDA.w #$1801 : STA.w $4300
 	LDA.w #hud_inputchars : STA.w $4302
 	LDX.b #hud_inputchars>>16 : STX.w $4304

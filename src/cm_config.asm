@@ -1,5 +1,8 @@
 CONFIG_SUBMENU:
-%menu_header("CONFIGURATION", 5)
+%menu_header("CONFIGURATION", 6)
+
+;===================================================================================================
+%submenu("System and ROM", SYSTEM_SUBMENU)
 
 ;===================================================================================================
 %toggle_onoff("Rerandomize", !config_rerandomize_toggle)
@@ -130,8 +133,8 @@ set_color:
 	db  0 ; HUD BG: black
 
 	db  1 ; Header FG: white
-	db 10 ; Header HL: lui
-	db  0 ; Header BG: black
+	db  0 ; Header HL: black
+	db 10 ; Header BG: lui
 
 	db  9 ; Selection FG: me
 	db  8 ; Selection BG: mine
@@ -202,6 +205,19 @@ UnmutedInstruments:
 	dw $0000, $0800
 
 ;---------------------------------------------------------------------------------------------------
+
+SYSTEM_SUBMENU:
+%menu_header("SYSTEM AND ROM", 6)
+
+%info1d("CPU version", SA1RAM.CPUVERSION)
+%info1d("PPU1 version", SA1RAM.PPU1VERSION)
+%info1d("PPU2 version", SA1RAM.PPU2VERSION)
+%info1d("SA-1 version", $00230E)
+
+%info4h("ROM checksum 1", $00FFDC)
+%info4h("ROM checksum 2", $00FFDE)
+
+;===================================================================================================
 
 MutedInstruments:
 	dw .end-.start, $3D00

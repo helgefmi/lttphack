@@ -5,16 +5,34 @@ title: LTTPHack - A Practice ROM for ALttP
 
 <h2>Latest update</h2>
 
-<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/14.2.2">v14.2.2</a> <span class="releaseDate"></span></h3>
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/14.3.0">v14.3.0</a> <span class="releaseDate">29 November 2021</span></h3>
+
+<ul class="changes">
+	<li>Added a system and ROM info submenu to the configurations menu.</li>
+	<li>Added idle frames to more textbox things.</li>
+	<li>Adjusted savestates to make room for the sword and shield graphics in WRAM.</li>
+	<li>Prevented Link from being invisible when loading a preset during stairs animation.</li>
+	<li>Fixed shutters always being open.</li>
+	<li>Fixed small bug with spawn points and presets.</li>
+	<li>Fixed a display error with extra gnarly stack traces on BSOD.</li>
+	<li>Fixed Vitreous eye prize drops.</li>
+	<li>Tinkered with the menu font.</li>
+	<li>Added guard probes back. Oops.</li>
+	<li>Unlock castle doors even when Agahnim is defeated in randomizer version.</li>
+	<li>Removed no magic message in randomizer version.</li>
+	<li>Moved the throne room mantle to allow sewers access when rain state is over in randomizer version.</li>
+</ul>
+
+
+<h2>Older updates</h2>
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/14.2.2">v14.2.2</a> <span class="releaseDate">26 September 2021</span></h3>
 
 <ul class="changes">
 	<li>Fixed a VRAM issue when saving states on overworld transitions.</li>
 	<li>Fixed enemy drops when loading presets and rooms.</li>
 	<li>Fixed a crash with crystals in the randomizer version.</li>
 </ul>
-
-
-<h2>Older updates</h2>
 
 
 <h3><a href="https://github.com/spannerisms/lttphack/releases/tag/14.2.1">v14.2.1</a> <span class="releaseDate">25 September 2021</span></h3>
@@ -114,6 +132,11 @@ title: LTTPHack - A Practice ROM for ALttP
 
 
 <h3 id="v14"><a href="https://github.com/spannerisms/lttphack/releases/tag/14.0.0">v14.0.0</a> <span class="releaseDate">1 September 2021</span></h3>
+
+<h4>FULL SA-1 REFACTOR</h4>
+<p>Version fourteen point zero point zero is finally here. This represents the biggest and most dramatic update since the inclusion of presets. From here on, the accessibility of the practice hack has been tightened a bit, now requiring decent SA-1 emulation. Fortunately, support is fairly widespread. Anyone without access to a supported system will be able to download v13.6.0 from this page; however, support for these non-SA-1 versions has been officially discontinued.</p>
+<p>The SA-1's on-board RAM allows every system to include large save files, so fully fledged savestates are now available to everyone, eliminating the need for a separate SDSNES version. And while we're at it, the vanilla HUD variants are being nixed too (the option still exists, but it is no longer a separate ROM).</p>
+<p>Anyone without access to a supported system will be unable to use this version or any future version. I know not everyone who plays on console can afford the more powerful flash carts, and that there are various other reasons people may stick with their current set up. Regardless, this hack is intended for vanilla practice, making accuracy for lag very important. Without a coprocessor, I have to put an aggressive filter on what features I add and count cycles meticulously everywhere. This inhibits improvement while <em>still</em> being too laggy. With the SA-1, I have so much more leeway. And with other cool features of the chip, I've vastly improved the backend of the practice menu to the point where it doesn't interfere with vanilla memory whatsoever. At the very least, I'm confident that this doesn't affect a majority audience. Many people who run on original hardware own an FXPak, and I can't name anyone who plays on the unsupported emulator cores. And, again, for those who can't or won't upgrade, v13.6 will always be available.</p>
 
 <h4>Changes</h4>
 <ul class="changes">

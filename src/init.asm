@@ -165,7 +165,15 @@ init_hook:
 
 	JSL reinit_sentry_addresses
 
+	REP #$30
+
+	LDA.w #$0000
+	STA.l SA1RAM.CPUVERSION
+	STA.l SA1RAM.PPU1VERSION
+	STA.l SA1RAM.PPU2VERSION
+
 	SEP #$30
+
 	LDA.b #$15 : STA.b $1C
 
 	STZ.b $11
@@ -174,6 +182,10 @@ init_hook:
 	LDA.b #$01
 	STA.b $10
 	STA.w $04AA
+
+	LDA.l $004210 : AND.b #$0F : STA.l SA1RAM.CPUVERSION
+	LDA.l $00213E : AND.b #$0F : STA.l SA1RAM.PPU1VERSION
+	LDA.l $00213F : AND.b #$0F : STA.l SA1RAM.PPU2VERSION
 
 	LDA.b #$81 : STA.w $4200
 

@@ -268,7 +268,9 @@ CM_CacheWRAM:
 
 	; MaxHP
 	LDA.l $7EF36C
-	LSR #3
+	LSR
+	LSR
+	LSR
 	STA.w SA1RAM.cm_equipment_maxhp
 
 	RTL

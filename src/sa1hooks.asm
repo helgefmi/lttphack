@@ -228,6 +228,7 @@ EnableCorruptionWatcher:
 DisableCorruptionWatcher:
 	PHP
 	SEP #$20
+
 	LDA.b #$00 : STA.w $2201
 
 	REP #$30
@@ -249,6 +250,7 @@ DisableCorruptionWatcher:
 
 RecoverFromCorruption:
 	SEP #$20
+
 	LDA.b #$80 : STA.w $2202 ; acknowledge IRQ
 	JSL DisableCorruptionWatcher
 
@@ -302,9 +304,9 @@ WasteTimeIfNeeded:
 	JSL CacheSA1Stuff
 
 ++	STZ.b $12
+
 	JML $008034
 
-; TODO arbitrary transfers with jump table?
 CacheSA1Stuff:
 	REP #$30 ; 16 bit first
 
@@ -323,10 +325,12 @@ CacheSA1Stuff:
 	LDX.b SA1IRAM.SNTADD4 : LDA.l $7E0000,X : STA.b SA1IRAM.SNTVAL4
 	LDX.b SA1IRAM.SNTADD5 : LDA.l $7E0000,X : STA.b SA1IRAM.SNTVAL5
 
-	LDA.w #$0000 ; top byte 0x00
+	LDA.w #$0001 ; top byte 0x00
 
 	; 8 bit stuff
 	SEP #$30
+
+	STA.b SA1IRAM.CachedThisFrame ; flag this with that 01
 
 	LDA.w $00E2 : STA.b SA1IRAM.CopyOf_E2
 	LDA.w $0057 : STA.b SA1IRAM.CopyOf_57
@@ -335,8 +339,6 @@ CacheSA1Stuff:
 	LDA.w $00A4 : STA.b SA1IRAM.CopyOf_A4
 	LDA.w $0372 : STA.b SA1IRAM.CopyOf_0372
 	LDA.l $7EF3CA : STA.b SA1IRAM.CopyOf_7EF3CA
-
-	INC.b SA1IRAM.CachedThisFrame ; flag this
 
 	LDA.b #$00 : TCD
 

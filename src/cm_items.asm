@@ -9,8 +9,9 @@ ITEMS_SUBMENU:
 #cm_set_bow:
 	LDA.w SA1RAM.cm_item_bow
 	ASL
+	BEQ +
+
 	TAX
-	BEQ ++
 
 	LDA.l $7EF377
 	BNE ++
@@ -18,7 +19,8 @@ ITEMS_SUBMENU:
 	DEX
 
 ++	TXA
-	STA.l $7EF340
++	STA.l $7EF340
+
 	RTL
 
 ;===================================================================================================

@@ -27,7 +27,7 @@ DoShortCuts:
 --	RTS
 
 gamemode_shortcuts:
-	REP #$30 ; this code is copyright Lui 2020
+	REP #$30 ; This REP © Lui 2020
 
 	LDA.b SA1IRAM.CONTROLLER_1_FILTERED : BEQ --
 
@@ -52,10 +52,13 @@ gamemode_shortcuts:
 
 ..forsa1
 	PHA
+
 	LDA.w #SA1SideShortcut
 	STA.b SA1IRAM.SHORTCUT_USED
 	PLA
+
 	JSL UseShortCutSA1
+
 	RTS
 
 ..forsnes

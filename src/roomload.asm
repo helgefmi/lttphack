@@ -193,7 +193,6 @@ LoadArbitraryRoom:
 
 	JMP .adjust_coords
 
-	; TODO find good coordinates based on room ID
 	; use entrance if room of entrance matches
 .no_doors
 	LDA.w #$0000 : TCD
@@ -426,10 +425,9 @@ LoadArbitraryRoom:
 .layerfloor
 	fillbyte $00 : fill 256
 
-; TODO add: layer, floor number
 ;    .w.. ffff
 ;    w = world
-;    ffff = A4 & 0x0F - sign extend after read
+;    ffff = $A4 & 0x0F - sign extended after read
 !ROOM_ID = 0
 macro room_load(e, w, f)
 	pushpc
@@ -728,11 +726,14 @@ ResetBeforeLoading:
 	STZ.w $4200
 	STZ.w $420C
 
-	REP #$20
+	REP #$30
 
 	LDA.w #$0000 : TCD
 
-	STZ.w $011A : STZ.w $011C
+	STA.l $7EC011
+
+	STZ.w $011A
+	STZ.w $011C
 
 	STZ.b $1E
 	STZ.b $95
@@ -743,26 +744,16 @@ ResetBeforeLoading:
 	STZ.w $0131
 	STZ.w $06B0
 
-	STZ.w $0B80
-	STZ.w $0B82
-	STZ.w $0B84
-	STZ.w $0B86
-	STZ.w $0B99
 
-	STZ.w $0CCA
-	STZ.w $0CCC
-	STZ.w $0CCE
-	STZ.w $0CD0
-	STZ.w $0CD2
-	STZ.w $0CD4
-	STZ.w $0CD6
-	STZ.w $0CD8
+	LDX.w #$0CBA : JSR ClearSpriteProps ; Forced item drops
+	LDX.w #$0B80 : JSR ClearOverlordProps ; Previous room
+	LDX.w #$0CCA : JSR ClearOverlordProps ; Overlord room
+
+	STZ.w $0B99
 
 	LDA.w #$0DF3 : STA.w $02CD
 
 	SEP #$30
-
-	STA.l $7EC011
 
 	JSL $07F18C
 
@@ -785,6 +776,7 @@ ResetBeforeLoading:
 	STZ.w $0B9E
 	STZ.w $0F70
 
+	STZ.b $4B
 	STZ.b $57
 	STZ.b $5D
 	STZ.b $62
@@ -797,8 +789,8 @@ ResetBeforeLoading:
 	STZ.w SA1IRAM.BossCycles+2
 
 	STZ.w $0128 ; disable IRQ
-	; big blocks of zeros clear tile map
 
+	; big blocks of zero
 	REP #$20
 
 	LDA.w #$2100 : TCD
@@ -863,7 +855,7 @@ ApplyAfterLoading:
 	LDA.w #$0000
 	TCD
 
-	; We need to enable HDMA to get proper lag times
+	; Enable HDMA to get proper lag times
 	LDA.w #$2641 : STA.w $4360 : STA.w $4370
 	LDA.w #$F2F6 : STA.w $4362 : STA.w $4372
 
@@ -924,6 +916,25 @@ ApplyAfterLoading:
 
 ;===================================================================================================
 
+ClearSpriteProps:
+	STZ.w $000E,X
+	STZ.w $000C,X
+	STZ.w $000A,X
+
+ClearAncillaProps:
+	STZ.w $0008,X
+
+ClearOverlordProps:
+	STZ.w $0006,X
+	STZ.w $0004,X
+	STZ.w $0002,X
+	STZ.w $0000,X
+
+	RTS
+
+
+;===================================================================================================
+
 TriggerTimerAndReset:
 	SEP #$30
 
@@ -943,11 +954,13 @@ TriggerTimerAndReset:
 ;===================================================================================================
 
 SetLoadedRoomID:
-	STA.w $00A0 : STA.w $048E
+	STA.w $00A0
+	STA.w $048E
+
 	STZ.w $00A2 ; clear previous room to prevent weirdness
 	STZ.w $008A ; clear DW to prevent palette weirdness
 
-	STZ.w $00A6 ; quadrants, which get manipulated shortly
+	STZ.w $00A6 ; quadrants, which get manipulated later
 	STZ.w $00A9
 
 	RTS
@@ -1100,6 +1113,7 @@ SetDungeonEntranceAndProperties:
 
 ConfigureCoordinatesToTilemap:
 	PHA
+
 	AND.w #$007F
 	ASL : ASL
 	ADC.w #$0008
@@ -1128,6 +1142,8 @@ ConfigureCameraToCoordinates:
 	AND.w #$FF00 : STA.w $0608 : STA.w $060C
 	AND.w #$FE00 : STA.w $060A
 	ORA.w #$0100 : STA.w $060E
+
+;---------------------------------------------------------------------------------------------------
 
 AdjustCameraScrollFromCamera:
 	LDA.w $00E8
@@ -1241,8 +1257,7 @@ FindOptimalDoorType:
 	INY
 	BRA .next
 
-
-
+;---------------------------------------------------------------------------------------------------
 
 .done
 	LDY.b SA1IRAM.preset_writer
@@ -1250,6 +1265,7 @@ FindOptimalDoorType:
 
 	RTS
 
+	; for exit markers, find the door it modifies by comparing position
 .find_associated_entrance_door
 	PHY
 	XBA
@@ -1323,11 +1339,10 @@ FindOptimalDoorType:
 
 HandleOpenShutters:
 	STA.w $0468
-
 	EOR.b #$01 : STA.w $0641
-	BNE ++
+	BEQ .exit_all
 
-++	REP #$30
+	REP #$30
 
 	PHB
 
@@ -1341,7 +1356,9 @@ HandleOpenShutters:
 	BEQ ++
 
 	PHY
-	JSR .open
+
+	JSR .open_one_door
+
 	PLY
 
 ++	INY
@@ -1353,9 +1370,13 @@ HandleOpenShutters:
 	JSL LoadSingleDoorTileAttribute
 
 	PLB
+
+.exit_all
 	RTL
 
-.open
+;---------------------------------------------------------------------------------------------------
+
+.open_one_door
 	LDA.w $1980,Y
 	AND.w #$00FE
 	TAX
@@ -1364,7 +1385,7 @@ HandleOpenShutters:
 	BEQ .shutter
 
 	CMP.w #$0044
-	BNE ++
+	BNE .exit
 
 .shutter
 	STA.b $06
@@ -1386,7 +1407,8 @@ HandleOpenShutters:
 	LDA.w $19A0,Y
 	STA.b $04
 
-++	RTS
+.exit
+	RTS
 
 .vectors
 	dw .north-1
@@ -1394,6 +1416,7 @@ HandleOpenShutters:
 	dw .west-1
 	dw .east-1
 
+;---------------------------------------------------------------------------------------------------
 
 .north
 	LSR
@@ -1460,7 +1483,6 @@ HandleOpenShutters:
 	STA.l $7E2100,X
 	STA.w $2118
 
-
 	TYA
 	CLC
 	ADC.w #$0006
@@ -1473,6 +1495,8 @@ HandleOpenShutters:
 	BNE --
 
 	RTS
+
+;---------------------------------------------------------------------------------------------------
 
 .south
 	LSR
@@ -1533,7 +1557,6 @@ HandleOpenShutters:
 	STA.l $7E2180,X
 	STA.w $2118
 
-
 	TYA
 	CLC
 	ADC.w #$0006
@@ -1545,14 +1568,14 @@ HandleOpenShutters:
 	DEC.b $0E
 	BNE --
 
-
 	RTS
+
+;---------------------------------------------------------------------------------------------------
 
 .west
 	LSR
 	AND.w #$FFE0
 	TAX
-
 
 	LDA.b $06
 	CMP.w #$44
@@ -1637,6 +1660,8 @@ HandleOpenShutters:
 	BNE --
 
 	RTS
+
+;---------------------------------------------------------------------------------------------------
 
 .east
 	LSR
@@ -1728,6 +1753,8 @@ HandleOpenShutters:
 
 	RTS
 
+;---------------------------------------------------------------------------------------------------
+
 .toVRAMAddr
 	STA.b $08
 	AND.w #$0040
@@ -1792,6 +1819,7 @@ LoadCustomLoadOut:
 	REP #$10
 
 	LDX.w #$0021
+
 --	LDA.l !config_custom_load,X
 	STA.l $7EF340,X
 
@@ -1942,7 +1970,7 @@ SetHUDItemGraphics:
 	RTL
 
 ;---------------------------------------------------------------------------------------------------
-; $0303 -> $0202
+	; $0303 -> $0202
 .item_to_menu
 	db $00 ; $00 - Nothing
 	db $04 ; $01 - Bombs
@@ -1966,7 +1994,7 @@ SetHUDItemGraphics:
 	db $13 ; $13 - Cape
 	db $14 ; $14 - Magic Mirror
 
-; dw bank0D address, SRAM address
+	; dw bank0D address, SRAM address
 .item_HUD
 	dw $0DF699, $7EF343 ; $01 - Bombs
 	dw $0DF671, $7EF341 ; $02 - Boomerang
@@ -2063,7 +2091,8 @@ HandleOverworldLoad:
 
 	SEP #$30
 
-	LDA.b #$FF : STA.l $7EF36F ; no keys
+	LDA.b #$FF
+	STA.l $7EF36F ; no keys
 	STA.w $040C ; no dungeon
 
 	; load overworld music
@@ -2080,14 +2109,16 @@ HandleOverworldLoad:
 SetOverworldMusic:
 	SEP #$30
 
+	; TODO bmi for special overworld whenever that's gotten around to
 	LDY.b $8A
 
-	; DM
+	; DW
 	LDX.b #$02
 	CPY.b #$40 : BCS .dark_world
 
 	; kakariko
 	CPY.b #$18 : BNE .not_kak
+
 	LDA.l $7EF3C5 : CMP.b #$03 : BCS .continue
 	LDX.b #$07 : BRA .save
 

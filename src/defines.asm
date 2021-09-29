@@ -7,7 +7,8 @@ function hexto555(h) = ((((h&$FF)/8)<<10)|(((h>>8&$FF)/8)<<5)|(((h>>16&$FF)/8)<<
 ; Memory map:
 ; Bank 40:
 ;    $0000..$1FFF - vanilla SRAM
-;    $2000..$5FFF - unused
+;    $2000..$20FF - meta data
+;    $2100..$5FFF - unused
 ;    $6000..$7FFF - mirrored to page $60 for SNES
 ;    $8000..$FFFF - unused
 ; Bank 41: savestates
@@ -18,10 +19,20 @@ function hexto555(h) = ((((h&$FF)/8)<<10)|(((h>>8&$FF)/8)<<5)|(((h>>16&$FF)/8)<<
 ;    $C000..$FFFF - Save States
 ;===================================================================================================
 org $400000
+
 SA1SRAM = $400000
 LiteStateData = $430000
 
-struct SA1RAM $406000
+struct SA1RAM $402000 ; DO NOT CHANGE THIS
+	.CPUVERSION: skip 2
+	.PPU1VERSION: skip 2
+	.PPU2VERSION: skip 2
+
+
+	warnpc $4020FF
+
+
+	org $406000 ; DO NOT CHANGE THIS
 	.HUD skip $800 ; bg3 HUD
 	.MENU skip $800 ; practice menu
 
@@ -236,15 +247,11 @@ if !last_config > $3FF
 	error "Too many config settings!"
 endif
 
+;===================================================================================================
 
-;-------------------------
-; Sword beams
-;-------------------------
 !disable_beams = $7A
 
-;-------------------------
-; From ROM
-;-------------------------
+;===================================================================================================
 
 GetRandomInt = $0DBA71
 UseImplicitRegIndexedLocalJumpTable = $008781

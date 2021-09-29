@@ -156,7 +156,6 @@ macro litestate(name, id)
 	db "<name>", $FF
 endmacro
 
-
 ;---------------------------------------------------------------------------------------------------
 %MenuAction("LABEL", 1, $2F)
 macro label(name)
@@ -301,6 +300,7 @@ macro submenu_variable(name, addr)
 endmacro
 
 ;---------------------------------------------------------------------------------------------------
+
 %MenuAction("NUMFIELD", 6, $6D)
 macro numfield(name, addr, start, end, increment)
 	%add_self()
@@ -683,6 +683,23 @@ macro choice_long_func_prgtext(name, addr,  max, func, addrtext)
 	db "<name>", $FF
 
 #?here:
+endmacro
+
+;---------------------------------------------------------------------------------------------------
+%MenuAction("INFO_1DIGIT", 4, $68)
+macro info1d(name, addr)
+	%add_self()
+	db !CM_INFO_1DIGIT
+	dl <addr>
+	db "<name>", $FF
+endmacro
+
+%MenuAction("INFO_4HEX", 4, $68)
+macro info4h(name, addr)
+	%add_self()
+	db !CM_INFO_4HEX
+	dl <addr>
+	db "<name>", $FF
 endmacro
 
 ;===================================================================================================
