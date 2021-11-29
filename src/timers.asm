@@ -66,7 +66,7 @@ org $0DE0E2 : JSL idle_menu
 ; Choosing
 org $0EF881 : JSL idle_choose : ORA.b #$00
 org $0EF8F9 : JSL idle_choose : ORA.b #$00
-org $0EF718 : JSL idle_chooseb : ORA.b #$00 : LDY.b $F4
+org $0EF718 : JSL idle_chooseb : NOP
 
 ; Waiting
 org $0EFA61 : JSL idle_holdA
@@ -335,6 +335,7 @@ idle_choose:
 
 idle_chooseb:
 	LDA.b $F6
+	LDY.b $F4
 	AND.b #$C0
 	ORA.b $F4
 
