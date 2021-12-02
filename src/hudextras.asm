@@ -2006,8 +2006,7 @@ linesentry_ancilla_all:
 	dw char(24)|!BLUE_PAL
 	dw char(22)|!YELLOW_PAL
 	dw char(20)|!GREEN_PAL
-	dw char(10)|!RED_PAL
-	dw char(12)|!RED_PAL
+	dw char(23)|!YELLOW_PAL
 
 .vectors
 	dw linesentry_ancilla_id-1
