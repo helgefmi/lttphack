@@ -2019,6 +2019,40 @@ linesentry_ancilla_all:
 	dw linesentry_ancilla_tile-1
 	dw linesentry_ancilla_egcheck-1
 	dw linesentry_ancilla_direction-1
+	dw linesentry_ancilla_decay-1
+
+	; placeholders
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
+	dw linesentry_ancilla_x-1
 
 ;---------------------------------------------------------------------------------------------------
 
@@ -2028,6 +2062,7 @@ linesentry_ancilla_tile:
 linesentry_ancilla_direction:
 linesentry_ancilla_layer:
 linesentry_ancilla_altitude:
+linesentry_ancilla_decay:
 .next_ancilla
 	INX
 	INX

@@ -911,6 +911,7 @@ CMDRAW_CTRL_SHORTCUT_FINAL:
 	REP #$30
 
 	LDA.b [SA1IRAM.cm_writer]
+	XBA
 	TAY
 
 	STZ.b SA1IRAM.cm_writer
@@ -918,7 +919,6 @@ CMDRAW_CTRL_SHORTCUT_FINAL:
 	; remap buttons to a more useful order
 	; LRABXYSs^v<>
 	SEP #$20
-
 	; dpad
 	ASL : ASL : ASL : ASL
 	TSB.b SA1IRAM.cm_writer
@@ -936,19 +936,20 @@ CMDRAW_CTRL_SHORTCUT_FINAL:
 	TYA : AND.b #$40 : LSR : LSR : LSR : LSR
 	TSB.b SA1IRAM.cm_writer+1
 
+	XBA
+	TAY
+
 	; LR
-	XBA : AND.b #$30 : ASL : ASL
+	AND.b #$30 : ASL : ASL
 	TSB.b SA1IRAM.cm_writer+1
 
 	; A
-	TYA : XBA : AND.b #$80 : ASL : ASL
+	TYA : AND.b #$80 : LSR : LSR
 	TSB.b SA1IRAM.cm_writer+1
 
 	; X
-	TYA : XBA : AND.b #$40 : ASL : ASL
+	TYA : AND.b #$40 : LSR : LSR : LSR
 	TSB.b SA1IRAM.cm_writer+1
-
-
 	REP #$20
 
 	LDA.w #12
