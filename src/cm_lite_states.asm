@@ -78,7 +78,7 @@ ValidateLiteState:
 
 LiteStateHeader:
 	;  "0123456789ABCDEF"
-	db "LITESTATELUIBETA"
+	db "LITESTATELUIBETH"
 ;	db "LITESTATELUICOOL"
 
 ;===================================================================================================
@@ -405,9 +405,11 @@ DMALiteStates:
 .less_importance
 	dl $7E0046 : db $01 ; i frames
 	dl $7E031F : db $01 ; i frames
+	dl $7E005B : db $01 ; falling
 	dl $7E005D : db $01 ; state
 	dl $7E0056 : db $01 ; bunny
 	dl $7E02E0 : db $01 ; bunny
+	dl $7E02E2 : db $01 ; bunny
 	dl $7E006C : db $01 ; door state
 	dl $7E00A4 : db $07 ; floor and quadrants
 	dl $7E00B7 : db $05 ; object pointers
@@ -418,16 +420,18 @@ DMALiteStates:
 	dl $7E0136 : db $01 ; music bank
 	dl $7E02FA : db $01 ; statue drag
 	dl $7E0345 : db $01 ; swimming
-	dl $7E02A1 : db $02 ; ancilla altitude
-	dl $7E044A : db $01 ; EG strength
+	dl $7E029E : db $05 ; ancilla altitude
+	dl $7E03C4 : db $01 ; ancilla index
+	dl $7E044A : db $02 ; EG strength
 	dl $7E047A : db $01 ; armed EG
-	dl $7E045A : db $01 ; torches lit
+	dl $7E045A : db $02 ; torches lit
 	dl $7E04F0 : db $04 ; torch timers
 	dl $7E0642 : db $01 ; shutter tags
 	dl $7E0FC7 : db $08 ; prize packs
 	dl $7E0B08 : db $02 ; overlord
 	dl $7E0B10 : db $02 ; overlord
 	dl $7E0B20 : db $02 ; overlord
+	dl $7E0CF7 : db $01 ; bush prizes
 	dl $7E0CF9 : db $04 ; drop luck and trees
 	dl $7E1ABF : db $01 ; mirror portal
 	dl $7E1ACF : db $01 ; mirror portal

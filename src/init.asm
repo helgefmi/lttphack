@@ -107,8 +107,23 @@ init_hook:
 	STZ.w $2181
 	STX.w $420B
 
+	REP #$30
+
+	LDA.w #$FFFF
+
+	LDX.w #$017E
+
+--	STA.l SA1IRAM.SA1CorruptionBuffer,X
+	DEX
+	DEX
+	BPL --
+
 	LDA.w #$0000
 	TCD
+
+
+
+
 
 ;===================================================================================================
 ; Done doing what ALTTP needs done but faster

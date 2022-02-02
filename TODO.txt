@@ -1,6 +1,15 @@
 Big stuff
 ----------
 
+trigger points to update timers:
+	at exact X,Y
+	when X is crossed
+	when Y is crossed
+	when X and Y are both crossed
+
+keep track of velocity via link's coordinates on SA-1
+
+
 last frame of crystal fade = bad savestate
 
 submenu for flags for important OW overlays (LJ, HC, Pyramid)

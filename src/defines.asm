@@ -83,6 +83,8 @@ struct SA1RAM $402000 ; DO NOT CHANGE THIS
 	.disabled_layers: skip 2
 	.layer_writer: skip 2
 
+	.line4wasactive: skip 1
+
 .end_of_clearable_sa1ram:
 
 	.cm_input_timer: skip 2
@@ -239,6 +241,8 @@ endmacro
 %def_sram("state_icons", !OFF)
 
 %def_sram("somaria_pits", !OFF)
+
+%def_sram("hide_lines", !OFF)
 
 print ""
 print "Config end: $", hex(!last_config,3)

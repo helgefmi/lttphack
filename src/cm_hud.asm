@@ -1,5 +1,5 @@
 HUDEXTRAS_SUBMENU:
-	%menu_header("HUD EXTRAS", 17)
+	%menu_header("HUD EXTRAS", 20)
 
 ;===================================================================================================
 %choice_here("Health display", !config_heart_display, 2)
@@ -94,6 +94,7 @@ endmacro
 %choice("Line 1", !config_linesentry1, !linesentry_count, linesentry_names)
 %choice("Line 2", !config_linesentry2, !linesentry_count, linesentry_names)
 %choice("Line 3", !config_linesentry3, !linesentry_count, linesentry_names)
+%choice("Line 4", !config_linesentry4, !linesentry_count, linesentry_names)
 
 #linesentry_names:
 %list_header(!linesentry_count)
@@ -112,6 +113,7 @@ endmacro
 %choice("Ancilla prop 1", !config_ancprop1, !ancprop_count, ancprop_names)
 %choice("Ancilla prop 2", !config_ancprop2, !ancprop_count, ancprop_names)
 %choice("Ancilla prop 3", !config_ancprop3, !ancprop_count, ancprop_names)
+%choice("Ancilla prop 4", !config_ancprop3, !ancprop_count, ancprop_names)
 
 #ancillawatch_props:
 	fillword $0C4A : fill !ancprop_count*2
@@ -141,6 +143,8 @@ endmacro
 	%new_ancprop($03B1, "Decay")
 
 ;===================================================================================================
+
+%toggle_onoff("Hide lines", !config_hide_lines)
 
 %toggle_onoff("HUD lag", !config_hudlag_spinner)
 

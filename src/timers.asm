@@ -71,7 +71,7 @@ org $0EF718 : JSL idle_chooseb : NOP
 ; Waiting
 org $0EFA61 : JSL idle_holdA
 
-org $0EF77E : JSL idle_item_toss : ORA.b #$00
+org $0EF77E : JSL idle_item_toss : AND.b #$C0
 
 pullpc
 
@@ -294,6 +294,8 @@ idle_waitkey:
 .pressed_key
 	RTL
 
+;---------------------------------------------------------------------------------------------------
+
 idle_endmessage:
 	LDA.b $F4 : ORA.b $F6 : BNE .pressed_key
 
@@ -306,6 +308,8 @@ idle_endmessage:
 .pressed_key
 	RTL
 
+;---------------------------------------------------------------------------------------------------
+
 idle_menu:
 	LDA.b $F4 : BNE .pressed_key
 
@@ -317,6 +321,7 @@ idle_menu:
 	AND.b #$10
 	RTL
 
+;---------------------------------------------------------------------------------------------------
 
 idle_choose:
 	LDA.b $F6
@@ -332,6 +337,8 @@ idle_choose:
 
 .pressed_key
 	RTL
+
+;---------------------------------------------------------------------------------------------------
 
 idle_chooseb:
 	LDA.b $F6
@@ -349,10 +356,13 @@ idle_chooseb:
 .pressed_key
 	RTL
 
+;---------------------------------------------------------------------------------------------------
+
 idle_item_toss:
 	LDA.b $F6
 	AND.b #$C0
 	ORA.b $F4
+	AND.b #$CF
 	BNE .pressed_key
 
 	REP #$20
@@ -360,7 +370,11 @@ idle_item_toss:
 	SEP #$20
 
 .pressed_key
+	LDA.b $F4
+	ORA.b $F6
 	RTL
+
+;---------------------------------------------------------------------------------------------------
 
 idle_holdA:
 	LDA.b $F2 : BPL .no_a_press

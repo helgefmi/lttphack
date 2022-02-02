@@ -18,6 +18,8 @@ struct SA1IRAM $003000
 
 	.JOYPAD2_NEW: skip 2
 
+	.HUDSIZE: skip 2
+
 	.CachedThisFrame: skip 1
 	.cm_submodule: skip 2
 	.cm_cursor: skip 1 ; keep these together
@@ -144,6 +146,11 @@ struct SA1IRAM $003000
 
 	print "SA1 mirroring: $", pc
 
+org $003680
+	.SA1CorruptionBuffer: skip $180
+
+	warnpc $003800
+
 endstruct
 
 ;===================================================================================================
@@ -172,7 +179,6 @@ ReadJoyPad_long:
 	JSR.w $0083D1
 	RTL
 
-
 ; This is critical to the survival of the SA1
 ; during somaria glitches, the SA-1 will listen for writes here
 ; and if the SNES goes too far, it triggers an IRQ
@@ -198,8 +204,11 @@ pullpc
 ;===================================================================================================
 
 SNES_CORRUPTION_IRQ:
-	SEP #$20 ; we don't need to preserve A, so it's fine
+	SEP #$30 ; we don't need to preserve A, so it's fine
 	LDA.b #$80 : STA.l $2202 ; acknowledge IRQ
+
+	JSL RecoverFromCorruption
+
 	PLP ; recover processor from the interrupt
 
 	PLA ; remove address of interrupted location
@@ -209,32 +218,26 @@ SNES_CORRUPTION_IRQ:
 
 	JML $01B897 ; return to exit of the loop
 
+;===================================================================================================
+
 UWOverlayWrapper:
-	JSL EnableCorruptionWatcher
-	JSL $01B83E
-	JSL DisableCorruptionWatcher
-	RTL
-
-
-EnableCorruptionWatcher:
-	PHP
 	SEP #$20
+
 	LDA.b #$80 : STA.w $2201 ; enable IRQ from here
 	LDA.b #$82 : STA.w $2200
 
-	PLP
-	RTL
+	JSL $01B83E ; Underworld_ApplyRoomOverlay
 
 DisableCorruptionWatcher:
-	PHP
 	SEP #$20
 
-	LDA.b #$00 : STA.w $2201
+	STZ.w $2201
 
 	REP #$30
+
 	LDA.w #$FFFF : STA.w SA1IRAM.corruption_watcher
 
-	SEP #$20
+	SEP #$30
 
 	LDA.w !config_somaria_pits : BEQ ++
 
@@ -245,16 +248,42 @@ DisableCorruptionWatcher:
 
 	JSL Shortcut_ShowPits
 
-++	PLP
-	RTL
+	SEP #$30
+
+++	RTL
+
+;===================================================================================================
 
 RecoverFromCorruption:
-	SEP #$20
+	REP #$30
 
-	LDA.b #$80 : STA.w $2202 ; acknowledge IRQ
-	JSL DisableCorruptionWatcher
+	LDX.w SA1IRAM.corruption_watcher
+	LDY.b $BA
 
+.next
+	LDA.b [$B7],Y
+	CMP.w #$FFFF
+	BEQ .end
+
+	TXA
+	ADC.w #$0030
+	CMP.w #$4200-$1100
+	BCS .really_bad
+
+	TAX
+
+	INY
+	INY
+	INY
+	BRA .next
+
+.end
 	RTL
+
+.really_bad
+	JML CorruptionCrash
+
+;===================================================================================================
 
 ; watch for this to be a bad value
 ; if it's FFFF, then NMI occured and things are fine
@@ -290,7 +319,6 @@ CorruptionWatcher:
 	LDA.b #$00 : STA.w $2209 ; disable IRQ from snes
 	RTS
 
-
 ;===================================================================================================
 ; CacheSA1Stuff is critical to balancing lag
 ; so if it isn't called from the HUD, we need to call it here
@@ -302,6 +330,7 @@ WasteTimeIfNeeded:
 	BCS ++
 
 	JSL CacheSA1Stuff
+	STZ.w SA1IRAM.CachedThisFrame ; don't leave it flagged for next frame
 
 ++	STZ.b $12
 
@@ -344,6 +373,8 @@ CacheSA1Stuff:
 
 	RTL
 
+;===================================================================================================
+
 Extra_SA1_Transfers:
 	SEP #$30
 
@@ -370,7 +401,7 @@ Extra_SA1_Transfers:
 
 	INY
 	INY
-	CPY.b #06
+	CPY.b #08
 	BCC .next
 
 	RTL
@@ -391,6 +422,8 @@ Extra_SA1_Transfers:
 .nothing
 	RTS
 
+;---------------------------------------------------------------------------------------------------
+
 .roomflag
 	LDA.w $0401 : STA.w SA1IRAM.LINEVAL+0,Y
 	LDA.w $0403 : STA.w SA1IRAM.LINEVAL+1,Y
@@ -398,22 +431,29 @@ Extra_SA1_Transfers:
 
 	RTS
 
+;---------------------------------------------------------------------------------------------------
+
 .camerax
 	LDA.b $A6 : STA.w SA1IRAM.LINEVAL+0,Y
 
 	REP #$20
+	
 	LDA.b $E2 : STA.w SA1IRAM.LINEVAL+1,Y
 
 	LDA.w $0608 : STA.w SA1IRAM.LINEVAL+3,Y
 	LDA.w $060C : STA.w SA1IRAM.LINEVAL+5,Y
 	LDA.w $060A : STA.w SA1IRAM.LINEVAL+7,Y
 	LDA.w $060E : STA.w SA1IRAM.LINEVAL+9,Y
+
 	RTS
+
+;---------------------------------------------------------------------------------------------------
 
 .cameray
 	LDA.b $A7 : STA.w SA1IRAM.LINEVAL+0,Y
 
 	REP #$20
+
 	LDA.b $E8 : STA.w SA1IRAM.LINEVAL+1,Y
 
 	LDA.w $0600 : STA.w SA1IRAM.LINEVAL+3,Y
@@ -422,6 +462,8 @@ Extra_SA1_Transfers:
 	LDA.w $0606 : STA.w SA1IRAM.LINEVAL+9,Y
 
 	RTS
+
+;---------------------------------------------------------------------------------------------------
 
 .ancilla04
 	PEA.w $0000
@@ -444,8 +486,6 @@ Extra_SA1_Transfers:
 	BCC .ancilla04
 
 	PHA
-	BRA .saveancilla
-
 
 .saveancilla
 	REP #$30
@@ -477,7 +517,6 @@ Extra_SA1_Transfers:
 	LDA.b $04,X : STA.w SA1IRAM.LINEVAL+4,Y
 
 	RTS
-
 
 ;===================================================================================================
 

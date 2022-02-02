@@ -25,9 +25,10 @@ function char(n) = $2150+n
 
 pushpc
 
-org $008B7D
+org $008B7C
 HUD_NMI_DMA_SIZE:
-	dw $200 ; make hud bigger, doesn't seem to cost any cycles
+	; need to calculate a dynamic size for it
+	LDX.w SA1IRAM.HUDSIZE ; make hud bigger, doesn't seem to cost any cycles
 
 org $0EFD3E
 	dw $6145, $6244 ; make the higher textbox slightly lower
@@ -458,10 +459,18 @@ draw_hud_sentry:
 
 draw_hud_linesentrys:
 	REP #$30
+
+	LDA.w .hudsize ; use first entry
+	STA.b SA1IRAM.HUDSIZE
+
+	LDA.w !config_hide_lines
+	AND.w #$0001
+	BNE hud_draw_input_display
+
 	LDA.w #5*64+10 ; start position
 	LDY.w #$0000
 
-	; later rows should be further left
+	; later rows may be further left
 	PEA.w 5*64+10
 	BRA .start
 
@@ -474,6 +483,7 @@ draw_hud_linesentrys:
 	TAX ; get spot
 
 	LDA.w !config_linesentry1,Y
+	STY.w SA1IRAM.cm_writer
 
 	ASL
 	TAY
@@ -493,7 +503,21 @@ draw_hud_linesentrys:
 
 	RTS ; call routine
 
+	; for now, always draw 0x0200 for first 3 lines
+.hudsize
+	dw $0200
+	dw $0200
+	dw $0200
+	dw $0240
+
 .return
+	REP #$30
+
+	LDY.b SA1IRAM.cm_writer
+	LDA.w .hudsize,Y
+	STA.b SA1IRAM.HUDSIZE
+
+#skipline_sentry:
 	REP #$31
 	PLY
 
@@ -502,7 +526,7 @@ draw_hud_linesentrys:
 
 	INY
 	INY
-	CPY.w #6
+	CPY.w #8
 	BCC .next_sentry
 
 ;===================================================================================================
@@ -557,6 +581,8 @@ hud_draw_input_display:
 	STA.w SA1RAM.HUD+$10A
 	INC
 	STA.w SA1RAM.HUD+$10C
+
+;===================================================================================================
 
 .skip
 draw_floor:
@@ -630,15 +656,21 @@ draw_timer:
 	STA.w SA1RAM.HUD+$E8
 
 .skip
+
 ;===================================================================================================
+
 done_extras:
-	PLB : PLP
+	PLB
+	PLP
 	RTL
 
 ;===================================================================================================
+
 draw_hearts_options:
 	dw .practicehack
 	dw .vanilla
+
+;---------------------------------------------------------------------------------------------------
 
 .practicehack
 	SEP #$21
@@ -695,7 +727,7 @@ draw_hearts_options:
 
 	RTS
 
-;------------------------------------------------------------------------------
+;---------------------------------------------------------------------------------------------------
 
 .vanilla
 	REP #$20
@@ -1098,6 +1130,8 @@ DrawHEXForward:
 
 	RTS
 
+;---------------------------------------------------------------------------------------------------
+
 DrawHEX2ForwardSaveY:
 	PHY
 	LDY.w #2
@@ -1132,6 +1166,8 @@ DrawHEX2ForwardSaveY:
 	JSR DrawHEXForward_gray
 	PLY
 	RTS
+
+;---------------------------------------------------------------------------------------------------
 
 DrawHEX4ForwardSaveY:
 	PHY
@@ -1190,6 +1226,21 @@ sentry_routines:
 	dw sentry_pit
 	dw sentry_bosshp
 	dw sentry_hover
+
+	; placeholders
+	dw sentry_raw
+	dw sentry_raw
+	dw sentry_raw
+	dw sentry_raw
+	dw sentry_raw
+	dw sentry_raw
+	dw sentry_raw
+	dw sentry_raw
+	dw sentry_raw
+	dw sentry_raw
+	dw sentry_raw
+	dw sentry_raw
+	dw sentry_raw
 
 ;===================================================================================================
 
@@ -1690,7 +1741,8 @@ linesentry_routines:
 ;===================================================================================================
 
 linesentry_nothing:
-	RTS
+	PLA ; remove the return point that adds the sentry as having been active
+	JMP skipline_sentry
 
 ;===================================================================================================
 

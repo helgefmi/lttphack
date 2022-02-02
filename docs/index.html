@@ -16,7 +16,7 @@ title: LTTPHack - A Practice ROM for ALttP
 <ul>
 	<li>SD2SNES</li>
 	<li>SNES Classic (with RetroArch)</li>
-	<li>Mesen-s</li>
+	<li>Mesen-S</li>
 	<li>higan/bsnes v115+</li>
 	<li>bsnes+</li>
 	<li>snes9x 1.6+</li>
@@ -51,7 +51,7 @@ title: LTTPHack - A Practice ROM for ALttP
 <section class="features">
 
 <h2>Hack features</h2>
-<p>The practice hack comes loaded with a full suite of HUD changes, features, and wedges to facilitate RTA practice and glitch hunting. The most common commonly used features include:</p>
+<p>The practice hack comes loaded with a full suite of HUD changes, features, and wedges to facilitate RTA practice and glitch hunting. The most commonly used features include:</p>
 <ul>
 	<li>Presets to load a specific section of the run with the appropriate equipment.</li>
 	<li>Built-in save states for practicing anything repeatedly.</li>
@@ -59,7 +59,7 @@ title: LTTPHack - A Practice ROM for ALttP
 	<li>Input display for displaying your inputs on your display.</li>
 </ul>
 
-<p>Configuration settings will persist across practice hack versions if newly downloaded hacks are given the same name on your SD card.</p>
+<p>Configuration settings will persist across practice hack versions if newly downloaded hacks are given the same file name as previous versions on whatever system you use.</p>
 
 <h3>Practice Hack Menu</h3>
 <p>The practice hack menu can be accessed by having the <span class="snesButton snesR">R</span> and <span class="snesButton snesStart">Start</span> buttons held down together on the same frame. This menu and other shortcuts can be activated during most gameplay modes, but will be prohibited during some modules (such as the file select menu). When disallowed, shortcut bindings will play a beep and resume normal action.</p>
@@ -228,6 +228,14 @@ title: LTTPHack - A Practice ROM for ALttP
 	<li>Holding <span class="snesButton snesStart">Start</span> and <span class="snesButton snesSelect">Select</span> during power on will reset all configurations to their defaults. When you do this, you will hear Link screaming as he falls to his death.</li>
 	<li>If something in the menu goes out of range, you will be warned with "BAD VAL". Press X to clear it.</li>
 </ul>
+
+<h2>Caveats</h2>
+<p>It's impossible to modify anything this much without sacrificing some behavior. This section details known caveats that should be taken into consideration by the user.</p>
+
+<h3>Overlay corruption and the SA-1</h3>
+<p>The memory layout of the SA-1 puts important hardware registers and on-board memory in an area potentially affected by overlay corruption. To prevent corruption to the SA-1, the star tile holes routine will be intercepted if it is about to write too far. This will have some effect on the timing of longer corruptions.</p>
+<p>When cut short, the practice hack will continue reading without writing to see how far the writes would have gone. If they reach too far (<code>$4200</code>), then a blue screen of death will be displayed to explain the intentional lock.</p>
+<p>In addition to the writing, this type of corruption may also read too far. This does not have the potential to corrupt the SA-1, but it does throw the behavior out of sync from vanilla. Normally, corruption that reaches this far should terminate at the address <code>$4307</code>; however, the values read from SA-1 registers and memory prevent that precise target from being hit. To guarantee that corruption resolves, a large block of memory from <code>$3680</code> to <code>$37FF</code> has been filled with the necessary terminator value. This solution necessarily means that far-reaching corruption will end much sooner than it normally would, making timings unreliable.</p>
 
 </section>
 
@@ -774,8 +782,8 @@ title: LTTPHack - A Practice ROM for ALttP
 		</dl>
 	</dd>
 
-	<dt>Line [1–3]<sup class="badge lag-badge">EX</sup></dt>
-	<dd>3 larger sentry lines of info displayed on the HUD.
+	<dt>Line [1–4]<sup class="badge lag-badge">EX</sup></dt>
+	<dd>4 larger sentry lines of info displayed on the HUD.
 		<dl class="subDefinition">
 			<dt>Room flags</dt>
 			<dd>Boss heart, key, chest, and door flags for current room.</dd>
@@ -795,8 +803,8 @@ title: LTTPHack - A Practice ROM for ALttP
 			<dd>Custom ancilla property for the 5 slots preceding the current search index ($03C4). This set of slots is indicated by a blue magnifying glass.</dd>
 		</dl>
 	</dd>
-	<dt>Ancilla prop [1–3]</dt>
-	<dd>Custom property 1–3 for ancilla sets corresponding to line sentries 1–3
+	<dt>Ancilla prop [1–4]</dt>
+	<dd>Custom property 1–4 for ancilla sets corresponding to line sentries 1–4
 		<dl class="subDefinition">
 			<dt>ID</dt>
 			<dd>Ancilla ID from $03C4,X (includes coloring for 00 and replacable particles).</dd>
@@ -820,6 +828,8 @@ title: LTTPHack - A Practice ROM for ALttP
 			<dd>Timer for wall arrows before disappearing; address: $7E03B1,X</dd>
 		</dl>
 	</dd>
+	<dt>Hide lines<sup class="badge sa1-badge">SA1</sup></dt>
+	<dd>Removes the line sentries from the HUD without the need to disable them.</dd>
 	<dt>HUD lag<sup class="badge sa1-badge">SA1</sup></dt>
 	<dd>Animated spinning icon that indicates there is potential for HUD-related lag present.</dd>
 	<dt>State icons<sup class="badge sa1-badge">SA1</sup></dt>

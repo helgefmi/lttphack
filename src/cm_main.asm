@@ -120,18 +120,41 @@ CM_Return:
 ;===================================================================================================
 
 CM_Exiting:
+	SEP #$30
+	STZ.w $4200
 	REP #$20
 
 	LDA.w #$0002
 	STA.w SA1IRAM.cm_submodule
 
-	SEP #$20
+	LDY.b #$80
+	STY.w $2100
 
-	STZ.w $4200
+	; trigger an update for deleting HUD lines if:
+	;   line sentry 4 is not active
+	;   line sentry 4 was active when the menu was opened
+	; TODO MAYBE ADD TEXT BOX SUPPORT? NOT THAT IMPORTANT
+	LDX.w SA1RAM.line4wasactive
+	BEQ .skipline4
 
-	LDA.b #$80
-	STA.w $2100
+	LDX.w !config_hide_lines
+	BNE .doline4
 
+	LDX.w !config_linesentry4
+	BNE .skipline4
+
+.doline4
+	LDA.w #$6140
+	STA.w $2116
+	STY.w $2115
+
+	LDA.w #$007F
+	LDX.b #32
+--	STA.w $2118
+	DEX
+	BNE --
+
+.skipline4
 	JSL LoadCustomHUDGFX
 	JSL reinit_sentry_addresses
 
@@ -272,6 +295,12 @@ CM_CacheWRAM:
 	LSR
 	LSR
 	STA.w SA1RAM.cm_equipment_maxhp
+
+	LDA.w !config_linesentry4
+	CMP.b #$01
+	LDA.b #$00
+	ADC.b #$00
+	STA.w SA1RAM.line4wasactive
 
 	RTL
 
