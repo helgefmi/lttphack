@@ -26,7 +26,6 @@ function char(n) = $2150+n
 pushpc
 
 org $008B7C
-HUD_NMI_DMA_SIZE:
 	; need to calculate a dynamic size for it
 	LDX.w SA1IRAM.HUDSIZE ; make hud bigger, doesn't seem to cost any cycles
 
@@ -508,6 +507,8 @@ draw_hud_linesentrys:
 	dw $0200
 	dw $0200
 	dw $0200
+
+#HUD_NMI_DMA_SIZE:
 	dw $0240
 
 .return
