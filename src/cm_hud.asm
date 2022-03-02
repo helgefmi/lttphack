@@ -14,7 +14,7 @@ HUDEXTRAS_SUBMENU:
 	%list_item("Classic Gray")
 
 ;===================================================================================================
-!sentry_count = 19
+!sentry_count = 20
 %choice("Sentry 1", !config_sentry1, !sentry_count, sentry_names)
 %choice("Sentry 2", !config_sentry2, !sentry_count, sentry_names)
 %choice("Sentry 3", !config_sentry3, !sentry_count, sentry_names)
@@ -48,6 +48,7 @@ endmacro
 	%new_sentry($00A9, "Quadrant")
 	%new_sentry($008A, "Screen ID")
 	%new_sentry($0114, "Tile (UW)")
+	%new_sentry($00EC, "Tile index")
 	%new_sentry($02A2, "Spooky")
 	%new_sentry($0B08, "Arc variable")
 	%new_sentry($0690, "WEST SOMARIA")
@@ -113,7 +114,7 @@ endmacro
 %choice("Ancilla prop 1", !config_ancprop1, !ancprop_count, ancprop_names)
 %choice("Ancilla prop 2", !config_ancprop2, !ancprop_count, ancprop_names)
 %choice("Ancilla prop 3", !config_ancprop3, !ancprop_count, ancprop_names)
-%choice("Ancilla prop 4", !config_ancprop3, !ancprop_count, ancprop_names)
+%choice("Ancilla prop 4", !config_ancprop4, !ancprop_count, ancprop_names)
 
 #ancillawatch_props:
 	fillword $0C4A : fill !ancprop_count*2

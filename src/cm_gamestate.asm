@@ -136,7 +136,7 @@ cm_game_state_crystals_submenu:
 	%toggle_bit_long("Ice", $7EF37A, 2)
 	%toggle_bit_long("Swamp", $7EF37A, 4)
 	%toggle_bit_long("Mire", $7EF37A, 0)
-	%toggle_bit_long("Turtle Rock", $7EF37A, 4)
+	%toggle_bit_long("Turtle Rock", $7EF37A, 3)
 
 ;===================================================================================================
 cm_game_reset_dungeons_submenu:

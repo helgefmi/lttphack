@@ -1219,6 +1219,7 @@ sentry_routines:
 	dw sentry_quadrant
 	dw sentry_screenid
 	dw sentry_tile
+	dw sentry_tileindex
 	dw sentry_spooky
 	dw sentry_arcvar
 	dw sentry_westsom
@@ -1522,6 +1523,43 @@ sentry_tile:
 
 	TYA
 	LDY.w #2
+	JMP DrawHex_white
+
+;---------------------------------------------------------------------------------------------------
+
+sentry_tileindex:
+	STA.b SA1IRAM.SCRATCH+14
+	TAY
+
+	LDA.b SA1IRAM.CopyOf_1B
+	AND.w #$00FF
+	BEQ NoDisplaySentry
+
+
+	LDA.w #char(24)|!BLUE_PAL
+	STA.w SA1RAM.HUD+6,X
+
+	TYA
+	AND.b SA1IRAM.CopyOf_20
+	AND.w #$FFF8
+	ASL
+	ASL
+	ASL
+	STA.b SA1IRAM.SCRATCH+12
+
+	LDA.b SA1IRAM.SCRATCH+14
+	AND.b SA1IRAM.CopyOf_22
+	LSR
+	LSR
+	LSR
+	AND.w #$003F
+	CLC
+	ADC.b SA1IRAM.SCRATCH+12
+	CLC
+	ADC.w #$2000
+
+	LDY.w #4
+
 	JMP DrawHex_white
 
 ;---------------------------------------------------------------------------------------------------
