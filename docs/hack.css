@@ -614,7 +614,7 @@ div#patcher-app div.patch-header {
 }
 
 div#patcher-app div.patch-body {
-    padding: 13px;
+	padding: 13px;
 }
 
 div#patcher-app div.patch-body > p {
@@ -623,8 +623,8 @@ div#patcher-app div.patch-body > p {
 }
 
 div#patcher-app div.patch-body > div.custom-file {
-    width: 70%;
-    margin: 10px auto;
+	width: 70%;
+	margin: 10px auto;
 }
 
 div#patcher-app div.patch-body > div.custom-file input {

@@ -3,7 +3,7 @@ PRESET_CONFIG_SUBMENU:
 
 ;===================================================================================================
 ; PRESET LIST
-%choice_here("Preset category", !config_preset_category, 8)
+%choice_here("Preset category", !config_preset_category, 10)
 	%list_item("Any% NMG")
 	%list_item("100% NMG")
 	%list_item("Low%")
@@ -12,6 +12,8 @@ PRESET_CONFIG_SUBMENU:
 	%list_item("AD 2014")
 	%list_item("Any% RMG")
 	%list_item("Boss RTAs")
+	%list_item("AD MG")
+	%list_item("RBO")
 
 ;===================================================================================================
 %submenu_variable("Safeties", SAFETIES_SUBMENU)
@@ -76,6 +78,8 @@ SAFETIES_SUBMENU:
 	dl presetsafeties_adold
 	dl presetsafeties_anyrmg
 	dl presetsafeties_bossrta
+	dl presetsafeties_admg
+	dl presetsafeties_rbo
 
 ;===================================================================================================
 
@@ -211,3 +215,18 @@ BOSSPRESET_SUBMENU:
 	dl presetheader_defeatvitreous
 	dl presetheader_defeattrinexx
 	dl presetheader_defeatagahnim2
+
+
+;===================================================================================================
+;---------------------------------------------------------------------------------------------------
+;===================================================================================================
+presetsafeties_admg:
+%menu_header("AD MG Safeties", 1)
+%add_menu_item(NO_SAFETIES)
+
+;===================================================================================================
+;---------------------------------------------------------------------------------------------------
+;===================================================================================================
+presetsafeties_rbo:
+%menu_header("RBO Safeties", 1)
+%add_menu_item(NO_SAFETIES)

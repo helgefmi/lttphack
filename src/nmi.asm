@@ -183,22 +183,25 @@ OAM_Cleaner:
 ;===================================================================================================
 NMI_RequestFullMenuUpdate:
 	REP #$20
+
 	LDA.w #NMI_UpdatePracticeHUD_full
 	STA.w SA1RAM.SNES_NMI_VECTOR
+
 	SEP #$30
+
 	RTL
 
 NMI_Request2RowsUpdate:
 	REP #$20
-	SEP #$10
 
 	LDA.w #NMI_UpdatePracticeHUD_two_rows
 	STA.w SA1RAM.SNES_NMI_VECTOR
 
+	SEP #$30
+
 	STX.w SA1RAM.SNES_NMI_args+0
 	STY.w SA1RAM.SNES_NMI_args+1
 
-	SEP #$30
 	RTL
 
 NMI_RequestCurrentRowUpdateUnless:
@@ -266,17 +269,15 @@ NMI_UpdatePracticeHUD:
 
 .do_row
 	AND.w #$00FF
-	ASL
-	ASL
-	ASL
-	ASL
-	ASL
+	XBA
+	LSR
+	LSR
 	PHA
+	LSR
 	ADC.w #$6C60
 	STA.w $2116
 
 	PLA
-	ASL
 	ADC.w #SA1RAM.MENU+(64*3)
 	STA.w $4352
 
@@ -338,7 +339,7 @@ SNES_CUSTOM_NMI:
 	PEA.w $0000
 	PLD
 	TDC ; A = 0000
-	TAX
+	TAX ; X = 0000
 
 	PHK
 	PLB

@@ -27,7 +27,7 @@ pullpc
 ;===================================================================================================
 
 rng_pokey:
-	LDA.w SA1RAM.pokey_rng : BEQ JML_to_RNG
+	LDA.w SA1RAM.pokey_rng : BEQ VanillaRNG
 
 	DEC
 
@@ -42,7 +42,7 @@ rng_pokey:
 
 ; Agahnim
 rng_agahnim:
-	LDA.w SA1RAM.agahnim_rng : BEQ JML_to_RNG
+	LDA.w SA1RAM.agahnim_rng : BEQ VanillaRNG
 
 	CMP.b #$01 : BEQ .done
 
@@ -54,36 +54,50 @@ rng_agahnim:
 ;===================================================================================================
 
 rng_helmasaur:
-	LDA.w SA1RAM.helmasaur_rng : BEQ JML_to_RNG
+	LDA.w SA1RAM.helmasaur_rng : BEQ VanillaRNG
 	DEC
 	RTL
 
 ;===================================================================================================
 
 rng_ganon_warp_location:
-	LDA.w SA1RAM.ganon_warp_location_rng : BEQ JML_to_RNG
+	LDA.w SA1RAM.ganon_warp_location_rng : BEQ VanillaRNG
 	DEC
 	RTL
 
 ;===================================================================================================
 
 rng_ganon_warp:
-	LDA.w SA1RAM.ganon_warp_rng : BEQ JML_to_RNG
+	LDA.w SA1RAM.ganon_warp_rng : BEQ VanillaRNG
 	DEC
 	RTL
 
 ;===================================================================================================
 
 rng_eyegore:
-	LDA.w SA1RAM.eyegore_rng : BEQ JML_to_RNG
+	LDA.w SA1RAM.eyegore_rng : BEQ VanillaRNG
 	DEC
 	RTL
 
 ;===================================================================================================
 
 rng_arrghus:
-	LDA.w SA1RAM.arrghus_rng : BEQ JML_to_RNG
+	LDA.w SA1RAM.arrghus_rng : BNE .get_speed
 
+;---------------------------------------------------------------------------------------------------
+
+; In the middle for best access
+#VanillaRNG:
+	LDA.w $2137
+	LDA.w $213C
+	ADC.b $1A
+	ADC.w $0FA1
+	STA.w $0FA1
+	RTL
+
+;---------------------------------------------------------------------------------------------------
+
+.get_speed
 	TXY
 
 	TAX : LDA.l .speeds-1,X
@@ -97,26 +111,20 @@ rng_arrghus:
 
 ;===================================================================================================
 
-; In the middle for best access
-JML_to_RNG:
-	JML GetRandomInt
-
-;===================================================================================================
-
 rng_turtles:
-	LDA.w SA1RAM.turtles_rng : BEQ JML_to_RNG
+	LDA.w SA1RAM.turtles_rng : BEQ VanillaRNG
 	DEC
 	RTL
 
 ;===================================================================================================
 
 rng_lanmola_1:
-	LDA.w SA1RAM.lanmola_rng : BEQ JML_to_RNG
+	LDA.w SA1RAM.lanmola_rng : BEQ VanillaRNG
 	DEC
 	RTL
 
 rng_lanmola_2:
-	LDA.w SA1RAM.lanmola_rng : BEQ JML_to_RNG
+	LDA.w SA1RAM.lanmola_rng : BEQ VanillaRNG
 	DEC
 	LSR
 	LSR
@@ -126,16 +134,16 @@ rng_lanmola_2:
 ;===================================================================================================
 
 rng_conveyor_belt:
-	LDA.w SA1RAM.conveyor_rng : BEQ JML_to_RNG
+	LDA.w SA1RAM.conveyor_rng : BEQ VanillaRNG
 	DEC
 	RTL
 
 ;===================================================================================================
 
 choose_vitty_eye:
-	LDA.w SA1RAM.vitreous_rng : BEQ JML_to_RNG
+	LDA.w SA1RAM.vitreous_rng : BEQ VanillaRNG
 
-	LDA.w $0E70,X : BNE JML_to_RNG
+	LDA.w $0E70,X : BNE VanillaRNG
 
 	INC : STA.w $0E70,X ; set to 1
 	LDA.w SA1RAM.vitreous_rng

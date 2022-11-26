@@ -168,37 +168,21 @@ UpdateOnMovingWallStart:
 	LDA.b #$01 : STA.w $02E4
 	RTL
 
-; mire/pod: 1704->17
-
+; mire/pod slow: 17"04 | fast: 00"17
 UpdateOnMovingWallEndPodMire:
 	LDA.w !config_fast_moving_walls : BEQ .slowwalls
-	SED
-	CLC
-	LDA.w SA1IRAM.ROOM_TIME_F : ADC.w #$47
-	CMP.w #$60 : BCC ++
-	SBC.w #$60
-++	STA.w SA1IRAM.ROOM_TIME_F
-	LDA.w SA1IRAM.ROOM_TIME_S : ADC.w #$16
-	STA.w SA1IRAM.ROOM_TIME_S
-	CLD
+	LDA.w #$1647 : STA.w SA1IRAM.TIMER_ADD_SSFF
 
 .slowwalls
 	LDY.b #$02 : STY.w SA1IRAM.TIMER_FLAG
 	LDY.b #$00 : STY.b $AE,X
 	RTL
 
-; desert: 918->10
+; desert slow: 09"18 | fast: 00"10
 UpdateOnMovingWallEndDesert:
 	LDA.w !config_fast_moving_walls : BEQ .slowwalls
-	SED
-	CLC
-	LDA.w SA1IRAM.ROOM_TIME_F : ADC.w #$08
-	CMP.w #$60 : BCC ++
-	SBC.w #$60
-++	STA.w SA1IRAM.ROOM_TIME_F
-	LDA.w SA1IRAM.ROOM_TIME_S : ADC.w #$09
-	STA.w SA1IRAM.ROOM_TIME_S
-	CLD
+
+	LDA.w #$0908 : STA.w SA1IRAM.TIMER_ADD_SSFF
 
 .slowwalls
 	LDY.b #$02 : STY.w SA1IRAM.TIMER_FLAG

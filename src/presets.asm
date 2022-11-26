@@ -124,6 +124,8 @@ PRESET_SUBMENU:
 	dl presetheader_adold
 	dl presetheader_anyrmg
 	dl BOSSRTA_SUBMENU-4
+	dl presetheader_alldungeonsmg
+	dl presetheader_reversebossorder
 
 ;===================================================================================================
 
@@ -742,11 +744,15 @@ LoadPresetSafeties:
 	dw .adold
 	dw .anyrmg
 	dw .bossrta
+	dw .admg
+	dw .rbo
 
 ; No safeties
 .bossrta
 .lownmg
 .lowleg
+.admg
+.rbo
 -- RTS
 
 ;---------------------------------------------------------------------------------------------------

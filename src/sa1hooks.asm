@@ -64,6 +64,7 @@ struct SA1IRAM $003000
 
 .savethis_start
 	.TIMER_FLAG: skip 2
+	.TIMER_ADD_SSFF: skip 2
 
 .timers_start
 	.ROOM_TIME_F: skip 2
@@ -748,6 +749,49 @@ SA1NMI_SENTRIES:
 	LDA.b SA1IRAM.SEG_TIME_M : ADC.w #$0000 ; increments by 1 if S>=60
 	STA.b SA1IRAM.SEG_TIME_M
 
+	; add in any necessary forced timer changes
+	LDA.b SA1IRAM.TIMER_ADD_SSFF
+	BEQ .no_timer_add
+
+	; ROOM TIMER
+	SEP #$20
+	CLC
+	ADC.b SA1IRAM.ROOM_TIME_F
+	CMP.b #$60 : BCC ++
+	SBC.b #$60
+++	STA.b SA1IRAM.ROOM_TIME_F
+
+	LDA.b #$00 ; clear frames value we don't want to 0
+
+	REP #$20
+	XBA
+	ADC.b SA1IRAM.ROOM_TIME_S
+	STA.b SA1IRAM.ROOM_TIME_S
+
+	; SEGMENT TIMER
+	CLC
+
+	SEP #$20
+	ADC.b SA1IRAM.SEG_TIME_F
+	CMP.b #$60 : BCC ++
+	SBC.b #$60
+++	STA.b SA1IRAM.SEG_TIME_F
+
+	XBA
+	ADC.b SA1IRAM.SEG_TIME_S
+	CMP.b #$60 : BCC ++
+	SBC.b #$60
+++	STA.b SA1IRAM.SEG_TIME_S
+
+	REP #$20
+
+	LDA.w #$0000
+	ADC.b SA1IRAM.SEG_TIME_M
+	STA.b SA1IRAM.SEG_TIME_M
+
+	STZ.b SA1IRAM.TIMER_ADD_SSFF
+
+.no_timer_add
 .dont_update_sentries
 	CLD
 
@@ -764,7 +808,9 @@ SA1NMI_SENTRIES:
 	LDX.w #SA1IRAM.ROOM_TIME_F
 	LDY.w #SA1IRAM.ROOM_TIME_F_DISPLAY
 
+	PHB
 	MVN $00,$00
+	PLB
 
 	BVC .dontreset
 

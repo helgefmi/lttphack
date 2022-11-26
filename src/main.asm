@@ -60,7 +60,8 @@ incsrc presets/cm_presets_defeatmoldorm.asm
 incsrc presets/cm_presets_defeatagahnim.asm
 incsrc presets/cm_presets_defeathelmasaur.asm
 incsrc presets/cm_presets_defeatarrghus.asm
-incsrc presets/cm_presets_defeatmothula.asm
+incsrc presets/cm_presets_defeatagahnim2.asm
+incsrc presets/cm_presets_defeatblind.asm
 print "Bank 1 end: ", pc
 
 org $318000
@@ -68,11 +69,10 @@ print ""
 print "Bank 2 ", pc
 incsrc presets/cm_presets_lownmg.asm
 incsrc presets/cm_presets_lowleg.asm
-incsrc presets/cm_presets_defeatblind.asm
 incsrc presets/cm_presets_defeatkholdstare.asm
 incsrc presets/cm_presets_defeatvitreous.asm
 incsrc presets/cm_presets_defeattrinexx.asm
-incsrc presets/cm_presets_defeatagahnim2.asm
+incsrc presets/cm_presets_defeatmothula.asm
 print "Bank 2 end: ", pc
 
 org $328000
@@ -81,9 +81,17 @@ print "Bank 3 ", pc
 incsrc presets/cm_presets_adold.asm
 incsrc presets/cm_presets_ad2020.asm
 incsrc presets/cm_presets_anyrmg.asm
+incsrc presets/cm_presets_reversebossorder.asm
 print "Bank 3 end: ", pc
 
 org $338000
+print ""
+print "Bank 4 ", pc
+incsrc presets/cm_presets_alldungeonsmg.asm
+print "Bank 4 end: ", pc
+
+
+org $3E8000
 incsrc bsod.asm
 
 ; pad rom to 2mb
