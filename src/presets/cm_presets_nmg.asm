@@ -5045,14 +5045,14 @@ presetSRAM_nmg:
 ...end
 ;-----------------------------
 ..spooky_action_2
-%write8($7EF36E, $30) ; Magic
+%write8($7EF36E, $28) ; Magic
 %writeroom($092, $0005)
 ...end
 ;-----------------------------
 ..vitty
 %write8($7EF343, $01) ; Bombs
 %write8($7EF377, $14) ; Arrows
-%write8($7EF36E, $40) ; Magic
+%write8($7EF36E, $8) ; Magic
 %writeroom($091, $0005)
 %writeroom($092, $0007)
 %writeroom($0A0, $800F)
