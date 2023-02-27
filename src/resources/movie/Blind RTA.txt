@@ -1,0 +1,28 @@
+@ Defeat Blind
+
+= Blind
+653 Link's Bed
+4829 Courtyard
+5420 Castle
+5836 Stair Clip
+6422 Re-arm EG
+7718 Ball 'n Chains
+9885 Trudge to Sanctuary
+14711 Trudge to Thieves' Town
+19441 Entrance
+21653 Stalfos Hallway
+22425 Snakes and Lizards
+22723 Conveyor Gibos
+23024 Actual Hellway
+23982 Attic
+24983 Bombable Floor
+26326 Backtracking
+27505 Basement
+28270 Conveyor Down
+28976 Prison
+30030 Conveyor Up
+30709 Toilet Switch
+31448 Blind
+
+
+= End

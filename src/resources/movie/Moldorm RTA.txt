@@ -1,0 +1,13 @@
+@ Defeat Moldorm
+
+= Moldorm
+676 Link's Bed
+4855 Courtyard
+5466 Castle
+5891 Stair Clip
+6495 EG Trudge
+8739 Don't Softlock
+9368 Hera Pot
+11088 Moldorm
+
+= End

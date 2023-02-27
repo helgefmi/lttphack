@@ -1,0 +1,17 @@
+@ Defeat Mothula
+
+= Mothula
+641 Link's Bed
+4831 Courtyard
+5452 Castle
+5886 Stair Clip
+6499 EG Trudge
+9169 Don't Softlock
+10243 Bunny DMD
+11468 Short Hop to Skull Woods
+12183 Skull Woods
+12701 Unbunny
+13801 Pumping
+15524 Mothula
+
+= End

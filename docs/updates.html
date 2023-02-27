@@ -1,0 +1,708 @@
+---
+layout: practicehack
+title: LTTPHack - A Practice ROM for ALttP
+---
+
+<h2>Latest update</h2>
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/14.3.3">v14.3.3</a> <span class="releaseDate">2 March 2022</span></h3>
+
+<ul class="changes">
+	<li>HUD extras:
+		<ul>
+			<li>Added "Tile index" for plaid.</li>
+		</ul>
+	</li>
+	<li>Other:
+		<ul>
+			<li>Fixed Trinexx crystal.</li>
+			<li>Fixed line sentry 4 ancilla prop.</li>
+		</ul>
+	</li>
+</ul>
+
+<h2>Older updates</h2>
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/14.3.2">v14.3.2</a> <span class="releaseDate">2 February 2022</span></h3>
+
+<ul class="changes">
+	<li>HUD extras:
+		<ul>
+			<li>Added a fourth line sentry.</li>
+			<li>Added "Hide lines".</li>
+		</ul>
+	</li>
+	<li>Other:
+		<ul>
+			<li>Added a "Caveats" section to the documentation.</li>
+			<li>Crash the game when somaria goes bad.</li>
+			<li>Fixed input on fairy item toss.</li>
+			<li>Fixed a very minor lag bug with menu.</li>
+			<li>Added a block of sentinels to catch heavy corruption and prevent it from hanging forever.</li>
+			<li>Added ancilla index to Lite States.</li>
+			<li>Spooky edit.</li>
+		</ul>
+	</li>
+</ul>
+
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/14.3.1">v14.3.1</a> <span class="releaseDate">2 December 2021</span></h3>
+
+<ul class="changes">
+	<li>Nevermind. I hate this font and so does everyone else.</li>
+	<li>Fixed shortcut button display.</li>
+	<li>Added arrow decay timer for Sirius.</li>
+</ul>
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/14.3.0">v14.3.0</a> <span class="releaseDate">29 November 2021</span></h3>
+
+<ul class="changes">
+	<li>Added a system and ROM info submenu to the configurations menu.</li>
+	<li>Added idle frames to more textbox things.</li>
+	<li>Adjusted savestates to make room for the sword and shield graphics in WRAM.</li>
+	<li>Prevented Link from being invisible when loading a preset during stairs animation.</li>
+	<li>Fixed shutters always being open.</li>
+	<li>Fixed small bug with spawn points and presets.</li>
+	<li>Fixed a display error with extra gnarly stack traces on BSOD.</li>
+	<li>Fixed Vitreous eye prize drops.</li>
+	<li>Tinkered with the menu font.</li>
+	<li>Added guard probes back. Oops.</li>
+	<li>Unlock castle doors even when Agahnim is defeated in randomizer version.</li>
+	<li>Removed no magic message in randomizer version.</li>
+	<li>Moved the throne room mantle to allow sewers access when rain state is over in randomizer version.</li>
+</ul>
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/14.2.2">v14.2.2</a> <span class="releaseDate">26 September 2021</span></h3>
+
+<ul class="changes">
+	<li>Fixed a VRAM issue when saving states on overworld transitions.</li>
+	<li>Fixed enemy drops when loading presets and rooms.</li>
+	<li>Fixed a crash with crystals in the randomizer version.</li>
+</ul>
+
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/14.2.1">v14.2.1</a> <span class="releaseDate">25 September 2021</span></h3>
+
+<ul class="changes">
+	<li>Fixed an issue with timers and floor numbers on the HUD.</li>
+	<li>Fixed the naming of the Tazmania and Black Bass fonts.</li>
+	<li>Banned savestates on specific frames that the underworld is loaded on to prevent VRAM issues.</li>
+	<li>Banned lite states in special overworld and specific underworld load frames.</li>
+	<li>Thickened the menu header.</li>
+</ul>
+
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/14.2.0">v14.2.0</a> <span class="releaseDate">22 September 2021</span></h3>
+
+<ul class="changes">
+	<li>Presets:
+		<ul>
+			<li>Added the rest of the Boss RTA Presets (courtesy of sirius).</li>
+			<li>Added "Double Reddies" preset for NMG categories.</li>
+			<li>Added bastard door behavior to several presets.</li>
+			<li>Fixed shutter doors on lower layers.</li>
+			<li>Randomized ice palace conveyor in presets.</li>
+			<li>Compressed preset data a little more (hopefully no problems).</li>
+			<li>Updated preset scraping script.</li>
+		</ul>
+	</li>
+	<li>Gameplay:
+		<ul>
+			<li>Added an option to always show somaria pits after corruptions.</li>
+		</ul>
+	</li>
+	<li>Other:
+		<ul>
+			<li>Introduced a beta for custom presets with the <a href="index#menuLiteStates">Lite states</a> menu. See that section for how to use them.</li>
+			<li>Fixed a savestate issue. Savestates from previous versions should not be loaded after updating.</li>
+			<li>Improved music load logic for Link's house.</li>
+			<li>Reversed the stack printing in the blue screen of death so that it's actually readable.</li>
+			<li>Added a color for BluntBunny since he asked nicely.</li>
+		</ul>
+	</li>
+</ul>
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/14.1.0">v14.1.0</a> <span class="releaseDate">12 September 2021</span></h3>
+
+<ul class="changes">
+	<li>Fixed an issue that made presets remove too much lag.</li>
+	<li>Added a new "Room master" submenu that includes the ability to view and set flags for underworld rooms, and load arbitrary rooms.</li>
+	<li>Presets:
+		<ul>
+			<li>Proper 100% NMG presets (thanks to Sirius)</li>
+			<li>Changed various preset names.</li>
+			<li>Added "Bumper Skip" for NMG presets.</li>
+			<li>Fixed some data issues with Swamp lobby.</li>
+			<li>Fixed 10,000,000,000 errors with the preset scraping script.</li>
+		</ul>
+	</li>
+	<li>Game state:
+		<ul>
+			<li>Added a submenu for controlling drops and such.</li>
+			<li>Fixed boss deaths menu.</li>
+		</ul>
+	</li>
+	<li>RNG Control:
+		<ul>
+			<li>Fixed pokeys</li>
+		</ul>
+	</li>
+	<li>HUD Extras:
+		<ul>
+			<li>Rebranded counters as "sentries".</li>
+			<li>Added an icon for the ancilla search index, spooky, UW tile, boss HP, hookslot, and WEST SOMARIA sentries.</li>
+			<li>Added an icon for every ancilla property as well as an icon for which set of slots is being watched.</li>
+			<li>Renamed "Heart lag" to "HUD lag" and moved the indicator to the left of the magic bar.</li>
+			<li>Added a state icons feature that displays along the left side of the HUD.</li>
+			<li>Removed door state from the subpixels sentry in favor of the state icon.</li>
+			<li>Added cycle counter for Agahnim 2.</li>
+		</ul>
+	</li>
+	<li>Other:
+		<ul>
+			<li>Implemented a blue screen of death for catching BRK and COP software interrupts. This will hopefully protect configuration settings more often.</li>
+			<li>Improved behavior for finding the currently equipped item after modifying items.</li>
+			<li>Changed the numfield icon to something more cool and abstract and less ugly.</li>
+			<li>Filling equipment will update the rest of the menu.</li>
+			<li>Fixed a bug with saving HDMA channels during savestates.</li>
+			<li>Fixed a bug with overworld sprite deaths during savestates.</li>
+			<li>Link no longer slides around if a preset is loaded during death.</li>
+			<li>Loading last preset should no longer bring up the select menu (unless you hold select for too long).</li>
+			<li>Rerandomization works properly again.</li>
+			<li>Rerebranded the default font again.</li>
+			<li>Segment timer now resets on preset load.</li>
+			<li>Removed file 3 BAGE functionality, since no one uses it and there are existing functions for max equipment.</li>
+		</ul>
+	</li>
+</ul>
+
+
+<h3 id="v14"><a href="https://github.com/spannerisms/lttphack/releases/tag/14.0.0">v14.0.0</a> <span class="releaseDate">1 September 2021</span></h3>
+
+<h4>FULL SA-1 REFACTOR</h4>
+<p>Version fourteen point zero point zero is finally here. This represents the biggest and most dramatic update since the inclusion of presets. From here on, the accessibility of the practice hack has been tightened a bit, now requiring decent SA-1 emulation. Fortunately, support is fairly widespread. Anyone without access to a supported system will be able to download v13.6.0 from this page; however, support for these non-SA-1 versions has been officially discontinued.</p>
+<p>The SA-1's on-board RAM allows every system to include large save files, so fully fledged savestates are now available to everyone, eliminating the need for a separate SDSNES version. And while we're at it, the vanilla HUD variants are being nixed too (the option still exists, but it is no longer a separate ROM).</p>
+<p>Anyone without access to a supported system will be unable to use this version or any future version. I know not everyone who plays on console can afford the more powerful flash carts, and that there are various other reasons people may stick with their current set up. Regardless, this hack is intended for vanilla practice, making accuracy for lag very important. Without a coprocessor, I have to put an aggressive filter on what features I add and count cycles meticulously everywhere. This inhibits improvement while <em>still</em> being too laggy. With the SA-1, I have so much more leeway. And with other cool features of the chip, I've vastly improved the backend of the practice menu to the point where it doesn't interfere with vanilla memory whatsoever. At the very least, I'm confident that this doesn't affect a majority audience. Many people who run on original hardware own an FXPak, and I can't name anyone who plays on the unsupported emulator cores. And, again, for those who can't or won't upgrade, v13.6 will always be available.</p>
+
+<h4>Changes</h4>
+<ul class="changes">
+	<li>Y-Items:
+		<ul>
+			<li>Unraveled the child and shoved it into its parent. The child being the bottle submenu.</li>
+		</ul>
+	</li>
+	<li>Equipment:
+		<ul>
+			<li>Removed the Fill HP and Fill Magic options and replaced them with numfields.</li>
+			<li>Max arrows is now 50</li>
+			<li>Added a small key editor</li>
+		</ul>
+	</li>
+	<li>Game state:
+		<ul>
+			<li>Follower option</li>
+			<li>Removed crystal switch color in lieu of the shortcut (it was causing problems).</li>
+			<li>Removed the room reset function, as it didn't work quite right.</li>
+			<li>Added some more progress bits to the game flag submenu.</li>
+		</ul>
+	</li>
+	<li>HUD extras:
+		<ul>
+			<li>Vanilla hearts is now here for those who want it for whatever reason.</li>
+			<li>Added "Classic Gray" input display.</li>
+			<li>Condensed the timers and RAM watches into a single system.</li>
+			<li>Replaced super watches with line counters and expanded their functionality.</li>
+			<li>Enemy HP has been replaced with a "Boss HP" watch and now only looks at the sprite in slot 0.</li>
+			<li>Added some more RAM watches:
+				<ul>
+					<li>Room ID</li>
+					<li>Quadrant</li>
+					<li>Overworld screen ID</li>
+					<li>Tile prop</li>
+					<li>West somaria timer</li>
+					<li>Ancilla index (no longer found in general ancilla watch)</li>
+					<li>Hookslot (no longer found in general ancilla watch)</li>
+					<li>Pit destination</li>
+					<li>Boss HP (to replace enemy HP)</li>
+					<li>Hover coach (politely stolen from Wulfy83)</li>
+					<li>Overworld transition triggers</li>
+				</ul>
+			</li>
+			<li>The quick warp icon is now gray when you will not quick warp. Also changed the graphics.</li>
+		</ul>
+	</li>
+	<li>Shortcuts:
+		<ul>
+			<li>Setting a shortcut will abort after 1 second of no input.</li>
+			<li>Toggle crystal switch state (only works when you're in control)</li>
+		</ul>
+	</li>
+	<li>Preset config:
+		<ul>
+			<li>Added various safeties, with separate submenus for each category</li>
+			<li>Added "Randomize Ganon Bats" option</li>
+			<li>Added preset loadout override</li>
+			<li>Added Lanmo RTA presets</li>
+		</ul>
+	</li>
+	<li>Configuration:
+		<ul>
+			<li>Added a <i>Crayon Shin-chan</i> font.</li>
+			<li>Added a <i>Super Black Bass 3</i> font.</li>
+			<li>Updated the default font and renamed it from "Normal" to "Shop".</li>
+			<li>Removed the italic and classic fonts.</li>
+			<li>Added a choice for where the menu opens to.</li>
+			<li>Menu colors can now be customized.</li>
+		</ul>
+	</li>
+	<li>Other:
+		<ul>
+			<li>New website design!</li>
+			<li>Completely new backend for menu and presets. Shoutouts to Siriuscord for debugging bad preset data.</li>
+			<li>Pressing select in the practice menu now brings you to the tippy top.</li>
+			<li>Pressing Y in the practice menu now enables options and sets numfields to their max.</li>
+			<li>Created a new "Preset config" menu that includes some new stuff and some old stuff.</li>
+			<li>Practice menu will restore BG3 properties under heavy VRAM corruption (unavoidable utility fix).</li>
+			<li>The higher position for text boxes has been moved down 1 tile to make room for additional HUD features.</li>
+			<li>Included safeguards for SA-1 registers against overlay corruption. Note that this will prevent the practice hack from crashing where the vanilla game would.</li>
+			<li>Removed the intro screens on initial boot. A boss roar will be played for my amusement as memory is initialized.</li>
+			<li>Added a room time trigger for post-Aga castle warp.</li>
+			<li>Added a room time trigger for Ganon death and Triforce door.</li>
+			<li>Changed a few preset names.</li>
+			<li>Created a page detailing the submission process for presets at <a href="presetbuilding">presetbuilding</a>.</li>
+			<li>The 100% NMG presets are too out of date. They will be operational, but fairly inaccurate. A call for a new movie file has been added to its menu.</li>
+			<li>Moved all these updates to this new page. Anyone who asks about new features should contact their local ISP to ban them from this webpage.</li>
+		</ul>
+	</li>
+	<li>Bug fixes:
+		<ul>
+			<li>Accidentally fixed the bug that prevented input display from updating during text.</li>
+		</ul>
+	</li>
+</ul>
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.6.0">v13.6.0</a> <span class="releaseDate">9 April 2021</span></h3>
+<ul>
+	<li>Lui fixed music</li>
+</ul>
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.5.0">v13.5.0</a> <span class="releaseDate">5 October 2020</span></h3>
+<ul>
+	<li>Lui cannot be stopped</li>
+</ul>
+
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.4.0">v13.4.0</a> <span class="releaseDate">4 October 2020</span></h3>
+<ul>
+	<li>Lui added low% presets. Can no one stop this mad man?</li>
+</ul>
+
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.3.0">v13.3.0</a> <span class="releaseDate">24 September 2020</span></h3>
+<ul>
+	<li>Lui added any% RMG presets.</li>
+	<li>Added some cool fonts.</li>
+	<li>Added "fill everything" to equipment menu.</li>
+</ul>
+
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.2.0">v13.2.0</a> <span class="releaseDate">15 September 2020</span></h3>
+<ul>
+	<li>Link state:
+		<ul>
+			<li>Added ancillae search index editor</li>
+		</ul>
+	</li>
+	<li>RNG control:
+		<ul>
+			<li>Added an option for forcing the frame counter to a specific value for frame rule testing.</li>
+			<li>Removed cannonball and soldier settings in favor of forced frames.</li>
+		</ul>
+	</li>
+	<li>HUD extras:
+		<ul>
+			<li>Merged misslots- and DG-watch into a single feature under the name "Super Watch".</li>
+		</ul>
+	</li>
+	<li>Ancillae watch has been revamped to be more readable and expandable.</li>
+	<li>Bug fixes:
+		<ul>
+			<li>The ancillae watch revamp means the quickwarp indicator is no longer overwritten.</li>
+			<li>Menu sound effects no longer cause problems when changing certain options.</li>
+			<li>Fixed mastersword LSD effect.</li>
+		</ul>
+	</li>
+</ul>
+
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.1.1">v13.1.1</a> <span class="releaseDate">23 April 2020</span></h3>
+<ul>
+	<li>Added an in-browser JavaScript-based patcher (thanks total).</li>
+	<li>More efficient music muting, accomplished by adjust ADSR (sorry Myramong).</li>
+	<li>Fixed invisible timers caused by MVN.</li>
+</ul>
+
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.1.0">v13.1.0</a> <span class="releaseDate">8 Feb 2020</span></h3>
+<ul>
+	<li>Old versions of the practice hack are no longer archived on GDrive. All future versions will point to the same file, without the version in its name.</li>
+	<li>Added versioning and custom title to the file select screen.</li>
+	<li>Added an explanation of Cycle Control to the site.</li>
+	<li>Input display has been made to be persistent across multiple versions.</li>
+	<li>The input display can now be shut off or changed to the old version. When off, it will still use its normal CPU time, as it is a core feature and part of Cycle Control. The old input display is laggier, and that will not be fixed. Nor can it be.</li>
+	<li>The segment timer has been downgraded to an optional feature and is no longer part of Cycle Control.</li>
+	<li>Added Icebreaker to RAM watch. It's just subpixels with an icon for being in a door.</li>
+	<li>Fill rupees now applies immediately. No more ching cha ching.</li>
+	<li>Experimenting with a background on input display for more visibility in certain places.</li>
+	<li>Lui fixed weird savestate on death behavior.</li>
+	<li>Lui also fixed the dumb bow stuff in AD presets.</li>
+	<li>Fluting now resets the timer.</li>
+	<li>Moved some code so that Vanilla HUD variants can enjoy cleaner menu characters.</li>
+</ul>
+
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.0.1">v13.0.1</a> <span class="releaseDate">2 Feb 2020</span></h3>
+<ul>Bug fixes:
+	<li>Setting health works properly again.</li>
+	<li>Health refills no longer flash the HUD.</li>
+	<li>Fixed Lanmo cycles. Probably</li>
+	<li>Fixed file select E.</li>
+	<li>Fixed segment timer.</li>
+</ul>
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/13.0.0">v13</a> <span class="releaseDate">22 Jan 2020</span></h3>
+<ul>
+	<li>Several features have been adjusted to persist across practice hack updates (assuming you use the same file name). Please hold <span class="snesButton snesStart">Start</span>+<span class="snesButton snesSelect">Select</span> on power-on the first time you use this update.</li>
+	<li>Cycle Control™ - made a number of features' lag contribution consistent, even when they're disabled.
+		<ul>The following features have Cycle Control™:
+			<li>Input display</li>
+			<li>Room timer</li>
+			<li>Lag timer</li>
+			<li>Idle frames</li>
+			<li>Segment timer</li>
+			<li>Coordinates</li>
+			<li>Quick warp indicator</li>
+		</ul>
+	</li>
+	<li>HUD Extras:
+		<ul>
+			<li>New arbitrary RAM watch with the following options:
+				<ul>
+					<li>Subpixels</li>
+					<li>Spooky altitude</li>
+					<li>Arc variable</li>
+				</ul>
+			</li>
+			<li>Deleted subpixels in favor of the above</li>
+			<li>Heart lag spinner. If it's animated, there's heart lag.</li>
+		</ul>
+	</li>
+	<li>RNG control:
+		<ul>
+			<li>First Vitreous eyeball charge (slot positions shown in image with the option's description above)</li>
+		</ul>
+	</li>
+	<li>Timer improvements
+		<ul>
+		<li>The lag counter is now red, to distinguish it from idle frames and to make it scary looking.</li>
+			<li>Fast moving walls will now add in the difference they saved to room times.</li>
+		</ul>
+		<ul>New triggers:
+			<li>Getting keys</li>
+			<li>Bonking</li>
+			<li>Chest appearing</li>
+			<li>Bombing stuff</li>
+			<li>Moving walls start/end</li>
+		</ul>
+	</li>
+	<li>Sleek new input display that looks like a controller. Also way more efficient.</li>
+	<li>Digging game and Super Bomb timers are added back, just below the input display.</li>
+	<li>Bonking, etc. no longer leave weird camera offsets after preset loading.</li>
+	<li>Enemy HP display is more efficient in finding enemies, but also less picky.</li>
+	<li>Saved a few cycles on health display.</li>
+	<li>New icons for things in the practice menu.</li>
+	<li>When dealing with number field options, the d-pad now changes all values by 1. <span class="snesButton snesL">L</span> and <span class="snesButton snesR">R</span> can be used to cycle through larger amounts.</li>
+	<li>Removed the debug lag setting, since no one bothered with it.</li>
+	<li>Temporarily removed decimal coordinates.</li>
+	<li>Added SD2SNES debug version to site.</li>
+</ul>
+
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/12.1.0">v12.1</a> <span class="releaseDate">26 Oct 2019</span></h3>
+<ul>
+	<li>Updated the Emerald font.</li>
+	<li>Menu improvements
+		<ul>
+			<li>Added icons to menu items indicating what they do.</li>
+			<li>You can now use <span class="snesButton snesX">X</span> to clear menu options.</li>
+			<li>Documented all these features on the site.</li>
+		</ul>
+	</li>
+	<li>Bug fixes
+		<ul>
+			<li>Fixed graphical/memory issue with the Mirror toggle.</li>
+		</ul>
+	</li>
+</ul>
+
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/12.0.0">v12</a> <span class="releaseDate">24 Oct 2019</span></h3>
+<ul>
+	<li>Gameplay
+		<ul>
+			<li>Fast moving walls - thanks Pinkus</li>
+		</ul>
+	</li>
+	<li>Link state - New menu
+		<ul>
+			<li>Waterwalk</li>
+			<li>Activate superbunny</li>
+			<li>Activate Lonk</li>
+			<li>Finish mirror door</li>
+			<li>Statue drag</li>
+			<li>Armed EG<sup class="footnote">*</sup></li>
+			<li>EG strength<sup class="footnote">*</sup></li>
+		</ul>
+		<ul class="quietlist footlist">
+			<li><sup class="footnote">*</sup> Will these options ever catch a break? They keep moving around!</li>
+		</ul>
+	</li>
+	<li>HUD extras
+		<ul>
+			<li>DG watch - fully explained <b><a href="doorwatch.html">here</a></b></li>
+		</ul>
+	</li>
+	<li>Configuration
+		<ul>
+			<li>HUD font - I probably won't add more than 16</li>
+		</ul>
+	</li>
+	<li>Added sound effects to the practice menu to help indicate responsiveness.</li>
+	<li>Updated the Practice menu font a little.</li>
+	<li>Removed the Japanese text for "Pendants" and "Crystals", mostly to make room for new graphics.</li>
+	<li>Removed the red gloves and put boots back.</li>
+	<li>Lag changes:
+		<ul>
+			<li><b>Heart lag compensation has been lowered and may be <em>slightly</em> too little, giving 1 less lag frame than vanilla on occasion.</b> <i>Please help calibrate lag by reporting numbers in places.</i></li>
+			<li>Crystal cutscenes should no longer be extremely slow, thanks to Pinkus.</li>
+			<li>Slightly optimized input display. Hopefully lag when mashing text is a little closer to vanilla.</li>
+			<li>The floor number indicator on the HUD has had its cycles added back in, matching vanilla perfectly without writing to BG3.</li>
+		</ul>
+	</li>
+	<li>Fixed some HUD bugs:
+		<ul>
+			<li>Lanmolas cycle toggle no longer messes with graphics.</li>
+			<li>Removed heart refill animation without affecting lag.</li>
+		</ul>
+	</li>
+</ul>
+
+
+<h3><a href="https://github.com/spannerisms/lttphack/releases/tag/11.0.0">v11</a> <span class="releaseDate">12 Oct 2019</span></h3>
+<ul>
+	<li>Under new management. General maintaining of the practice hack has been outsourced to the Americas.</li>
+	<li>A handful of menu items were moved around to keep similar options together.</li>
+	<li>Presets
+		<ul>
+			<li>All Dungeons preset (thanks to JoshRTA)</li>
+		</ul>
+	</li>
+	<li>Game state
+		<ul>
+			<li>Full dungeon room resets</li>
+			<li>World state toggle</li>
+			<li>Crystal switch toggle</li>
+			<li>EG strength - renamed and added EG 0</li>
+		</ul>
+	</li>
+	<li>Gameplay
+		<ul>
+			<li>Skip Triforce</li>
+			<li>Sanc heart<sup class="footnote">*</sup></li>
+			<li>Disable beams</li>
+			<li>Visible probes</li>
+			<li>Lit rooms<sup class="footnote">*</sup> - also improved to work on current room</li>
+			<li>See bonk items</li>
+			<li>Disable BG1</li>
+			<li>Disable BG2</li>
+			<li>OoB Mode</li>
+		</ul>
+		<ul class="quietlist footlist">
+			<li><sup class="footnote">*</sup> Moved from another menu</li>
+		</ul>
+	</li>
+	<li>RNG control
+		<ul>
+			<li>Prize packs</li>
+		</ul>
+	</li>
+	<li>Shortcuts
+		<ul>
+			<li>LTTPHack menu is now set in stone</li>
+			<li>VRAM repair</li>
+			<li>Somaria pits</li>
+		</ul>
+	</li>
+	<li>HUD extras - renamed from "Counters"
+		<ul>
+			<li>Input display<sup class="footnote">‡</sup></li>
+			<li>Room time<sup class="footnote">†</sup></li>
+			<li>Lag counter<sup class="footnote">†</sup></li>
+			<li>Idle frames<sup class="footnote">†</sup></li>
+			<li>Segment time<sup class="footnote">†</sup></li>
+			<li>Lanmolas cycles<sup class="footnote">‡</sup></li>
+			<li>Lagometer<sup class="footnote">‡</sup></li>
+			<li>Enemy HP<sup class="footnote">‡</sup></li>
+			<li>Misslots RAM watch</li>
+		</ul>
+		<ul class="quietlist footlist">
+			<li><sup class="footnote">†</sup> Option already existed, but was renamed</li>
+			<li><sup class="footnote">‡</sup> Moved from "Features" menu</li>
+		</ul>
+	</li>
+	<li>Renamed "Features" menu to "Configuration"</li>
+	<li>Holding START+SELECT on boot will now reset the practice hack configuration as intended.</li>
+	<li>Various features are now disabled during map screens.</li>
+	<li>Fixed a bug that somehow only prevented the GT Wizzrobes 2 preset from loading.</li>
+	<li>Replaced broken graphics in the item menu with placeholder tiles.</li>
+	<li>General refactoring. Practice hack control should be smoother now.</li>
+</ul>
+
+
+
+<h3>v10</h3>
+<p class="warped"><span>This version was lost in a time </span><span class="morewarped">paradox.</span></p>
+
+
+<h3><a href="https://milde.no/lttp/lttphack_9.sfc">v9</a> - <small>08.02.2018</small></h3>
+<ul>
+	<li>
+		Presets
+		<ul>
+			<li>Added "Bosses" menu at the bottom.</li>
+			<li>Added "Ganon (full magic)" preset.</li>
+			<li>Fixed crystal state for Pokey 1.</li>
+			<li>Misspellings.</li>
+		</ul>
+	</li>
+	<li>
+		Item/Equipment
+		<ul>
+			<li>Better control over each bottle and its contents.</li>
+			<li>Set which big keys you have.</li>
+		</ul>
+	</li>
+	<li>
+		Game state
+		<ul>
+			<li>Skip text</li>
+			<li>Remove sprites</li>
+			<li>Boss defeated</li>
+			<li>Pendants and crystals</li>
+			<li>Game flags, Progress, Map indicator</li>
+			<li>Toggle armed/strong EG</li>
+		</ul>
+	</li>
+	<li>RNG control</li>
+	<li>Configurable controller shortcuts</li>
+	<li>
+		Features
+		<ul>
+			<li>Music</li>
+			<li>Idle frames</li>
+			<li>Lagometer</li>
+			<li>Made it possible to toggle on/off any of the counters.</li>
+			<li>Disabled the "Show enemy HP" by default.</li>
+		</ul>
+	</li>
+	<li>Persist some things through console power-off/on, resets or load state.</li>
+	<li>Comes in VanillaHUD and NoSaveState versions.</li>
+	<li>Fixed bug that set game phase to "Agahnim killed" when upgrading sword manually</li>
+	<li>Fixed bug that didn't update frame counters on mirror or underworld warps.</li>
+	<li>Set the SNES header ROM size to 2mb. This fixes an issue where the ROM would not load properly on some platforms (everdrive).</li>
+	<li>Show version in lttphack menu.</li>
+	<li>Instant lttphack menu (no waiting for menu to go up/down).</li>
+	<li>Improved transition detection (triggers on mirror/warp, reset counters when you start a new file)</li>
+</ul>
+
+
+
+<h3><a href="https://milde.no/lttp/lttphack_8.sfc">v8</a> - <small>24.10.2016</small></h3>
+<ul>
+	<li>Complete rewrite.</li>
+	<li>Presets.</li>
+	<li>I don't even remember anymore. This is the same version that's been around for a while, I just arbitrarily decided to remove "beta2" from the version.</li>
+</ul>
+
+
+
+<h3><a href="https://milde.no/lttp/lttphack_7.sfc">v7</a> - <small>15.12.2015</small></h3>
+<ul>
+	<li>
+		Made save/load state code more robust.
+		Screen should not get messed up anymore by loading during mirror warp.<br>
+		Big thanks to <em>total</em> for this fix.
+	</li>
+	<li>
+		Added a toggle for "always lit rooms".
+	</li>
+</ul>
+
+
+
+<h3><a href="https://milde.no/lttp/lttphack_6.sfc">v6</a> - <small>09.12.2015</small></h3>
+<ul>
+	<li>Fixed a bug that made the game crash when resetting segment counter.</li>
+</ul>
+
+
+
+<h3><a href="https://milde.no/lttp/lttphack_5.sfc">v5</a> - <small>08.12.2015</small></h3>
+<ul>
+	<li>Made Link get full equipment when using 3rd filename slot before starting a game.</li>
+	<li>
+		Added controller inputs for:
+		<ul>
+			<li>Upgrading sword, armor and shield.</li>
+			<li>Filling HP, magic, rupees and stuff.</li>
+			<li>Pause game and frame advance.</li>
+			<li>Displaying Link's coordinates.</li>
+		</ul>
+	</li>
+</ul>
+
+
+
+<h3><a href="https://milde.no/lttp/lttphack_4.sfc">v4</a> - <small>05.12.2015</small></h3>
+<ul>
+	<li>Fixed a bug where saving or loading would add a frame to your attempts in a room.</li>
+	<li>Added a "Full HP indicator".</li>
+</ul>
+
+
+
+<h3><a href="https://milde.no/lttp/lttphack_3.sfc">v3</a> - <small>02.12.2015</small></h3>
+<ul>
+	<li>Removed a bunch of lag. Should be less laggy than original ROM now.</li>
+	<li>Added "Quick Warp Indicator".</li>
+	<li>Better enemy detection.</li>
+	<li>Removed per-room Game Time counter.</li>
+	<li>Better B. Thanks, Audity.</li>
+</ul>
+
+
+
+<h3><a href="https://milde.no/lttp/lttphack_2.sfc">v2</a> - <small>30.11.2015</small></h3>
+<ul>
+	<li>Fixed issue where parts of segment timer was erased.</li>
+	<li>Fixed issue where counters didn't run during maiden crystal sequence.</li>
+	<li>Added better transition detection for boss victory &rarr; overworld.</li>
+</ul>
+
+
+
+<h3><a href="https://milde.no/lttp/lttphack_1.sfc">v1</a> - <small>29.11.2015</small></h3>
+<p>
+	<ul>
+		<li>Initial release</li>
+	</ul>
+</p>

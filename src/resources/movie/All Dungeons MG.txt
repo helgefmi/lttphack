@@ -1,0 +1,117 @@
+@ All Dungeons MG
+
+= Escape
+650 Link's Bed
+2230 Lamp
+2726 Outside
+4200 Uncle
+5143 Courtyard
+5728 Entrance
+6514 Stair Clip
+7388 Re-arm EG
+8670 Zelda's Cell
+10394 EG to Sanc
+13067 Pre Sanctuary
+13548 Sanctuary
+
+= Collection
+15028 Sanctuary to Bat Cave
+16661 Bat Cave Reload
+18138 Somaria Bridge
+19358 Beat the Fireball
+20635 Sluggulas
+21467 Torches Room STC
+22586 Getting Hook and Pearl
+
+= Eastern Palace
+24958 Link's House
+26205 Eastern Screen Wrapping
+27441 Spin Hookpush
+28738 Armos
+
+= Skull Woods
+31448 Outside Eastern
+32141 Sahasrahla's Hut
+34373 Link's House
+34801 Castle Screen
+35345 Hookpush to Skull
+36922 Dungeon Reload
+38560 Fire Rod STC
+41016 Open the Skull
+42026 Skull Entrance
+43500 Getting Item from Moth
+
+= Skull Woods Helmasaur
+46113 Skull Entrance (Mirror)
+47262 Mirror Made of Crystal
+48532 Skull Entrance (Helmasaur)
+49568 Helmasaur Weirdshot
+50137 Helmasaur
+
+= Palace of Darkness Blind
+55231 PoD Entrance
+55472 PoD Hookpush
+57203 Prison Misslottings
+58754 Attic Falling
+59703 Blind
+
+= Thieves' Town kholdstare
+65153 Outside Thieves'
+66045 Hookpush to Ice Rod
+66956 Ice Rod Room
+68127 Thieves' Entrance
+68744 Thieves' Ambush
+69724 Kholdstare Weirdshot
+70970 Kholdstare Hookpushes
+72278 Kholdstare
+
+= Ice Palace Agahnim 2
+76211 Ice Entrance (Crystal)
+77335 Ice Palace Fanfare Skip
+80546 Ice Entrance (Agahnim 2)
+80972 Agahnim 2 Misslottings
+82213 Agahnim 2
+
+= Hyrule Castle Lanmolas
+85186 Pyramid
+85658 Somaria Stair Clip
+86850 Dark Room Bonk
+87514 Lanmolas
+
+= Desert Palace Vitreous
+88992 Hookpush to Desert
+90077 Desert Hookpush
+91477 Slime Room Weirdshot
+92088 Vitreous Hookpush
+93001 Vitreous
+
+= Misery Mire Trinexx
+94951 Outside Mire
+96400 Mire 2
+97182 Main Hub
+98027 Trinexx STC Hookpush
+99256 Trinexx
+
+= Turtle Rock Arrghus
+104336 Turtle Rock Entrance
+105153 Pre Armos Room Weirdshot
+106296 Arrghus Death Hole
+108909 Arrghus
+
+= Tower of Hera
+113244 Swamp Crystal Hookpush
+118239 Old Man Cave
+118770 Entrance
+119974 Moldorm
+
+= Agahnim
+121721 Hera Entrance
+122078 Beetles
+122574 Yuzuhera
+123543 Arena Dash
+123841 Agahnim
+
+= Ganon
+129000 Pyramid
+
+= End

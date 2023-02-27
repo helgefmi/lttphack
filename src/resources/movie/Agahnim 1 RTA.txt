@@ -1,0 +1,12 @@
+@ Defeat Agahnim
+
+= Agahnim
+724 Link's Bed
+5288 Courtyard
+6044 Castle
+6445 Stair Clip
+7044 EG Trudge
+8021 Catwalk
+10552 Agahnim
+
+= End

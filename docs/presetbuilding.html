@@ -1,0 +1,71 @@
+---
+layout: practicehack
+title: LTTPHack - A Practice ROM for ALttP
+---
+<section id="presets">
+
+<h2>Expectations</h2>
+<p>For examples of preset definitions in the desired format, look at <a href="https://github.com/spannerisms/lttphack/tree/master/src/resources/movie">the repository's existing files</a>. The <code>preset_scraper.lua</code> script used to create preset data files can also be found here. To run this script, navigate to the Lua console under the Tools menu, then open the script from there. The script should not be run until a movie is playing. All files should be in the same directory, and within that directory should be a folder named <code>states</code>.</p>
+
+<h2>Recording</h2>
+<p>Create an emulator playback file in BizHawk 2.3+ using the vanilla JP1.0 ROM. You don't need to play perfectly, but play well enough that any preset built from the movie is useful for practice. Sloppy movement is fine, as long as Link's position for defined presets is useful. However, movies should still be reasonably good execution. Avoid taking unintended damage unless a trick is hard enough that every runner expects to take damage more often than not.</p>
+
+<p>I will not scrape any movie that takes around 30% longer than the world record (unless it is a very short category). Such long movies will need to be scraped by the submitter.</p>
+
+<h3>How to start a new movie</h3>
+<ol>
+	<li>Open the vanilla JP1.0 ROM in BizHawk.</li>
+	<li>Navigate to the File→Movie→Record Movie… option.</li>
+	<li>Be gamer</li>
+</ol>
+
+<h3>Tips for recording</h3>
+<ul>
+	<li>Enable the frame counter and other useful values in the View menu.</li>
+	<li>Save state often. BizHawk allows you to bind up to 10 quick states. It also includes support for named save states.</li>
+	<li>Take note of the frames you want to define presets at as they happen. Get Link into an appropriate position, pause the emulator, and look at the frame counter.</li>
+	<li>If you want to take a break, make a save state on the last frame you recorded. When you return, navigate to File→Movie→Recent and open your movie. Disable Read-only mode in the Movie submenu. Load the save state you created at the end of the movie.</li>
+	<li>Stop input for a few frames where you plan to make presets on the overworld. Do this to make sure that standing still at that position won't trigger a transition onto another screen or into the underworld.</li>
+	<li>Use RAM Watch to look at Link's coordinates for determining good preset definitions. This feature can be found at Tools→RAM Watch. Create a new watch for address <code>0x000020</code> that is 1 byte, displayed in HEX, in the WRAM Memory Domain for Link's Y coordinate. Do the same for address <code>0x000022</code> to get Link's X coordinate.</li>
+		<ul>Ideal coordinate stopping points for underworld:
+			<li>North transitions: Y = 14</li>
+			<li>South transitions: Y = E1</li>
+			<li>East transitions: X = E8</li>
+			<li>West transitions: Y = 0A</li>
+		</ul>
+		<ul>Ideal coordinate stopping points for overworld:
+			<li>North transitions: Y = 05</li>
+			<li>South transitions: Y = E2</li>
+			<li>East transitions: X = E6</li>
+			<li>West transitions: Y = 08</li>
+			<li>Underworld entrance: Y = xA</li>
+		</ul>
+	</li>
+</ul>
+
+<h2>Defining presets</h2>
+<ul>
+	<li>Create a <code>.txt</code> file named <code>&lt;category&gt;.txt</code>.</li>
+	<li>At the top of the file, put an "at" symbol (@), followed by a space, followed by the name of the category as it should be displayed.</li>
+	<li>To define a new segment, enter a new line that starts with an equals sign (=), followed by a space, followed by the name of the segment as it should be displayed in the menu.</li>
+	<li>To define a preset in a segment, start the line with the frame of the movie to capture data from, followed by a space, followed by the name of the preset as it should be displayed in the menu.</li>
+	<li>Choose frames that precede the next scene of action. For example, if the preset is for a kill room, define the frame as one where Link is in the door in the room before it. Don't pick frames that are in the middle of combat, performing a transition, or using an interface. The gamer should have control of Link once the preset is loaded, so the preset should be defined as a frame with control.</li>
+	<li>If you have specific concerns for what data gets scraped or presets you are unsure will be created properly, put a comment by adding a pound sign (#) followed by the comment at the end of the line. Everything that follows the pound sign will be ignored.</li>
+	<li>After the last segment, create a segment named "End"; i.e. put a new line containing <code>=&nbsp;End</code>.</li>
+	<li>After you have defined the end, put one more new line. This is required due to a bug I don't feel like fixing.</li>
+</ul>
+
+<h2>Submitting</h2>
+<p>Ideally, you will run the scraping script yourself. If you do that, be sure to include a folder in the same directory as the script named <code>states</code>. The script will automatically create a save state 60 frames before every preset. The script will also create a file named <code>cm_presets_&lt;category&gt;.asm</code>. Ideally, you package this file along with the preset definitions and every save state in a single <code>.zip</code> folder.</p>
+
+<p>After submission and some initial clean up, I will send you a <code>.bps</code> file for you to patch yourself and test the presets.</p>
+
+<p>When completed, all savestates generated by the final run of the script will be archived in <a href="https://github.com/spannerisms/PracticeStates">a separate repository</a>.</p>
+
+<h2>Styling</h2>
+<ul>
+	<li>Category, segment, and preset names should be no longer than 25 characters and are limited to alphanumeric characters and the following symbols: <code>% $ . - , ? ! # ( ) '</code></li>
+	<li>Category, segment, and preset names should be title case. Every word should be capitalized unless it is a conjunction (e.g. and, but, or), a preposition (e.g. at, of, to), or an article adjective (e.g. a, an, the).</li>
+	<li>Category names should match the common name for the category. Full abbreviations should not be used except for rulesets. For example, the category name "All Dungeons" should be used instead of "AD", but the ruleset should be "RMG" instead of "Restricted Major Glitches".</li>
+	<li>I retain final authority on any name used and reserve the right to change them as I see fit.</li>
+</ul>

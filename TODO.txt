@@ -1,68 +1,40 @@
 Big stuff
 ----------
 
-- Movies
+trigger points to update timers:
+	at exact X,Y
+	when X is crossed
+	when Y is crossed
+	when X and Y are both crossed
 
-- Ghost Link
+keep track of velocity via link's coordinates on SA-1
+
+
+last frame of crystal fade = bad savestate
+
+submenu for flags for important OW overlays (LJ, HC, Pyramid)
+
+dig game RNG in safeties? (random, 25-38 guaranteed) hook after RNG call for consistency
+chest game RNG in safeties (random, guaranteed) hook after RNG call
+
+fix mushroom gfx for lost woods
+
+Get good entrance caching for every EG 2 room in a table
+replace eg caching in presets with a routine call/preset command
+update preset script
+use bit 7 to indicate left/right half for double entrance rooms
+
+aga 2 rng
+	lui: agah2 submenu -> set positions for each of the agahs for cycles 1, 2, 3 and 4+
+
+
+======== MINIGAMES TODO ========
 
 - Counters (spec below)
 
-- Rewrite sd2snes save/load state code
-
 - Mashing & Pumping mini-game
 
-- Fix lag:
-	debug hacks:
-		A = $10
-		B = $00
-		C = $18
-		D = $08
 
-- Refactoring gamemode (gamemode2.asm) to be more intuitive
-
-Other stuff
-------------
-
-- Preset for double reddies
-
-- Show kill counter for Agahnim 2
-
-- Feature: Disable text? Like rando.
-
-- Faster travel speed via shortcut
-
-- Better frame advance mode. Perhaps only pause while holding L in, and if you press R while holding L it advances the game one frame. Would be good for clip learning. Maybe stop timer during this.
-
-- Show sprite hitboxes in general?
-
-- Show intermediate room time in more places (bonk, walk up stairs)
-
-- See if I can make the menu prettier (let users change color?)
-
-- Colorblind options?
-
-- Frame counter for actions, like swinging your sword, throwing boomerang, enemy movement startup times. Startup/active/recovery.
-
-- Room frame counts that show frame-pixel movement tallies. Would basically be to contrast how many nudge/slowdown/movement frames were lost that is pulled away from room overall time count and lag frames.
-
-- Active movement speed counter. Like the above kinda but shows real time how fast you're going. Would help for things like understanding swim speeds or hidden bastard/rail type deals.
-
-- A way to change/preset your antennae value for spoopy inputs presently lengthy. To easily engage in mirerod entanglements.
-
-- hey pinkus! Thanks for working on the LTTP practice hack. I have a feature request. I'm still early enough in my NMG play that i get the powder. It's annoying to have to turn on for every single preset, I imagine in the same way turning on the sanc heart was annoying. Can we get a setting to have powder on for the presets? (medium priority)
-
-- bug with presets and sq
-
-Possible toggles/options
--------------------------
-- Follower $7EF3CC
-
-
-Low priority
--------------
-- Make the menu redraw less often, just for practicality's sake and less disruptive fblank
-
-======== MINIGAMES TODO ========
 
 - Mini games (menu)
 
@@ -94,125 +66,3 @@ Low priority
         - frames where diagonal is held
         - # of pixel boost chances per second on average
             * for air and for wall, according to my hypothesis
-
-
-======== MOVIES TODO ========
-
-- Movies (menu)
-
-    [ Options ]
-        Record: [Disabled, Movies, Ghost Link, Both]
-        HUD: [No, Record, Play, Both]
-
-    [ Save current movie ]
-        - Should be put at the top, pushing everything down.
-
-    ( List of movies )
-        - A to play movie
-        - Y to play ghost link
-        - X to delete
-        - Could use preset names
-        - Infinite scroll
-
-- Stop movie before saving movie from menu
-
-- Disable SD2SNES save/load state 
-
-- Disable movie record on Poverty states
-
-- During playback:
-    * L = Pause playback when held
-    * L + tap R = Frame advance once.
-    * L + hold R = Slow motion (after 30f of holding)
-    * X = Stop movie (gives control back to player)
-    * A = Replay movie from start
-
-
-======== GHOST LINK SPEC ========
-
-- Record type
-    * 1 = movie only
-    * 2 = ghost only
-    * 3 = both
-    Needs to be stored in Movies meta.
-
-- Depending on record type, we populate !ram_movie differently
-    * Ghost format:
-        ttffffff ffffffff yyyyyyyy yyyyyyyy xxxxxxxx xxxxxxxx ddaaaaaa
-        - t = 0
-        - f = frames
-        - y = y coord
-        - x = x coord
-        - d = direction
-        - a = animation data (dashing, picking up pot, holding wall, shooting bow, idk.. probably need more bytes if we want it to actually look good too)
-
-    * Movie format:
-        ttffffff ffffffff BYSTudlr AXLR0000
-        - t = 1
-        - f = frames of inputs held
-        - rest = which keys are held
-
-    * RNG format:
-        tt000000 nnnnnnnn
-        - t = 2
-        - n = rng value
-
-- When replaying, we need to either select Movie or Ghost.
-    * Look for highest two bits to find out if it's a Ghost entry, Movie entry or RNG entry.
-      Jump over stuff we should jump over.
-      Track RNG index separately and call `LDA #!ENTRY_RNG : LDX !ram_rng_index : JSR find_next_entry`.
-
-
-======== COUNTERS SPEC ========
-
-DNGSCR  ☑  hex1  0000A0  #
-OWSCR   ☑  hex1  00008A  #
-HSCRLL  ▢  hex2  0000E2  #
-VSCRLL  ▢  hex2  0000E8  #
-ROMDTA  ☑  hex1  000403  #
-LAYER   ▢  dec1  0000EE  #
-GNOCNT  ☑  dec2  000123  #
-ALTITU  ☑  dec2  0002A2  #
-PODSCR  ☑  dec2  00F0D4  #
-
-ADD NEW
-
---------------------------
-
-^ and v = Normal
-< and > = Select what to edit
-A = Edit
-X = Remove line
-
-☑ & ▢ = enabled/disabled
-# = set position (use dpad to find position, A/Start to commit, B/X to cancel, L/R to change colors?)
-
---------------------------
-
-enum Type {
-    dec1,
-    dec2,
-    dec4,
-    hex1,
-    hex2,
-    hex4
-}
-
-struct {
-    char name[6];
-    bool enabled;
-    Type type;
-    uint24 address;
-    uint16 position;
-    uint8 palette;
-} counters[]
-
----------------------------
-
-1. make linked list of counter-ouput
-   struct {
-      uint16 position;
-      uint8 palette;
-      char tiles[10];
-   } buffer[];
-2. blit it to screen after vblank hud update

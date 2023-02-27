@@ -1,17 +1,19 @@
-table.romtable th {
-	width: 25%;
-	vertical-align: middle;
-	text-align: right;
+div.content {
+	background-color: #C8C8C8;
 }
 
-table.romtable caption {
-	caption-side: top;
-	text-align: center;
+footer {
+	position: fixed;
+	bottom: 0;
+	margin-top: auto;
 }
 
-table.romtable caption:last-of-type {
-	caption-side: bottom;
-	text-align: center;
+img {
+	max-width: 100%;
+}
+
+img.helpvis {
+	background: #C3C3C3;
 }
 
 strong.lag {
@@ -28,88 +30,6 @@ strong.lag b:before {
 	content: "\026A0";
 }
 
-h3 {
-	margin-top: 20px;
-	border-bottom: 2px solid #505050;
-}
-
-div.center {
-	text-align: center;
-}
-
-img {
-	max-width: 100%;
-}
-
-img.helpvis {
-	background: #C3C3C3;
-}
-
-dt:after {
-	content: ":";
-}
-
-strong.lag:before,
-dt:before {
-	content: " ";
-	display: block;
-}
-
-dd {
-	padding-left: 60px;
-}
-
-dt {
-	padding-left: 30px;
-}
-
-dl.subDefinition {
-	padding-left: 10px;
-	font-size: 100%;
-}
-
-dl.subDefinition dt,
-dl.inlineDefinition:not(.dinkyList) dt {
-	display: contents;
-	font-size:100%;
-}
-
-dl.inlineDefinition.dinkyList {
-	padding-left:30px;
-}
-
-dl.subDefinition dt,
-dl.inlineDefinition.dinkyList dt {
-	display: contents;
-	padding-left:30px;
-}
-
-dl.subDefinition dd,
-dl.inlineDefinition dd {
-	display: inline;
-	padding-left: 5px;
-}
-
-dl.inlineDefinition dd ol {
-	display: inline;
-	padding-left: 0;
-}
-
-dl.inlineDefinition dd li {
-	display: inline
-}
-
-dl.inlineDefinition dd ol>li:not(:last-child):after {
-	content: ",";
-}
-
-em.SD2SNES {
-	font-weight: 600;
-	font-size: 80%;
-	color: #555555;
-	display:inline-block;
-}
-
 p.warped {
 	transform: skewX(45deg) rotate(-3deg) translateY(-19px);
 	font-family: impact;
@@ -120,6 +40,7 @@ p.warped {
 p.warped span{
 	display: inline-block;
 }
+
 span.morewarped {
 	transform: skewX(12deg) rotate(30deg) translate(05px,15px);
 }
@@ -145,87 +66,6 @@ span.morewarped::selection {
 	content: 'Attack on ';
 }
 
-header {
-	padding: 154px 0 100px;
-}
-
-@media (min-width: 992px) {
-	header {
-		padding: 156px 0 100px;
-	}
-}
-
-section {
-	padding: 150px 0;
-}
-
-.dl-tbl th {
-	background-color: #fafafa;
-}
-
-header {
-	background-color: #4A545F;
-}
-
-.nav-dropdown:hover {
-	background-color: #4A545F;	
-}
-
-.nav-dropdown ul {
-	display: none;
-	position: absolute;
-	background-color: #4A545F;
-	padding: 10px 40px 10px 10px;
-	font-size: 90%;
-}
-
-.nav-dropdown li a {
-	color: rgba(255,255,255,.5);
-	text-decoration: none
-}
-
-.nav-dropdown li a:hover {
-	color: white;
-}
-
-.nav-dropdown li {
-	list-style: none;
-	padding-left: 0;
-	margin-left: 0;
-}
-
-.nav-dropdown:hover ul {
-	display: block;
-}
-
-.bg-dark a {
-	color: #A0B6CE;
-}
-
-h2 {
-	font-size: 2.5rem;
-}
-
-ul.quietlist {
-	list-style: none;
-}
-
-sup.footnote {
-	font-size: 100%;
-	font-weight: 600;
-	font-style: italic;
-	top: -.2em;
-	left: .1em;
-}
-
-li > sup.footnote {
-	opacity: .6;
-}
-
-li:hover > sup.footnote {
-	opacity: 1.0
-}
-
 span.dgIcon {
 	background-image: url("doorwatchicons.png");
 	background-color: #AEAEAE;
@@ -235,6 +75,7 @@ span.dgIcon {
 	display: inline-block;
 	margin-right: .3em;
 	margin-left: .5px;
+	image-rendering: crisp-edges;
 	image-rendering: pixelated;
 }
 
@@ -365,81 +206,47 @@ span.dgIcon.dgYbottom {
 	background-position: -192px 0px;
 }
 
-code.size16 {
-	font-family: inherit;
-	color: #777777;
-	font-size: 80%;
-	vertical-align: bottom;
-}
-
-code.wram {
-	color: deeppink;
-}
-
-code.bank,
-code.rom {
-	color: royalblue;
-}
-
-code.value {
-	color: orangered;
-}
-
-table.ramTable th {
-	text-align: center;
-	background: #F4F4F4;
-}
-
-table.ramTable th,
-table.ramTable td {
-	padding: 1px 14px;
-	border: 1px solid;
-}
-
-table.flagtable tr:nth-child(even) {
-	background: #FDF;
-}
-
-table.flagtable tr:nth-child(odd):not(:nth-child(1)) {
-	background: #ECF;
-}
-
-table.flagtable th:not(:empty) {
-	padding-left: 10px;
-	background: #ECE;
-	border-right: 1px solid #D8D;
-	border-bottom: 1px solid #D8D;
-}
-
-table.flagtable td:not(:empty) {
-	border-right: 1px solid #D8D;
-}
-
-table.flagtable tr > td:nth-child(3),
-table.flagtable tr > td:nth-child(4),
-table.flagtable tr > td:nth-child(7),
-table.flagtable tr > td:nth-child(8) {
-	text-align: right;
-}
-
-table.flagtable tr > td:nth-child(1),
-table.flagtable tr > td:nth-child(5) {
+table.ctrltable th:first-child {
 	text-align: center;
 }
 
-table.flagtable tr > td:nth-child(2),
-table.flagtable tr > td:nth-child(6) {
-	font-size: 87%;
+span.menuIcon {
+	background-image: url("menuicons.png");
+	outline: 2px solid #282828;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	margin: .3em 0 .1em;
+	image-rendering: crisp-edges;
+	image-rendering: pixelated;
 }
 
-table.flagtable th,
-table.flagtable td {
-	padding-right: 5px;
-	padding-left: 5px;
+span.menuIcon.menuSubmenu {
+	background-position: 0px 0px
 }
 
-th.dividerColumn {
-	padding: 0px 10px;
+span.menuIcon.menuCommand {
+	background-position: -16px 0px
+}
+
+span.menuIcon.menuToggle {
+	background-position: -32px 0px
+}
+
+span.menuIcon.menuSelection {
+	background-position: -48px 0px
+}
+
+span.menuIcon.menuNumfield {
+	background-position: -64px 0px
+}
+
+span.menuIcon.menuPreset {
+	background-position: -80px 0px
+}
+
+span.menuIcon.menuBinding {
+	background-position: -96px 0px
 }
 
 ul.fontList > li > span.fontName {
@@ -452,13 +259,15 @@ ul.fontList > li > span.fontPreview {
 	background-image: url("fontpreviews.png");
 	background-color: #489848;
 	outline: 2px solid #489848;
-	width: 256;
+	width: 256px;
 	height: 16px;
 	vertical-align: sub;
+	image-rendering: crisp-edges;
 	image-rendering: pixelated;
 }
 
 ul.fontList > li:hover > span.fontName {
+	list-style: none;
 	font-weight: bold;
 }
 
@@ -530,4 +339,310 @@ span.fontPreview.font15 {
 
 span.fontPreview.font16 {
 	background-position: 0px -240px;
+}
+
+span.fontPreview.font17 {
+	background-position: 0px -256px;
+}
+
+span.fontPreview.font18 {
+	background-position: 0px -272px;
+}
+
+span.fontPreview.font19 {
+	background-position: 0px -288px;
+}
+
+span.fontPreview.font20 {
+	background-position: 0px -304px;
+}
+
+span.fontPreview.font21 {
+	background-position: 0px -320px;
+}
+
+span.fontPreview.font22 {
+	background-position: 0px -336px;
+}
+
+span.fontPreview.font23 {
+	background-position: 0px -352px;
+}
+
+span.fontPreview.font24 {
+	background-position: 0px -368px;
+}
+
+span.fontPreview.font25 {
+	background-position: 0px -384px;
+}
+
+span.fontPreview.font26 {
+	background-position: 0px -400px;
+}
+
+span.snesButton {
+	font-weight: 600;
+	font-variant: small-caps;
+	display: inline-block;
+	color: white;
+	border: 2px solid;
+	border-left: none;
+	border-top: none;
+	border-radius: 20px;
+	text-transform: capitalize;
+	text-align: center;
+}
+
+span.snesButton.snesDPAD {
+	border-radius: 0;
+	width: 17px;
+	height: 17px;
+	padding-bottom: 1px;
+	background: #595E62;
+	border-color: #2B3033;
+}
+
+span.snesButton.snesA,
+span.snesButton.snesB,
+span.snesButton.snesX,
+span.snesButton.snesY {
+	width: 22px;
+	height: 20px;
+	padding: 3px 1px 0;
+}
+
+span.snesButton.snesA {
+	background: #DA3948;
+	border-color: #610102;
+}
+
+span.snesButton.snesB {
+	background: #FEBB52;
+	border-color: #3E0A00;
+}
+
+span.snesButton.snesX {
+	background: #00489F;
+	border-color: #000A35;
+}
+
+span.snesButton.snesY {
+	background: #00916A;
+	border-color: #00331B;
+}
+
+span.snesButton.snesL,
+span.snesButton.snesR {
+	width: 40px;
+	height: 16px;
+	padding-bottom: 1px;
+	font-weight: bold;
+	border-color: #8D8D8D;
+	background: #B8B8A8;
+}
+
+span.snesButton.snesL {
+	border-radius: 12px 0 0 0;
+}
+
+span.snesButton.snesR {
+	border-radius: 0 12px 0 0;
+}
+
+span.snesButton.snesStart,
+span.snesButton.snesSelect {
+	width: 50px;
+	height: 12px;
+	padding-bottom: 4px;
+	background: #4B545B;
+	border-color: #050704;
+	font-variant: small-caps;
+}
+
+span.releaseDate {
+	font-variant: small-caps;
+	font-size: 70%;
+}
+
+sup.badge {
+	font-weight: bold;
+	font-family: consolas;
+	color: white;
+	border-radius: 6px;
+	padding: 0 6px;
+}
+
+sup.sa1-badge {
+	background-color: #0089FF;
+	border: 1px solid #562AB3;
+}
+
+sup.lag-badge {
+	background-color: #FF8900;
+	border: 1px solid #B32A56;
+}
+
+ul, dl {
+	margin-block-start: 0;
+}
+
+dd {
+	padding-left: 30px;
+	margin-inline-start: 0;
+	margin-block-start: 0;
+}
+
+dt {
+	padding-left: 10px;
+}
+
+dt:after {
+	content: ":";
+}
+
+strong.lag:before,
+dt:not(:first-child):before {
+	content: " ";
+	display: block;
+}
+
+dt:first-child:before {
+	content: " ";
+	display: block;
+	margin-top: -1.2em;
+}
+
+dt:first-child:before {
+	height: 0;
+	line-height: 0;
+}
+
+dl:not(.dinkyList):not(.subDefinition) > dt:before {
+	margin-top: 15px;
+}
+
+
+dl.subDefinition {
+	padding-left: 10px;
+	font-size: 100%;
+}
+
+dl.subDefinition dt,
+dl.inlineDefinition:not(.dinkyList) dt {
+	display: contents;
+	font-size: 100%;
+}
+
+dl.inlineDefinition.dinkyList {
+	padding-left: 30px;
+}
+
+dl.subDefinition dt,
+dl.inlineDefinition.dinkyList dt {
+	display: inline;
+	padding-left: 30px;
+}
+
+dl.subDefinition dd,
+dl.inlineDefinition dd {
+	display: inline;
+	padding-left: 5px;
+}
+
+dl.inlineDefinition dd ol {
+	display: inline;
+	padding-left: 0;
+}
+
+dl.inlineDefinition dd li {
+	display: inline
+}
+
+dl.inlineDefinition dd ol>li:not(:last-child):after {
+	content: ",";
+}
+
+strong.lag {
+	color: red;
+	font-weight: normal;
+	border-bottom: 1px dashed red;
+}
+
+strong.lag b {
+	font-size: 80%;
+}
+
+strong.lag b:before {
+	content: "\026A0";
+}
+
+ul.colorList {
+	list-style: none;
+}
+
+ul.colorList > li.colorDefine > .colorBlock {
+	display: inline-block;
+	padding: 0 4px;
+	width: 90px;
+	text-align: center;
+	height: 18px;
+	margin: 1px 3px 1px 0;
+}
+
+/**************************************
+
+**************************************/
+div#patcher-app {
+	margin: auto;
+	width: 40%;
+	min-width: 300px;
+	font-size: .9em;
+	background: #EEEEFF;
+	border: 3px solid #A0A0FF;
+	border-radius: 20px 20px 0 0;
+}
+
+div#patcher-app div.patch-header {
+	text-align: center;
+	margin: auto;
+	background: #CCCCFF;
+	font-weight: bold;
+	font-size: 1.4em;
+	padding: 7px 0;
+	border-radius: 16px 16px 0 0;
+}
+
+div#patcher-app div.patch-body {
+	padding: 13px;
+}
+
+div#patcher-app div.patch-body > p {
+	text-align: center;
+	margin: 0 2px 9px 2px;
+}
+
+div#patcher-app div.patch-body > div.custom-file {
+	width: 70%;
+	margin: 10px auto;
+}
+
+div#patcher-app div.patch-body > div.custom-file input {
+	   cursor: pointer;
+}
+
+div#patcher-app div.patch-body > button {
+	display: block;
+	margin: auto;
+	width: 70%
+}
+
+div#patcher-app div.patch-body div.choosev {
+	margin: 0 auto 10px;
+	width: 70%;
+	text-align: center;
+}
+
+div#patcher-app div.patch-body div.choosev label {
+	font-weight: bold;
 }

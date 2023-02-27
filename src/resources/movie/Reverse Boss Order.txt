@@ -1,0 +1,140 @@
+@ Reverse Boss Order
+
+= Escape
+650 Link's Bed
+2230 Lamp
+2726 Outside
+4200 Uncle
+5143 Courtyard
+5728 Entrance
+6514 Stair Clip
+7388 Re-arm EG
+8670 Zelda's Cell
+10394 EG to Sanc
+12240 Dark Room Crossing
+13428 Before Cutscene
+
+= Collection
+14871 After Cutscene
+16257 Bootless DMA
+17208 Camera Fixing
+19954 Death Mountain
+21413 Sanctuary
+24125 Bat Cave Teleport
+25620 Somaria Bridge
+26834 Beat the Fireball
+28146 Sluggulas
+29058 Torches Room STC
+30219 Getting Hook and Pearl
+32171 After Moonpearl
+32924 Back in the Right Screen
+35030 Fire Rod Weirldshot
+36291 Skull Quickwarp
+37154 Leaving Skull
+39308 Frog Rescue
+40819 Getting Tempered
+44472 Kak Town Hooks
+45009 Hookshop to Ice Rod
+
+= Ganon
+46820 Link's House
+47316 Wish Enemy Prize
+48184 Ganon Pot
+48919 Ganon
+
+= Agahnim 2
+55598 After Ganon
+55989 Somaria Stair Clip
+57210 EG Under Beamos
+58122 Spin STC
+59180 Laser Entrance
+59706 Lava Dive
+60799 Agahnim 2
+
+= Trinexx
+64001 Pyramid
+64534 Castle Hookpush
+67549 Trinexx Weirdshot
+69574 Trinexx
+
+= Vitreous
+72162 After Trinexx
+72533 Dark Room
+73121 Desert Weirdshot
+73930 Desert Hookpush
+74954 Slime Room Weirdshot
+75770 Vitreous Stuckhook
+76804 Vitreous
+
+= Knoldstare
+79068 Outside Mire
+79544 Link's House
+80967 Eastern Screen Wrapping
+82081 Eastern Entrance
+82677 Cannonballs
+85878 Knoldstare Weirdshot
+86700 Knoldstare Hookpushes
+88439 Knoldstare
+
+= Blind
+90102 Outside Ice
+90703 Fountain Hookpush
+93301 Ice Entrance
+94374 GT Hookpush
+96016 Thieves' Weirdshot
+96565 Prison Hookpushes
+98478 Attic Falling
+99460 Blind
+
+= Mothula
+104672 Outside Thieves' 1
+105846 Thieves' Fanfare Skip
+108747 Outside Thieves' 2
+109395 Hookpush to Skull
+110379 Skull Entrance
+111933 Getting Item from Moth
+
+= Arrghus
+114035 Outside Skull
+115566 Mire Entrance Weirdshot
+117431 Mire Entrance Hookpush
+119128 Mire Fanfare Skip
+121918 Turtle Hookpush
+122737 Pre Armos Room Weirdshot
+124659 Arrghus Death Hole
+126274 Arrghus
+
+= Helmasaur
+130608 Swamp Crystal Hookpush
+135079 Outside Skull
+135930 Helmasaur Misslottings
+136991 Helmasaur
+
+= Agahnim
+142275 PoD Crystal Hookpush
+142759 PoD Fanfare Skip
+146394 Old Man Cave
+147329 Beetles
+147818 Yuzuhera
+148888 Arena Dash
+149177 Agahnim
+
+= Moldorm
+154341 Pyramid
+155170 Old Man Cave
+155779 Entrance
+156983 Moldorm
+
+= Lanmolas
+158697 Outside Hera
+159473 Sanctuary EG0 Jumps
+160628 Lanmolas
+
+= Triforce
+162344 Link's House
+163273 Eastern Screen Wrapping
+164213 Armos Hookpush
+164951 Armos
+166572 Sanctuary Stuckhook
+
+= End
