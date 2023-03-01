@@ -212,7 +212,6 @@ DMA_BWRAMSRAM:
 	LDA.b #$41 : STA.w $4354
 
 	LDX.w #$0000
-	TXA : XBA ; top byte 0
 	STX.w $4352 ; bottom of bank
 
 .next
@@ -229,10 +228,11 @@ DMA_BWRAMSRAM:
 
 	LDA.b #$20 : STA.w $420B
 
-	TXA
-	CLC
-	ADC.b #$05
-	TAX
+	INX
+	INX
+	INX
+	INX
+	INX
 	BRA .next
 
 ; need a completely separate space for this shit
@@ -453,7 +453,6 @@ Shortcut_FillEverything:
 
 	PEA.w $0000
 	PLD
-
 
 	PHB
 
@@ -760,25 +759,25 @@ QuickSwap:
 	PHX
 	LDX.w $0202 : BEQ .done_X
 
-	CMP.b #$30 : BEQ .swap
+;	CMP.b #$30 : BEQ .swap
 	BIT.b #$10 : BEQ .no_r_press
 
-	LDA.b $F2 : BIT.b #$20 : BNE .swap_from_last_r
-	STZ.w SA1IRAM.QuickSwapLR
+	LDA.b $F2 : BIT.b #$20 : BNE .swap ; .swap_from_last_r
+;	STZ.w SA1IRAM.QuickSwapLR
 .find_r
 	JSR .find_next
 	BRA .store
 
 .no_r_press
-	LDA.b $F2 : BIT.b #$10 : BNE .swap_from_last_l
-	STZ.w SA1IRAM.QuickSwapLR
+	LDA.b $F2 : BIT.b #$10 : BNE .swap ; .swap_from_last_l
+;	STZ.w SA1IRAM.QuickSwapLR
 .find_l
 	JSR .find_prev
 	BRA .store
 
 .swap
 	CPX.b #$10 : BNE .store ; not bottles
-	STX.w SA1IRAM.QuickSwapLR
+;	STX.w SA1IRAM.QuickSwapLR
 
 	JSR FindNextBottle
 	BRA .click

@@ -266,16 +266,54 @@ RecoverFromCorruption:
 	CMP.w #$FFFF
 	BEQ .end
 
-	TXA
+	STA.b $00
+
+	SEP #$20
+
+	AND.b #$FC
+	STA.b $08
+
+	INY
+	INY
+
+	XBA
+	LSR
+	LSR
+	LSR
+	ROR.b $08
+	STA.b $09
+
+	INY
+	STY.b $BA
+
+	REP #$20
+
+	PHX
+
+	LDA.w #$0004
+	STA.b $0A
+
+.next_super
+	LDX.b $08
+
+	JSR .check_one_pit
+	JSR .check_one_pit
+	JSR .check_one_pit
+	JSR .check_one_pit
+
+	LDA.b $08
+	ADC.w #$0080
+	STA.b $08
+
+	DEC.b $0A
+	BNE .next_super
+
+	PLA
 	ADC.w #$0030
 	CMP.w #$4200-$1100
 	BCS .really_bad
 
 	TAX
-
-	INY
-	INY
-	INY
 	BRA .next
 
 .end
@@ -283,6 +321,41 @@ RecoverFromCorruption:
 
 .really_bad
 	JML CorruptionCrash
+
+.check_one_pit
+	PHX
+
+	TXA
+	LSR
+	PHA
+
+	LDA.l $7E2000,X
+	AND.w #$03FE
+
+	PLX
+
+	; high byte will already be 00 for floors
+	CMP.w #$00EE
+	BEQ .floor
+
+	CMP.w #$00FE
+	BEQ .floor
+
+	LDA.w #$2000 ; put value in high byte, so it's XBA'd
+	; which makes the whole thing easier
+
+.floor
+	SEP #$20
+	XBA
+	STA.l $7F2000,X
+
+	REP #$21
+
+	PLX
+	INX
+	INX
+
+	RTS
 
 ;===================================================================================================
 

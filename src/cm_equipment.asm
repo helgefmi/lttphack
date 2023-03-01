@@ -102,7 +102,9 @@ EQUIPMENT_SUBMENU:
 	%list_item("Titan's mitt")
 
 ;===================================================================================================
-%toggle_long_func("Boots", $7EF355, this)
+%toggle_long_func("Boots", $7EF355, SetBootsFlag)
+
+#SetBootsFlag:
 	LDA.l $7EF355
 	LSR
 
@@ -117,7 +119,9 @@ EQUIPMENT_SUBMENU:
 	RTL
 
 ;===================================================================================================
-%toggle_long_func("Flippers", $7EF356, this)
+%toggle_long_func("Flippers", $7EF356, SetFlippersFlag)
+
+#SetFlippersFlag:
 	LDA.l $7EF356
 	LSR
 

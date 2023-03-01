@@ -395,6 +395,7 @@ CM_MenuSFX:
 ;===================================================================================================
 
 CM_BackToTipTop:
+	JSL CM_MenuSFX_submenuback
 	JSR EmptyCurrentMenu
 	JSR CM_ResetStackAndMenu
 	JSR DrawCurrentMenu

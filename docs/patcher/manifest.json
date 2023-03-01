@@ -1,6 +1,6 @@
 {
     "name": "LTTPHack",
-    "version": "14.3.3",
+    "version": "14.3.4",
     "base": {
         "name": "A Link to the Past (J) 1.0",
         "crc": "3322EFFC"

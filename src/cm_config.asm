@@ -58,7 +58,7 @@ CONFIG_SUBMENU:
 	%list_item("Save place")
 
 ;===================================================================================================
-%choice_here("HUD font", !config_hud_font, 22)
+%choice_here("HUD font", !config_hud_font, 23)
 	%list_item("LTTP")
 	%list_item("Klonoa")
 	%list_item("TI-83")
@@ -75,18 +75,19 @@ CONFIG_SUBMENU:
 	%list_item("Pac-Man")
 	%list_item("DOOM")
 	%list_item("Undertale")
-	%list_item("Planet X-3")
+	%list_item("Pocky")
 	%list_item("Skyroads")
 	%list_item("Yoshi's")
 	%list_item("S. Metroid")
 	%list_item("Tazmania")
 	%list_item("Black Bass")
+	%list_item("Loopz")
 
 ;===================================================================================================
 %submenu("Color config", COLOR_CONFIG_SUBMENU)
 
 ;===================================================================================================
-!color_count = 21
+!color_count = 22
 !color_id = -1
 
 COLORS_YAY:
@@ -158,7 +159,7 @@ color_list:
 	%fixed_color($06A969, "Lui green")
 	%fixed_color($20A8F8, "Glan blue") ; fantasy
 
-	%fixed_color($F8B000, "Mike orange")
+	%fixed_color($F8B000, "Orange")
 	%fixed_color($782878, "Purple")
 	%fixed_color($605800, "Garbage")
 	%fixed_color($8090A0, "Blilver")
@@ -169,6 +170,7 @@ color_list:
 	%fixed_color($BADA55, "BADA55")
 
 	%fixed_color($FFBFFF, "Blunt pink")
+	%fixed_color($78886A, "Futaba")
 
 ;===================================================================================================
 UnmutedInstruments:

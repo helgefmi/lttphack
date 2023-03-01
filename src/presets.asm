@@ -94,7 +94,6 @@ PRESET_SUBMENU:
 
 #SetPresetMenuArea:
 	; put bank in appropriate places
-	STA.b SA1IRAM.preset_addr+1
 	STA.b SA1IRAM.preset_prog+1
 	STA.b SA1IRAM.preset_pert+1
 	STA.b SA1IRAM.preset_reader+1

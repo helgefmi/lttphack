@@ -3,7 +3,7 @@ PRESET_CONFIG_SUBMENU:
 
 ;===================================================================================================
 ; PRESET LIST
-%choice_here("Preset category", !config_preset_category, 10)
+%choice_here("Preset category", !config_preset_category, 8)
 	%list_item("Any% NMG")
 	%list_item("100% NMG")
 	%list_item("Low%")
@@ -12,8 +12,8 @@ PRESET_CONFIG_SUBMENU:
 	%list_item("AD 2014")
 	%list_item("Any% RMG")
 	%list_item("Boss RTAs")
-	%list_item("AD MG")
-	%list_item("RBO")
+;	%list_item("AD MG")
+;	%list_item("RBO")
 
 ;===================================================================================================
 %submenu_variable("Safeties", SAFETIES_SUBMENU)
